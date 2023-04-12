@@ -1,0 +1,21 @@
+theme = "onedark"
+
+[editor]
+line-number = "relative"
+mouse = false
+gutters = ["spacer", "diagnostics", "spacer", "diff"]
+auto-save = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[editor.file-picker]
+hidden = false
+max-depth = 2
+
+[editor.soft-wrap]
+enable = true
+max-wrap = 25
+

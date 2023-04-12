@@ -1,0 +1,18 @@
+/* ref: https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/EventOverview/TextDefaultsBindings/TextDefaultsBindings.html */
+{
+    /* movement */
+    "~f" = "moveWordForward:";
+    "~b" = "moveWordBackward:";
+    "~<" = "moveToBeginningOfDocument:";
+    "~>" = "moveToEndOfDocument:";
+    "~v" = "pageUp:";
+
+    /* deletion */
+    "~d" = "deleteWordForward:";
+    "^w" = "deleteWordBackward:";
+    "^u" = "deleteToBeginningOfLine:";
+    "^k" = "deleteToEndOfLine:";
+
+    /* Escape should really be complete: */
+    "\033" = "complete:";  /* Escape */
+}

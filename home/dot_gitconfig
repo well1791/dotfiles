@@ -1,0 +1,78 @@
+;reference: https://github.com/voku/dotfiles/blob/master/.gitconfig
+
+[credential "https://github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+[user]
+  name = Wellington Mendoza
+  email = wellsaint91@gmail.com
+
+[includeIf "gitdir:~/Code/"]
+  path = ~/Code/.gitconfig
+
+[filter "lfs"]
+  clean = git-lfs clean %f
+  smudge = git-lfs smudge %f
+  required = true
+
+[color]
+  ui = true
+
+[diff]
+  compactionHeuristic = true
+  renamelimit = 9999
+  tool = vimdif
+  renames = copies
+  algorithm = patience
+  wsErrorHighlight = all
+  identHeuristic = on
+  colorMoved = default
+
+[core]
+  trustctime = false
+  precomposeunicode = false
+  untrackedCache = true
+  excludesfile = ~/.gitignore_global
+  attributesfile = ~/.gitattributes
+  fscache = true
+
+[init]
+  defaultBranch = main
+  templatedir = ~/.git_template
+
+[push]
+  default = simple
+  followTags = true
+
+[pull]
+  default = current
+  rebase = true
+  ff = only
+
+[fetch]
+  prune = true
+
+[merge]
+  stat = true
+  ff = false
+
+[grep]
+  lineNumber = true
+
+[apply]
+  whitespace = warn
+
+[rebase]
+  autosquash = true
+
+[credential]
+  # cache the password for http-auth
+  helper = cache
+
+[log]
+  decorate = short
