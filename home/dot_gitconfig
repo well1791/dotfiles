@@ -26,12 +26,22 @@
 [diff]
   compactionHeuristic = true
   renamelimit = 9999
-  tool = vimdif
+  tool = difftastic
   renames = copies
   algorithm = patience
   wsErrorHighlight = all
   identHeuristic = on
   colorMoved = default
+  external = difft
+
+[difftool]
+  prompt = false
+
+[difftool "difftastic"]
+  cmd = difft "$LOCAL" "$REMOTE"  
+
+[pager]
+  difftool = true
 
 [core]
   trustctime = false

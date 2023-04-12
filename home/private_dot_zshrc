@@ -43,6 +43,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(zoxide init zsh)"
 eval "$(zellij setup --generate-auto-start zsh)"
 
+alias x=hx
+
 
 # -----------------
 # Zim configuration
