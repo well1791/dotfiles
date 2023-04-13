@@ -43,7 +43,15 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(zoxide init zsh)"
 eval "$(zellij setup --generate-auto-start zsh)"
 
+local chezmoi_dir=`chezmoi git -- rev-parse --show-toplevel`
+local home_manager_dir="${chezmoi_dir}/nix/home-manager"
+
 alias x=hx
+alias hm=home-manager
+alias hms='hm switch --flake ${home_manager_dir}/\#wmendoza'
+alias hmp='hm packages'
+alias hmu='nix flake update ${home_manager_dir} && hms'
+
 
 
 # -----------------
