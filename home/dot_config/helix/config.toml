@@ -1,5 +1,9 @@
 theme = "onedark"
 
+[keys.normal]
+pageup = "half_page_up"
+pagedown = "half_page_down"
+
 [editor]
 line-number = "relative"
 mouse = false

@@ -26,6 +26,7 @@ local bindings = {
     p = launchOrFocus("NordPass"),
     y = launchOrFocus("System Preferences"),
     z = launchOrFocus("Zoom.us"),
+    m = launchOrFocus("Microsoft Teams"),
   },
 }
 
