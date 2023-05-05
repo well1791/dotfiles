@@ -36,22 +36,42 @@ WORDCHARS=${WORDCHARS//[\/]}
 
 export EDITOR=/opt/homebrew/bin/hx
 export VISUAL=/opt/homebrew/bin/hx
+export LANG=en_US.UTF-8
+export LC_ALL=en_US.UTF-8
+export LESS="--no-init --RAW-CONTROL-CHARS --ignore-case --quit-if-one-screen --silent --tabs=4 --window=-2"
+export LDFLAGS="-L/opt/homebrew/opt/llvm@14/lib"
+export CPPFLAGS="-I/opt/homebrew/opt/llvm@14/include"
+
+[ -d "$HOME/.local/bin" ] && PATH="$HOME/.local/bin:$PATH"
+export PATH="/opt/homebrew/opt/llvm@14/bin:$PATH"
+export PATH="/opt/homebrew/opt/postgresql@15/bin:$PATH"
+
+# android
+export PATH="$PATH:$ANDROID_HOME/emulator"
+export PATH="$PATH:$ANDROID_HOME/tools"
+export PATH="$PATH:$ANDROID_HOME/tools/bin"
+export PATH="$PATH:$ANDROID_HOME/platform-tools"
+export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools"
 
 . "$HOME/.cargo/env"
+. "/Users/wmendoza/Library/Application Support/edgedb/env"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(zoxide init zsh)"
-eval "$(zellij setup --generate-auto-start zsh)"
+eval "$(fnm env --use-on-cd)"
+#eval "$(zellij setup --generate-auto-start zsh)"
 
 local chezmoi_dir=`chezmoi git -- rev-parse --show-toplevel`
 local home_manager_dir="${chezmoi_dir}/nix/home-manager"
 
-alias x=hx
-alias hm=home-manager
+alias b='bat -p'
+alias j='zellij'
+alias x='hx'
+alias ch='chezmoi'
+alias hm='home-manager'
 alias hms='hm switch --flake ${home_manager_dir}/\#wmendoza'
 alias hmp='hm packages'
 alias hmu='nix flake update ${home_manager_dir} && hms'
-
 
 
 # -----------------
@@ -152,3 +172,12 @@ for key ('j') bindkey -M vicmd ${key} history-substring-search-down
 unset key
 # }}} End configuration added by Zim install
 
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+[ -f "/Users/wmendoza/.ghcup/env" ] && source "/Users/wmendoza/.ghcup/env"
+# ghcup-env
+
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"

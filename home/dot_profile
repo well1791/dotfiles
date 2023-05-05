@@ -1,1 +1,3 @@
 . "$HOME/.cargo/env"
+
+export PATH="/Users/wmendoza/Library/Application Support/edgedb/bin:$PATH"

@@ -12,21 +12,22 @@ local bindings = {
   [{'alt', 'ctrl', 'shift'}] = {
      -- left hand
     r = launchOrFocus("Microsoft Edge"),
-    t = launchOrFocus("Slack"),
-    n = launchOrFocus("Wezterm"),
+    t = launchOrFocus("Wezterm"),
+    n = launchOrFocus("Visual Studio Code"),
+    s = launchOrFocus("Slack"),
 
     -- left hand
     e = launchOrFocus("Firefox Developer Edition"),
-    i = launchOrFocus("Ferdium"),
-    a = launchOrFocus("Finder"),
+    i = launchOrFocus("Finder"),
+    a = launchOrFocus("System Preferences"),
+    c = launchOrFocus("Ferdium"),
 
     -- more
+    f = launchOrFocus("Microsoft Teams"),
     k = launchOrFocus("Docker"),
-    v = launchOrFocus("NordVPN"),
+    m = launchOrFocus("Zoom.us"),
     p = launchOrFocus("NordPass"),
-    y = launchOrFocus("System Preferences"),
-    z = launchOrFocus("Zoom.us"),
-    m = launchOrFocus("Microsoft Teams"),
+    v = launchOrFocus("NordVPN"),
   },
 }
 
