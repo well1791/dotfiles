@@ -13,6 +13,12 @@ zmodule environment
 # Provides handy git aliases and functions.
 zmodule git
 # Applies correct bindkeys for input events.
+
+alias giD='git diff --cached --word-diff'
+alias gid='git diff --cached'
+alias gwD='git diff --word-diff'
+alias gwd='git diff'
+
 zmodule input
 # Sets a custom terminal title.
 zmodule termtitle
