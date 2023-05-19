@@ -11,7 +11,8 @@ end
 local bindings = {
   [{'alt', 'ctrl', 'shift'}] = {
      -- left hand
-    r = launchOrFocus("Microsoft Edge"),
+    -- r = launchOrFocus("Microsoft Edge"),
+    r = launchOrFocus("Arc"),
     t = launchOrFocus("Wezterm"),
     n = launchOrFocus("Visual Studio Code"),
     s = launchOrFocus("Slack"),

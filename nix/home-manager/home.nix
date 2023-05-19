@@ -25,7 +25,6 @@
       git
       git-lfs
       glow
-      gnu-units
       gnupg
       helix
       htop

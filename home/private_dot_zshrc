@@ -72,6 +72,11 @@ alias hm='home-manager'
 alias hms='hm switch --flake ${home_manager_dir}/\#wmendoza'
 alias hmp='hm packages'
 alias hmu='nix flake update ${home_manager_dir} && hms'
+alias giD='git diff --cached --word-diff'
+alias gid='git diff --cached'
+alias gwD='git diff --word-diff'
+alias gwd='git diff'
+
 
 
 # -----------------
