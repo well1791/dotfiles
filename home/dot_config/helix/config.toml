@@ -1,11 +1,6 @@
 theme = "onedark"
 
-[keys.normal]
-pageup = "half_page_up"
-pagedown = "half_page_down"
-
 [editor]
-line-number = "relative"
 mouse = false
 gutters = ["spacer", "diagnostics", "spacer", "diff"]
 auto-save = true
@@ -17,7 +12,7 @@ select = "underline"
 
 [editor.file-picker]
 hidden = false
-max-depth = 2
+max-depth = 4
 
 [editor.soft-wrap]
 enable = true

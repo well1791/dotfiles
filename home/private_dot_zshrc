@@ -54,12 +54,16 @@ export PATH="$PATH:$ANDROID_HOME/platform-tools"
 export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/tools"
 
 . "$HOME/.cargo/env"
-. "/Users/wmendoza/Library/Application Support/edgedb/env"
+#. "/Users/wmendoza/Library/Application Support/edgedb/env"
 
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(zoxide init zsh)"
 eval "$(fnm env --use-on-cd)"
-#eval "$(zellij setup --generate-auto-start zsh)"
+
+# rbenv
+export PATH="/opt/homebrew/opt/ruby/bin:$PATH"
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
 
 local chezmoi_dir=`chezmoi git -- rev-parse --show-toplevel`
 local home_manager_dir="${chezmoi_dir}/nix/home-manager"
@@ -178,7 +182,5 @@ unset key
 export SDKMAN_DIR="$HOME/.sdkman"
 [[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
+# ghcup
 [ -f "/Users/wmendoza/.ghcup/env" ] && source "/Users/wmendoza/.ghcup/env"
-# ghcup-env
-
-export PATH="/opt/homebrew/opt/ruby/bin:$PATH"

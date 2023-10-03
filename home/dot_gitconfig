@@ -15,6 +15,7 @@
 [includeIf "gitdir:~/Code/"]
   path = ~/Code/.gitconfig
 
+
 [filter "lfs"]
   clean = git-lfs clean %f
   smudge = git-lfs smudge %f
@@ -44,12 +45,28 @@
   difftool = true
 
 [core]
+  pager = delta
   trustctime = false
   precomposeunicode = false
   untrackedCache = true
   excludesfile = ~/.gitignore_global
   attributesfile = ~/.gitattributes
   fscache = true
+
+[interactive]
+  diffFilter = delta --color-only --features=interactive
+
+[delta]
+  features = decorations
+  whitespace-error-style = 22 reverse
+
+[delta "interactive"]
+  keep-plus-minus-markers = false
+
+[delta "decorations"]
+  commit-decoration-style = bold yellow box ul
+  file-style = bold crimson
+  file-decoration-style = bold crimson box
 
 [init]
   defaultBranch = main
@@ -58,6 +75,7 @@
 [push]
   default = simple
   followTags = true
+  autoSetupRemote = true
 
 [pull]
   default = current
@@ -70,6 +88,7 @@
 [merge]
   stat = true
   ff = false
+  conflictstyle = diff3
 
 [grep]
   lineNumber = true

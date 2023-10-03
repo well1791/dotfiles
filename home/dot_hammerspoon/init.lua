@@ -1,6 +1,14 @@
+spaces = require("hs.spaces")
+
 --
 -- Key bindings.
 --
+
+function rightClick()
+  local pos = hs.mouse.absolutePosition()
+  hs.eventtap.leftClick(pos)
+  hs.eventtap.event.newMouseEvent()
+end
 
 function launchOrFocus(app)
   return function()
@@ -9,24 +17,21 @@ function launchOrFocus(app)
 end
 
 local bindings = {
-  [{'alt', 'ctrl', 'shift'}] = {
-     -- left hand
-    -- r = launchOrFocus("Microsoft Edge"),
-    r = launchOrFocus("Arc"),
-    t = launchOrFocus("Wezterm"),
-    n = launchOrFocus("Visual Studio Code"),
+  [{'ctrl', 'alt', 'shift'}] = {
+    -- main
+    e = launchOrFocus("Wezterm"),
+    i = launchOrFocus("Visual Studio Code"),
+    a = launchOrFocus("Arc"),
     s = launchOrFocus("Slack"),
-
-    -- left hand
-    e = launchOrFocus("Firefox Developer Edition"),
-    i = launchOrFocus("Finder"),
-    a = launchOrFocus("System Preferences"),
-    c = launchOrFocus("Ferdium"),
+    -- n = settings:desktop 1
+    -- t = settings:screenshot
+    o = launchOrFocus("Firefox Developer Edition"),
+    -- r = settings:desktop 2
 
     -- more
-    f = launchOrFocus("Microsoft Teams"),
-    k = launchOrFocus("Docker"),
-    m = launchOrFocus("Zoom.us"),
+    d = launchOrFocus("Finder"),
+    b = launchOrFocus("Ferdium"),
+    u = launchOrFocus("System Preferences"),
     p = launchOrFocus("NordPass"),
     v = launchOrFocus("NordVPN"),
   },
@@ -38,6 +43,21 @@ for modifier, keyActions in pairs(bindings) do
   end
 end
 
+--
+-- Hold left click on key press
+--
+
+hs.hotkey.bind({}, 'f3', function()
+  hs.eventtap.event.newMouseEvent(
+    hs.eventtap.event.types['leftMouseDown'],
+    hs.mouse.getAbsolutePosition()
+  ):post()
+end, function()
+  hs.eventtap.event.newMouseEvent(
+    hs.eventtap.event.types['leftMouseUp'],
+    hs.mouse.getAbsolutePosition()
+  ):post()
+end)
 
 --
 -- Auto-reload config on change.
