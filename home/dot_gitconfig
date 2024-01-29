@@ -12,8 +12,8 @@
   name = Wellington Mendoza
   email = wellsaint91@gmail.com
 
-[includeIf "gitdir:~/Code/"]
-  path = ~/Code/.gitconfig
+[includeIf "gitdir:~/Code/inscyth/"]
+  path = ~/Code/inscyth/.gitconfig
 
 
 [filter "lfs"]
