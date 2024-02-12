@@ -1,6 +1,6 @@
 # git fetch
-abbr -a -- gf 'git fetch --all --prune'
-abbr -a -- gfu 'git pull --ff-only --all --prune'
+abbr -a -- gf 'git pull --ff-only --all --prune'
+abbr -a -- gfa 'git fetch --all --prune'
 
 # git push
 abbr -a -- gp 'git push'
@@ -54,11 +54,10 @@ abbr -a -- gra 'git rebase --abort'
 abbr -a -- ge 'git reset --hard'
 
 # git log
-set -g _git_log_fuller_format '%C(bold yellow)commit %h%C(auto)%d%n%C(bold)Author: %C(blue)%an <%ae> %C(reset)%C(cyan)%ai (%ar)%n%C(bold)Commit: %C(blue)%cn <%ce> %C(reset)%C(cyan)%ci (%cr)%C(reset)%n%+B'
+set -g _git_log_fuller_format '%C(bold yellow)commit %h%C(auto)%d%n%C(bold)Author: %C(blue)%an <%ae >%C(reset)%C(cyan)%ai (%ar)%n%C(bold)Commit: %C(blue)%cn <%ce >%C(reset)%C(cyan)%ci (%cr)%C(reset)%n%+B'
 set -g _git_log_oneline_format '%C(bold yellow)%h%C(reset) %s%C(auto)%d%C(reset)'
 
 abbr -a -- gl 'git log --topo-order --pretty=format:(echo $_git_log_oneline_format) -11'
 abbr -a -- gll 'git log --topo-order --pretty=format:(echo $_git_log_fuller_format) -11'
 abbr -a -- gld 'git log --topo-order --stat --patch --pretty=format:(echo $_git_log_fuller_format) -11'
 abbr -a -- gls 'git log --topo-order --stat --pretty=format:(echo $_git_log_fuller_format) -11'
-
