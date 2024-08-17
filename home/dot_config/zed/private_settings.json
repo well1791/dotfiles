@@ -1,0 +1,38 @@
+// see: https://zed.dev/docs/configuring-zed or `open default settings`
+{
+  // VIM
+  "vim_mode": true,
+  "vim": {
+    "use_system_clipboard": "on_yank",
+    "use_multiline_find": true,
+    "use_smartcase_find": true
+  },
+
+  // MUST
+  "autosave": "on_window_change",
+  "soft_wrap": "preferred_line_length",
+  "line_indicator_format": "short",
+  "tab_size": 2,
+
+  // DISABLE
+  "cursor_blink": false,
+  "indent_guides": { "enabled": false },
+  "toolbar": { "quick_actions": false },
+  "scrollbar": { "show": "never" },
+  "tab_bar": { "show": false },
+  "gutter": {
+    "line_numbers": false,
+    "code_actions": false
+  },
+
+  // FONTS
+  "ui_font_size": 18,
+  "buffer_font_size": 20,
+
+  // COLOR
+  "theme": {
+    "mode": "system",
+    "light": "Ayu Light",
+    "dark": "Rosé Pine"
+  }
+}
