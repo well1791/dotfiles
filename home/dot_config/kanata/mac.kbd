@@ -1,0 +1,126 @@
+(defcfg
+  process-unmapped-keys yes
+  macos-dev-names-include (
+    "Apple Internal Keyboard / Trackpad"
+    "Bluetooth USB Host Controller"
+  )
+  concurrent-tap-hold yes
+)
+
+(defsrc
+  q  w  e  r      u  i  o  p
+  a  s  d  f      j  k  l  ;
+)
+
+(defvar
+  tap-timeout   100
+  hold-timeout  200
+  tt $tap-timeout
+  ht $hold-timeout
+)
+
+(defalias
+  ;; HOME SQUARE
+  n (tap-hold $tt $ht n lmet)
+  t (tap-hold $tt $ht t lalt)
+  a (tap-hold $tt $ht a lsft)
+  i (tap-hold $tt $ht i lctl)
+
+  ;; ONE SHOT
+  os_meh (one-shot-press 500 C-S-lalt)
+
+  ;; LAYERS
+  e_l (tap-hold $tt $ht e (layer-while-held nav_l))
+  e_r (tap-hold $tt $ht e (layer-while-held nav_r))
+
+  ;; ALPHA CHORDS
+  _r (chord base _r)
+  _n (chord base _n)
+  _t (chord base _t)
+  _s (chord base _s)
+  _o (chord base _o)
+  _a (chord base _a)
+  _i (chord base _i)
+  _e_l (chord base _e_l)
+  _e_r (chord base _e_r)
+
+  ;; SYM CHORDS ???????????????????
+
+  ;; NAV
+  und (macro M-z)
+  cut (macro M-x)
+  cpy (macro M-c)
+  pst (macro M-v)
+
+  _pgup (tap-hold $tt $ht pgup lalt)
+  _pgdn (tap-hold $tt $ht pgdn lctl)
+  _cpy (tap-hold $tt $ht @cpy lsft)
+  _pst (tap-hold $tt $ht @pst lmet)
+)
+
+(defchords base 50
+  ;; BASE
+  (_e_l                     ) @e_r
+  (_e_r                     ) @e_l
+  (     _i                  ) @i
+  (        _a               ) @a
+  (           _o            ) o
+  (              _s         ) s
+  (                 _t      ) @t
+  (                    _n   ) @n
+  (                       _r) r
+
+  ;; ALPHA
+  (_e_l _i                  ) d
+  (_e_r _i                  ) d
+  (_e_l    _a               ) l
+  (_e_r    _a               ) l
+  (_e_l       _o            ) g
+  (_e_r       _o            ) g
+  (_e_l             _t      ) c
+  (_e_r             _t      ) c
+  (_e_l                _n   ) m
+  (_e_r                _n   ) m
+  (_e_l                   _r) w
+  (_e_r                   _r) w
+  (     _i _a               ) u
+  (     _i             _n   ) k
+  (        _a _o            ) b
+  (        _a    _s         ) z
+  (        _a       _t      ) h
+  (           _o _s         ) j
+  (           _o       _n   ) x
+  (              _s _t      ) f
+  (              _s    _n   ) y
+  (              _s       _r) q
+  (                 _t _n   ) p
+  (                    _n _r) v
+
+  ;; META
+  (_e_l _i _a               ) spc
+  (_e_r _i _a               ) spc
+  (_e_r _i             _n   ) tab
+  (_e_l _i             _n   ) tab
+  ;;(_e_l             _t _n   ) (layer-switch @sym)
+  ;;(_e_r             _t _n   ) (layer-switch @sym)
+  (     _i _a    _s         ) caps
+  (     _i _a _o            ) ret
+  (              _s _t _n   ) @os_meh
+  (              _s    _n _r) bspc
+  (                 _t _n _r) esc
+)
+
+(deflayer base
+  @_r  @_n  @_t  @_s          @_s    @_t  @_n  @_r
+  @_o  @_a  @_i  @_e_l        @_e_r  @_i  @_a  @_o
+)
+
+(deflayer nav_r
+  @cut  @_pst  @_pgup  _      del   up    bspc  _
+  @und  @_cpy  @_pgdn  _      left  down  rght  _
+)
+
+(deflayer nav_l
+  _  bspc  up    del          _  @_pgup  @_pst  @cut
+  _  left  down  rght         _  @_pgdn  @_cpy  @und
+)
