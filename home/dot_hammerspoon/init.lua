@@ -25,13 +25,13 @@ local bindings = {
 
 		-- qwerty right
 		j = launchOrFocus("Wezterm"),
-		k = launchOrFocus("Visual Studio Code"),
-		l = launchOrFocus("Microsoft Teams (work or school)"),
+		--k = launchOrFocus("Visual Studio Code"),
+		k = launchOrFocus("Zed"),
+		l = launchOrFocus("Microsoft Teams"),
 
 		-- layout agnostic
 		u = launchOrFocus("System Preferences"),
 		p = launchOrFocus("NordPass"),
-		v = launchOrFocus("NordVPN"),
 	},
 }
 
