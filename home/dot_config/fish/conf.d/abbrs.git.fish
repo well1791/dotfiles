@@ -27,9 +27,9 @@ abbr -a -- go 'git checkout'
 abbr -a -- goc 'git checkout -- .'
 
 # git commit
-abbr -a gc --set-cursor 'git commit --message "%" -a'
-abbr -a gcm --set-cursor 'git commit --message "%"'
-abbr -a -- gce 'git commit --amend -a'
+abbr -a -- gc 'git commit --verbose'
+abbr -a gcm --set-cursor 'git commit --message "%" -a'
+abbr -a -- gce 'git commit --verbose --amend -a'
 abbr -a -- gcf 'git commit --amend --reuse-message HEAD -a'
 
 # git merge
