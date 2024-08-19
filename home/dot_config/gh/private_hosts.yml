@@ -1,3 +1,5 @@
 github.com:
-    user: well1791
     git_protocol: ssh
+    users:
+        well1791:
+    user: well1791
