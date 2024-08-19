@@ -12,9 +12,8 @@
   name = Wellington Mendoza
   email = wellsaint91@gmail.com
 
-[includeIf "gitdir:~/Code/inscyth/"]
-  path = ~/Code/inscyth/.gitconfig
-
+[includeIf "gitdir:~/code/work/"]
+  path = ~/code/work/.gitconfig
 
 [filter "lfs"]
   clean = git-lfs clean %f
@@ -57,6 +56,7 @@
   diffFilter = delta --color-only --features=interactive
 
 [delta]
+  dark = true
   features = decorations
   whitespace-error-style = 22 reverse
 
@@ -84,6 +84,7 @@
 
 [fetch]
   prune = true
+	writeCommitGraph = true
 
 [merge]
   stat = true
@@ -105,3 +106,15 @@
 
 [log]
   decorate = short
+
+[rerere]
+	enabled = true
+
+[branch]
+	sort = -committerdate
+
+[maintenance]
+	repo = /Users/well/code/inscyth/ee.git
+
+[advice]
+	detachedHead = false
