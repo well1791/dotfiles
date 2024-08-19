@@ -1,4 +1,6 @@
-theme = "onedark"
+theme = "rose_pine"
+#theme = "rose_pine_moon"
+#theme = "rose_pine_dawn"
 
 [editor]
 mouse = false
@@ -12,9 +14,27 @@ select = "underline"
 
 [editor.file-picker]
 hidden = false
-max-depth = 4
 
 [editor.soft-wrap]
 enable = true
 max-wrap = 25
+
+[editor.statusline]
+left = ["mode", "spinner"]
+center = ["file-name"]
+right = [
+  "diagnostics",
+  "selections",
+  "position",
+  "file-encoding",
+  "file-line-ending",
+  "file-type"
+]
+separator = "│"
+mode.normal = "N"
+mode.insert = "I"
+mode.select = "S"
+
+[keys.normal.space]
+F = "file_picker_in_current_buffer_directory"
 
