@@ -56,17 +56,17 @@
   diffFilter = delta --color-only --features=interactive
 
 [delta]
-  dark = true
+  navigate = true
   features = decorations
   whitespace-error-style = 22 reverse
 
 [delta "interactive"]
   keep-plus-minus-markers = false
 
-[delta "decorations"]
-  commit-decoration-style = bold yellow box ul
-  file-style = bold crimson
-  file-decoration-style = bold crimson box
+# [delta "decorations"]
+#   commit-decoration-style = bold yellow box ul
+#   file-style = bold crimson
+#   file-decoration-style = bold crimson box
 
 [init]
   defaultBranch = main

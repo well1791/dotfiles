@@ -1,3 +1,6 @@
+# git rush
+abbr -a -- gg 'git add . && git commit -m "WIP" -an && git push --force-with-lease'
+
 # git fetch
 abbr -a -- gf 'git pull --ff-only --all --prune'
 abbr -a -- gfa 'git fetch --all --prune'
@@ -25,6 +28,8 @@ abbr -a -- gbc 'git checkout -b'
 # git checkout
 abbr -a -- go 'git checkout'
 abbr -a -- goc 'git checkout -- .'
+abbr -a -- god 'git checkout origin/dev'
+abbr -a -- gom 'git checkout origin/main'
 
 # git commit
 abbr -a -- gc 'git commit --verbose'

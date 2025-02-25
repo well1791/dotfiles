@@ -1,3 +1,5 @@
 . "$HOME/.cargo/env"
 
 export PATH="/Users/wmendoza/Library/Application Support/edgedb/bin:$PATH"
+export PATH="/Users/well/.config/herd-lite/bin:$PATH"
+export PHP_INI_SCAN_DIR="/Users/well/.config/herd-lite/bin:$PHP_INI_SCAN_DIR"

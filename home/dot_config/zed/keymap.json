@@ -1,0 +1,13 @@
+[
+  {
+    "context": "Editor",
+    "bindings": {
+      // "escape": ["vim::SwitchMode", "HelixNormal"]
+      // "escape": "vim::HelixNormalAfter"
+    }
+  },
+  {
+    "context": "vim_mode == normal",
+    "bindings": {}
+  }
+]

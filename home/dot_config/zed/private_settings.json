@@ -1,6 +1,16 @@
 // see: https://zed.dev/docs/configuring-zed or `open default settings`
 {
   // VIM
+  "features": {
+    "inline_completion_provider": "zed"
+  },
+  "assistant": {
+    "default_model": {
+      "provider": "anthropic",
+      "model": "claude-3-5-sonnet-latest"
+    },
+    "version": "2"
+  },
   "vim_mode": true,
   "vim": {
     "use_system_clipboard": "on_yank",

@@ -19,8 +19,8 @@ end
 local bindings = {
 	[{ "ctrl", "alt", "shift" }] = {
 		-- qwerty left
-		a = launchOrFocus("Arc"),
-		s = launchOrFocus("Firefox Developer Edition"),
+		s = launchOrFocus("Arc"),
+		a = launchOrFocus("Zen Browser"),
 		d = launchOrFocus("Finder"),
 
 		-- qwerty right
