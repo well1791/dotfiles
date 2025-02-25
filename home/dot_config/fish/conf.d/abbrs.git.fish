@@ -54,6 +54,7 @@ abbr -a -- gr 'git rebase'
 abbr -a -- gri 'git rebase -i'
 abbr -a -- grc 'git rebase --continue'
 abbr -a -- gra 'git rebase --abort'
+abbr -a -- grd 'git rebase origin/dev'
 
 # git reset
 abbr -a -- ge 'git reset --hard'
