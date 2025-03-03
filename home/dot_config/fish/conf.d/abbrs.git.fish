@@ -2,12 +2,11 @@
 abbr -a -- gg 'git add . && git commit -m "WIP" -an && git push --force-with-lease'
 
 # git fetch
-abbr -a -- gf 'git pull --ff-only --all --prune'
-abbr -a -- gfa 'git fetch --all --prune'
+abbr -a -- gf 'git fetch --all --prune'
+abbr -a -- gff 'git pull --ff-only --all --prune'
 
 # git push
-abbr -a -- gp 'git push'
-abbr -a -- gpc 'git push --set-upstream origin (git branch --show-current)'
+abbr -a -- gp 'git push --set-upstream origin (git branch --show-current)'
 abbr -a -- gpf 'git push --force-with-lease'
 
 # git add
@@ -55,6 +54,7 @@ abbr -a -- gri 'git rebase -i'
 abbr -a -- grc 'git rebase --continue'
 abbr -a -- gra 'git rebase --abort'
 abbr -a -- grd 'git rebase origin/dev'
+abbr -a -- grm 'git rebase origin/dev'
 
 # git reset
 abbr -a -- ge 'git reset --hard'

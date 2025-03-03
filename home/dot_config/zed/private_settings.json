@@ -1,16 +1,19 @@
 // see: https://zed.dev/docs/configuring-zed or `open default settings`
 {
-  // VIM
+  // AI
   "features": {
     "inline_completion_provider": "zed"
   },
   "assistant": {
+    "enabled": true,
     "default_model": {
       "provider": "anthropic",
       "model": "claude-3-5-sonnet-latest"
     },
     "version": "2"
   },
+
+  // VIM
   "vim_mode": true,
   "vim": {
     "use_system_clipboard": "on_yank",
@@ -36,13 +39,17 @@
   },
 
   // FONTS
-  "ui_font_size": 18,
   "buffer_font_size": 20,
+  "ui_font_size": 18,
 
   // COLOR
   "theme": {
     "mode": "system",
-    "light": "Ayu Light",
-    "dark": "Rosé Pine"
+    "light": "Rosé Pine Dawn",
+    "dark": "Tokyo Night Storm"
+  },
+
+  "auto_install_extensions": {
+    "html": true
   }
 }
