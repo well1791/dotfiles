@@ -1,7 +1,9 @@
 // see: https://zed.dev/docs/configuring-zed or `open default settings`
 {
-  // AI
+  // AI and completion
+  "show_completions_on_input": true,
   "features": {
+    "edit_prediction_provider": "copilot",
     "inline_completion_provider": "zed"
   },
   "assistant": {

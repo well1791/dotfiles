@@ -1,6 +1,6 @@
-theme = "rose_pine"
+# theme = "rose_pine"
 #theme = "rose_pine_moon"
-#theme = "rose_pine_dawn"
+theme = "rose_pine_dawn"
 
 [editor]
 mouse = false
