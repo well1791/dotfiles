@@ -1,13 +1,16 @@
 [
+  // space binding
   {
-    "context": "Editor",
+    "context": "Editor && (vim_mode == normal || vim_mode == helix_normal) && vim_operator == none && !VimWaiting",
     "bindings": {
-      // "escape": ["vim::SwitchMode", "HelixNormal"]
-      // "escape": "vim::HelixNormalAfter"
+      "space e": "workspace::ToggleLeftDock"
     }
   },
   {
-    "context": "vim_mode == normal",
-    "bindings": {}
+    "context": "ProjectPanel",
+    "bindings": {
+      "escape": "workspace::ToggleLeftDock",
+      "space e": "workspace::ToggleLeftDock"
+    }
   }
 ]

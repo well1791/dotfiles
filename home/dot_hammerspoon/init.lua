@@ -24,10 +24,8 @@ local bindings = {
 		d = launchOrFocus("Finder"),
 
 		-- qwerty right
-		j = launchOrFocus("Wezterm"),
-		--k = launchOrFocus("Visual Studio Code"),
+		--j = launchOrFocus("Wezterm"),
 		k = launchOrFocus("Zed"),
-		l = launchOrFocus("Microsoft Teams"),
 
 		-- layout agnostic
 		u = launchOrFocus("System Preferences"),

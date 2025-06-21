@@ -1,57 +1,76 @@
 // see: https://zed.dev/docs/configuring-zed or `open default settings`
 {
-  // AI and completion
-  "show_completions_on_input": true,
-  "features": {
-    "edit_prediction_provider": "copilot",
-    "inline_completion_provider": "zed"
-  },
-  "assistant": {
-    "enabled": true,
-    "default_model": {
-      "provider": "anthropic",
-      "model": "claude-3-5-sonnet-latest"
-    },
-    "version": "2"
-  },
-
   // VIM
   "vim_mode": true,
   "vim": {
     "use_system_clipboard": "on_yank",
     "use_multiline_find": true,
-    "use_smartcase_find": true
+    "use_smartcase_find": true,
+    // "default_mode": "helix_normal",
+    "cursor_shape": {
+      // "normal": "bar",
+      // "insert": "bar",
+      // "visual": "bar",
+      // "visual_block": "bar",
+      // "visual_line": "bar"
+    }
   },
-
-  // MUST
-  "autosave": "on_window_change",
-  "soft_wrap": "preferred_line_length",
-  "line_indicator_format": "short",
-  "tab_size": 2,
 
   // DISABLE
   "cursor_blink": false,
-  "indent_guides": { "enabled": false },
-  "toolbar": { "quick_actions": false },
-  "scrollbar": { "show": "never" },
-  "tab_bar": { "show": false },
+  "indent_guides": {
+    "enabled": false
+  },
+  "scrollbar": {
+    "axes": {
+      "horizontal": false
+    }
+  },
+  "tab_bar": {
+    "show": false
+  },
   "gutter": {
     "line_numbers": false,
     "code_actions": false
+  },
+  "preview_tabs": {
+    "enabled": false
+  },
+  "toolbar": {
+    "quick_actions": false,
+    "selections_menu": false,
+    "agent_review": false
+  },
+  "search": {
+    "button": false
   },
 
   // FONTS
   "buffer_font_size": 20,
   "ui_font_size": 18,
 
-  // COLOR
+  // THEME
   "theme": {
     "mode": "system",
     "light": "Rosé Pine Dawn",
     "dark": "Tokyo Night Storm"
   },
 
+  // MUST
+  "autosave": "on_focus_change",
+  "soft_wrap": "none",
+  "tab_size": 2,
+  "wrap_guides": [80],
   "auto_install_extensions": {
     "html": true
+  },
+  "use_smartcase_search": true,
+  "terminal": {
+    "option_as_meta": true,
+    "copy_on_select": true,
+    "default_height": 800,
+    "toolbar": {
+      "breadcrumbs": false
+    }
   }
 }
