@@ -3,8 +3,6 @@ abbr -a -- cmd command
 abbr -a -- m chezmoi
 
 # editor
-abbr -a -- c zed
-abbr -a -- e hx
 abbr -a -- ee zellij edit -d down
 # ls
 abbr -a -- ls eza
