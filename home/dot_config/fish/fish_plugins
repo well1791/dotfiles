@@ -1,8 +1,4 @@
 jorgebucaran/fisher
-jorgebucaran/autopair.fish
-nickeb96/puffer-fish
-jorgebucaran/getopts.fish
 kidonng/zoxide.fish
-kidonng/fishion
-patrickf1/colored_man_pages.fish
 ilancosman/tide@v6
+~/.config/fish/fish_plugins
