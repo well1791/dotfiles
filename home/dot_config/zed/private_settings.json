@@ -8,11 +8,10 @@
     "use_smartcase_find": true,
     // "default_mode": "helix_normal",
     "cursor_shape": {
-      // "normal": "bar",
-      // "insert": "bar",
-      // "visual": "bar",
-      // "visual_block": "bar",
-      // "visual_line": "bar"
+      "normal": "block",
+      "insert": "bar",
+      "visual_block": "bar",
+      "visual_line": "bar"
     }
   },
 
@@ -53,7 +52,7 @@
   "theme": {
     "mode": "system",
     "light": "Rosé Pine Dawn",
-    "dark": "Tokyo Night Storm"
+    "dark": "Rosé Pine Moon"
   },
 
   // MUST

@@ -3,11 +3,6 @@ layout {
         pane size=1 borderless=true {
             plugin location="zellij:compact-bar" 
         }
-        // pane split_direction="vertical" {
-        //     pane borderless=true size="25%"
-        //     pane focus=true borderless=true name="code" command="hx" close_on_exit=false
-        //     children
-        // }
         children
     }
 
