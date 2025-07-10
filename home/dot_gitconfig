@@ -84,7 +84,7 @@
 
 [fetch]
   prune = true
-	writeCommitGraph = true
+  writeCommitGraph = true
 
 [merge]
   stat = true
