@@ -1,9 +1,11 @@
 # github.com/well1791/dotfiles
 
-Tom Well's dotfiles, managed with [`chezmoi`](https://github.com/twpayne/chezmoi).
+Well's dotfiles, managed with [`chezmoi`](https://github.com/twpayne/chezmoi).
 
-Install them with:
+Install with:
 
-    chezmoi init well1791
+```sh
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply well1791
+```
 
 
