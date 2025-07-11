@@ -1,13 +1,5 @@
 ;reference: https://github.com/voku/dotfiles/blob/master/.gitconfig
 
-[credential "https://github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-
-[credential "https://gist.github.com"]
-	helper = 
-	helper = !/opt/homebrew/bin/gh auth git-credential
-
 [user]
   name = Wellington Mendoza
   email = wellsaint91@gmail.com
