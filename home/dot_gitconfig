@@ -12,8 +12,8 @@
   name = Wellington Mendoza
   email = wellsaint91@gmail.com
 
-[includeIf "gitdir:~/code/work/"]
-  path = ~/code/work/.gitconfig
+[includeIf "gitdir:~/Code/work/"]
+  path = ~/Code/work/.gitconfig
 
 [filter "lfs"]
   clean = git-lfs clean %f
@@ -112,9 +112,6 @@
 
 [branch]
 	sort = -committerdate
-
-[maintenance]
-	repo = /Users/well/code/inscyth/ee.git
 
 [advice]
 	detachedHead = false
