@@ -35,6 +35,12 @@ mode.normal = "N"
 mode.insert = "I"
 mode.select = "S"
 
+[keys.normal.g]
+# https://github.com/helix-editor/helix/issues/1630#issuecomment-1511995639
+l = ["collapse_selection", "extend_to_line_end"]
+h = ["collapse_selection", "extend_to_line_start"]
+s = ["collapse_selection", "select_mode", "goto_first_nonwhitespace", "exit_select_mode"]
+
 [keys.normal.space]
 F = "file_picker_in_current_buffer_directory"
 
