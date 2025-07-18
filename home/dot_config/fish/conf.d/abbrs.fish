@@ -13,6 +13,6 @@ abbr -a -- ll 'eza --all --long --tree --level=2'
 abbr -a -- cat 'bat -p'
 
 # zellij
-abbr -a -- j zellij --layout ~/.config/zellij/main.layout.kdl
+abbr -a -- j zellij --layout main
 abbr -a -- jj zellij
 abbr -a -- ja zellij attach
