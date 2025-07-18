@@ -234,10 +234,15 @@ keybinds {
         bind "Alt n" { NewPane "Down"; }
         bind "Alt u" { MoveTab "Left"; }
         bind "Alt o" { MoveTab "Right"; }
-        bind "Alt j" "Alt Left" { MoveFocusOrTab "Left"; }
-        bind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
-        bind "Alt k" "Alt Down" { MoveFocus "Down"; }
-        bind "Alt i" "Alt Up" { MoveFocus "Up"; }
+
+        // Nav
+        bind "Alt j" { GoToPreviousTab; }
+        bind "Alt l" { GoToNextTab; }
+        bind "Alt J" "Alt Left" { MoveFocus "Left"; }
+        bind "Alt L" "Alt Right" { MoveFocus "Right"; }
+        bind "Alt K" "Alt Down" { MoveFocus "Down"; }
+        bind "Alt I" "Alt Up" { MoveFocus "Up"; }
+
         bind "Alt =" "Alt +" { Resize "Increase"; }
         bind "Alt -" { Resize "Decrease"; }
         bind "Alt [" { PreviousSwapLayout; }
