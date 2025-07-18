@@ -3,13 +3,22 @@ keybinds {
     normal {
         // uncomment this and adjust key if using copy_on_select=false
         // bind "Alt c" { Copy; }
+
+        bind "Enter" {
+            // Passthru `Enter`.
+            WriteChars "\u{000D}";
+            // Invoke autolock to immediately assess proper lock state.
+            // (This provides a snappier experience compared to
+            // solely relying on `reaction_seconds` to elapse.)
+            MessagePlugin "autolock" {};
+        }
     }
 
     locked {
         bind "Alt z" {
-            SwitchToMode "Normal";
             // Disable the autolock plugin.
             MessagePlugin "autolock" { payload "disable"; };
+            SwitchToMode "Normal";
         }
     }
 
@@ -97,7 +106,7 @@ keybinds {
 
     scroll {
         bind "Ctrl s" { SwitchToMode "Normal"; }
-        bind "Ctrl c" { ScrollToBottom; SwitchToMode "Normal"; }
+        bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // Nav
         bind "k" "s" "Down" { ScrollDown; }
@@ -202,7 +211,6 @@ keybinds {
         bind "p" { GoToPreviousTab; SwitchToMode "Normal"; }
         bind "n" { GoToNextTab; SwitchToMode "Normal"; }
         bind "o" { FocusNextPane; }
-        bind "d" { Detach; }
         bind "Space" { NextSwapLayout; }
         bind "x" { CloseFocus; SwitchToMode "Normal"; }
     }
