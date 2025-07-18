@@ -1,0 +1,32 @@
+layout {
+    default_tab_template {
+        pane size=1 borderless=true {
+            plugin location="zellij:compact-bar" 
+        }
+        children
+    }
+
+    tab focus=true {
+        pane split_direction="vertical" {
+            pane size="75%" {
+                command "helix"
+                args "."
+            }
+            pane split_direction="horizontal" {
+                pane_npm size="35%" { args "run" "start"; }
+                pane_npm { args "run" "type-check"; }
+            }
+        }
+    }
+    tab {
+        pane
+    }
+    tab {
+        pane
+    }
+
+    pane_template name="pane_npm" {
+        command "npm"
+        start_suspended true
+    }
+}
