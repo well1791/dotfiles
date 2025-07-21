@@ -8,13 +8,13 @@ layout {
 
     tab focus=true {
         pane split_direction="vertical" {
-            pane size="75%" {
-                command "helix"
-                args "."
-            }
             pane split_direction="horizontal" {
                 pane_npm size="35%" { args "run" "start"; }
                 pane_npm { args "run" "type-check"; }
+            }
+            pane size="75%" {
+                command "helix"
+                args "."
             }
         }
     }

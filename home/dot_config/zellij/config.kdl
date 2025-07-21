@@ -238,8 +238,8 @@ keybinds {
         // Nav
         bind "Alt j" { GoToPreviousTab; }
         bind "Alt l" { GoToNextTab; }
-        bind "Alt J" "Alt Left" { MoveFocus "Left"; }
-        bind "Alt L" "Alt Right" { MoveFocus "Right"; }
+        bind "Alt J" "Alt Left" { MoveFocusOrTab "Left"; }
+        bind "Alt L" "Alt Right" { MoveFocusOrTab "Right"; }
         bind "Alt K" "Alt Down" { MoveFocus "Down"; }
         bind "Alt I" "Alt Up" { MoveFocus "Up"; }
 
