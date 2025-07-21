@@ -7,17 +7,11 @@ keybinds {
         bind "Enter" {
             // Passthru `Enter`.
             WriteChars "\u{000D}";
-            // Invoke autolock to immediately assess proper lock state.
-            // (This provides a snappier experience compared to
-            // solely relying on `reaction_seconds` to elapse.)
-            MessagePlugin "autolock" {};
         }
     }
 
     locked {
         bind "Alt z" {
-            // Disable the autolock plugin.
-            MessagePlugin "autolock" { payload "disable"; };
             SwitchToMode "Normal";
         }
     }
@@ -216,16 +210,10 @@ keybinds {
     }
 
     shared {
-        bind "Alt Shift z" {
-            // Enable the autolock plugin.
-            MessagePlugin "autolock" { payload "enable"; };
-        }
     }
 
     shared_except "locked" {
         bind "Alt z" {
-            // Disable the autolock plugin.
-            MessagePlugin "autolock" { payload "disable"; };
             SwitchToMode "Locked";
         }
 
@@ -291,21 +279,9 @@ plugins {
     configuration location="zellij:configuration"
     plugin-manager location="zellij:plugin-manager"
     about location="zellij:about"
-    autolock location="file:~/.config/zellij/plugins/zellij-autolock.wasm" {
-        // Enabled at start?
-        is_enabled true
-        // Lock when any open these programs open.
-        triggers "nvim|helix|vim|git|fzf|zoxide|atuin"
-        // Reaction to input occurs after this many seconds. (default=0.3)
-        // (An existing scheduled reaction prevents additional reactions.)
-        reaction_seconds "1.0"
-        // Print to Zellij log? (default=false)
-        print_to_log true
-    }
 }
 
 load_plugins {
-    autolock
 }
 
 // Choose what to do when zellij receives SIGTERM, SIGINT, SIGQUIT or SIGHUP
