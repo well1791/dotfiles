@@ -9,8 +9,8 @@ layout {
     tab focus=true {
         pane split_direction="vertical" {
             pane split_direction="horizontal" {
-                pane_npm size="35%" { args "run" "start"; }
-                pane_npm { args "run" "type-check"; }
+                pane size="35%"
+                pane
             }
             pane size="75%" {
                 command "helix"
@@ -23,10 +23,5 @@ layout {
     }
     tab {
         pane
-    }
-
-    pane_template name="pane_npm" {
-        command "npm"
-        start_suspended true
     }
 }
