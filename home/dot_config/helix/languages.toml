@@ -1,89 +1,26 @@
 [[language]]
+name = "toml"
+formatter = { command = "prettier" }
+auto-format = true
+
+[[language]]
+name = "yaml"
+formatter = { command = "prettier" }
+auto-format = true
+
+[[language]]
 name = "typescript"
-scope = "source.ts"
 injection-regex = "(ts|typescript)"
-language-servers = [{except-features = ["format"], name = "typescript-language-server"}, "eslint"]
-roots = [".prettierrc.ts"]
 file-types = ["ts", "mts", "cts"]
-#formatter = { command = 'prettier', args = ["--stdin-filepath", "file.ts"] }
-#indent = { tab-width = 2, unit = "\t" }
+# @see https://github.com/helix-editor/helix/discussions/8452#discussioncomment-12224231
+formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
 auto-format = true
 
 [[language]]
-language-servers = [{except-features = ["format"], name = "typescript-language-server"}, "eslint"]
-roots = [".prettierrc.js"]
 name = "javascript"
-scope = "source.js"
-injection-regex = "(js|javascript)"
-file-types = ["js", "mjs", "cjs"]
-#formatter = { command = 'prettier', args = ["--stdin-filepath", "file.js"] }
-#indent = { tab-width = 4, unit = "\t" }
-auto-format = true
-
-[[language]]
-language-servers = [{except-features = ["format"], name = "typescript-language-server"}, "eslint"]
-roots = [".prettierrc.js"]
-name = "tsx"
-scope = "source.tsx"
-injection-regex = "(tsx)" # |typescript
-file-types = ["tsx"]
-#formatter = { command = 'prettier', args = ["--stdin-filepath", "file.tsx"] }
-#indent = { tab-width = 4, unit = "\t" }
-auto-format = true
-
-# [[language]]
-# name = "html"
-# scope = "text.html.basic"
-# injection-regex = "html"
-# file-types = ["html"]
-# language-servers = ["tailwindcss-react","vscode-html-language-server"]
-# roots = ["tailwind.config.js","tailwind.config.cjs", ".prettierrc.json"]
-# auto-format = true
-# indent = { tab-width = 4, unit = "\t" }
-
-# [[language]]
-# name = "css"
-# scope = "source.css"
-# injection-regex = "css"
-# file-types = ["css"]
-# language-servers = ["tailwindcss-react", "vscode-css-language-server"]
-# roots = ["tailwind.config.js","tailwind.config.cjs", ".prettierrc.json"]
-# auto-format = true
-# indent = { tab-width = 4, unit = "\t" }
-
-# [language-server.eslint]
-# args = ["--stdio"]
-# command = "vscode-eslint-language-server"
-
-# [language-server.eslint.config]
-# format = true
-# nodePath = ""
-# onIgnoredFiles = "off"
-# quiet = false
-# rulesCustomizations = []
-# run = "onType"
-# validate = "on"
-
-# [language-server.eslint.config.codeAction]
-# [language-server.eslint.config.codeAction.disableRuleComment]
-# enable = true
-# location = "separateLine"
-
-# [language-server.eslint.config.codeAction.showDocumentation]
-# enable = true
-
-# [language-server.eslint.config.codeActionOnSave]
-# enable = true
-# mode = "all"
-
-# [language-server.eslint.config.workingDirectory]
-# mode = "location"
-
-[language-server.typescript-language-server]
-args = ["--stdio"]
-command = "typescript-language-server"
-
-[language-server.typescript-language-server.config]
-documentFormatting = false
-
-
+language-servers = [
+  "typescript-language-server",
+  "eslint-lsp",
+]  # ADD eslint-lsp to your langauge.
+# formatter = { command = 'prettier', args = ['--parser', 'babel'] }
+auto-format = false
