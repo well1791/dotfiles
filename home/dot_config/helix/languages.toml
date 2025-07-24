@@ -24,3 +24,41 @@ language-servers = [
 ]  # ADD eslint-lsp to your langauge.
 # formatter = { command = 'prettier', args = ['--parser', 'babel'] }
 auto-format = false
+
+[[language]]
+name = "ini"
+scope = "source.ini"
+file-types = [
+  "ini",
+  # Systemd unit files
+  "service",
+  "automount",
+  "device",
+  "mount",
+  "path",
+  "service",
+  "slice",
+  "socket",
+  "swap",
+  "target",
+  "timer",
+  # Podman quadlets
+  "container",
+  "volume",
+  "kube",
+  "network",
+  { glob = ".editorconfig" },
+  { glob = "rclone.conf" },
+  "properties",
+  "cfg",
+  "directory",
+  "conf",
+]
+injection-regex = "ini"
+comment-token = "#"
+indent = { tab-width = 4, unit = "\t" }
+
+[[grammar]]
+name = "ini"
+source = { git = "https://github.com/justinmk/tree-sitter-ini", rev = "87176e524f0a98f5be75fa44f4f0ff5c6eac069c" }
+
