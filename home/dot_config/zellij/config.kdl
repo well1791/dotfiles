@@ -3,14 +3,12 @@ keybinds {
     normal {
         // uncomment this and adjust key if using copy_on_select=false
         // bind "Alt c" { Copy; }
-
-        bind "Enter" {
-            // Passthru `Enter`.
-            WriteChars "\u{000D}";
-        }
     }
 
     locked {
+        bind "Ctrl g" {
+            // noop
+        }
         bind "Alt z" {
             SwitchToMode "Normal";
         }
@@ -213,6 +211,9 @@ keybinds {
     }
 
     shared_except "locked" {
+        bind "Ctrl g" {
+            // noop
+        }
         bind "Alt z" {
             SwitchToMode "Locked";
         }
