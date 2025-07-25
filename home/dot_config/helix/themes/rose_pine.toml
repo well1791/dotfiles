@@ -1,0 +1,2 @@
+inherits = "rose_pine"
+"ui.background" = { fg = "foreground" }

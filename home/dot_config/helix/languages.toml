@@ -12,9 +12,9 @@ auto-format = true
 name = "typescript"
 injection-regex = "(ts|typescript)"
 file-types = ["ts", "mts", "cts"]
+auto-format = true
 # @see https://github.com/helix-editor/helix/discussions/8452#discussioncomment-12224231
 formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
-auto-format = true
 
 [[language]]
 name = "javascript"

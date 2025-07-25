@@ -59,7 +59,7 @@ C-u = ["half_page_up", "align_view_center"]
 C-d = ["half_page_down", "align_view_center"]
 K = "hover"
 "{" = ["goto_prev_paragraph", "collapse_selection"]
-"}" = ["goto_next_paragraph", "collapse_selection"]
+"}" = ["goto_next_paragraph", "move_visual_line_down", "collapse_selection"]
 C-e = [
   ":sh rm -f /tmp/helix-yazi-tmp-file",
   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-tmp-file",
@@ -69,7 +69,8 @@ C-e = [
 ]
 
 [keys.normal.space.k]
-r = [":w", ":config-reload"]
+r = [":w", ":config-reload", ":redraw"]
+x = [":w", ":config-reload", ":redraw", ":bc"]
 o = ":config-open"
 l = ":o ~/.config/helix/languages.toml"
 
@@ -85,6 +86,8 @@ s = [
 ]
 
 [keys.normal.z]
+w = ["half_page_up", "align_view_center"]
+s = ["half_page_down", "align_view_center"]
 # |-- NAVIGATION
 # j = "left"
 # l = "right"
@@ -96,3 +99,5 @@ F = "file_picker_in_current_buffer_directory"
 
 [keys.select]
 g = { "e" = "extend_to_file_end" }
+"{" = ["goto_prev_paragraph"]
+"}" = ["goto_next_paragraph", "move_visual_line_down"]
