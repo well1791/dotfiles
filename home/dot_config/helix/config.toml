@@ -53,12 +53,20 @@ mode.select = "S"
 # i = ["move_visual_line_up"]
 # k = ["move_visual_line_down"]
 # |-- OTHERS
+G = "goto_file_end"
 esc = ["collapse_selection", "keep_primary_selection"]
 C-u = ["half_page_up", "align_view_center"]
 C-d = ["half_page_down", "align_view_center"]
 K = "hover"
 "{" = ["goto_prev_paragraph", "collapse_selection"]
 "}" = ["goto_next_paragraph", "collapse_selection"]
+C-e = [
+  ":sh rm -f /tmp/helix-yazi-tmp-file",
+  ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-tmp-file",
+  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ":open %sh{cat /tmp/helix-yazi-tmp-file}",
+  ":redraw",
+]
 
 [keys.normal.space.k]
 r = [":w", ":config-reload"]
@@ -88,4 +96,3 @@ F = "file_picker_in_current_buffer_directory"
 
 [keys.select]
 g = { "e" = "extend_to_file_end" }
-
