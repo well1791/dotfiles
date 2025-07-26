@@ -1,18 +1,16 @@
-# custom
-abbr -a -- cmd command
+# |-- CHEZMOI
 abbr -a -- m chezmoi
 
-# editor
-abbr -a -- ee zellij edit -d down
-# ls
-abbr -a -- ls eza
+# |-- EZA
 abbr -a -- l 'eza --all --long'
 abbr -a -- ll 'eza --all --long --tree --level=2'
 
-# cat
+# |-- BAT
 abbr -a -- cat 'bat -p'
 
-# zellij
-abbr -a -- j zellij --layout main
-abbr -a -- jj zellij
+# |-- ZELLIJ
+abbr -a -- j zellij
 abbr -a -- ja zellij attach
+
+# |-- OTHERS
+abbr -a -- cmd command
