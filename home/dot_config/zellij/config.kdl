@@ -55,10 +55,10 @@ keybinds clear-defaults=true {
         bind "Ctrl h" { SwitchToMode "Normal"; }
 
         // |-- MOVE
-        bind "j" "Left" { MovePane "Left"; }
-        bind "k" "Down" { MovePane "Down"; }
-        bind "i" "Up" { MovePane "Up"; }
-        bind "l" "Right" { MovePane "Right"; }
+        bind "j" { MovePane "Left"; }
+        bind "l" { MovePane "Right"; }
+        bind "i" { MovePane "Up"; }
+        bind "k" { MovePane "Down"; }
     }
 
     tab {
@@ -218,7 +218,7 @@ keybinds clear-defaults=true {
         bind "Alt d" { NewPane "Down"; }
         bind "Alt t" { NewTab; SwitchToMode "Normal"; }
 
-        // |-- NEW
+        // |-- TOGGLES
         bind "Alt f" { ToggleFloatingPanes; }
         
         // bind "Alt p" { TogglePaneInGroup; } // ERROR?
@@ -537,7 +537,6 @@ default_layout "compact"
 // Note: be sure to escape backslashes and similar characters properly
 //
 // post_command_discovery_hook "echo $RESURRECT_COMMAND | sed <your_regex_here>"
-
 
 web_client {
     font "monospace"
