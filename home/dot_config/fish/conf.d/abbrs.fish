@@ -1,7 +1,7 @@
 # |-- CHEZMOI
 abbr -a -- m chezmoi
 abbr -a -- mc chezmoi cd
-abbr -a -- me chezmoi edit --apply ~/.config/
+abbr -a me --set-cursor 'chezmoi edit --apply ~/.config/%'
 abbr -a -- mj chezmoi edit --apply ~/.config/zellij/config.kdl
 abbr -a -- mh chezmoi edit --apply ~/.config/helix/config.toml
 
