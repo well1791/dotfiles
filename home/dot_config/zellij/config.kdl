@@ -489,7 +489,6 @@ default_layout "compact"
 //
 // web_server_ip "127.0.0.1"
 
-
 // A path to a certificate file to be used when setting up the web client to serve the
 // connection over HTTPs
 //
