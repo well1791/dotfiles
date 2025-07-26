@@ -12,5 +12,9 @@ abbr -a -- cat 'bat -p'
 abbr -a -- j zellij
 abbr -a -- ja zellij attach
 
+# |-- EDIT CONFIGS
+abbr -a -- kz chezmoi edit --apply ~/.config/zellij/config.kdl
+abbr -a -- kh chezmoi edit --apply ~/.config/helix/config.toml
+
 # |-- OTHERS
 abbr -a -- cmd command
