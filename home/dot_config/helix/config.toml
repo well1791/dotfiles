@@ -99,15 +99,32 @@ s = ["half_page_down", "align_view_center"]
 F = "file_picker_in_current_buffer_directory"
 
 [keys.normal.space.k]
-o = ":config-open"
-l = ":o ~/.config/helix/languages.toml"
-r = [":config-reload", ":redraw"]
-w = [":w", ":config-reload", ":redraw"]
-c = [":w", ":config-reload", ":redraw", ":bc"]
-x = [":w", ":config-reload", ":redraw", ":x"]
+r = ":reload-all"
+k = ":config-reload"
+w = [":w", ":run-shell-command chezmoi apply", ":config-reload", ":redraw"]
+c = [
+  ":w",
+  ":run-shell-command chezmoi apply",
+  ":config-reload",
+  ":redraw",
+  ":bc",
+]
+x = [
+  ":w",
+  ":run-shell-command chezmoi apply",
+  ":config-reload",
+  ":redraw",
+  ":x",
+]
 
 [keys.select]
 g = { "e" = "extend_to_file_end" }
 "{" = "goto_prev_paragraph"
 "}" = "goto_next_paragraph"
 
+# [keys.normal.backspace]
+# b = ":run-shell-command zellij run -f -- just build"
+# r = ":run-shell-command zellij run -f -- just run"
+# t = ":run-shell-command zellij run -f -- just test"
+# g = ":run-shell-command zellij run -fc -- lazygit"
+# f = ":run-shell-command zellij run -fc -- broot"
