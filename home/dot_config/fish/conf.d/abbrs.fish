@@ -2,9 +2,9 @@
 abbr -a -- m chezmoi
 abbr -a -- ms chezmoi status
 abbr -a -- mc chezmoi cd
-abbr -a me --set-cursor 'chezmoi edit --apply ~/.config/%'
-abbr -a -- mj chezmoi edit --apply ~/.config/zellij/config.kdl
-abbr -a -- mh chezmoi edit --apply ~/.config/helix/config.toml
+abbr -a me --set-cursor 'chezmoi edit ~/.config/%'
+abbr -a -- mj chezmoi edit ~/.config/zellij/config.kdl
+abbr -a -- mh chezmoi edit ~/.config/helix/config.toml
 
 # |-- EZA
 abbr -a -- l 'eza --all --long'
