@@ -103,7 +103,8 @@ o = ":config-open"
 l = ":o ~/.config/helix/languages.toml"
 r = [":config-reload", ":redraw"]
 w = [":w", ":config-reload", ":redraw"]
-x = [":w", ":config-reload", ":redraw", ":bc"]
+c = [":w", ":config-reload", ":redraw", ":bc"]
+x = [":w", ":config-reload", ":redraw", ":x"]
 
 [keys.select]
 g = { "e" = "extend_to_file_end" }
