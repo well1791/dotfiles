@@ -1,5 +1,6 @@
 # |-- CHEZMOI
 abbr -a -- m chezmoi
+abbr -a -- ms chezmoi status
 abbr -a -- mc chezmoi cd
 abbr -a me --set-cursor 'chezmoi edit --apply ~/.config/%'
 abbr -a -- mj chezmoi edit --apply ~/.config/zellij/config.kdl
