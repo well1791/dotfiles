@@ -81,12 +81,12 @@ keybinds clear-defaults=true {
         bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // |-- NAV
-        bind "k" "s" { ScrollDown; }
         bind "i" "w" { ScrollUp; }
+        bind "k" "s" { ScrollDown; }
+        bind "e" "u" { HalfPageScrollUp; }
         bind "d" { HalfPageScrollDown; }
-        bind "e" { HalfPageScrollUp; }
-        bind "l" { PageScrollDown; }
         bind "j" { PageScrollUp; }
+        bind "l" { PageScrollDown; }
 
         // |-- OTHERS
         bind "f" { SwitchToMode "EnterSearch"; SearchInput 0; }
@@ -102,10 +102,10 @@ keybinds clear-defaults=true {
         // |-- NAV
         bind "k" "s" { ScrollDown; }
         bind "i" "w" { ScrollUp; }
+        bind "e" "u" { HalfPageScrollUp; }
         bind "d" { HalfPageScrollDown; }
-        bind "e" { HalfPageScrollUp; }
-        bind "l" { PageScrollDown; }
         bind "j" { PageScrollUp; }
+        bind "l" { PageScrollDown; }
 
         // |-- SEARCH NAV
         bind "n" { Search "down"; }
@@ -113,8 +113,8 @@ keybinds clear-defaults=true {
 
         // |-- FILTERS
         bind "c" { SearchToggleOption "CaseSensitivity"; }
-        bind "a" { SearchToggleOption "Wrap"; }
         bind "o" { SearchToggleOption "WholeWord"; }
+        bind "a" { SearchToggleOption "Wrap"; }
     }
 
     entersearch {
@@ -171,12 +171,6 @@ keybinds clear-defaults=true {
             };
             SwitchToMode "Normal"
         }
-        bind "o" {
-            Run "helix" "~/.config/zellij/config.kdl" {
-                // cwd "~/.config/zellij" // not working (?)
-                direction "Down"
-            }
-        }
     }
 
     shared {
@@ -202,7 +196,6 @@ keybinds clear-defaults=true {
         bind "Alt 7" { GoToTab 7; SwitchToMode "Normal"; }
         bind "Alt 8" { GoToTab 8; SwitchToMode "Normal"; }
         bind "Alt 9" { GoToTab 9; SwitchToMode "Normal"; }
-        
 
         // |-- MOVE
         bind "Alt J" { MovePane "Left"; }
@@ -220,9 +213,13 @@ keybinds clear-defaults=true {
         bind "Alt [" { PreviousSwapLayout; }
         bind "Alt ]" { NextSwapLayout; }
 
-        // |-- OTHERS
+        // |-- NEW
+        bind "Alt r" { NewPane "Right"; }
+        bind "Alt d" { NewPane "Down"; }
+        bind "Alt t" { NewTab; SwitchToMode "Normal"; }
+
+        // |-- NEW
         bind "Alt f" { ToggleFloatingPanes; }
-        bind "Alt n" { NewPane "Down"; }
         
         // bind "Alt p" { TogglePaneInGroup; } // ERROR?
         // bind "Alt Shift p" { ToggleGroupMarking; } // ERROR?
