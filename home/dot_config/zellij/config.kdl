@@ -257,7 +257,7 @@ plugins {
         welcome_screen false
     }
     filepicker location="zellij:strider" {
-        cwd "$HOME/"
+        cwd "/"
     }
     configuration location="zellij:configuration"
     plugin-manager location="zellij:plugin-manager"
