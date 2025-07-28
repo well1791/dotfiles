@@ -97,24 +97,26 @@ s = ["half_page_down", "align_view_center"]
 
 [keys.normal.space]
 F = "file_picker_in_current_buffer_directory"
+c = ":write-all"
+C = ":noop"
+A-c = ":noop"
 
+# |-- CONFIGS
 [keys.normal.space.k]
 r = ":reload-all"
 k = ":config-reload"
-w = [":w", ":run-shell-command chezmoi apply", ":config-reload", ":redraw"]
+w = [
+  ":w",
+  ":sh chezmoi apply -k --force",
+  ":config-reload",
+  ":redraw",
+]
 c = [
   ":w",
-  ":run-shell-command chezmoi apply",
+  ":sh chezmoi apply -k --force",
   ":config-reload",
-  ":redraw",
   ":bc",
-]
-x = [
-  ":w",
-  ":run-shell-command chezmoi apply",
-  ":config-reload",
   ":redraw",
-  ":x",
 ]
 
 [keys.select]
