@@ -106,7 +106,7 @@ A-c = ":noop"
 e = "rename_symbol"
 w = ":write-all"
 x = ":x"
-c = ":bc"
+c = ":write-buffer-close"
 
 # |-- CHEZMOI
 [keys.normal.space.m]
