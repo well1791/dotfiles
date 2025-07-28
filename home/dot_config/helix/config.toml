@@ -104,7 +104,7 @@ A-c = ":noop"
 
 [keys.normal.space.k]
 e = "rename_symbol"
-w = ":w"
+w = ":write-all"
 x = ":x"
 c = ":bc"
 
