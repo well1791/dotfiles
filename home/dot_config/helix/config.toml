@@ -104,6 +104,9 @@ A-c = ":noop"
 
 [keys.normal.space.k]
 e = "rename_symbol"
+w = ":w"
+x = ":x"
+c = ":bc"
 o = ":sh chezmoi edit ~/.config/helix/config.toml"
 
 # |-- CHEZMOI
@@ -128,4 +131,4 @@ g = { "e" = "extend_to_file_end" }
 "}" = "goto_next_paragraph"
 
 # [keys.normal.backspace]
-# b = ":run-shell-command zellij run -f -- just build"
+# b = ":run-shell-command zellij run -f -- echo updated"
