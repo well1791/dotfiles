@@ -107,7 +107,6 @@ e = "rename_symbol"
 w = ":w"
 x = ":x"
 c = ":bc"
-o = ":sh chezmoi edit ~/.config/helix/config.toml"
 
 # |-- CHEZMOI
 [keys.normal.space.m]
