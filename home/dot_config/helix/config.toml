@@ -96,27 +96,30 @@ w = ["half_page_up", "align_view_center"]
 s = ["half_page_down", "align_view_center"]
 
 [keys.normal.space]
+r = [":reload-all", ":config-reload", ":redraw"]
 F = "file_picker_in_current_buffer_directory"
-c = ":write-all"
+c = ":noop"
 C = ":noop"
 A-c = ":noop"
 
-# |-- CONFIGS
 [keys.normal.space.k]
-r = ":reload-all"
-k = ":config-reload"
+e = "rename_symbol"
+o = ":sh chezmoi edit ~/.config/helix/config.toml"
+
+# |-- CHEZMOI
+[keys.normal.space.m]
 w = [
   ":w",
   ":sh chezmoi apply -k --force",
-  ":config-reload",
   ":redraw",
+  ":config-reload",  # not working
 ]
 c = [
   ":w",
   ":sh chezmoi apply -k --force",
-  ":config-reload",
   ":bc",
   ":redraw",
+  ":config-reload",  # not working
 ]
 
 [keys.select]
@@ -126,7 +129,3 @@ g = { "e" = "extend_to_file_end" }
 
 # [keys.normal.backspace]
 # b = ":run-shell-command zellij run -f -- just build"
-# r = ":run-shell-command zellij run -f -- just run"
-# t = ":run-shell-command zellij run -f -- just test"
-# g = ":run-shell-command zellij run -fc -- lazygit"
-# f = ":run-shell-command zellij run -fc -- broot"
