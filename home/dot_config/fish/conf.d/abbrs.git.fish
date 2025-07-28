@@ -1,5 +1,5 @@
 # git rush
-abbr -a -- gg 'git add . && git commit -m "WIP" -an && git push --force-with-lease'
+abbr -a -- gg 'git add . && git commit -m "WIP" -an && git push --set-upstream origin (git branch --show-current) --force-with-lease'
 
 # git fetch
 abbr -a -- gf 'git fetch --all --prune'
@@ -32,9 +32,10 @@ abbr -a -- gom 'git checkout origin/main'
 
 # git commit
 abbr -a -- gc 'git commit --verbose'
-abbr -a gcm --set-cursor 'git commit --message "%" -a'
-abbr -a -- gce 'git commit --verbose --amend -a'
-abbr -a -- gcf 'git commit --amend --reuse-message HEAD -a'
+abbr -a gcm --set-cursor 'git commit --message "%"'
+abbr -a gcma --set-cursor 'git commit -a --message "%"'
+abbr -a -- gce 'git commit --verbose --amend'
+abbr -a -- gcf 'git commit --amend --reuse-message HEAD'
 
 # git merge
 abbr -a -- gm 'git merge'
