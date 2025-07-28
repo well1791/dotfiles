@@ -216,7 +216,7 @@ keybinds clear-defaults=true {
         // |-- NEW
         bind "Alt r" { NewPane "Right"; }
         bind "Alt d" { NewPane "Down"; }
-        bind "Alt t" { NewTab; SwitchToMode "Normal"; }
+        bind "Alt n" { NewTab; SwitchToMode "Normal"; }
 
         // |-- TOGGLES
         bind "Alt f" { ToggleFloatingPanes; }
