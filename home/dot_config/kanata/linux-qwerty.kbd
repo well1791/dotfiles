@@ -70,7 +70,7 @@
   os_me    (one-shot-press $ot (layer-while-held U_ME))
 
   ;; GOTO
-  u_base   (layer-switch U_BASE)
+  u_al     (layer-switch U_AL)
   u_nl     (layer-switch U_NL)
   u_nr     (layer-switch U_NR)
  
@@ -264,37 +264,43 @@
   (_f10  _f11) f12
 )
 
-(deflayer U_BASE
+(deflayer U_AL
   @_ptl  @_rtl  @_mtl  @_itl         @_itr  @_mtr  @_rtr  @_ptr      
   @_pbl  @_rbl  @_mbl  @_ibl         @_ibr  @_mbr  @_rbr  @_pbr      
 )
 
 (deflayer U_NS
-  @_nq  @_n9  @_n8  @_n7       @_n7  @_n8  @_n9  @_nq
-  @_n0  @_n3  @_n2  @_n1       @_n1  @_n2  @_n3  @_n0
+  ;; NS = Numbers and Symbols
+  @_n0  @_n9  @_n8  @_n7       @_n7  @_n8  @_n9  @_n0
+  @_nq  @_n3  @_n2  @_n1       @_n1  @_n2  @_n3  @_nq
 )
 
 (deflayer U_FF
+  ;; FF = Functional keys
   @_f10  @_f9  @_f8  @_f7        @_f7  @_f9  @_f8  @_f10
   @_f11  @_f2  @_f3  @_f1        @_f1  @_f2  @_f3  @_f11
 )
 
 (deflayer U_NR
-  @u_nl  lmet  tab  @pgup            tab   up    bspc  @u_base
+  ;; NR = Navigation Right
+  @u_nl  lmet  tab  @pgup            tab   up    bspc  @u_al
       _  lctl  esc  @pgdn            left  down  rght  enter
 )
 
 (deflayer U_NL
-  @u_base  bspc  up    tab          @pgup  tab  lmet  @u_nr
-    enter  left  down  rght         @pgdn  esc  lctl  _
+  ;; NL = Navigation Left
+  @u_al  bspc  up    tab          @pgup  tab  lmet  @u_nr
+  enter  left  down  rght         @pgdn  esc  lctl  _
 )
 
 (deflayer U_GO
+  ;; GO = easy "go to" navigation
   @_C_A_q  @_A_9    @_prevTab  _                   _  @_prevTab    @_A_9  @_C_A_q
         _  @_C_tab  @_nextTab  @_C_w           @_C_w  @_nextTab  @_C_tab        _
 )
 
 (deflayer U_ME
+  ;; ME = Media
   _  prev  volu    mute        mute  volu    prev  _
   _  next  voldwn  pp          pp    voldwn  next  _
 )
