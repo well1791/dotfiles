@@ -124,18 +124,30 @@
   _n9   (chord CH_NS _n9)
 
   ;; CHORDS FF
-  ;;_f1   (chord CH_FF _f1)
-  ;;_f2   (chord CH_FF _f2)
-  ;;_f3   (chord CH_FF _f3)
-  ;;_f7   (chord CH_FF _f7)
-  ;;_f8   (chord CH_FF _f8)
-  ;;_f9   (chord CH_FF _f9)
-  ;;_f10  (chord CH_FF _f10)
-  ;;_f11  (chord CH_FF _f11)
+  _f1   (chord CH_FF _f1)
+  _f2   (chord CH_FF _f2)
+  _f3   (chord CH_FF _f3)
+  _f7   (chord CH_FF _f7)
+  _f8   (chord CH_FF _f8)
+  _f9   (chord CH_FF _f9)
+  _f10  (chord CH_FF _f10)
+  _f11  (chord CH_FF _f11)
 
   ;; ACTIONS
   pgup   (tap-hold $tt $ht pgup lalt)
   pgdn   (tap-hold $tt $ht pgdn lsft)
+
+  _und (macro C-z)
+  _cut (macro M-x)
+  _cpy (macro M-c)
+  _pst (macro M-v)
+
+  _prevTab (macro C-pgup)
+  _nextTab (macro C-pgdn)
+  _C_tab (macro C-tab)
+  _C_A_q (macro C-A-q)
+  _C_w (macro C-w)
+  _A_9 (macro A-9)
 )
 
 (defchords CH_BASE $ct
@@ -143,60 +155,113 @@
   (_ptl) @ptl   (_rtl) @rtl   (_mtl) @mtl   (_itl) @itl      (_itr) @itr   (_mtr) @mtr   (_rtr) @rtr   (_ptr) @ptr
   (_pbl) @pbl   (_rbl) @rbl   (_mbl) @mbl   (_ibl) @ibl      (_ibr) @ibr   (_mbr) @mbr   (_rbr) @rbr   (_pbr) @pbr 
 
-  ;;                  | | | | |     ib_mb_rb     | | | | |
-  ;;                  | |*|*|*|     ib_mb_rb     |*|*|*| |
-  (_rbl _mbl _ibl) spc                           (_ibr _mbr _rbr) spc
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  (_rbl _mbl _ibl) spc                     (_ibr _mbr _rbr) spc
 
-  ;;                  | |*|*|*|     ib_mb_rb     |*|*|*| |
-  ;;                  | | | | |     ib_mb_rb     | | | | |
-  (_rtl _mtl _itl) esc                           (_itr _mtr _rtr) esc
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (_rtl _mtl _itl) esc                     (_itr _mtr _rtr) esc
 
-  ;;                  | |*|*| |     ib_mt_rt     | |*|*| |
-  ;;                  | | | |*|     ib_mt_rt     |*| | | |
-  (_rbl _mtl _itl) @os_meh                       (_ibr _mtr _rtr) @os_meh
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | |*|     --     |*| | | |
+  (_rtl _mtl _ibl) @os_meh                 (_ibr _mtr _rtr) @os_meh
 
-  ;;                  | | |*| |     ib_mt_rb     | |*| | |
-  ;;                  | |*| |*|     ib_mt_rb     |*| |*| |
-  (_rbl _mtl _ibl) @os_ns                        (_ibr _mtr _rbr) @os_ns
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (_rbl _mtl _ibl) @os_ns                  (_ibr _mtr _rbr) @os_ns
 
-  ;;                  | | |*|*|     it_mt_rb     |*|*| | |
-  ;;                  | |*| | |     it_mt_rb     | | |*| |
-  (_rtl _mtl _ibl) enter                         (_itr _mtr _rbr) enter
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  (_rbl _mtl _itl) enter                   (_itr _mtr _rbr) enter
 
-  ;;                 | |*| | |     ib_mb_rt     | | |*| |
-  ;;                 | | |*|*|     ib_mb_rt     |*|*| | |
-  (_rbl _mbl _itl) bspc                         (_ibr _mbr _rtr) bspc
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (_rtl _mbl _ibl) bspc                   (_ibr _mbr _rtr) bspc
 
-  ;;                  | | | |*|     it_mb_rb     |*| | | |
-  ;;                  | |*|*| |     it_mb_rb     | |*|*| |
-  (_rtl _mbl _ibl) @os_ff                        (_itr _mbr _rbr) @os_ff
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (_rbl _mbl _itl) @os_ff                  (_itr _mbr _rbr) @os_ff
   
-  ;;                  | | | | |     ib_mb_rb     | | | | |
-  ;;                  |*|*|*| |     ib_mb_rb     | |*|*|*|
-  (_pbl _rbl _mbl) @os_go                        (_mbr _rbr _pbr) @os_go
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*|*|*| |     --     | |*|*|*|
+  (_pbl _rbl _mbl) @os_go                  (_mbr _rbr _pbr) @os_go
 
-  ;;                  |*|*|*| |     ib_mb_rb     | |*|*|*|
-  ;;                  | | | | |     ib_mb_rb     | | | | |
-  (_ptl _rtl _mtl) @os_me                        (_mtr _rtr _ptr) @os_me
+  ;;                  |*|*|*| |     --     | |*|*|*|
+  ;;                  | | | | |     --     | | | | |
+  (_ptl _rtl _mtl) @os_me                  (_mtr _rtr _ptr) @os_me
 )
 
 (defchords CH_NS $ct
   ;; NUMBER CHORDS
-  (_nq) @quot   (_n9) 9   (_n8) 8   (_n7) 7
-  (_n0) 0       (_n3) 3   (_n2) 2   (_n1) 1
-  ( _n1  _n7) 4
-  ( _n2  _n8) 5
-  ( _n3  _n9) 6
+  (_n0) 0   (_n9) 9   (_n8) 8   (_n7) 7
+  (_nq) '   (_n3) 3   (_n2) 2   (_n1) 1
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  | | | |*|     --     |*| | | |
+  (_n1  _n7) 4
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | | |*| |     --     | |*| | |
+  (_n2  _n8) 5
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | |*| | |     --     | | |*| |
+  (_n3  _n9) 6
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (_n1  _n2) @gt
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  (_n7  _n8) @lt
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (_n3  _n2) @rbrak
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (_n8  _n9) @lbrak
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (_n3  _n1) @rbrac
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  (_n7  _n9) @lbrac
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*| | |*|     --     |*| | |*|
+  (_nq  _n1) @rparn
+
+  ;;                  |*| | |*|     --     |*| | |*|
+  ;;                  | | | | |     --     | | | | |
+  (_n7  _n0) @lparn
 )
 
 (defchords CH_FF $ct
   ;; NUMBER CHORDS
-  ;;(_f10) f10   (_f9) f9    (_f8) f8    (_f7) f7   
-  ;;(_f11) f11   (_f2) f2    (_f3) f3    (_f1) f1   
-  ;;( _f1   _f7)  f4
-  ;;( _f2   _f8)  f5
-  ;;( _f3   _f9)  f6
-  ;;(_f10  _f11) f12
+  (_f10) f10   (_f9) f9    (_f8) f8    (_f7) f7
+  (_f11) f11   (_f2) f2    (_f3) f3    (_f1) f1
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  | | | |*|     --     |*| | | |
+  ( _f1   _f7)  f4
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | | |*| |     --     | |*| | |
+  ( _f2   _f8)  f5
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | |*| | |     --     | | |*| |
+  ( _f3   _f9)  f6
+
+  ;;                  |*| | | |     --     | | | |*|
+  ;;                  |*| | | |     --     | | | |*|
+  (_f10  _f11) f12
 )
 
 (deflayer U_BASE
@@ -210,26 +275,27 @@
 )
 
 (deflayer U_FF
-  _  _  _  _                   _  _  _  _
-  _  _  _  _                   _  _  _  _
+  @_f10  @_f9  @_f8  @_f7        @_f7  @_f9  @_f8  @_f10
+  @_f11  @_f2  @_f3  @_f1        @_f1  @_f2  @_f3  @_f11
 )
 
 (deflayer U_NR
-  @u_nl  lmet  tab  @pgup            del   up    bspc  @u_base
-      _  lctl  esc  @pgdn            left  down  rght  _
+  @u_nl  lmet  tab  @pgup            tab   up    bspc  @u_base
+      _  lctl  esc  @pgdn            left  down  rght  enter
 )
 
 (deflayer U_NL
-  @u_base  bspc  up    del          @pgup  tab  lmet  @u_nr
-        _  left  down  rght         @pgdn  esc  lctl  _
+  @u_base  bspc  up    tab          @pgup  tab  lmet  @u_nr
+    enter  left  down  rght         @pgdn  esc  lctl  _
 )
 
 (deflayer U_GO
-  _  _  _  _                   _  _  _  _
-  _  _  _  _                   _  _  _  _
+  @_C_A_q  @_A_9    @_prevTab  _                   _  @_prevTab    @_A_9  @_C_A_q
+        _  @_C_tab  @_nextTab  @_C_w           @_C_w  @_nextTab  @_C_tab        _
 )
 
 (deflayer U_ME
   _  prev  volu    mute        mute  volu    prev  _
   _  next  voldwn  pp          pp    voldwn  next  _
 )
+
