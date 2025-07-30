@@ -106,6 +106,7 @@ A-c = ":noop"
 e = "rename_symbol"
 s = ":write-all"
 x = ":x"
+q = ":q"
 c = ":write-buffer-close"
 
 # |-- CHEZMOI
