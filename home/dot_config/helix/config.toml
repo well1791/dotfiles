@@ -112,15 +112,15 @@ c = ":write-buffer-close!"
 # |-- CHEZMOI
 [keys.normal.space.m]
 w = [
-  ":w",
+  ":write-all!",
   ":sh chezmoi apply -k --force",
   ":redraw",
   ":config-reload",  # not working
 ]
 c = [
-  ":w",
+  ":write-all!",
   ":sh chezmoi apply -k --force",
-  ":bc",
+  ":write-buffer-close!",
   ":redraw",
   ":config-reload",  # not working
 ]
