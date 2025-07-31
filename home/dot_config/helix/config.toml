@@ -104,10 +104,10 @@ A-c = ":noop"
 
 [keys.normal.space.k]
 e = "rename_symbol"
-s = ":write-all"
-x = ":x"
-q = ":q"
-c = ":write-buffer-close"
+s = ":write-all!"
+x = ":write-quit-all!"
+q = ":q!"
+c = ":write-buffer-close!"
 
 # |-- CHEZMOI
 [keys.normal.space.m]
