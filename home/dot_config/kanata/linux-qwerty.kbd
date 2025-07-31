@@ -62,14 +62,14 @@
 )
 
 (defalias
-  ;; ONE SHOT
+  ;; ONE SHOT LAYER
   os_meh   (one-shot-press $ot C-S-lalt)
   os_ns    (one-shot-press $ot (layer-while-held U_NS))
   os_ff    (one-shot-press $ot (layer-while-held U_FF))
   os_go    (one-shot-press $ot (layer-while-held U_GO))
   os_me    (one-shot-press $ot (layer-while-held U_ME))
 
-  ;; GOTO
+  ;; GO TO LAYER
   u_al     (layer-switch U_AL)
   u_nl     (layer-switch U_NL)
   u_nr     (layer-switch U_NR)
@@ -117,21 +117,19 @@
   _nq   (chord CH_NS _nq)
   _n0   (chord CH_NS _n0)
   _n1   (chord CH_NS _n1)
-  _n2   (chord CH_NS _n2)
   _n3   (chord CH_NS _n3)
-  _n7   (chord CH_NS _n7)
+  _n5   (chord CH_NS _n5)
+  _n6   (chord CH_NS _n6)
   _n8   (chord CH_NS _n8)
-  _n9   (chord CH_NS _n9)
 
   ;; CHORDS FF
   _f1   (chord CH_FF _f1)
-  _f2   (chord CH_FF _f2)
   _f3   (chord CH_FF _f3)
-  _f7   (chord CH_FF _f7)
+  _f5   (chord CH_FF _f5)
+  _f6   (chord CH_FF _f6)
   _f8   (chord CH_FF _f8)
-  _f9   (chord CH_FF _f9)
   _f10  (chord CH_FF _f10)
-  _f11  (chord CH_FF _f11)
+  _f12  (chord CH_FF _f12)
 
   ;; ACTIONS
   pgup   (tap-hold $tt $ht pgup lalt)
@@ -142,8 +140,8 @@
   _cpy (macro M-c)
   _pst (macro M-v)
 
-  _prevTab (macro C-pgup)
-  _nextTab (macro C-pgdn)
+  _C_pgup (macro C-pgup)
+  _C_pgdn (macro C-pgdn)
   _C_tab (macro C-tab)
   _C_A_q (macro C-A-q)
   _C_w (macro C-w)
@@ -177,7 +175,7 @@
 
   ;;                  | |*| | |     --     | | |*| |
   ;;                  | | |*|*|     --     |*|*| | |
-  (_rtl _mbl _ibl) bspc                   (_ibr _mbr _rtr) bspc
+  (_rtl _mbl _ibl) bspc                    (_ibr _mbr _rtr) bspc
 
   ;;                  | | | |*|     --     |*| | | |
   ;;                  | |*|*| |     --     | |*|*| |
@@ -194,114 +192,84 @@
 
 (defchords CH_NS $ct
   ;; NUMBER CHORDS
-  (_n0) 0   (_n9) 9   (_n8) 8   (_n7) 7
-  (_nq) '   (_n3) 3   (_n2) 2   (_n1) 1
-
-  ;;                  | | | |*|     --     |*| | | |
-  ;;                  | | | |*|     --     |*| | | |
-  (_n1  _n7) 4
-
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | | |*| |     --     | |*| | |
-  (_n2  _n8) 5
-
-  ;;                  | |*| | |     --     | | |*| |
-  ;;                  | |*| | |     --     | | |*| |
-  (_n3  _n9) 6
+  (_n6) 6   (_n8) 8   (_n0) 0
+  (_n1) 1   (_n3) 3   (_n5) 5   (_nq) '
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | | |*|*|     --     |*|*| | |
-  (_n1  _n2) @gt
+  (_n1  _n3) 2
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (_n3  _n5) 4
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | | | | |     --     | | | | |
-  (_n7  _n8) @lt
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*|*| |     --     | |*|*| |
-  (_n3  _n2) @rbrak
+  (_n6  _n8) 7
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (_n8  _n9) @lbrak
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*| |*|     --     |*| |*| |
-  (_n3  _n1) @rbrac
-
-  ;;                  | |*| |*|     --     |*| |*| |
-  ;;                  | | | | |     --     | | | | |
-  (_n7  _n9) @lbrac
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  |*| | |*|     --     |*| | |*|
-  (_nq  _n1) @rparn
-
-  ;;                  |*| | |*|     --     |*| | |*|
-  ;;                  | | | | |     --     | | | | |
-  (_n7  _n0) @lparn
+  (_n8  _n0) 9
 )
 
 (defchords CH_FF $ct
   ;; NUMBER CHORDS
-  (_f10) f10   (_f9) f9    (_f8) f8    (_f7) f7
-  (_f11) f11   (_f2) f2    (_f3) f3    (_f1) f1
+  (_f6) f6   (_f8) f8    (_f10) f10    (_f12) f12
+  (_f1) f1   (_f3) f3    ( _f5)  f5
 
-  ;;                  | | | |*|     --     |*| | | |
-  ;;                  | | | |*|     --     |*| | | |
-  ( _f1   _f7)  f4
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (_f1   _f3)  f2
 
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | | |*| |     --     | |*| | |
-  ( _f2   _f8)  f5
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (_f3   _f5)  f4
 
-  ;;                  | |*| | |     --     | | |*| |
-  ;;                  | |*| | |     --     | | |*| |
-  ( _f3   _f9)  f6
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  (_f6   _f8)  f7
 
-  ;;                  |*| | | |     --     | | | |*|
-  ;;                  |*| | | |     --     | | | |*|
-  (_f10  _f11) f12
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (_f8  _f10)  f9
+
+  ;;                  |*|*| | |     --     | | |*|*|
+  ;;                  | | | | |     --     | | | | |
+  (_f10 _f12)  f11
 )
 
-(deflayer U_AL
-  @_ptl  @_rtl  @_mtl  @_itl         @_itr  @_mtr  @_rtr  @_ptr      
-  @_pbl  @_rbl  @_mbl  @_ibl         @_ibr  @_mbr  @_rbr  @_pbr      
+(deflayer U_AL ;; Alpha keys
+  @_ptl  @_rtl  @_mtl  @_itl               @_itr  @_mtr  @_rtr  @_ptr      
+  @_pbl  @_rbl  @_mbl  @_ibl               @_ibr  @_mbr  @_rbr  @_pbr      
 )
 
-(deflayer U_NS
-  ;; NS = Numbers and Symbols
-  @_n0  @_n9  @_n8  @_n7       @_n7  @_n8  @_n9  @_n0
-  @_nq  @_n3  @_n2  @_n1       @_n1  @_n2  @_n3  @_nq
+(deflayer U_NS ;; [N]umbers and [S]ymbols
+     _  @_n0  @_n8  @_n6                   @_n6  @_n8  @_n0     _
+  @_nq  @_n5  @_n3  @_n1                   @_n1  @_n3  @_n5  @_nq
 )
 
-(deflayer U_FF
-  ;; FF = Functional keys
-  @_f10  @_f9  @_f8  @_f7        @_f7  @_f9  @_f8  @_f10
-  @_f11  @_f2  @_f3  @_f1        @_f1  @_f2  @_f3  @_f11
+(deflayer U_FF ;; [F]unctional keys
+  @_f12  @_f10  @_f8  @_f6                   @_f6  @_f8  @_f10  @_f12
+      _   @_f5  @_f3  @_f1                   @_f1  @_f3   @_f5  _
 )
 
-(deflayer U_NR
-  ;; NR = Navigation Right
-  @u_nl  lmet  tab  @pgup            tab   up    bspc  @u_al
-      _  lctl  esc  @pgdn            left  down  rght  enter
+(deflayer U_NR ;; [N]avigation [R]ight
+  @u_nl  lmet  tab  @pgup                   tab   up    bspc  @u_al
+  @u_al  lctl  esc  @pgdn                   left  down  rght  enter
 )
 
-(deflayer U_NL
-  ;; NL = Navigation Left
-  @u_al  bspc  up    tab          @pgup  tab  lmet  @u_nr
-  enter  left  down  rght         @pgdn  esc  lctl  _
+(deflayer U_NL ;; [N]avigation [L]eft
+  @u_al  bspc  up    tab                    @pgup  tab  lmet  @u_nr
+  enter  left  down  rght                   @pgdn  esc  lctl  @u_al
 )
 
-(deflayer U_GO
-  ;; GO = easy "go to" navigation
-  @_C_A_q  @_A_9    @_prevTab  _                   _  @_prevTab    @_A_9  @_C_A_q
-        _  @_C_tab  @_nextTab  @_C_w           @_C_w  @_nextTab  @_C_tab        _
+(deflayer U_ME ;; [ME]dia
+  _  prev  volu    mute                     mute  volu    prev  _
+  _  next  voldwn  pp                       pp    voldwn  next  _
 )
 
-(deflayer U_ME
-  ;; ME = Media
-  _  prev  volu    mute        mute  volu    prev  _
-  _  next  voldwn  pp          pp    voldwn  next  _
+(deflayer U_GO ;; "[GO] to" shortcuts
+  @_C_A_q  @_A_9    @_C_pgup  _                 _  @_C_pgup    @_A_9  @_C_A_q
+        _  @_C_tab  @_C_pgdn  @_C_w         @_C_w  @_C_pgdn  @_C_tab        _
 )
 
