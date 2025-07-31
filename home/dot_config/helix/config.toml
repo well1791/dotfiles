@@ -57,13 +57,13 @@ G = "goto_file_end"
 K = "hover"
 "{" = ["goto_prev_paragraph", "collapse_selection"]
 "}" = ["goto_next_paragraph", "move_visual_line_down", "collapse_selection"]
-C-e = [
-  ":sh rm -f /tmp/helix-yazi-tmp-file",
-  ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-tmp-file",
-  ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
-  ":open %sh{cat /tmp/helix-yazi-tmp-file}",
-  ":redraw",
-]  # Open yazi
+# C-e = [
+#   ":sh rm -f /tmp/helix-yazi-tmp-file",
+#   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-tmp-file",
+#   ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+#   ":open %sh{cat /tmp/helix-yazi-tmp-file}",
+#   ":redraw",
+# ]  # Open yazi
 "A-k" = [
   "extend_to_line_bounds",
   "delete_selection",
