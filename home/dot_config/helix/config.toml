@@ -16,7 +16,7 @@ other-lines = "disable"
 
 [editor.cursor-shape]
 insert = "bar"
-normal = "hidden"
+normal = "block"
 select = "hidden"
 
 [editor.file-picker]
