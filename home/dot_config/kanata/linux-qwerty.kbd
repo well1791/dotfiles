@@ -11,7 +11,7 @@
 
 (defvar
   tap-timeout      100
-  hold-timeout     150
+  hold-timeout     250
   chord-timeout    50
   one-shot-timeout 500
 
@@ -135,11 +135,10 @@
   pgup   (tap-hold $tt $ht pgup lalt)
   pgdn   (tap-hold $tt $ht pgdn lsft)
 
-  _und (macro C-z)
-  _cut (macro M-x)
-  _cpy (macro M-c)
-  _pst (macro M-v)
-
+  _C_z (macro C-z)
+  _C_x (macro C-x)
+  _C_c (macro C-c)
+  _C_v (macro C-v)
   _C_pgup (macro C-pgup)
   _C_pgdn (macro C-pgdn)
   _C_tab (macro C-tab)
