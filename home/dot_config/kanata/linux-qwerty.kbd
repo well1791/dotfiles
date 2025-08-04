@@ -10,15 +10,12 @@
 )
 
 (defvar
-  tap-timeout      100
-  hold-timeout     250
-  chord-timeout    50
-  one-shot-timeout 500
-
-  tt   $tap-timeout
-  ht   $hold-timeout
-  ct   $chord-timeout
-  ot   $one-shot-timeout
+  tt  100 ;; tap time
+  ht  200 ;; hold time
+  ct  70  ;; chord time
+  ot  500 ;; one shot time
+  ltk (q w e r t  a s d f g) ;; left hand
+  rtk (y u i o p  h j k l ;) ;; right hand
 )
 
 (defalias
@@ -62,6 +59,11 @@
 )
 
 (defalias
+  tap (multi
+    (layer-switch nomods)
+    (on-idle-fakekey to-base tap 20)
+  )
+
   ;; ONE SHOT LAYER
   os_meh   (one-shot-press $ot C-S-lalt)
   os_ns    (one-shot-press $ot (layer-while-held U_NS))
@@ -70,26 +72,26 @@
   os_me    (one-shot-press $ot (layer-while-held U_ME))
 
   ;; GO TO LAYER
-  u_al     (layer-switch U_AL)
+  u_al     (layer-switch base)
   u_nl     (layer-switch U_NL)
   u_nr     (layer-switch U_NR)
  
   ;; QWERTY - LEFT
-  _w       (tap-hold $tt $ht w lmet)
-  _e       (tap-hold $tt $ht e (layer-while-held U_NS))
-  _r       (tap-hold $tt $ht r lalt)
-  _a       (tap-hold $tt $ht a (layer-while-held U_NR))
-  _s       (tap-hold $tt $ht s lctl)
-  _f       (tap-hold $tt $ht f lsft)
-  _d       (tap-hold $tt $ht d (layer-while-held U_FF))
+  _w       (tap-hold-release-keys $tt $ht (multi w @tap) lmet $ltk)
+  _e       (tap-hold-release-keys $tt $ht (multi e @tap) (layer-while-held U_NS) $ltk)
+  _r       (tap-hold-release-keys $tt $ht (multi r @tap) lalt $ltk)
+  _a       (tap-hold-release-keys $tt $ht (multi a @tap) (layer-while-held U_NR) $ltk)
+  _s       (tap-hold-release-keys $tt $ht (multi s @tap) lctl $ltk)
+  _f       (tap-hold-release-keys $tt $ht (multi f @tap) lsft $ltk)
+  _d       (tap-hold-release-keys $tt $ht (multi d @tap) (layer-while-held U_FF) $ltk)
   ;; QWERTY - RIGHT
-  _u       (tap-hold $tt $ht u lalt)
-  _i       (tap-hold $tt $ht i (layer-while-held U_NS))
-  _o       (tap-hold $tt $ht o lmet)
-  _j       (tap-hold $tt $ht j lsft)
-  _k       (tap-hold $tt $ht k (layer-while-held U_FF))
-  _l       (tap-hold $tt $ht l lctl)
-  _;       (tap-hold $tt $ht ; (layer-while-held U_NL))
+  _u       (tap-hold-release-keys $tt $ht (multi u @tap) lalt $rtk)
+  _i       (tap-hold-release-keys $tt $ht (multi i @tap) (layer-while-held U_NS) $rtk)
+  _o       (tap-hold-release-keys $tt $ht (multi o @tap) lmet $rtk)
+  _j       (tap-hold-release-keys $tt $ht (multi j @tap) lsft $rtk)
+  _k       (tap-hold-release-keys $tt $ht (multi k @tap) (layer-while-held U_FF) $rtk)
+  _l       (tap-hold-release-keys $tt $ht (multi l @tap) lctl $rtk)
+  _;       (tap-hold-release-keys $tt $ht (multi ; @tap) (layer-while-held U_NL) $rtk)
 
   ;; ALPHA                       |-- LEFT --|           |-- RIGHT --|
   ptl   q     rtl @_w     mtl @_e     itl @_r           itr @_u     mtr @_i     rtr @_o     ptr p
@@ -237,19 +239,19 @@
   (_f10 _f12)  f11
 )
 
-(deflayer U_AL ;; Alpha keys
-  @_ptl  @_rtl  @_mtl  @_itl               @_itr  @_mtr  @_rtr  @_ptr      
-  @_pbl  @_rbl  @_mbl  @_ibl               @_ibr  @_mbr  @_rbr  @_pbr      
+(deflayer base ;; Alpha keys
+  @_ptl  @_rtl  @_mtl  @_itl                @_itr  @_mtr  @_rtr  @_ptr      
+  @_pbl  @_rbl  @_mbl  @_ibl                @_ibr  @_mbr  @_rbr  @_pbr      
 )
 
 (deflayer U_NS ;; [N]umbers and [S]ymbols
-     _  @_n0  @_n8  @_n6                   @_n6  @_n8  @_n0     _
-  @_nq  @_n5  @_n3  @_n1                   @_n1  @_n3  @_n5  @_nq
+     _  @_n0  @_n8  @_n6                    @_n6  @_n8  @_n0     _
+  @_nq  @_n5  @_n3  @_n1                    @_n1  @_n3  @_n5  @_nq
 )
 
 (deflayer U_FF ;; [F]unctional keys
-  @_f12  @_f10  @_f8  @_f6                   @_f6  @_f8  @_f10  @_f12
-      _   @_f5  @_f3  @_f1                   @_f1  @_f3   @_f5  _
+  @_f12  @_f10  @_f8  @_f6                  @_f6  @_f8  @_f10  @_f12
+      _   @_f5  @_f3  @_f1                  @_f1  @_f3   @_f5  _
 )
 
 (deflayer U_NR ;; [N]avigation [R]ight
@@ -272,3 +274,11 @@
         _  @_C_tab  @_C_pgdn  @_C_w         @_C_w  @_C_pgdn  @_C_tab        _
 )
 
+(deffakekeys
+  to-base (layer-switch base)
+)
+
+(deflayer nomods
+  q  w  e  r      u  i  o  p 
+   a  s  d  f      j  k  l  ;
+)
