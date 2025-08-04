@@ -53,23 +53,62 @@ i = "move_visual_line_up"
 k = "move_visual_line_down"
 # |-- OTHERS
 esc = ["collapse_selection", "keep_primary_selection"]
-"{" = ["goto_prev_paragraph", "collapse_selection"]
-"}" = ["goto_next_paragraph", "move_visual_line_down", "collapse_selection"]
-# C-e = [
-#   ":sh rm -f /tmp/helix-yazi-tmp-file",
-#   ":insert-output yazi %{buffer_name} --chooser-file=/tmp/helix-yazi-tmp-file",
-#   ':insert-output echo "\x1b[?1049h\x1b[?2004h" > /dev/tty',
-#   ":open %sh{cat /tmp/helix-yazi-tmp-file}",
-#   ":redraw",
-# ]  # Open yazi
-"A-k" = [
+"{" = [
+  "move_next_word_start",
+  "select_mode",
+  "insert_at_line_end",
+  "move_line_up",
+  "goto_prev_paragraph",
+  "normal_mode",
+  "goto_next_paragraph",
+  "goto_prev_paragraph",
+  "trim_selections",
+  "collapse_selection",
+]  # go to prev paragraph start
+"A-{" = [
+  "move_next_word_start",
+  "select_mode",
+  "insert_at_line_end",
+  "move_line_up",
+  "goto_prev_paragraph",
+  "normal_mode",
+  "goto_next_paragraph",
+  "goto_prev_paragraph",
+  "trim_selections",
+  "collapse_selection",
+]  # go to prev paragraph end
+"}" = [
+  "move_next_word_end",
+  "select_mode",
+  "insert_at_line_start",
+  "move_line_down",
+  "goto_next_paragraph",
+  "normal_mode",
+  "goto_prev_paragraph",
+  "goto_next_paragraph",
+  "trim_selections",
+  "collapse_selection",
+]  # go to next paragraph end
+"A-}" = [
+  "move_next_word_end",
+  "select_mode",
+  "insert_at_line_start",
+  "move_line_down",
+  "goto_next_paragraph",
+  "normal_mode",
+  "goto_prev_paragraph",
+  "goto_next_paragraph",
+  "trim_selections",
+  "collapse_selection",
+]  # go to next paragraph start
+"A-i" = [
   "extend_to_line_bounds",
   "delete_selection",
   "move_line_up",
   "paste_before",
   "flip_selections",
 ]  # Move line(s) up
-"A-j" = [
+"A-k" = [
   "extend_to_line_bounds",
   "delete_selection",
   "paste_after",
@@ -77,6 +116,8 @@ esc = ["collapse_selection", "keep_primary_selection"]
   "goto_line_start",
   "normal_mode",
 ]  # Move line(s) down
+a = "select_regex"
+s = "delete_selection"
 
 [keys.normal.g]
 i = "goto_file_start"
@@ -99,9 +140,14 @@ r = ":noop"
 #   "goto_first_nonwhitespace",
 #   "exit_select_mode",
 # ]
-#
 
-[keys.normal.a]
+[keys.normal.d]
+l = "find_till_char"
+j = "till_prev_char"
+u = "find_prev_char"
+o = "find_next_char"
+
+[keys.normal.f]
 l = "append_mode"
 j = "insert_mode"
 i = "open_above"
@@ -109,7 +155,7 @@ k = "open_below"
 o = "change_selection"
 O = "change_selection_noyank"
 
-[keys.normal.A]
+[keys.normal.F]
 l = "insert_at_line_end"
 j = "insert_at_line_start"
 
