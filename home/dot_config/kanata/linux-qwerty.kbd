@@ -10,8 +10,8 @@
 )
 
 (defvar
-  tt  200 ;; tap time ;; prev was 150
-  ht  150 ;; hold time ;; prev was 200
+  tt  100 ;; tap time
+  ht  150 ;; hold time
   ct  70  ;; chord time
   ot  500 ;; one shot time
   ltk (q w e r t  a s d f g) ;; left hand
