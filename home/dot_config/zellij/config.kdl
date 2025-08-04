@@ -202,8 +202,8 @@ keybinds clear-defaults=true {
         bind "Alt L" { MovePane "Right"; }
         bind "Alt I" { MovePane "Up"; }
         bind "Alt K" { MovePane "Down"; }
-        bind "Alt u" { MoveTab "Left"; }
-        bind "Alt o" { MoveTab "Right"; }
+        bind "Alt O" { MoveTab "Left"; }
+        bind "Alt U" { MoveTab "Right"; }
 
         // |-- RESIZE
         bind "Alt =" "Alt +" { Resize "Increase"; }
@@ -215,7 +215,7 @@ keybinds clear-defaults=true {
         bind "Alt n" { NewTab; SwitchToMode "Normal"; }
 
         // |-- SESSION
-        bind "Alt p" {
+        bind "Alt o" {
             LaunchOrFocusPlugin "session-manager" {
                 floating true
                 move_to_focused_tab true
@@ -252,7 +252,7 @@ keybinds clear-defaults=true {
         bind "Ctrl t" { SwitchToMode "Tab"; }
     }
     shared_except "move" "locked" {
-        bind "Ctrl h" { SwitchToMode "Move"; }
+        bind "Ctrl m" { SwitchToMode "Move"; }
     }
 }
 
