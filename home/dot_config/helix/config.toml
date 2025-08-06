@@ -117,7 +117,7 @@ esc = ["collapse_selection", "keep_primary_selection"]
   "normal_mode",
 ]  # Move line(s) down
 "," = "undo"
-"." = "redo"
+"<" = "redo"
 
 [keys.normal.g]
 i = "goto_file_start"
@@ -216,14 +216,16 @@ c = [
 
 [keys.select]
 I = ":noop"
-"{" = "goto_prev_paragraph"
-"}" = "goto_next_paragraph"
-# Navigation
 h = ":noop"
 i = "extend_visual_line_up"
 k = "extend_visual_line_down"
 j = "extend_prev_word_start"
 l = "extend_next_word_end"
+u = "goto_prev_paragraph"
+o = "goto_next_paragraph"
+c = ":noop"
+C = ":noop"
+A-c = ":noop"
 
 [keys.select.g]
 h = ":noop"
@@ -231,3 +233,17 @@ i = "extend_to_file_start"
 k = "extend_to_file_end"
 j = "extend_to_first_nonwhitespace"
 l = "extend_to_line_end"
+
+[keys.select.a]
+l = "append_mode"
+j = "insert_mode"
+i = "open_above"
+k = "open_below"
+o = "change_selection"
+O = "change_selection_noyank"
+
+[keys.select.f]
+l = "find_till_char"
+j = "till_prev_char"
+u = "find_prev_char"
+o = "find_next_char"
