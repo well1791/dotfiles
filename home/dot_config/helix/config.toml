@@ -51,33 +51,12 @@ j = ["move_prev_word_start", "trim_selections"]
 l = ["move_next_word_end", "trim_selections"]
 i = "move_visual_line_up"
 k = "move_visual_line_down"
-# |-- OTHERS
 esc = ["collapse_selection", "keep_primary_selection"]
-"u" = [
-  "move_next_word_start",
-  "select_mode",
-  "insert_at_line_end",
-  "move_line_up",
+u = [
   "goto_prev_paragraph",
-  "normal_mode",
-  "goto_next_paragraph",
-  "goto_prev_paragraph",
-  "trim_selections",
-  "collapse_selection",
-]  # go to prev paragraph start
-"U" = [
-  "move_next_word_start",
-  "select_mode",
-  "insert_at_line_end",
-  "move_line_up",
-  "goto_prev_paragraph",
-  "normal_mode",
-  "goto_next_paragraph",
-  "goto_prev_paragraph",
-  "trim_selections",
-  "collapse_selection",
-]  # go to prev paragraph end
-"o" = [
+  "goto_first_nonwhitespace",
+]
+o = [
   "move_next_word_end",
   "select_mode",
   "insert_at_line_start",
@@ -88,19 +67,7 @@ esc = ["collapse_selection", "keep_primary_selection"]
   "goto_next_paragraph",
   "trim_selections",
   "collapse_selection",
-]  # go to next paragraph end
-"O" = [
-  "move_next_word_end",
-  "select_mode",
-  "insert_at_line_start",
-  "move_line_down",
-  "goto_next_paragraph",
-  "normal_mode",
-  "goto_prev_paragraph",
-  "goto_next_paragraph",
-  "trim_selections",
-  "collapse_selection",
-]  # go to next paragraph start
+]
 "A-i" = [
   "extend_to_line_bounds",
   "delete_selection",
@@ -118,6 +85,18 @@ esc = ["collapse_selection", "keep_primary_selection"]
 ]  # Move line(s) down
 "," = "undo"
 "<" = "redo"
+
+[keys.select]
+I = ":noop"
+h = ":noop"
+i = "extend_visual_line_up"
+k = "extend_visual_line_down"
+j = "extend_prev_word_start"
+l = "extend_next_word_end"
+u = "goto_prev_paragraph"
+o = "goto_next_paragraph"
+C = ":noop"
+A-c = ":noop"
 
 [keys.normal.g]
 i = "goto_file_start"
@@ -141,7 +120,20 @@ r = ":noop"
 #   "exit_select_mode",
 # ]
 
+[keys.select.g]
+h = ":noop"
+i = "extend_to_file_start"
+k = "extend_to_file_end"
+j = "extend_to_first_nonwhitespace"
+l = "extend_to_line_end"
+
 [keys.normal.f]
+l = "find_till_char"
+j = "till_prev_char"
+u = "find_prev_char"
+o = "find_next_char"
+
+[keys.select.f]
 l = "find_till_char"
 j = "till_prev_char"
 u = "find_prev_char"
@@ -155,11 +147,33 @@ k = "open_below"
 o = "change_selection"
 O = "change_selection_noyank"
 
+[keys.select.a]
+l = "append_mode"
+j = "insert_mode"
+i = "open_above"
+k = "open_below"
+o = "change_selection"
+O = "change_selection_noyank"
+
 [keys.normal.A]
 l = "insert_at_line_end"
 j = "insert_at_line_start"
 
+[keys.select.A]
+l = "insert_at_line_end"
+j = "insert_at_line_start"
+
 [keys.normal.b]
+r = [":reload-all", ":redraw"]
+s = ":write-all!"
+w = ":write-all!"
+b = "buffer_picker"
+j = "goto_previous_buffer"
+l = "goto_next_buffer"
+c = ":write-buffer-close!"
+C = ":buffer-close-others"
+
+[keys.select.b]
 r = [":reload-all", ":redraw"]
 s = ":write-all!"
 w = ":write-all!"
@@ -181,11 +195,30 @@ d = "goto_definition"
 y = "goto_type_definition"
 r = "goto_reference"
 
+[keys.select.c]
+a = "code_action"
+k = "hover"
+c = "toggle_comments"
+e = "rename_symbol"
+x = ":write-quit-all!"
+q = ":q!"
+f = "goto_file"
+d = "goto_definition"
+y = "goto_type_definition"
+r = "goto_reference"
+
 [keys.normal.z]
 w = ["half_page_up", "align_view_center"]
 s = ["half_page_down", "align_view_center"]
 
 [keys.normal.space]
+r = [":config-reload", ":redraw"]
+F = "file_picker_in_current_buffer_directory"
+c = ":noop"
+C = ":noop"
+A-c = ":noop"
+
+[keys.select.space]
 r = [":config-reload", ":redraw"]
 F = "file_picker_in_current_buffer_directory"
 c = ":noop"
@@ -213,37 +246,3 @@ c = [
   ":redraw",
   ":config-reload",  # not working
 ]
-
-[keys.select]
-I = ":noop"
-h = ":noop"
-i = "extend_visual_line_up"
-k = "extend_visual_line_down"
-j = "extend_prev_word_start"
-l = "extend_next_word_end"
-u = "goto_prev_paragraph"
-o = "goto_next_paragraph"
-c = ":noop"
-C = ":noop"
-A-c = ":noop"
-
-[keys.select.g]
-h = ":noop"
-i = "extend_to_file_start"
-k = "extend_to_file_end"
-j = "extend_to_first_nonwhitespace"
-l = "extend_to_line_end"
-
-[keys.select.a]
-l = "append_mode"
-j = "insert_mode"
-i = "open_above"
-k = "open_below"
-o = "change_selection"
-O = "change_selection_noyank"
-
-[keys.select.f]
-l = "find_till_char"
-j = "till_prev_char"
-u = "find_prev_char"
-o = "find_next_char"
