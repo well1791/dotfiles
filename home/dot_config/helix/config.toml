@@ -46,17 +46,34 @@ mode.insert = "I"
 mode.select = "S"
 
 [keys.normal]
-h = ":noop"
+esc = ["collapse_selection", "keep_primary_selection"]
 j = ["move_prev_word_start", "trim_selections"]
 l = ["move_next_word_end", "trim_selections"]
 i = "move_visual_line_up"
 k = "move_visual_line_down"
-esc = ["collapse_selection", "keep_primary_selection"]
+h = "undo"
+H = "redo"
 u = [
   "goto_prev_paragraph",
   "goto_first_nonwhitespace",
 ]
+U = [
+  "goto_prev_paragraph",
+  "goto_first_nonwhitespace",
+]
 o = [
+  "move_next_word_end",
+  "select_mode",
+  "insert_at_line_start",
+  "move_line_down",
+  "goto_next_paragraph",
+  "normal_mode",
+  "goto_prev_paragraph",
+  "goto_next_paragraph",
+  "trim_selections",
+  "collapse_selection",
+]
+O = [
   "move_next_word_end",
   "select_mode",
   "insert_at_line_start",
@@ -83,16 +100,15 @@ o = [
   "goto_line_start",
   "normal_mode",
 ]  # Move line(s) down
-"," = "undo"
-"<" = "redo"
 
 [keys.select]
-I = ":noop"
-h = ":noop"
-i = "extend_visual_line_up"
-k = "extend_visual_line_down"
+# esc = ["collapse_selection", "keep_primary_selection"]
 j = "extend_prev_word_start"
 l = "extend_next_word_end"
+i = "extend_visual_line_up"
+k = "extend_visual_line_down"
+h = "undo"
+H = "redo"
 u = "goto_prev_paragraph"
 o = "goto_next_paragraph"
 C = ":noop"
@@ -103,29 +119,23 @@ i = "goto_file_start"
 k = "goto_file_end"
 j = "goto_first_nonwhitespace"
 l = "goto_line_end"
-a = ":noop"
-g = ":noop"
-f = ":noop"
+h = ":noop"
 n = ":noop"
 p = ":noop"
-s = ":noop"
+g = ":noop"
+f = ":noop"
 d = ":noop"
 y = ":noop"
 r = ":noop"
-# |-- @see https://github.com/helix-editor/helix/issues/1630#issuecomment-1511995639
-# s = [
-#   "collapse_selection",
-#   "select_mode",
-#   "goto_first_nonwhitespace",
-#   "exit_select_mode",
-# ]
 
 [keys.select.g]
-h = ":noop"
 i = "extend_to_file_start"
 k = "extend_to_file_end"
 j = "extend_to_first_nonwhitespace"
 l = "extend_to_line_end"
+h = ":noop"
+n = ":noop"
+p = ":noop"
 
 [keys.normal.f]
 l = "find_till_char"
@@ -170,8 +180,9 @@ w = ":write-all!"
 b = "buffer_picker"
 j = "goto_previous_buffer"
 l = "goto_next_buffer"
-c = ":write-buffer-close!"
-C = ":buffer-close-others"
+c = ":write-buffer-close"
+C = ":write-buffer-close!"
+"A-c" = ":buffer-close-others"
 
 [keys.select.b]
 r = [":reload-all", ":redraw"]
@@ -180,8 +191,9 @@ w = ":write-all!"
 b = "buffer_picker"
 j = "goto_previous_buffer"
 l = "goto_next_buffer"
-c = ":write-buffer-close!"
-C = ":buffer-close-others"
+c = ":write-buffer-close"
+C = ":write-buffer-close!"
+"A-c" = ":buffer-close-others"
 
 [keys.normal.c]
 a = "code_action"
