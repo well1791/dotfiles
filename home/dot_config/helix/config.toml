@@ -54,12 +54,28 @@ k = "move_visual_line_down"
 h = "undo"
 H = "redo"
 u = [
+  "move_next_word_start",
+  "select_mode",
+  "insert_at_line_end",
+  "move_line_up",
   "goto_prev_paragraph",
-  "goto_first_nonwhitespace",
+  "normal_mode",
+  "goto_next_paragraph",
+  "goto_prev_paragraph",
+  "trim_selections",
+  "collapse_selection",
 ]
 U = [
+  "move_next_word_start",
+  "select_mode",
+  "insert_at_line_end",
+  "move_line_up",
   "goto_prev_paragraph",
-  "goto_first_nonwhitespace",
+  "normal_mode",
+  "goto_next_paragraph",
+  "goto_prev_paragraph",
+  "trim_selections",
+  "collapse_selection",
 ]
 o = [
   "move_next_word_end",
