@@ -10,7 +10,7 @@
 )
 
 (defvar
-  tt  100 ;; tap time
+  tt  150 ;; tap time
   ht  150 ;; hold time
   ct  70  ;; chord time
   ot  500 ;; one shot time
