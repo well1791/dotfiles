@@ -202,8 +202,8 @@ keybinds clear-defaults=true {
         bind "Alt L" { MovePane "Right"; }
         bind "Alt I" { MovePane "Up"; }
         bind "Alt K" { MovePane "Down"; }
-        bind "Alt O" { MoveTab "Left"; }
-        bind "Alt U" { MoveTab "Right"; }
+        bind "Alt U" { MoveTab "Left"; }
+        bind "Alt O" { MoveTab "Right"; }
 
         // |-- RESIZE
         bind "Alt =" "Alt +" { Resize "Increase"; }
