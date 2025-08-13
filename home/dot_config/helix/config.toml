@@ -199,6 +199,7 @@ l = "goto_next_buffer"
 c = ":write-buffer-close"
 C = ":write-buffer-close!"
 "A-c" = ":buffer-close-others"
+x = ":buffer-close-all"
 
 [keys.select.b]
 r = [":reload-all", ":redraw"]
