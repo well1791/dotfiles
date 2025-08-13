@@ -154,10 +154,10 @@ n = ":noop"
 p = ":noop"
 
 [keys.normal.f]
-l = "find_till_char"
-j = "till_prev_char"
-u = "find_prev_char"
-o = "find_next_char"
+u = "till_prev_char"
+o = "find_till_char"
+j = "find_prev_char"
+l = "find_next_char"
 
 [keys.select.f]
 l = "find_till_char"
