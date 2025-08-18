@@ -9,6 +9,7 @@ true-color = true
 shell = ["fish", "-c"]
 scrolloff = 10
 completion-trigger-len = 1
+popup-border = "all"
 
 [editor.inline-diagnostics]
 cursor-line = "error"
@@ -116,6 +117,7 @@ O = [
   "goto_line_start",
   "normal_mode",
 ]  # Move line(s) down
+X = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.select]
 # esc = ["collapse_selection", "keep_primary_selection"]
@@ -129,41 +131,7 @@ u = "goto_prev_paragraph"
 o = "goto_next_paragraph"
 C = ":noop"
 A-c = ":noop"
-
-[keys.normal.g]
-i = "goto_file_start"
-k = "goto_file_end"
-j = "goto_first_nonwhitespace"
-l = "goto_line_end"
-h = ":noop"
-n = ":noop"
-p = ":noop"
-g = ":noop"
-f = ":noop"
-d = ":noop"
-y = ":noop"
-r = ":noop"
-
-[keys.select.g]
-i = "extend_to_file_start"
-k = "extend_to_file_end"
-j = "extend_to_first_nonwhitespace"
-l = "extend_to_line_end"
-h = ":noop"
-n = ":noop"
-p = ":noop"
-
-[keys.normal.f]
-u = "till_prev_char"
-o = "find_till_char"
-j = "find_prev_char"
-l = "find_next_char"
-
-[keys.select.f]
-l = "find_till_char"
-j = "till_prev_char"
-u = "find_prev_char"
-o = "find_next_char"
+X = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.normal.a]
 l = "append_mode"
@@ -223,6 +191,8 @@ f = "goto_file"
 d = "goto_definition"
 y = "goto_type_definition"
 r = "goto_reference"
+s = "symbol_picker"
+h = "select_references_to_symbol_under_cursor"
 
 [keys.select.c]
 a = "code_action"
@@ -235,8 +205,49 @@ f = "goto_file"
 d = "goto_definition"
 y = "goto_type_definition"
 r = "goto_reference"
+s = "symbol_picker"
+h = "select_references_to_symbol_under_cursor"
+
+[keys.normal.f]
+u = "till_prev_char"
+o = "find_till_char"
+j = "find_prev_char"
+l = "find_next_char"
+
+[keys.select.f]
+l = "find_till_char"
+j = "till_prev_char"
+u = "find_prev_char"
+o = "find_next_char"
+
+[keys.normal.g]
+i = "goto_file_start"
+k = "goto_file_end"
+j = "goto_first_nonwhitespace"
+l = "goto_line_end"
+h = ":noop"
+n = ":noop"
+p = ":noop"
+g = ":noop"
+f = ":noop"
+d = ":noop"
+y = ":noop"
+r = ":noop"
+
+[keys.select.g]
+i = "extend_to_file_start"
+k = "extend_to_file_end"
+j = "extend_to_first_nonwhitespace"
+l = "extend_to_line_end"
+h = ":noop"
+n = ":noop"
+p = ":noop"
 
 [keys.normal.z]
+w = ["half_page_up", "align_view_center"]
+s = ["half_page_down", "align_view_center"]
+
+[keys.select.z]
 w = ["half_page_up", "align_view_center"]
 s = ["half_page_down", "align_view_center"]
 
