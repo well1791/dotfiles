@@ -54,54 +54,10 @@ i = "move_visual_line_up"
 k = "move_visual_line_down"
 h = "undo"
 H = "redo"
-u = [
-  "move_next_word_start",
-  "select_mode",
-  "insert_at_line_end",
-  "move_line_up",
-  "goto_prev_paragraph",
-  "normal_mode",
-  "goto_next_paragraph",
-  "goto_prev_paragraph",
-  "trim_selections",
-  "collapse_selection",
-]
-U = [
-  "move_next_word_start",
-  "select_mode",
-  "insert_at_line_end",
-  "move_line_up",
-  "goto_prev_paragraph",
-  "normal_mode",
-  "goto_next_paragraph",
-  "goto_prev_paragraph",
-  "trim_selections",
-  "collapse_selection",
-]
-o = [
-  "move_next_word_end",
-  "select_mode",
-  "insert_at_line_start",
-  "move_line_down",
-  "goto_next_paragraph",
-  "normal_mode",
-  "goto_prev_paragraph",
-  "goto_next_paragraph",
-  "trim_selections",
-  "collapse_selection",
-]
-O = [
-  "move_next_word_end",
-  "select_mode",
-  "insert_at_line_start",
-  "move_line_down",
-  "goto_next_paragraph",
-  "normal_mode",
-  "goto_prev_paragraph",
-  "goto_next_paragraph",
-  "trim_selections",
-  "collapse_selection",
-]
+u = "goto_prev_paragraph"
+U = ":noop"
+o = "goto_next_paragraph"
+O = ":noop"
 "A-i" = [
   "extend_to_line_bounds",
   "delete_selection",
@@ -327,13 +283,21 @@ y = "goto_prev_tabstop"
 i = "add_newline_above"
 k = "add_newline_below"
 
-[keys.normal.z]
-w = ["half_page_up", "align_view_center"]
-s = ["half_page_down", "align_view_center"]
-
-[keys.select.z]
-w = ["half_page_up", "align_view_center"]
-s = ["half_page_down", "align_view_center"]
+[keys.normal.Z]
+s = ["move_prev_word_start", "trim_selections"]
+j = ["move_prev_word_start", "trim_selections"]
+f = ["move_next_word_end", "trim_selections"]
+l = ["move_next_word_end", "trim_selections"]
+e = "move_visual_line_up"
+i = "move_visual_line_up"
+d = "move_visual_line_down"
+k = "move_visual_line_down"
+q = "page_cursor_half_up"
+a = "page_cursor_half_down"
+w = "goto_prev_paragraph"
+u = "goto_prev_paragraph"
+r = "goto_next_paragraph"
+o = "goto_next_paragraph"
 
 [keys.normal.space]
 r = [":config-reload", ":redraw"]

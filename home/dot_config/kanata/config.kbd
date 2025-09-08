@@ -10,58 +10,24 @@
 )
 
 (defvar
-  tt  150 ;; tap time
-  ht  150 ;; hold time
-  ct  70  ;; chord time
+  ct   75 ;; chord time (50-100)
+  tt  200 ;; tap time (150-250)
+  ht  200 ;; hold time (150-250)
   ot  500 ;; one shot time
-  ltk (q w e r t  a s d f g) ;; left hand
-  rtk (y u i o p  h j k l ;) ;; right hand
-)
-
-(defalias
-  ;; UNICODE SYMBOLS
-  colon   (unicode :)
-  semic   (unicode ;)
-  dot     (unicode .)
-  comma   (unicode ,)
-  qmark   (unicode ?)
-  ;;
-  emark   (unicode !)
-  at      (unicode @)
-  hash    (unicode #)
-  dollr   (unicode $)
-  percn   (unicode %)
-  caret   (unicode ^)
-  amper   (unicode &)
-  aster   (unicode *)
-  ;;
-  plus    (unicode +)
-  equal   (unicode =)
-  dash    (unicode -)
-  under   (unicode _)
-  ;;
-  lparn   (macro S-9)
-  rparn   (macro S-0)
-  lbrac   (unicode {)
-  rbrac   (unicode })
-  lbrak   (unicode [)
-  rbrak   (unicode ])
-  gt      (unicode >)
-  lt      (unicode <)
-  ;;
-  grave   (unicode `)
-  tilde   (unicode ~)
-  fslsh   (unicode /)
-  pipe    (unicode |)
-  bslsh   (unicode \)
-  quot    (unicode ')
-  dquot   (macro S-')
+  ltk ( ;; [l]ef[t]-hand keyboard
+    q w e r t
+    a s d f g
+  )
+  rtk ( ;; righ[t]-hand keyboard
+    y u i o p
+    h j k l ;
+  )
 )
 
 (defalias
   tap (multi
-    (layer-switch nomods)
-    (on-idle-fakekey to-base tap 20)
+    (layer-switch U_NO)
+    (on-idle-fakekey fk_u_no tap 20)
   )
 
   ;; ONE SHOT LAYER
@@ -75,6 +41,7 @@
   u_al     (layer-switch base)
   u_nl     (layer-switch U_NL)
   u_nr     (layer-switch U_NR)
+  u_no     (layer-switch U_NO)
  
   ;; QWERTY - LEFT
   _w       (tap-hold-release-keys $tt $ht (multi w @tap) lmet $ltk)
@@ -98,22 +65,25 @@
   pbl @_a     rbl @_s     mbl @_d     ibl @_f           ibr @_j     mbr @_k     rbr @_l     pbr @_;
 
   ;; CHORDS ALPHA
-  _itl   (chord CH_BASE _itl)
-  _mtl   (chord CH_BASE _mtl)
-  _rtl   (chord CH_BASE _rtl)
-  _ptl   (chord CH_BASE _ptl)
-  _ibl   (chord CH_BASE _ibl)
-  _mbl   (chord CH_BASE _mbl)
-  _rbl   (chord CH_BASE _rbl)
-  _pbl   (chord CH_BASE _pbl)
-  _itr   (chord CH_BASE _itr)
-  _mtr   (chord CH_BASE _mtr)
-  _rtr   (chord CH_BASE _rtr)
-  _ptr   (chord CH_BASE _ptr)
-  _ibr   (chord CH_BASE _ibr)
-  _mbr   (chord CH_BASE _mbr)
-  _rbr   (chord CH_BASE _rbr)
-  _pbr   (chord CH_BASE _pbr)
+  al_itl   (chord CH_BASE ch_itl)
+  al_mtl   (chord CH_BASE ch_mtl)
+  al_rtl   (chord CH_BASE ch_rtl)
+  al_ptl   (chord CH_BASE ch_ptl)
+  al_ibl   (chord CH_BASE ch_ibl)
+  al_mbl   (chord CH_BASE ch_mbl)
+  al_rbl   (chord CH_BASE ch_rbl)
+  al_pbl   (chord CH_BASE ch_pbl)
+  al_itr   (chord CH_BASE ch_itr)
+  al_mtr   (chord CH_BASE ch_mtr)
+  al_rtr   (chord CH_BASE ch_rtr)
+  al_ptr   (chord CH_BASE ch_ptr)
+  al_ibr   (chord CH_BASE ch_ibr)
+  al_mbr   (chord CH_BASE ch_mbr)
+  al_rbr   (chord CH_BASE ch_rbr)
+  al_pbr   (chord CH_BASE ch_pbr)
+
+  ;; CHORDS NO MODS
+  no_d     (chord CH_NA ch_up)
 
   ;; CHORDS NS
   _nq   (chord CH_NS _nq)
@@ -133,62 +103,58 @@
   _f10  (chord CH_FF _f10)
   _f12  (chord CH_FF _f12)
 
-  ;; ACTIONS
-  pgup   (tap-hold $tt $ht pgup lalt)
-  pgdn   (tap-hold $tt $ht pgdn lsft)
+  ;; CHORDS NA
+  na_up     (chord CH_NA ch_up)
+  na_dn     (chord CH_NA ch_dn)
+  na_lt     (chord CH_NA ch_lt)
+  na_rt     (chord CH_NA ch_rt)
+  na_tab    (chord CH_NA ch_tab)
+  na_bspc   (chord CH_NA ch_bspc)
+  na_pgup   (tap-hold $tt $ht pgup lalt)
+  na_pgdn   (tap-hold $tt $ht pgdn lsft)
 
-  _C_z (macro C-z)
-  _C_x (macro C-x)
-  _C_c (macro C-c)
-  _C_v (macro C-v)
-  _C_pgup (macro C-pgup)
-  _C_pgdn (macro C-pgdn)
-  _C_tab (macro C-tab)
-  _C_A_q (macro C-A-q)
-  _C_w (macro C-w)
-  _A_9 (macro A-9)
+  ;; CHORDS NO
+  no_s     (chord CH_NO ch_s)
+  no_f     (chord CH_NO ch_f)
+  no_j     (chord CH_NO ch_j)
+  no_l     (chord CH_NO ch_l)
+
+  _C_z      (macro C-z)
+  _C_x      (macro C-x)
+  _C_c      (macro C-c)
+  _C_v      (macro C-v)
+  _C_pgup   (macro C-pgup)
+  _C_pgdn   (macro C-pgdn)
+  _C_tab    (macro C-tab)
+  _C_A_q    (macro C-A-q)
+  _C_w      (macro C-w)
+  _A_9      (macro A-9)
+)
+
+(deffakekeys
+  fk_u_no (layer-switch base)
 )
 
 (defchords CH_BASE $ct
-  ;; ALPHA                                 |-- LEFT --|      |-- RIGHT --|
-  (_ptl) @ptl   (_rtl) @rtl   (_mtl) @mtl   (_itl) @itl      (_itr) @itr   (_mtr) @mtr   (_rtr) @rtr   (_ptr) @ptr
-  (_pbl) @pbl   (_rbl) @rbl   (_mbl) @mbl   (_ibl) @ibl      (_ibr) @ibr   (_mbr) @mbr   (_rbr) @rbr   (_pbr) @pbr 
+  ;; ALPHA                                         |-- LEFT --|      |-- RIGHT --|
+  (ch_ptl) @ptl   (ch_rtl) @rtl   (ch_mtl) @mtl   (ch_itl) @itl      (ch_itr) @itr   (ch_mtr) @mtr   (ch_rtr) @rtr   (ch_ptr) @ptr
+  (ch_pbl) @pbl   (ch_rbl) @rbl   (ch_mbl) @mbl   (ch_ibl) @ibl      (ch_ibr) @ibr   (ch_mbr) @mbr   (ch_rbr) @rbr   (ch_pbr) @pbr 
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*|*|     --     |*|*|*| |
-  (_rbl _mbl _ibl) spc                     (_ibr _mbr _rbr) spc
+  (ch_rbl ch_mbl ch_ibl) spc               (ch_ibr ch_mbr ch_rbr) spc
 
   ;;                  | |*|*|*|     --     |*|*|*| |
   ;;                  | | | | |     --     | | | | |
-  (_rtl _mtl _itl) esc                     (_itr _mtr _rtr) esc
+  (ch_rtl ch_mtl ch_itl) @u_no             (ch_itr ch_mtr ch_rtr) @u_no
 
-  ;;                  | |*|*| |     --     | |*|*| |
-  ;;                  | | | |*|     --     |*| | | |
-  (_rtl _mtl _ibl) @os_meh                 (_ibr _mtr _rtr) @os_meh
-
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | |*| |*|     --     |*| |*| |
-  (_rbl _mtl _ibl) @os_ns                  (_ibr _mtr _rbr) @os_ns
-
-  ;;                  | | |*|*|     --     |*|*| | |
-  ;;                  | |*| | |     --     | | |*| |
-  (_rbl _mtl _itl) enter                   (_itr _mtr _rbr) enter
-
-  ;;                  | |*| | |     --     | | |*| |
-  ;;                  | | |*|*|     --     |*|*| | |
-  (_rtl _mbl _ibl) bspc                    (_ibr _mbr _rtr) bspc
-
-  ;;                  | | | |*|     --     |*| | | |
-  ;;                  | |*|*| |     --     | |*|*| |
-  (_rbl _mbl _itl) @os_ff                  (_itr _mbr _rbr) @os_ff
-  
   ;;                  | | | | |     --     | | | | |
   ;;                  |*|*|*| |     --     | |*|*|*|
-  (_pbl _rbl _mbl) @os_go                  (_mbr _rbr _pbr) @os_go
+  (ch_pbl ch_rbl ch_mbl) @os_go            (ch_mbr ch_rbr ch_pbr) @os_go
 
   ;;                  |*|*|*| |     --     | |*|*|*|
   ;;                  | | | | |     --     | | | | |
-  (_ptl _rtl _mtl) @os_me                  (_mtr _rtr _ptr) @os_me
+  (ch_ptl ch_rtl ch_mtl) @os_me            (ch_mtr ch_rtr ch_ptr) @os_me
 )
 
 (defchords CH_NS $ct
@@ -239,9 +205,35 @@
   (_f10 _f12)  f11
 )
 
+(defchords CH_NA $ct
+  ;; NAVIGATION CHORDS
+  (ch_tab) tab   (ch_up) up     (ch_bspc) bspc
+  (ch_lt) left   (ch_dn) down   (ch_rt) rght
+
+  (ch_lt   ch_dn  ch_rt)        spc
+  (ch_tab  ch_up  ch_bspc)      esc
+  (ch_tab         ch_bspc)      home
+  (ch_lt          ch_rt)        end
+  (        ch_up  ch_bspc)      del
+)
+
+(defchords CH_NO $ct
+  ;; NAVIGATION CHORDS
+  (ch_s) s   (ch_f) f
+  (ch_j) j   (ch_l) l
+
+  (ch_s   ch_f)   @u_al
+  (ch_j   ch_l)   @u_al
+)
+
 (deflayer base ;; Alpha keys
-  @_ptl  @_rtl  @_mtl  @_itl                @_itr  @_mtr  @_rtr  @_ptr      
-  @_pbl  @_rbl  @_mbl  @_ibl                @_ibr  @_mbr  @_rbr  @_pbr      
+  @al_ptl  @al_rtl  @al_mtl  @al_itl        @al_itr  @al_mtr  @al_rtr  @al_ptr      
+  @al_pbl  @al_rbl  @al_mbl  @al_ibl        @al_ibr  @al_mbr  @al_rbr  @al_pbr      
+)
+
+(deflayer U_NO ;; [No] mods
+  q      w  e      r                                    u  i      o  p 
+  a  @no_s  d  @no_f                                @no_j  k  @no_l  ;
 )
 
 (deflayer U_NS ;; [N]umbers and [S]ymbols
@@ -255,13 +247,13 @@
 )
 
 (deflayer U_NR ;; [N]avigation [R]ight
-  @u_nl  lmet  tab  @pgup                   tab   up    bspc  @u_al
-  @u_al  lctl  esc  @pgdn                   left  down  rght  enter
+  @u_nl  lmet  tab  @na_pgup                @na_tab   @na_up    @na_bspc  @u_al
+  @u_al  lctl  esc  @na_pgdn                @na_lt    @na_dn    @na_rt    enter
 )
 
 (deflayer U_NL ;; [N]avigation [L]eft
-  @u_al  bspc  up    tab                    @pgup  tab  lmet  @u_nr
-  enter  left  down  rght                   @pgdn  esc  lctl  @u_al
+  @u_al  @na_bspc  @na_up   @na_tab         @na_pgup  tab  lmet  @u_nr
+  enter  @na_lt    @na_dn   @na_rt          @na_pgdn  esc  lctl  @u_al
 )
 
 (deflayer U_ME ;; [ME]dia
@@ -274,11 +266,4 @@
         _  @_C_tab  @_C_pgdn  @_C_w         @_C_w  @_C_pgdn  @_C_tab        _
 )
 
-(deffakekeys
-  to-base (layer-switch base)
-)
 
-(deflayer nomods
-  q  w  e  r      u  i  o  p 
-   a  s  d  f      j  k  l  ;
-)
