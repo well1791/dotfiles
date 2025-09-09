@@ -42,7 +42,7 @@
   u_nl     (layer-switch U_NL)
   u_nr     (layer-switch U_NR)
   u_no     (layer-switch U_NO)
- 
+
   ;; QWERTY - LEFT
   _w       (tap-hold-release-keys $tt $ht (multi w @tap) lmet $ltk)
   _e       (tap-hold-release-keys $tt $ht (multi e @tap) (layer-while-held U_NS) $ltk)
@@ -61,26 +61,26 @@
   _;       (tap-hold-release-keys $tt $ht (multi ; @tap) (layer-while-held U_NL) $rtk)
 
   ;; ALPHA                       |-- LEFT --|           |-- RIGHT --|
-  ptl   q     rtl @_w     mtl @_e     itl @_r           itr @_u     mtr @_i     rtr @_o     ptr p
-  pbl @_a     rbl @_s     mbl @_d     ibl @_f           ibr @_j     mbr @_k     rbr @_l     pbr @_;
+  tlp   q     tlr @_w     tlm @_e     tli @_r           tri @_u     trm @_i     trr @_o     trp p
+  blp @_a     blr @_s     blm @_d     bli @_f           bri @_j     brm @_k     brr @_l     brp @_;
 
   ;; CHORDS ALPHA
-  al_itl   (chord CH_BASE ch_itl)
-  al_mtl   (chord CH_BASE ch_mtl)
-  al_rtl   (chord CH_BASE ch_rtl)
-  al_ptl   (chord CH_BASE ch_ptl)
-  al_ibl   (chord CH_BASE ch_ibl)
-  al_mbl   (chord CH_BASE ch_mbl)
-  al_rbl   (chord CH_BASE ch_rbl)
-  al_pbl   (chord CH_BASE ch_pbl)
-  al_itr   (chord CH_BASE ch_itr)
-  al_mtr   (chord CH_BASE ch_mtr)
-  al_rtr   (chord CH_BASE ch_rtr)
-  al_ptr   (chord CH_BASE ch_ptr)
-  al_ibr   (chord CH_BASE ch_ibr)
-  al_mbr   (chord CH_BASE ch_mbr)
-  al_rbr   (chord CH_BASE ch_rbr)
-  al_pbr   (chord CH_BASE ch_pbr)
+  al_tli   (chord CH_BASE ch_tli)
+  al_tlm   (chord CH_BASE ch_tlm)
+  al_tlr   (chord CH_BASE ch_tlr)
+  al_tlp   (chord CH_BASE ch_tlp)
+  al_bli   (chord CH_BASE ch_bli)
+  al_blm   (chord CH_BASE ch_blm)
+  al_blr   (chord CH_BASE ch_blr)
+  al_blp   (chord CH_BASE ch_blp)
+  al_tri   (chord CH_BASE ch_tri)
+  al_trm   (chord CH_BASE ch_trm)
+  al_trr   (chord CH_BASE ch_trr)
+  al_trp   (chord CH_BASE ch_trp)
+  al_bri   (chord CH_BASE ch_bri)
+  al_brm   (chord CH_BASE ch_brm)
+  al_brr   (chord CH_BASE ch_brr)
+  al_brp   (chord CH_BASE ch_brp)
 
   ;; CHORDS NO MODS
   no_d     (chord CH_NA ch_up)
@@ -114,10 +114,10 @@
   na_pgdn   (tap-hold $tt $ht pgdn lsft)
 
   ;; CHORDS NO
-  no_s     (chord CH_NO ch_s)
-  no_f     (chord CH_NO ch_f)
-  no_j     (chord CH_NO ch_j)
-  no_l     (chord CH_NO ch_l)
+  no_tlr    (chord CH_NO ch_w)
+  no_tli    (chord CH_NO ch_r)
+  no_tri    (chord CH_NO ch_u)
+  no_trr    (chord CH_NO ch_o)
 
   _C_z      (macro C-z)
   _C_x      (macro C-x)
@@ -137,24 +137,28 @@
 
 (defchords CH_BASE $ct
   ;; ALPHA                                         |-- LEFT --|      |-- RIGHT --|
-  (ch_ptl) @ptl   (ch_rtl) @rtl   (ch_mtl) @mtl   (ch_itl) @itl      (ch_itr) @itr   (ch_mtr) @mtr   (ch_rtr) @rtr   (ch_ptr) @ptr
-  (ch_pbl) @pbl   (ch_rbl) @rbl   (ch_mbl) @mbl   (ch_ibl) @ibl      (ch_ibr) @ibr   (ch_mbr) @mbr   (ch_rbr) @rbr   (ch_pbr) @pbr 
+  (ch_tlp) @tlp   (ch_tlr) @tlr   (ch_tlm) @tlm   (ch_tli) @tli      (ch_tri) @tri   (ch_trm) @trm   (ch_trr) @trr   (ch_trp) @trp
+  (ch_blp) @blp   (ch_blr) @blr   (ch_blm) @blm   (ch_bli) @bli      (ch_bri) @bri   (ch_brm) @brm   (ch_brr) @brr   (ch_brp) @brp 
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*|*|     --     |*|*|*| |
-  (ch_rbl ch_mbl ch_ibl) spc               (ch_ibr ch_mbr ch_rbr) spc
+  (ch_blr ch_blm ch_bli) spc               (ch_bri ch_brm ch_brr) spc
 
   ;;                  | |*|*|*|     --     |*|*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_rtl ch_mtl ch_itl) @u_no             (ch_itr ch_mtr ch_rtr) @u_no
+  (ch_tlr ch_tlm ch_tli) esc               (ch_tri ch_trm ch_trr) esc
 
   ;;                  | | | | |     --     | | | | |
   ;;                  |*|*|*| |     --     | |*|*|*|
-  (ch_pbl ch_rbl ch_mbl) @os_go            (ch_mbr ch_rbr ch_pbr) @os_go
+  (ch_blp ch_blr ch_blm) @os_go            (ch_brm ch_brr ch_brp) @os_go
 
   ;;                  |*|*|*| |     --     | |*|*|*|
   ;;                  | | | | |     --     | | | | |
-  (ch_ptl ch_rtl ch_mtl) @os_me            (ch_mtr ch_rtr ch_ptr) @os_me
+  (ch_tlp ch_tlr ch_tlm) @os_me            (ch_trm ch_trr ch_trp) @os_me
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tlr        ch_tli) @u_no             (ch_tri        ch_trr) @u_no
 )
 
 (defchords CH_NS $ct
@@ -219,21 +223,21 @@
 
 (defchords CH_NO $ct
   ;; NAVIGATION CHORDS
-  (ch_s) s   (ch_f) f
-  (ch_j) j   (ch_l) l
+  (ch_w) w   (ch_r) r
+  (ch_u) u   (ch_o) o
 
-  (ch_s   ch_f)   @u_al
-  (ch_j   ch_l)   @u_al
+  (ch_w   ch_r)   @u_al
+  (ch_u   ch_o)   @u_al
 )
 
 (deflayer base ;; Alpha keys
-  @al_ptl  @al_rtl  @al_mtl  @al_itl        @al_itr  @al_mtr  @al_rtr  @al_ptr      
-  @al_pbl  @al_rbl  @al_mbl  @al_ibl        @al_ibr  @al_mbr  @al_rbr  @al_pbr      
+  @al_tlp  @al_tlr  @al_tlm  @al_tli        @al_tri  @al_trm  @al_trr  @al_trp      
+  @al_blp  @al_blr  @al_blm  @al_bli        @al_bri  @al_brm  @al_brr  @al_brp      
 )
 
 (deflayer U_NO ;; [No] mods
-  q      w  e      r                                    u  i      o  p 
-  a  @no_s  d  @no_f                                @no_j  k  @no_l  ;
+  q  @no_tlr  e  @no_tli                    @no_tri  i  @no_trr  p 
+  a        s  d        f                          j  k        l  ;
 )
 
 (deflayer U_NS ;; [N]umbers and [S]ymbols
