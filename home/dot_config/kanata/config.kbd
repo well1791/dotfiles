@@ -10,7 +10,7 @@
 )
 
 (defvar
-  ct   75 ;; chord time (50-100)
+  ct   25 ;; chord time (50-100)
   tt  200 ;; tap time (150-250)
   ht  200 ;; hold time (150-250)
   ot  500 ;; one shot time
@@ -43,28 +43,30 @@
   u_nr     (layer-switch U_NR)
   u_no     (layer-switch U_NO)
 
-  ;; QWERTY - LEFT
-  _w       (tap-hold-release-keys $tt $ht (multi w @tap) lmet $ltk)
-  _e       (tap-hold-release-keys $tt $ht (multi e @tap) (layer-while-held U_NS) $ltk)
-  _r       (tap-hold-release-keys $tt $ht (multi r @tap) lalt $ltk)
-  _a       (tap-hold-release-keys $tt $ht (multi a @tap) (layer-while-held U_NR) $ltk)
-  _s       (tap-hold-release-keys $tt $ht (multi s @tap) lctl $ltk)
-  _f       (tap-hold-release-keys $tt $ht (multi f @tap) lsft $ltk)
-  _d       (tap-hold-release-keys $tt $ht (multi d @tap) (layer-while-held U_FF) $ltk)
-  ;; QWERTY - RIGHT
-  _u       (tap-hold-release-keys $tt $ht (multi u @tap) lalt $rtk)
-  _i       (tap-hold-release-keys $tt $ht (multi i @tap) (layer-while-held U_NS) $rtk)
-  _o       (tap-hold-release-keys $tt $ht (multi o @tap) lmet $rtk)
-  _j       (tap-hold-release-keys $tt $ht (multi j @tap) lsft $rtk)
-  _k       (tap-hold-release-keys $tt $ht (multi k @tap) (layer-while-held U_FF) $rtk)
-  _l       (tap-hold-release-keys $tt $ht (multi l @tap) lctl $rtk)
-  _;       (tap-hold-release-keys $tt $ht (multi ; @tap) (layer-while-held U_NL) $rtk)
+  ;; BASE KEYBOARD LAYOUT
+  _tlp q   _tlr w   _tlm e   _tli r         _tri u   _trm i   _trr o   _trp p
+  _blp a   _blr s   _blm d   _bli f         _bri j   _brm k   _brr l   _brp ;
 
-  ;; ALPHA                       |-- LEFT --|           |-- RIGHT --|
-  tlp   q     tlr @_w     tlm @_e     tli @_r           tri @_u     trm @_i     trr @_o     trp p
-  blp @_a     blr @_s     blm @_d     bli @_f           bri @_j     brm @_k     brr @_l     brp @_;
+  ;; MODS ALPHA
+  tlp      @_tlp
+  tlr      (tap-hold-release-keys $tt $ht (multi @_tlr @tap) lmet $ltk)
+  tlm      (tap-hold-release-keys $tt $ht (multi @_tlm @tap) (layer-while-held U_NS) $ltk)
+  tli      (tap-hold-release-keys $tt $ht (multi @_tli @tap) lalt $ltk)
+  tri      (tap-hold-release-keys $tt $ht (multi @_tri @tap) lalt $rtk)
+  trm      (tap-hold-release-keys $tt $ht (multi @_trm @tap) (layer-while-held U_NS) $rtk)
+  trr      (tap-hold-release-keys $tt $ht (multi @_trr @tap) lmet $rtk)
+  trp      @_trp
 
-  ;; CHORDS ALPHA
+  blp      (tap-hold-release-keys $tt $ht (multi @_blp @tap) (layer-while-held U_NR) $ltk)
+  blr      (tap-hold-release-keys $tt $ht (multi @_blr @tap) lctl $ltk)
+  blm      (tap-hold-release-keys $tt $ht (multi @_blm @tap) (layer-while-held U_FF) $ltk)
+  bli      (tap-hold-release-keys $tt $ht (multi @_bli @tap) lsft $ltk)
+  bri      (tap-hold-release-keys $tt $ht (multi @_bri @tap) lsft $rtk)
+  brm      (tap-hold-release-keys $tt $ht (multi @_brm @tap) (layer-while-held U_FF) $rtk)
+  brr      (tap-hold-release-keys $tt $ht (multi @_brr @tap) lctl $rtk)
+  brp      (tap-hold-release-keys $tt $ht (multi @_brp @tap) (layer-while-held U_NL) $rtk)
+
+  ;; CHORDS AL
   al_tli   (chord CH_BASE ch_tli)
   al_tlm   (chord CH_BASE ch_tlm)
   al_tlr   (chord CH_BASE ch_tlr)
@@ -82,26 +84,26 @@
   al_brr   (chord CH_BASE ch_brr)
   al_brp   (chord CH_BASE ch_brp)
 
-  ;; CHORDS NO MODS
+  ;; CHORDS NO
   no_d     (chord CH_NA ch_up)
 
   ;; CHORDS NS
-  _nq   (chord CH_NS _nq)
-  _n0   (chord CH_NS _n0)
-  _n1   (chord CH_NS _n1)
-  _n3   (chord CH_NS _n3)
-  _n5   (chord CH_NS _n5)
-  _n6   (chord CH_NS _n6)
-  _n8   (chord CH_NS _n8)
+  _nq   (chord CH_NS ch_nq)
+  _n0   (chord CH_NS ch_n0)
+  _n1   (chord CH_NS ch_n1)
+  _n3   (chord CH_NS ch_n3)
+  _n5   (chord CH_NS ch_n5)
+  _n6   (chord CH_NS ch_n6)
+  _n8   (chord CH_NS ch_n8)
 
   ;; CHORDS FF
-  _f1   (chord CH_FF _f1)
-  _f3   (chord CH_FF _f3)
-  _f5   (chord CH_FF _f5)
-  _f6   (chord CH_FF _f6)
-  _f8   (chord CH_FF _f8)
-  _f10  (chord CH_FF _f10)
-  _f12  (chord CH_FF _f12)
+  _f1   (chord CH_FF ch_f1)
+  _f3   (chord CH_FF ch_f3)
+  _f5   (chord CH_FF ch_f5)
+  _f6   (chord CH_FF ch_f6)
+  _f8   (chord CH_FF ch_f8)
+  _f10  (chord CH_FF ch_f10)
+  _f12  (chord CH_FF ch_f12)
 
   ;; CHORDS NA
   na_up     (chord CH_NA ch_up)
@@ -119,6 +121,7 @@
   no_tri    (chord CH_NO ch_u)
   no_trr    (chord CH_NO ch_o)
 
+  ;; MACROS
   _C_z      (macro C-z)
   _C_x      (macro C-x)
   _C_c      (macro C-c)
@@ -163,50 +166,50 @@
 
 (defchords CH_NS $ct
   ;; NUMBER CHORDS
-  (_n6) 6   (_n8) 8   (_n0) 0
-  (_n1) 1   (_n3) 3   (_n5) 5   (_nq) '
+  (ch_n6) 6   (ch_n8) 8   (ch_n0) 0
+  (ch_n1) 1   (ch_n3) 3   (ch_n5) 5   (ch_nq) '
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | | |*|*|     --     |*|*| | |
-  (_n1  _n3) 2
+  (ch_n1  ch_n3) 2
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (_n3  _n5) 4
+  (ch_n3  ch_n5) 4
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | | | | |     --     | | | | |
-  (_n6  _n8) 7
+  (ch_n6  ch_n8) 7
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (_n8  _n0) 9
+  (ch_n8  ch_n0) 9
 )
 
 (defchords CH_FF $ct
   ;; NUMBER CHORDS
-  (_f6) f6   (_f8) f8    (_f10) f10    (_f12) f12
-  (_f1) f1   (_f3) f3    ( _f5)  f5
+  (ch_f6) f6   (ch_f8) f8    (ch_f10) f10    (ch_f12) f12
+  (ch_f1) f1   (ch_f3) f3    ( ch_f5)  f5
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | | |*|*|     --     |*|*| | |
-  (_f1   _f3)  f2
+  (ch_f1   ch_f3)  f2
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (_f3   _f5)  f4
+  (ch_f3   ch_f5)  f4
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | | | | |     --     | | | | |
-  (_f6   _f8)  f7
+  (ch_f6   ch_f8)  f7
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (_f8  _f10)  f9
+  (ch_f8  ch_f10)  f9
 
   ;;                  |*|*| | |     --     | | |*|*|
   ;;                  | | | | |     --     | | | | |
-  (_f10 _f12)  f11
+  (ch_f10 ch_f12)  f11
 )
 
 (defchords CH_NA $ct
