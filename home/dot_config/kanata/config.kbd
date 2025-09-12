@@ -222,6 +222,8 @@
   (ch_tab         ch_bspc)      home
   (ch_lt          ch_rt)        end
   (        ch_up  ch_bspc)      del
+  (ch_tab  ch_up         )      pgup
+  (        ch_dn  ch_bspc)      pgdn
 )
 
 (defchords CH_NO $ct
