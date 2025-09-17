@@ -7,6 +7,8 @@
 (defsrc
   q  w  e  r      u  i  o  p
    a  s  d  f      j  k  l  ;
+       x  c
+              spc
 )
 
 (defvar
@@ -83,6 +85,10 @@
   al_brm   (chord CH_BASE ch_brm)
   al_brr   (chord CH_BASE ch_brr)
   al_brp   (chord CH_BASE ch_brp)
+  al_x     (chord CH_BASE al_ch_x)
+  al_c     (chord CH_BASE al_ch_c)
+  al_spc   (chord CH_BASE al_ch_spc)
+
 
   ;; CHORDS NO
   no_d     (chord CH_NA ch_up)
@@ -116,10 +122,9 @@
   na_pgdn   (tap-hold $tt $ht pgdn lsft)
 
   ;; CHORDS NO
-  no_tlr    (chord CH_NO ch_w)
-  no_tli    (chord CH_NO ch_r)
-  no_tri    (chord CH_NO ch_u)
-  no_trr    (chord CH_NO ch_o)
+  no_x      (chord CH_NO no_ch_x)
+  no_c      (chord CH_NO no_ch_c)
+  no_spc    (chord CH_NO no_ch_spc)
 
   ;; MACROS
   _C_z      (macro C-z)
@@ -142,6 +147,9 @@
   ;; ALPHA                                         |-- LEFT --|      |-- RIGHT --|
   (ch_tlp) @tlp   (ch_tlr) @tlr   (ch_tlm) @tlm   (ch_tli) @tli      (ch_tri) @tri   (ch_trm) @trm   (ch_trr) @trr   (ch_trp) @trp
   (ch_blp) @blp   (ch_blr) @blr   (ch_blm) @blm   (ch_bli) @bli      (ch_bri) @bri   (ch_brm) @brm   (ch_brr) @brr   (ch_brp) @brp 
+  (al_ch_x) x
+  (al_ch_c) c
+  (al_ch_spc) spc
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*|*|     --     |*|*|*| |
@@ -159,9 +167,9 @@
   ;;                  | | | | |     --     | | | | |
   (ch_tlp ch_tlr ch_tlm) @os_me            (ch_trm ch_trr ch_trp) @os_me
 
-  ;;                  | |*| |*|     --     |*| |*| |
-  ;;                  | | | | |     --     | | | | |
-  (ch_tlr        ch_tli) @u_no             (ch_tri        ch_trr) @u_no
+  ;;              | S |z|*|*|v|
+  ;;              |C|F|M|A|  *  |
+  (al_ch_x al_ch_c al_ch_spc) @u_no
 )
 
 (defchords CH_NS $ct
@@ -227,52 +235,58 @@
 )
 
 (defchords CH_NO $ct
-  ;; NAVIGATION CHORDS
-  (ch_w) w   (ch_r) r
-  (ch_u) u   (ch_o) o
+  (no_ch_x) x
+  (no_ch_c) c
+  (no_ch_spc) spc
 
-  (ch_w   ch_r)   @u_al
-  (ch_u   ch_o)   @u_al
+  (no_ch_x no_ch_c no_ch_spc) @u_al
 )
 
 (deflayer base ;; Alpha keys
   @al_tlp  @al_tlr  @al_tlm  @al_tli        @al_tri  @al_trm  @al_trr  @al_trp      
   @al_blp  @al_blr  @al_blm  @al_bli        @al_bri  @al_brm  @al_brr  @al_brp      
+  @al_x    @al_c    @al_spc
 )
 
 (deflayer U_NO ;; [No] mods
-  q  @no_tlr  e  @no_tli                    @no_tri  i  @no_trr  p 
-  a        s  d        f                          j  k        l  ;
+                          q  w  e  r        u  i  o  p 
+                          a  s  d  f        j  k  l  ;
+  @no_x    @no_c    @no_spc
 )
 
 (deflayer U_NS ;; [N]umbers and [S]ymbols
      _  @_n0  @_n8  @_n6                    @_n6  @_n8  @_n0     _
   @_nq  @_n5  @_n3  @_n1                    @_n1  @_n3  @_n5  @_nq
+  @al_x    @al_c    @al_spc
 )
 
 (deflayer U_FF ;; [F]unctional keys
   @_f12  @_f10  @_f8  @_f6                  @_f6  @_f8  @_f10  @_f12
       _   @_f5  @_f3  @_f1                  @_f1  @_f3   @_f5  _
+  @al_x    @al_c    @al_spc
 )
 
 (deflayer U_NR ;; [N]avigation [R]ight
   @u_nl  lmet  tab  @na_pgup                @na_tab   @na_up    @na_bspc  @u_al
   @u_al  lctl  esc  @na_pgdn                @na_lt    @na_dn    @na_rt    enter
+  @al_x    @al_c    @al_spc
 )
 
 (deflayer U_NL ;; [N]avigation [L]eft
   @u_al  @na_bspc  @na_up   @na_tab         @na_pgup  tab  lmet  @u_nr
   enter  @na_lt    @na_dn   @na_rt          @na_pgdn  esc  lctl  @u_al
+  @al_x    @al_c    @al_spc
 )
 
 (deflayer U_ME ;; [ME]dia
   _  prev  volu    mute                     mute  volu    prev  _
   _  next  voldwn  pp                       pp    voldwn  next  _
+  @al_x    @al_c    @al_spc
 )
 
 (deflayer U_GO ;; "[GO] to" shortcuts
   @_C_A_q  @_A_9    @_C_pgup  _                 _  @_C_pgup    @_A_9  @_C_A_q
         _  @_C_tab  @_C_pgdn  @_C_w         @_C_w  @_C_pgdn  @_C_tab        _
+  @al_x    @al_c    @al_spc
 )
-
 
