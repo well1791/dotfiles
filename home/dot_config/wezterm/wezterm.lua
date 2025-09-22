@@ -1,10 +1,10 @@
 local wezterm = require 'wezterm'
 local mux = wezterm.mux
-local conf = {}
+local config = {}
 
 -- Keep config
 if wezterm.config_builder then
-  conf = wezterm.config_builder()
+  config = wezterm.config_builder()
 end
 
 function get_appearance()
@@ -22,46 +22,48 @@ function scheme_for_appearance(appearance)
   end
 end
 
+local active_theme = scheme_for_appearance(get_appearance()) 
+
 -- Font stuff
--- conf.font = wezterm.font('');
-conf.font_size = 15.0
-conf.line_height = 1.5
-conf.adjust_window_size_when_changing_font_size = false
+-- config.font = wezterm.font('');
+config.font_size = 14.0
+config.line_height = 1.4
+config.adjust_window_size_when_changing_font_size = false
 
 -- Theme and color
-conf.color_scheme = scheme_for_appearance(get_appearance())
-conf.force_reverse_video_cursor = true
+config.color_scheme = active_theme
+config.force_reverse_video_cursor = true
 
 -- UI
-conf.initial_cols = 100
-conf.initial_rows = 35
-conf.window_padding = {
+config.initial_cols = 100
+config.initial_rows = 35
+config.window_padding = {
   top = 0,
   left = 0,
   right = 0,
   bottom = 0,
 }
-conf.window_decorations = 'RESIZE'
-conf.window_background_opacity = 0.8
-conf.window_close_confirmation = "NeverPrompt"
-conf.hide_tab_bar_if_only_one_tab = true
-conf.enable_tab_bar = false
+config.window_decorations = 'RESIZE'
+config.window_background_opacity = 0.9
+config.window_close_confirmation = "NeverPrompt"
+config.hide_tab_bar_if_only_one_tab = true
+-- config.enable_tab_bar = true
 
 -- Performance
-conf.max_fps = 144
-conf.animation_fps = 60
-conf.cursor_blink_rate = 250
+config.max_fps = 144
+config.animation_fps = 60
+config.cursor_blink_rate = 250
 
 -- Keyboard stuff
-conf.use_dead_keys = false
-conf.unicode_version = 14
+config.use_dead_keys = false
+config.unicode_version = 14
 
 -- more stuff
-conf.exit_behavior = 'Close'
-conf.audible_bell = 'Disabled'
-conf.scrollback_lines = 10000
-conf.show_update_window = true
-conf.skip_close_confirmation_for_processes_named = {
+config.exit_behavior = 'Close'
+config.audible_bell = 'Disabled'
+config.scrollback_lines = 10000
+config.show_update_window = true
+config.skip_close_confirmation_for_processes_named = {
   'bash',
   'sh',
   'zsh',
@@ -75,4 +77,55 @@ wezterm.on('gui-startup', function(cmd)
   window:gui_window():maximize()
 end)
 
-return conf
+local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+
+tabline.setup({
+  options = {
+    icons_enabled = true,
+    theme = active_theme,
+    tabs_enabled = true,
+    theme_overrides = {},
+    section_separators = {
+      left = wezterm.nerdfonts.pl_left_hard_divider,
+      right = wezterm.nerdfonts.pl_right_hard_divider,
+    },
+    component_separators = {
+      left = wezterm.nerdfonts.pl_left_soft_divider,
+      right = wezterm.nerdfonts.pl_right_soft_divider,
+    },
+    tab_separators = {
+      left = wezterm.nerdfonts.pl_left_hard_divider,
+      right = wezterm.nerdfonts.pl_right_hard_divider,
+    },
+  },
+
+  sections = {
+    -- Left side
+    tabline_a = { 'mode' },
+    tabline_b = { 'workspace' },
+    tabline_c = { ' ' },
+
+    -- Middle side
+    tab_active = {
+      'parent',
+      '/',
+      { 'cwd', padding = { left = 0, right = 1 } },
+  		{
+				'zoomed',
+				icon = wezterm.nerdfonts.oct_zoom_in,
+				padding = { left = 0, right = 0 },
+			},
+    },
+    tab_inactive = { 'index', { 'process', padding = { left = 0, right = 1 } } },
+
+    -- Right side
+    tabline_x = { 'ram' },
+    tabline_y = { 'cpu' },
+    tabline_z = { 'battery' },
+  },
+
+  extensions = {},
+})
+
+
+return config
