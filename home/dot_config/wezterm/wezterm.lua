@@ -44,10 +44,10 @@ config.window_padding = {
   bottom = 0,
 }
 config.window_decorations = 'RESIZE'
-config.window_background_opacity = 0.9
+config.window_background_opacity = 1
 config.window_close_confirmation = "NeverPrompt"
-config.hide_tab_bar_if_only_one_tab = true
--- config.enable_tab_bar = true
+config.hide_tab_bar_if_only_one_tab = false
+config.use_fancy_tab_bar = false
 
 -- Performance
 config.max_fps = 144
@@ -81,7 +81,7 @@ local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabl
 
 tabline.setup({
   options = {
-    icons_enabled = true,
+    icons_enabled = false,
     theme = active_theme,
     tabs_enabled = true,
     theme_overrides = {},
@@ -103,20 +103,23 @@ tabline.setup({
     -- Left side
     tabline_a = { 'mode' },
     tabline_b = { 'workspace' },
-    tabline_c = { ' ' },
+    tabline_c = { ' ;] ' },
 
     -- Middle side
     tab_active = {
-      'parent',
+      { 'parent', padding = { left = 1, right = 0 } },
+      { 'parent', padding = { left = 1, right = 0 } },
       '/',
       { 'cwd', padding = { left = 0, right = 1 } },
   		{
 				'zoomed',
 				icon = wezterm.nerdfonts.oct_zoom_in,
-				padding = { left = 0, right = 0 },
+				padding = { left = 0, right = 1 },
 			},
     },
-    tab_inactive = { 'index', { 'process', padding = { left = 0, right = 1 } } },
+    tab_inactive = {
+      { 'process', padding = { left = 0, right = 1 } },
+    },
 
     -- Right side
     tabline_x = { 'ram' },
