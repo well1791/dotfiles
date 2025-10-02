@@ -73,19 +73,6 @@ tabline.setup({
     tabs_enabled = true,
     theme_overrides = {},
 
-    -- section_separators = {
-    --   left = wezterm.nerdfonts.pl_left_hard_divider,
-    --   right = wezterm.nerdfonts.pl_right_hard_divider,
-    -- },
-    -- component_separators = {
-    --   left = wezterm.nerdfonts.pl_left_soft_divider,
-    --   right = wezterm.nerdfonts.pl_right_soft_divider,
-    -- },
-    -- tab_separators = {
-    --   left = wezterm.nerdfonts.pl_left_hard_divider,
-    --   right = wezterm.nerdfonts.pl_right_hard_divider,
-    -- },
-
 		section_separators = {
 			left = wezterm.nerdfonts.ple_right_half_circle_thick,
 			right = wezterm.nerdfonts.ple_left_half_circle_thick,
@@ -111,7 +98,7 @@ tabline.setup({
       { 'index', fmt = function(str) return string.format("[%s]", str) end },
       { 'parent', padding = 0 },
       '/',
-      { 'cwd', padding = { left = 0, right = 1 } },
+      { 'cwd', padding = { left = 0, right = 1 }, max_length = 20 },
       { 'zoomed', padding = 0 },
     },
     tab_inactive = {
@@ -140,7 +127,7 @@ config.keys = {
 
   -- Pane close
   {
-    key = 'x',
+    key = 'o',
     mods = 'LEADER',
     action = act.CloseCurrentPane { confirm = false },
   },
@@ -154,17 +141,17 @@ config.keys = {
 
   -- Tabs
   {
-    key = 'f',
+    key = 'w',
     mods = 'LEADER',
     action = act.SpawnTab('CurrentPaneDomain'),
   },
   {
-    key = 'q',
+    key = 'f',
     mods = 'LEADER',
     action = act.CloseCurrentTab { confirm = false },
   },
   {
-    key = 'w',
+    key = 's',
     mods = 'LEADER',
     action = act.ActivateLastTab,
   },
