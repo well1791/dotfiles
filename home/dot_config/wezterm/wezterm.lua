@@ -54,6 +54,7 @@ config.skip_close_confirmation_for_processes_named = {
   'nu',
   'zellij',
 }
+config.default_workspace = "~"
 
 wezterm.on('gui-startup', function(cmd)
     local tab, pane, window = mux.spawn_window(cmd or {})
@@ -116,6 +117,10 @@ tabline.setup({
   extensions = { 'resurrect', 'smart_workspace_switcher'},
 })
 
+local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+
+workspace_switcher.apply_to_config(config)
+
 config.leader = { key = 'Space', mods = 'CTRL|SHIFT', timeout_milliseconds = 1000 }
 config.keys = {
   -- Send 'ALT-Space' to the terminal when pressing: ALT-Space, ALT-Space
@@ -171,41 +176,20 @@ config.keys = {
     key = 'h',
     mods = 'LEADER',
     action = act.SwitchToWorkspace {
-      name = 'default',
+      name = '~',
     },
   },
 
-  -- All workspaces
+  -- Workspaces
   {
-    key = 'o',
-    mods = 'LEADER',
-    action = act.ShowLauncherArgs {
-      flags = 'FUZZY|WORKSPACES',
-    },
+    key = "o",
+    mods = "LEADER",
+    action = workspace_switcher.switch_workspace(),
   },
-
-  -- Create and go to workspace.
   {
-    key = 'g',
-    mods = 'LEADER',
-    action = act.PromptInputLine {
-      description = wezterm.format {
-        { Attribute = { Intensity = 'Bold' } },
-        { Foreground = { AnsiColor = 'Fuchsia' } },
-        { Text = 'Enter name for new workspace' },
-      },
-      action = wezterm.action_callback(function(window, pane, line)
-        -- line will be `nil` if they hit escape without entering anything
-        -- An empty string if they just hit enter
-        -- Or the actual line of text they wrote
-        if line then
-          window:perform_action(
-            act.SwitchToWorkspace { name = line, },
-            pane
-          )
-        end
-      end),
-    },
+    key = "u",
+    mods = "LEADER",
+    action = workspace_switcher.switch_to_prev_workspace(),
   },
 }
 
