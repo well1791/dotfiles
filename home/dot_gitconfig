@@ -18,19 +18,21 @@
 [diff]
   compactionHeuristic = true
   renamelimit = 9999
-  tool = difftastic
   renames = copies
   algorithm = patience
   wsErrorHighlight = all
   identHeuristic = on
   colorMoved = default
+  tool = difftastic
   external = difft
 
 [difftool]
   prompt = false
 
 [difftool "difftastic"]
-  cmd = difft "$LOCAL" "$REMOTE"  
+  # See `man git-difftool` for a description of MERGED, LOCAL and REMOTE.
+  cmd = difft "$MERGED" "$LOCAL" "abcdef1" "100644" "$REMOTE" "abcdef2" "100644"
+  # cmd = difft "$LOCAL" "$REMOTE"  
 
 [pager]
   difftool = true
@@ -76,7 +78,7 @@
 
 [fetch]
   prune = true
-	writeCommitGraph = true
+  writeCommitGraph = true
 
 [merge]
   stat = true
@@ -100,10 +102,10 @@
   decorate = short
 
 [rerere]
-	enabled = true
+  enabled = true
 
 [branch]
-	sort = -committerdate
+  sort = -committerdate
 
 [advice]
-	detachedHead = false
+  detachedHead = false
