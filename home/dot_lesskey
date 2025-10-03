@@ -1,17 +1,15 @@
-#command
+# ijkl
+i back-line
+k forw-line
 j left-scroll
 l right-scroll
-k forw-line
-s forw-line
-i back-line
-w back-line
-
 J back-screen
 L forw-screen
 j left-scroll
 l right-scroll
 
-d forw-scroll
-e back-scroll
-
-
+# esdf
+e back-line
+d forw-line
+r back-scroll
+f forw-scroll
