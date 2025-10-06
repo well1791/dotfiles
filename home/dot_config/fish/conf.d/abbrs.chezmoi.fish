@@ -9,7 +9,6 @@ abbr -a -- mc chezmoi cd
 abbr -a mee --set-cursor 'chezmoi edit ~/%'
 abbr -a me --set-cursor 'chezmoi edit ~/.config/%'
 abbr -a -- mf chezmoi edit ~/.config/fish
-abbr -a -- mj chezmoi edit ~/.config/zellij/config.kdl
 abbr -a -- mh chezmoi edit ~/.config/helix/config.toml
 abbr -a -- mk chezmoi edit ~/.config/kanata/config.kbd
 abbr -a -- mw chezmoi edit ~/.config/wezterm/wezterm.lua
