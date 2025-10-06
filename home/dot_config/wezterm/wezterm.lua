@@ -54,7 +54,7 @@ config.skip_close_confirmation_for_processes_named = {
   'nu',
   'zellij',
 }
-config.default_workspace = "~"
+config.default_workspace = '~'
 
 wezterm.on('gui-startup', function(cmd)
     local tab, pane, window = mux.spawn_window(cmd or {})
@@ -70,40 +70,33 @@ local tabline = wezterm.plugin.require('https://github.com/michaelbrusegard/tabl
 tabline.setup({
   options = {
     icons_enabled = false,
-    theme = "GruvboxDark",
+    theme = 'GruvboxDark',
     tabs_enabled = true,
     theme_overrides = {},
-
-		section_separators = {
-			left = wezterm.nerdfonts.ple_right_half_circle_thick,
-			right = wezterm.nerdfonts.ple_left_half_circle_thick,
-		},
-		component_separators = {
-			left = wezterm.nerdfonts.ple_right_half_circle_thin,
-			right = wezterm.nerdfonts.ple_left_half_circle_thin,
-		},
-		tab_separators = {
-			left = wezterm.nerdfonts.ple_right_half_circle_thick,
-			right = wezterm.nerdfonts.ple_left_half_circle_thick,
-		},
+    section_separators = '',
+    component_separators = '',
+    tab_separators = '',
   },
 
   sections = {
     -- Left side
     tabline_a = { 'mode' },
-    tabline_b = { 'workspace' },
+    tabline_b = {
+      { Foreground = { AnsiColor = 'Aqua' } },
+      'workspace'
+    },
     tabline_c = { },
 
     -- Middle section
     tab_active = {
-      { 'index', fmt = function(str) return string.format("[%s]", str) end },
+      { 'index', fmt = function(str) return string.format('[%s]', str) end },
       { 'parent', padding = 0 },
       '/',
       { 'cwd', padding = { left = 0, right = 1 }, max_length = 20 },
       { 'zoomed', padding = 0 },
     },
     tab_inactive = {
-      { 'index', fmt = function(str) return string.format("[%s]", str) end },
+      { 'index', fmt = function(str) return string.format('[%s]', str) end },
       { 'process', padding = { left = 0, right = 1 } },
       { 'cwd', padding = { left = 0, right = 1 }, max_length = 10 },
     },
@@ -117,13 +110,13 @@ tabline.setup({
   extensions = { 'resurrect', 'smart_workspace_switcher'},
 })
 
-local workspace_switcher = wezterm.plugin.require("https://github.com/MLFlexer/smart_workspace_switcher.wezterm")
+local workspace_switcher = wezterm.plugin.require('https://github.com/MLFlexer/smart_workspace_switcher.wezterm')
 
 workspace_switcher.apply_to_config(config)
 
 config.leader = { key = 'Space', mods = 'CTRL|SHIFT', timeout_milliseconds = 1000 }
 config.keys = {
-  -- Send 'ALT-Space' to the terminal when pressing: ALT-Space, ALT-Space
+  -- Send the *leader* shortcut to the terminal
   {
     key = 'Space',
     mods = 'LEADER|CTRL|SHIFT',
@@ -182,13 +175,13 @@ config.keys = {
 
   -- Workspaces
   {
-    key = "o",
-    mods = "LEADER",
+    key = 'o',
+    mods = 'LEADER',
     action = workspace_switcher.switch_workspace(),
   },
   {
-    key = "u",
-    mods = "LEADER",
+    key = 'u',
+    mods = 'LEADER',
     action = workspace_switcher.switch_to_prev_workspace(),
   },
 }
@@ -209,7 +202,7 @@ local right_nav_keys = {
 }
 
 for key, direction in pairs(right_nav_keys) do
-  -- focus panes: ijkl
+  -- focus pane: ijkl
   table.insert(config.keys, {
     key = key,
     mods = 'LEADER',
@@ -218,7 +211,7 @@ for key, direction in pairs(right_nav_keys) do
     end),
   })
 
-  -- create panes: IJKL
+  -- create pane: IJKL
   table.insert(config.keys, {
     key = string.upper(key),
     mods = 'LEADER',
