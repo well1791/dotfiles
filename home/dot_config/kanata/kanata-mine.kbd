@@ -1,0 +1,295 @@
+(defcfg
+  process-unmapped-keys yes
+  concurrent-tap-hold yes
+  ;; sequence-input-mode visible-backspaced
+
+  ;; linux-dev /dev/input/by-id/usb-Kinesis_Kinesis_Adv360_360555127546-if01-event-kbd
+  ;; linux-dev /dev/input/event4
+
+  rapid-event-delay 0
+  chords-v2-min-idle-experimental 5
+  log-layer-changes no
+)
+
+(defsrc
+  q  w  e  r  t       y  u  i  o  p
+   a  s  d  f  g       h  j  k  l  ;
+    z  x  c  v  b       n  m  ,  .  /  
+)
+
+(defvar
+  chord_timeout     25 ;; ( 50-100)
+  tap_timeout      200 ;; (150-250)
+  hold_timeout     200 ;; (150-250)
+  one_shot_timeout  500 ;; time to dismiss
+)
+
+(defalias
+  ;; LAYER ONE SHOT
+  os_meh   (one-shot-press $one_shot_timeout C-A-S)
+  os_ns    (one-shot-press $one_shot_timeout (layer-while-held U_NS))
+  os_ff    (one-shot-press $one_shot_timeout (layer-while-held U_FF))
+  os_go    (one-shot-press $one_shot_timeout (layer-while-held U_GO))
+  os_me    (one-shot-press $one_shot_timeout (layer-while-held U_ME))
+
+  ;; LAYER SWITCH
+  to_normal_r     (layer-switch L_NORMAL)
+
+  u_nl     (layer-switch U_NL)
+  u_nr     (layer-switch U_NR)
+  u_no     (layer-switch U_NO)
+
+  ;; QWERTY KEYBOARD LAYOUT
+  _tlp q   _tlr w   _tlm e   _tli r         _tri u   _trm i   _trr o   _trp p
+  _blp a   _blr s   _blm d   _bli f         _bri j   _brm k   _brr l   _brp ;
+
+  ;; MODS ALPHA
+  tlp      @_tlp
+  tlr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlr @tap) lalt $lt_kbd)
+  tlm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlm @tap) (layer-while-held U_NS) $lt_kbd)
+  tli      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tli @tap) lmet $lt_kbd)
+  tri      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tri @tap) lmet $rt_kbd)
+  trm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_trm @tap) (layer-while-held U_NS) $rt_kbd)
+  trr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_trr @tap) lalt $rt_kbd)
+  trp      @_trp
+
+  blp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blp @tap) (layer-while-held U_NR) $lt_kbd)
+  blr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blr @tap) lctl $lt_kbd)
+  blm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blm @tap) (layer-while-held U_FF) $lt_kbd)
+  bli      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_bli @tap) lsft $lt_kbd)
+  bri      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_bri @tap) lsft $rt_kbd)
+  brm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brm @tap) (layer-while-held U_FF) $rt_kbd)
+  brr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brr @tap) lctl $rt_kbd)
+  brp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brp @tap) (layer-while-held U_NL) $rt_kbd)
+
+  ;; CHORDS AL
+  al_tli   (chord CH_BASE ch_tli)
+  al_tlm   (chord CH_BASE ch_tlm)
+  al_tlr   (chord CH_BASE ch_tlr)
+  al_tlp   (chord CH_BASE ch_tlp)
+  al_bli   (chord CH_BASE ch_bli)
+  al_blm   (chord CH_BASE ch_blm)
+  al_blr   (chord CH_BASE ch_blr)
+  al_blp   (chord CH_BASE ch_blp)
+  al_tri   (chord CH_BASE ch_tri)
+  al_trm   (chord CH_BASE ch_trm)
+  al_trr   (chord CH_BASE ch_trr)
+  al_trp   (chord CH_BASE ch_trp)
+  al_bri   (chord CH_BASE ch_bri)
+  al_brm   (chord CH_BASE ch_brm)
+  al_brr   (chord CH_BASE ch_brr)
+  al_brp   (chord CH_BASE ch_brp)
+  al_x     (chord CH_BASE al_ch_x)
+  al_c     (chord CH_BASE al_ch_c)
+  al_spc   (chord CH_BASE al_ch_spc)
+
+
+  ;; CHORDS NO
+  no_d     (chord CH_NA ch_up)
+
+  ;; CHORDS NS
+  _nq   (chord CH_NS ch_nq)
+  _n0   (chord CH_NS ch_n0)
+  _n1   (chord CH_NS ch_n1)
+  _n3   (chord CH_NS ch_n3)
+  _n5   (chord CH_NS ch_n5)
+  _n6   (chord CH_NS ch_n6)
+  _n8   (chord CH_NS ch_n8)
+
+  ;; CHORDS FF
+  _f1   (chord CH_FF ch_f1)
+  _f3   (chord CH_FF ch_f3)
+  _f5   (chord CH_FF ch_f5)
+  _f6   (chord CH_FF ch_f6)
+  _f8   (chord CH_FF ch_f8)
+  _f10  (chord CH_FF ch_f10)
+  _f12  (chord CH_FF ch_f12)
+
+  ;; CHORDS NA
+  na_up     (chord CH_NA ch_up)
+  na_dn     (chord CH_NA ch_dn)
+  na_lt     (chord CH_NA ch_lt)
+  na_rt     (chord CH_NA ch_rt)
+  na_tab    (chord CH_NA ch_tab)
+  na_bspc   (chord CH_NA ch_bspc)
+  na_pgup   (tap-hold $tap_timeout $hold_timeout pgup lmet)
+  na_pgdn   (tap-hold $tap_timeout $hold_timeout pgdn lsft)
+
+  ;; CHORDS NO
+  no_x      (chord CH_NO no_ch_x)
+  no_c      (chord CH_NO no_ch_c)
+  no_spc    (chord CH_NO no_ch_spc)
+
+  ;; MACROS
+  _C_z      (macro C-z)
+  _C_x      (macro C-x)
+  _C_c      (macro C-c)
+  _C_v      (macro C-v)
+  _C_pgup   (macro C-pgup)
+  _C_pgdn   (macro C-pgdn)
+  _C_tab    (macro C-tab)
+  _C_A_q    (macro C-A-q)
+  _C_w      (macro C-w)
+  _A_9      (macro A-9)
+)
+
+(defchords CH_BASE $chord_timeout
+  ;; ALPHA                                         |-- LEFT --|      |-- RIGHT --|
+  (ch_tlp) @tlp   (ch_tlr) @tlr   (ch_tlm) @tlm   (ch_tli) @tli      (ch_tri) @tri   (ch_trm) @trm   (ch_trr) @trr   (ch_trp) @trp
+  (ch_blp) @blp   (ch_blr) @blr   (ch_blm) @blm   (ch_bli) @bli      (ch_bri) @bri   (ch_brm) @brm   (ch_brr) @brr   (ch_brp) @brp 
+  (al_ch_x) x
+  (al_ch_c) c
+  (al_ch_spc) spc
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  (ch_blr ch_blm ch_bli) spc               (ch_bri ch_brm ch_brr) spc
+
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tlr ch_tlm ch_tli) esc               (ch_tri ch_trm ch_trr) esc
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*|*|*| |     --     | |*|*|*|
+  (ch_blp ch_blr ch_blm) @os_go            (ch_brm ch_brr ch_brp) @os_go
+
+  ;;                  |*|*|*| |     --     | |*|*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_tlp ch_tlr ch_tlm) @os_me            (ch_trm ch_trr ch_trp) @os_me
+
+  ;;              | S |z|*|*|v|
+  ;;              |C|F|M|A|  *  |
+  (al_ch_x al_ch_c al_ch_spc) @u_no
+)
+
+(defchords CH_NS $chord_timeout
+  ;; NUMBER CHORDS
+  (ch_n6) 6   (ch_n8) 8   (ch_n0) 0
+  (ch_n1) 1   (ch_n3) 3   (ch_n5) 5   (ch_nq) '
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (ch_n1  ch_n3) 2
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (ch_n3  ch_n5) 4
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  (ch_n6  ch_n8) 7
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_n8  ch_n0) 9
+)
+
+(defchords CH_FF $chord_timeout
+  ;; NUMBER CHORDS
+  (ch_f6) f6   (ch_f8) f8    (ch_f10) f10    (ch_f12) f12
+  (ch_f1) f1   (ch_f3) f3    ( ch_f5)  f5
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (ch_f1   ch_f3)  f2
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (ch_f3   ch_f5)  f4
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  (ch_f6   ch_f8)  f7
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_f8  ch_f10)  f9
+
+  ;;                  |*|*| | |     --     | | |*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_f10 ch_f12)  f11
+)
+
+(defchords CH_NA $chord_timeout
+  ;; NAVIGATION CHORDS
+  (ch_tab) tab   (ch_up) up     (ch_bspc) bspc
+  (ch_lt) left   (ch_dn) down   (ch_rt) rght
+
+  (ch_lt   ch_dn  ch_rt)        spc
+  (ch_tab  ch_up  ch_bspc)      esc
+  (ch_tab         ch_bspc)      home
+  (ch_lt          ch_rt)        end
+  (        ch_up  ch_bspc)      del
+  (ch_tab  ch_up         )      pgup
+  (        ch_dn  ch_bspc)      pgdn
+)
+
+;; Colemak-dh
+;; q w f p b     j l u y ;
+;;  a r s t g     m n e i o
+;;   z x c d v     k h , . /
+(deflayer L_NORMAL ;; Alpha keys
+
+  # @al_tlp  @al_tlr  @al_tlm  @al_tli  t        y  @al_tri  @al_trm  @al_trr  @al_trp
+  # @al_blp  @al_blr  @al_blm  @al_bli  g        h  @al_bri  @al_brm  @al_brr  @al_brp
+  #       z        x        c        v  b        n        m        ,        .        /
+
+
+         @u_nl   lalt    tab  @na_pgup  _           _  @no_word_prv   @no_line_up    @no_word_nxt  @no_para_up
+  @to_normal_r   lctl    esc  @na_pgdn  _           _  @no_line_lt    @no_line_dn    @no_line_rt   @no_para_dn
+)
+
+(deflayer U_NO ;; [No] mods
+                  q  w  e  r  t        y  u  i  o  p 
+                  a  s  d  f  g        h  j  k  l  ;
+                  z  x  c  v  b        n  m  ,  .  /
+)
+
+(deflayer U_NS ;; [N]umbers and [S]ymbols
+     _   @_n0   @_n8  @_n6  _                    _  @_n6  @_n8  @_n0     _
+  @_nq   @_n5   @_n3  @_n1  _                    _  @_n1  @_n3  @_n5  @_nq
+     _  @al_x  @al_c     _  _                    _     _     _     _     _
+                                 @al_spc
+)
+
+(deflayer U_FF ;; [F]unctional keys
+  @_f12  @_f10   @_f8  @_f6  _              _  @_f6  @_f8  @_f10  @_f12
+      _   @_f5   @_f3  @_f1  _              _  @_f1  @_f3   @_f5      _
+      _  @al_x  @al_c     _  _              _     _     _      _      _
+                                 @al_spc
+)
+
+(deflayer U_NR ;; [N]avigation [R]ight
+  @u_nl   lalt    tab  @na_pgup  _           _  @na_tab   @na_up    @na_bspc  @to_normal_r
+  @to_normal_r   lctl    esc  @na_pgdn  _           _   @na_lt   @na_dn      @na_rt  enter
+      _  @al_x  @al_c         _  _           _       _         _           _      _
+)
+
+(deflayer U_NL ;; [N]avigation [L]eft
+  @to_normal_r  @na_bspc  @na_up   @na_tab  _       _  @na_pgup  tab  lalt  @u_nr
+  enter    @na_lt  @na_dn    @na_rt  _       _  @na_pgdn  esc  lctl  @to_normal_r
+      _     @al_x   @al_c         _  _       _         _    _     _      _
+                                 @al_spc
+)
+
+(deflayer U_NOR ;; Normal mode
+  @to_normal_r  @na_bspc  @na_up   @na_tab  _       _  @na_pgup  tab  lmet  @u_nr
+  enter    @na_lt  @na_dn    @na_rt  _       _  @na_pgdn  esc  lctl  @to_normal_r
+      _     @al_x   @al_c         _  _       _         _    _     _      _
+                                 @al_spc
+)
+
+(deflayer U_ME ;; [ME]dia
+  _   prev    volu  mute  _                   _  mute    volu  prev  _
+  _   next  voldwn    pp  _                   _    pp  voldwn  next  _
+  _  @al_x   @al_c     _  _                   _     _       _     _  _
+                                 @al_spc
+)
+
+(deflayer U_GO ;; "[GO] to" shortcuts
+  @_C_A_q    @_A_9  @_C_pgup      _  _        _      _  @_C_pgup    @_A_9  @_C_A_q
+        _  @_C_tab  @_C_pgdn  @_C_w  _        _  @_C_w  @_C_pgdn  @_C_tab        _
+        _    @al_x     @al_c      _  _        _      _         _        _        _
+                                       @al_spc
+)
+

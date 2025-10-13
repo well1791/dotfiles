@@ -1,0 +1,659 @@
+(defcfg
+  process-unmapped-keys yes
+  concurrent-tap-hold yes
+  ;; linux-dev /dev/input/by-id/usb-Kinesis_Kinesis_Adv360_360555127546-if01-event-kbd
+  ;; linux-dev /dev/input/event4
+
+  rapid-event-delay 0
+  chords-v2-min-idle-experimental 5
+  log-layer-changes no
+)
+
+(defsrc
+  q w e r t    y u i o p
+   a s d f g    h j k l ;
+    z x c v b    n m , . /
+;;  caps prnt ins
+;;  f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
+;;  grv 1 2 3 4 5 6 7 8 9 0 - =
+;;  tab q w e r t y u i o p \
+;;  esc a s d f g h j k l ; '
+;;  lsft z x c v b n m , . / rsft
+;;  lalt lmet rctl spc rmet
+;;  lctl ralt ret bspc
+;;  left right up down [ ]
+;;  home end pgup pgdn
+)
+
+  ;; Variables
+(defvar
+  ;; tap-hold timeouts. adjust to your liking.
+  tap_timeout 150
+  hold_timeout 150
+
+  ;; Some keys may need slower timeouts (for example if key is further away holding it may require a slower timeout to be comfortable)
+  tap_timeout_slow 200
+  hold_timeout_slow 200
+)
+
+(defalias
+  ;; Default Layers
+  L_main (layer-switch main)
+
+  ;; --- Vim layers ---
+  ;; toggling different layers for Vim motions
+  L_ret_leader_tog (tap-hold-press $tap_timeout_slow $hold_timeout_slow ret (layer-toggle leader))
+  L_spc_leader_tog (tap-hold-release $tap_timeout_slow $hold_timeout_slow spc (layer-toggle leader))
+  ;; L_ret_leader2_tog (tap-hold-release $tap_timeout $hold_timeout ret (layer-toggle leader2))
+  L_bspc_shift_tog (tap-hold-press $tap_timeout_slow 1000 bspc (layer-toggle shift_layer))
+  L_rmet_leader_tog (tap-hold-release 1 1 rmet (layer-toggle leader))
+  L_esc_leader_tog (tap-hold-release $tap_timeout $hold_timeout_slow esc (layer-toggle leader))
+  L_esc_leader2_tog (tap-hold-press $tap_timeout 1000 esc (layer-toggle leader2))
+  L_lsft_leader_shift_tog (tap-hold-release $tap_timeout $hold_timeout lsft (layer-toggle leader_mode_shift_layer))
+
+  ;; Homerow mods tog
+  L_f_ctrl_tog (tap-hold-release $tap_timeout_slow $hold_timeout f (layer-toggle ctrl_homerow))
+  L_j_ctrl_tog (tap-hold-release $tap_timeout_slow $hold_timeout j (layer-toggle ctrl_homerow))
+  L_d_alt_tog (tap-hold-release $tap_timeout_slow $hold_timeout d (layer-toggle alt_homerow))
+  L_k_alt_tog (tap-hold-release $tap_timeout_slow $hold_timeout k (layer-toggle alt_homerow))
+  L_s_numbers_tog (tap-hold-release $tap_timeout_slow $hold_timeout s (layer-toggle numbers))
+
+  ;; Modes tog from normal mode layer
+  L_f_norm_ctrl_tog (tap-hold-release $tap_timeout $hold_timeout f (layer-toggle normal_mode_ctrl_layer))
+  L_g_norm_g_tog (tap-hold-release $tap_timeout $hold_timeout lsft (layer-toggle normal_mode_g_layer))
+
+  ;; Shift modes tog from normal mode layer
+  L_lsft_norm_shift_tog (tap-hold-release $tap_timeout $hold_timeout lsft (layer-toggle normal_mode_shift_layer))
+  L_rsft_norm_shift_tog (tap-hold-release $tap_timeout $hold_timeout rsft (layer-toggle normal_mode_shift_layer))
+  L_lsft_norm_d_shift_tog (tap-hold-release $tap_timeout $hold_timeout lsft (layer-toggle normal_mode_d_shift_layer))
+  L_rsft_norm_d_shift_tog (tap-hold-release $tap_timeout $hold_timeout rsft (layer-toggle normal_mode_d_shift_layer))
+  L_lsft_norm_c_shift_tog (tap-hold-release $tap_timeout $hold_timeout lsft (layer-toggle normal_mode_c_shift_layer))
+  L_rsft_norm_c_shift_tog (tap-hold-release $tap_timeout $hold_timeout rsft (layer-toggle normal_mode_c_shift_layer))
+  L_lsft_norm_y_shift_tog (tap-hold-release $tap_timeout $hold_timeout lsft (layer-toggle normal_mode_y_shift_layer))
+  L_rsft_norm_y_shift_tog (tap-hold-release $tap_timeout $hold_timeout rsft (layer-toggle normal_mode_y_shift_layer))
+  L_lsft_norm_v_shift_tog (tap-hold-release $tap_timeout $hold_timeout lsft (layer-toggle normal_mode_v_shift_layer))
+  L_rsft_norm_v_shift_tog (tap-hold-release $tap_timeout $hold_timeout rsft (layer-toggle normal_mode_v_shift_layer))
+
+  ;; switching to different layers for Vim motions
+  L_win (layer-switch window)
+  L_leader (layer-switch leader)
+  L_norm (layer-switch normal_mode)
+  L_normal_mode_replace_single_letter (layer-switch normal_mode_replace_single_letter_layer)
+  L_g (layer-switch normal_mode_g_layer)
+  L_d (layer-switch normal_mode_d_layer)
+  L_d_i (layer-switch normal_mode_d_i_layer)
+  L_c (layer-switch normal_mode_c_layer)
+  L_c_i (layer-switch normal_mode_c_i_layer)
+  L_v (layer-switch normal_mode_v_layer)
+  L_v_i (layer-switch normal_mode_v_i_layer)
+  L_y (layer-switch normal_mode_y_layer)
+  L_y_i (layer-switch normal_mode_y_i_layer)
+
+
+  ;; Mod-combinations
+  cspc C-spc
+
+  ;; Apps
+  a_chrome M-1
+  a_editor M-2      ;; Neovim
+  a_editor2 M-x     ;; VSCode
+  a_firefox M-3
+  a_postman M-4
+  a_slack M-q
+  a_email M-w       ;; Thunderbird 
+  a_filemanager M-e ;; File Manager
+  a_dbclient M-r    ;; DBEaver     
+  a_terminal M-esc  ;; Kitty    
+  a_launcher C-spc  ;; Rofi
+  a_clipboard (multi @L_norm M-v)   ;; Show clipboard history using built-in KDE tool
+
+  ;; Macros
+  cut_word (macro C-right S-C-left C-c del)
+
+  ;; Navigation
+  mscrollup (mwheel-down 150 360)
+  mscrolldown (mwheel-up 150 360)
+)
+
+;; input chords. pressing key1 + key2 will trigger the action
+(defchordsv2-experimental
+  ;; layer chords
+  ;; (j k) @L_leader 50 first-release ()
+  ;; (d f) @L_leader 50 first-release ()
+  ;; (s d f) @L_leader 50 first-release ()
+  (n m) @L_norm 50 first-release ()
+
+  ;; app chords
+  (d f) @a_editor 25 first-release ()
+  (c v) @a_terminal 25 first-release ()
+  (f g) @a_firefox 50 first-release ()
+  (v b) @a_chrome 50 first-release ()
+
+  ;; key chords
+  (x c) esc 50 first-release () ;; escape easier to reach
+  ;; (d f) (multi lalt lctl) 50 first-release () ;; ctrl + alt on home row
+)
+
+(deflayermap (main)
+  ;; Mapping leader toggle when key is held (goes back to main mode when key is released)
+  ;; (I use a split keyboard so leader keys are usually on my left and right thumb keys so it's convenient to reach)
+  ret @L_ret_leader_tog
+  ;; spc @L_spc_leader_tog
+  ;; rmet @L_rmet_leader_tog
+  ;; ret @L_ret_leader2_tog
+  bspc @L_bspc_shift_tog 
+  ;; esc @L_esc_leader_tog
+  esc @L_esc_leader2_tog
+
+  ;; -- Home row mods -- 
+  ;; left hand
+  f @L_f_ctrl_tog
+  d @L_d_alt_tog
+  s @L_s_numbers_tog
+
+  ;; right hand
+  ;; j @L_j_ctrl_tog
+)
+
+(deflayermap (leader)
+  ;; esc @L_main
+  ' @L_main
+  ;; i @L_main
+
+  ;; layers
+  ;; n (multi (release-layer leader) @L_norm)
+  w (multi (release-layer leader) @L_win)
+  lsft @L_lsft_leader_shift_tog
+  ;; ret @L_lsft_leader_shift_tog
+
+  ;; apps
+  r (multi @L_main @a_launcher)
+  s (multi @L_main @a_slack)
+  c (multi @L_main @a_chrome)
+  f (multi @L_main @a_firefox)
+  d (multi @L_main @a_terminal)
+  b (multi @L_main @a_email)
+  v (multi @L_main @a_editor)
+  e (multi @L_main @a_filemanager)
+  g (multi @L_main @a_dbclient)
+  x (multi @L_main @a_editor2)
+  ;; p (multi @L_main @a_clipboard)
+  t (multi @L_main @a_postman)
+  spc (multi @L_main @a_launcher)
+  ;; / (multi @L_main @a_terminal)
+  q (multi @L_main A-tab)       ;; go to previous window (alt-tab)
+  tab (multi @L_main A-tab)     ;; go to previous window (alt-tab)
+
+  ;; useful hotkeys
+  p C-S-v  ;; paste
+
+  ;; add some navigation keys to the right hand side when leader layer is active
+  h left
+  l right
+  k up
+  j down
+  i (macro-repeat up)
+  u (macro-repeat down)
+
+  ;; switch between tabs in some apps (zellij)
+  1 (multi @L_main (macro C-1))
+  2 (multi @L_main (macro C-2))
+  3 (multi @L_main (macro C-3))
+  4 (multi @L_main (macro C-4))
+  5 (multi @L_main (macro C-5))
+
+ esc tab
+ bspc del
+
+  ___ @L_main
+)
+
+;; shift mode accessed from leader mode
+(deflayermap (leader_mode_shift_layer)
+  esc @L_main
+  ' @L_main
+
+  ;; navigation
+  k (macro-repeat up)
+  j (macro-repeat down)
+  h (macro-repeat left)
+  l (macro-repeat right)
+
+  ___ XX
+)
+
+(deflayermap (normal_mode)
+  esc @L_main
+  ' @L_main
+  0 home              ;; go to the beginning of the line
+  i @L_main           ;; go to main layer (insert mode)
+  a @L_main           ;; go to main layer (insert mode)
+  h left
+  l right
+  k up
+  j down
+  e C-right
+  w (macro C-right right)
+  r @L_normal_mode_replace_single_letter
+  b C-left
+  o (multi @L_main (macro end enter))
+  u C-z  ;; undo
+  p C-v  ;; paste
+  n C-f3 ;; next search default key in some apps
+  x (macro right bspc) ;; delete a letter under cursor
+  / (multi @L_main C-f)  ;; find
+  bspc bspc
+
+  ;; layers
+  ;; spc @L_leader
+  ;; ret @L_ret_leader_tog
+  spc @L_spc_leader_tog
+  rmet @L_rmet_leader_tog
+  lctl @L_f_norm_ctrl_tog
+  f @L_f_norm_ctrl_tog          ;; additionally mapping ctrl to "f" (easier to reach from the home row)
+  lsft @L_lsft_norm_shift_tog
+  rsft @L_rsft_norm_shift_tog
+  g @L_g
+  d @L_d
+  c @L_c
+  v @L_v
+  y @L_y
+
+  ;; keys from shift layer without the need to press shift (shift layer still works though)
+  4 end   ;; go to the end of the line, same as $ in vim
+  6 home  ;; go to the beginning of the line, same as ^ in vim
+
+  ___ XX
+)
+
+;; ctrl mode accessed from normal mode
+(deflayermap (normal_mode_ctrl_layer)
+  esc @L_norm
+  ' @L_norm
+  r C-S-z ;; redo
+  u (macro-repeat up)   ;; alternative to ctrl+u in Vim
+  d (macro-repeat down) ;; alternative to ctrl+d in Vim
+  ___ XX
+)
+
+;; "normal" mode shift layer
+(deflayermap (normal_mode_shift_layer)
+  esc @L_norm
+  ' @L_norm
+  4 end           ;; go to the end of the line, same as $ in vim
+  6 home          ;; go to the beginning of the line, same as ^ in vim
+  g C-end ;; go to the end of the document, same as "gg" in vim
+  y (macro S-end C-c esc) ;; yank to the end of the line
+  o (multi @L_main (macro home enter up)) ;; create new line above
+  n C-S-f3 ;; previous search default key in some apps
+  v (multi @L_v (macro home S-end))
+  ___ XX
+)
+
+
+;; "g" (go) mode accessed from normal mode
+(deflayermap (normal_mode_g_layer)
+  esc @L_norm
+  ' @L_norm
+  g (multi @L_norm C-home)               ;; go to the beginning of the document, same as "gg" in vim
+  c (multi @L_norm (macro home / / spc)) ;; comment line (will only use // since it doesn't know the context language)
+  ___ XX
+)
+
+;; "d" (delete) mode accessed from normal mode.
+(deflayermap (normal_mode_d_layer)
+  esc @L_norm
+  ' @L_norm
+  i @L_d_i
+  d (multi @L_norm (macro home S-end C-c del del))          ;; delete line, same as "dd" in vim
+  0 (multi @L_norm (macro S-home C-c del))                  ;; delete to the position 0 of the line (same as vim)
+  4 (multi @L_norm (macro S-end C-c del))                   ;; delete to the end of the line, same as d$ in vim
+  6 (multi @L_norm (macro S-home C-c del))                  ;; delete to the beginning of the line, same as d^ in vim
+  j (multi @L_norm (macro down home S-end C-c del bspc))    ;; delete line down
+  k (multi @L_norm (macro up home S-end C-c del bspc down)) ;; delete line up
+  l (multi @L_norm del)                                     ;; delete to the right
+  h (multi @L_norm bspc)                                    ;; delete to the left
+  lsft @L_lsft_norm_d_shift_tog
+  rsft @L_rsft_norm_d_shift_tog
+  ___ XX
+)
+
+;; "d" mode shift layer
+(deflayermap (normal_mode_d_shift_layer)
+  esc @L_norm
+  ' @L_norm
+  4 (multi @L_norm (macro S-end C-c del))           ;; delete to the end of the line, same as d$ in vim
+  6 (multi @L_norm (macro S-home C-c del))          ;; delete to the beginning of the line, same as d^ in vim
+  g (multi @L_norm (macro S-pgdn C-c del))          ;; delete to the end of the document
+  ___ XX
+)
+
+;; "d" mode "i" (inside) layer
+(deflayermap (normal_mode_d_i_layer)
+  esc @L_norm
+  ' @L_norm
+  w (multi @L_norm @cut_word) ;; delete word, same as "diw" in vim
+  g (multi @L_norm (macro pgup home S-pgdn C-c del)) ;; delete entire document
+  ___ XX
+)
+
+;; "c" mode accessed from normal mode. This mode moves you into the main layer (insert mode) after executing any action
+(deflayermap (normal_mode_c_layer)
+  esc @L_norm
+  ' @L_norm
+  i @L_c_i
+  0 (multi @L_main (macro S-home C-c del)) ;; cut to the position 0 of the line and go insert mode (same as vim)
+  lsft @L_lsft_norm_c_shift_tog
+  rsft @L_rsft_norm_c_shift_tog
+  ___ XX
+)
+
+;; "c" mode "i" (inside) layer
+(deflayermap (normal_mode_c_i_layer)
+  esc @L_norm
+  ' @L_norm
+  w (multi @L_main @cut_word) ;; cut word, same as "ciw" in vim
+  g (multi @L_main (macro pgup home S-pgdn C-c del)) ;; cut entire document
+  ___ XX
+)
+
+;; "c" mode shift layer
+(deflayermap (normal_mode_c_shift_layer)
+  esc @L_norm
+  ' @L_norm
+  4 (multi @L_main (macro S-end C-c del))           ;; cut to the end of the line, same as d$ in vim
+  6 (multi @L_main (macro S-home C-c del))          ;; cut to the beginning of the line, same as d^ in vim
+  g (multi @L_main (macro S-pgdn C-c del))                  ;; cut to the end of the document
+  ___ XX
+)
+
+;; "v" (visual) mode accessed from normal mode.
+(deflayermap (normal_mode_v_layer)
+  esc (multi @L_norm esc)
+  ' @L_norm
+  i @L_v_i
+  0 S-home     ;; select to the position 0 of the line (same as vim)
+  4 S-end
+  6 S-home
+  h S-left
+  j S-down
+  k S-up
+  l S-right
+  y (multi @L_norm (macro C-c esc)) ;; copy selected text
+  p (multi @L_norm C-v)             ;; paste into selected text
+  d (multi @L_norm (macro C-c del))
+  c (multi @L_main (macro C-c del))
+  x (multi @L_norm del)
+  lsft @L_lsft_norm_v_shift_tog
+  rsft @L_rsft_norm_v_shift_tog
+  ___ XX
+)
+
+;; "v" mode "i" (inside) layer
+(deflayermap (normal_mode_v_i_layer)
+  esc @L_norm
+  ' @L_norm
+  w (multi @L_v (macro C-right S-C-left))   ;; select word
+  g (multi @L_v (macro pgup home S-pgdn))   ;; select entire document
+  ___ XX
+)
+
+;; "v" mode shift layer
+(deflayermap (normal_mode_v_shift_layer)
+  esc @L_norm
+  ' @L_norm
+  4 (multi @L_v S-end)               ;; select to the end of the line, same as d$ in vim
+  6 (multi @L_v S-home)              ;; select to the beginning of the line, same as d^ in vim
+  g (multi @L_v S-pgdn)              ;; select to the end of the document
+  ___ XX
+)
+
+;; "y" (yank) mode accessed from normal mode.
+(deflayermap (normal_mode_y_layer)
+  esc @L_norm
+  ' @L_norm
+  i @L_y_i
+  0 (multi @L_main (macro S-home C-c esc)) ;; yank to the position 0 of the line and go insert mode (same as vim)
+  lsft @L_lsft_norm_y_shift_tog
+  rsft @L_rsft_norm_y_shift_tog
+  ___ XX
+)
+
+;; "y" mode "i" (inside) layer
+(deflayermap (normal_mode_y_i_layer)
+  esc @L_norm
+  ' @L_norm
+  w (multi @L_norm (macro C-right S-C-left C-c esc)) ;; yank word
+  g (multi @L_norm (macro pgup home S-pgdn C-c esc)) ;; Copy entire document
+  ___ XX
+)
+
+;; "y" mode shift layer
+(deflayermap (normal_mode_y_shift_layer)
+  esc @L_norm
+  ' @L_norm
+  4 (multi @L_norm (macro S-end C-c esc))  ;; copy to the end of the line, same as d$ in vim
+  6 (multi @L_norm(macro S-home C-c esc))  ;; copy to the beginning of the line, same as d^ in vim
+  g (multi @L_norm(macro S-pgdn C-c esc))  ;; copy to the end of the document
+  ___ XX
+)
+
+;; layer to help with normal mode "r" key to replace the letter under cursor, same as in Vim
+(deflayermap (normal_mode_replace_single_letter_layer)
+  esc @L_main
+  ' @L_main
+  _ (multi @L_norm _ (macro right bspc left))
+)
+
+;; window controls
+(deflayermap (window)
+  esc @L_main
+  ' @L_main
+  q (multi @L_main A-f4)   ;; quit window (alt+f4)
+  d (multi @L_main C-w)    ;; close tab (ctrl+w)
+  t (multi @L_main C-t)    ;; new tab (ctrl+t)
+  r (multi @L_main C-S-t)  ;; reopen closed tab (ctrl+t)
+  e (multi @L_main A-tab)  ;; switch to previous window (alt-tab)
+  f (multi @L_main M-pgup) ;; toggle maximize window (meta+page_up)
+  m (multi @L_main M-pgdn) ;; minimize window (meta+page_down)
+
+  ;; actions below do not move you back to the main layer
+  h M-A-left  ;; Switch to Window to the Left
+  j M-A-down  ;; Switch to Window Below
+  k M-A-up    ;; Switch to Window Above
+  l M-A-right ;; Switch to Window to the Right
+  ___ XX
+)
+
+;; ----- Home row mods below -----
+;; enter ctrl layer. Useful for navigating apps like vim with ctrl+d and ctrl+u and so on.
+(deflayermap (ctrl_homerow)
+  esc @L_main
+  ' @L_main
+  1 C-1
+  2 C-2
+  3 C-3
+  4 C-4
+  5 C-5
+  6 C-6
+  7 C-7
+  8 C-8
+  9 C-9
+  0 C-0
+  d C-d
+  u C-u
+  w C-w
+  s C-s
+  l C-l
+  h C-h
+  j C-j
+  k C-k
+  a C-a
+  c C-c
+  v C-v
+  o C-o
+  i C-i
+  r C-r
+  t C-t
+  p C-p
+  . C-.
+  / C-/
+
+  ret C-ret
+
+  ___ XX
+)
+
+;; alt layer.
+(deflayermap (alt_homerow)
+  esc @L_main
+  ' @L_main
+  d A-d
+  w A-w
+  u A-u
+  l A-l
+  h A-h
+  j A-j
+  k A-k
+  a A-a
+  c A-c
+  v A-v
+  o A-o
+  i A-i
+  r A-r
+  t A-t
+  p A-p
+  tab A-tab
+  ___ XX
+)
+
+;; leader2 layer for some frequently used hotkeys
+(deflayermap (leader2)
+  ;; esc @L_main
+  ' @L_main
+
+  ;; navigation keys
+  ;; h left
+  ;; l right
+  ;; k up
+  ;; j down
+  ;; u (macro-repeat up)
+  ;; i (macro-repeat down)
+
+  ;; remapped hotkey combinations for easier access
+  v C-S-v ;; easier paste into terminals
+  p C-S-v ;; easier paste into terminals
+
+  ;; switch between tabs in some apps (zellij)
+  1 (multi @L_main (macro C-1))
+  2 (multi @L_main (macro C-2))
+  3 (multi @L_main (macro C-3))
+  4 (multi @L_main (macro C-4))
+  5 (multi @L_main (macro C-5))
+
+  q S-1  ;; !
+  w S-2  ;; @
+  e S-3  ;; #
+  r S-4  ;; $
+  t S-5  ;; %
+  a S-6  ;; ^
+  s S-7  ;; &
+  d S-8  ;; *
+  f S-9  ;; (
+  g S-0  ;; )
+
+  y =
+  u +
+  i -
+  o S--
+  
+  h '
+  j S-'  ;; "
+  k `
+  l S-`  ;; ~
+  ; S-\  ;; |
+
+  n (multi @L_main S-[)
+  m (multi @L_main S-])
+  , (multi @L_main [)
+  . (multi @L_main ])
+  / \
+
+  spc A-tab
+
+  ___ XX
+)
+
+(deflayermap (numbers)
+ ;; number pad
+ m 1
+ , 2
+ . 3
+ j 4
+ k 5
+ l 6
+ u 7
+ i 8
+ o 9
+ n 0
+
+ esc @L_esc_leader2_tog
+
+  ___ XX
+)
+
+(deflayermap (shift_layer)
+  1 S-1
+  2 S-2
+  3 S-3
+  4 S-4
+  5 S-5
+  6 S-6
+  7 S-7
+  8 S-8
+  9 S-9
+  0 S-0
+
+  a S-a
+  b S-b
+  c S-c
+  d S-d
+  e S-e
+  f S-f
+  g S-g
+  h S-h
+  i S-i
+  j S-j
+  k S-k
+  l S-l
+  m S-m
+  n S-n
+  o S-o
+  p S-p
+  q S-q
+  r S-r
+  s S-s
+  t S-t
+  u S-u
+  v S-v
+  w S-w
+  x S-x
+  y S-y
+  z S-z
+
+  ; S-;
+  ' S-'
+  ` S-`
+  / S-/
+  \ S-\
+  - S--
+  , S-,
+  . S-.
+  ] S-]
+  [ S-[
+
+  ret S-ret
+  spc S-spc
+
+  ___ XX
+)
