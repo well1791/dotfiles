@@ -89,6 +89,7 @@ tabline.setup({
 
     -- Middle section
     tab_active = {
+      { Foreground = { Color = '#ebdbb2' } },
       { 'index', fmt = function(str) return string.format('[%s]', str) end },
       { 'parent', padding = 0 },
       '/',
@@ -96,9 +97,12 @@ tabline.setup({
       { 'zoomed', padding = 0 },
     },
     tab_inactive = {
+      { Foreground = { Color = 'Gray' } },
       { 'index', fmt = function(str) return string.format('[%s]', str) end },
-      { 'process', padding = { left = 0, right = 1 } },
-      { 'cwd', padding = { left = 0, right = 1 }, max_length = 10 },
+      -- { 'process', padding = { left = 0, right = 1 } },
+      { 'parent', padding = 0 },
+      '/',
+      { 'cwd', padding = { left = 0, right = 1 }, max_length = 20 },
     },
 
     -- Right side
