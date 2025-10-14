@@ -91,10 +91,6 @@
   al_c     (chord CH_BASE al_ch_c)
   al_spc   (chord CH_BASE al_ch_spc)
 
-
-  ;; CHORDS NO
-  no_d     (chord CH_NA ch_up)
-
   ;; CHORDS NS
   _nq   (chord CH_NS ch_nq)
   _n0   (chord CH_NS ch_n0)
