@@ -1,15 +1,16 @@
 # ijkl
 i back-line
 k forw-line
+I back-scroll
+K forw-scroll
+
 j left-scroll
 l right-scroll
 J back-screen
 L forw-screen
-j left-scroll
-l right-scroll
 
 # esdf
 e back-line
 d forw-line
-r back-scroll
-f forw-scroll
+w back-scroll
+s forw-scroll
