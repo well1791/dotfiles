@@ -153,12 +153,13 @@
   in_del    (multi del @to_ins)
 
   ;; Edit Layer
-  ed_up (macro S-up)
-  ed_dn (macro S-down)
-  ed_lt (macro left S-left)
-  ed_rt (macro right S-right)
-  ed_wl (macro left C-left C-S-right) ;; word left
-  ed_wr (macro right C-right C-S-left) ;; word right
+  ed_up     (macro S-up)
+  ed_dn     (macro S-down)
+  ed_lt     (macro left S-left)
+  ed_rt     (macro right S-right)
+  ed_wl     (macro left C-left C-S-right) ;; word left
+  ed_wr     (macro right C-right C-S-left) ;; word right
+  ed_del    (macro del S-right)
 )
 
 (defchords CH_ALPHA $chord_timeout
@@ -188,7 +189,7 @@
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
   ;;(ch_tlr ch_tlm) @caps_word             (ch_trm ch_trr) @caps_word
-
+  (ch_tlr ch_tlm) @to_edit_nor             (ch_trm ch_trr) @to_edit_nor
 )
 
 
@@ -268,7 +269,7 @@
 
 (deflayermap (L_INS)
   ;; LEFT
-  q @_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
+  q @_tlp        w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
   a @mod_blp     s @ch_al_blr     d @ch_al_blm     f @ch_al_bli    g @ch_al_blii
 
   ;;---------RIGHT
@@ -318,8 +319,8 @@
 
 (deflayermap (L_EDIT_INS)
   ;; LEFT
-  q @to_nor_r    w XX    e XX    r XX
-  a @to_ins      s XX    d XX    f XX
+  q @to_edit_nor    w XX    e XX    r XX
+  a @to_ins         s XX    d XX    f XX
 
   ;;---------------------RIGHT
                          u @in_home    i @in_up     o @in_end      p @in_del
