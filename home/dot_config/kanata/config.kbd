@@ -65,19 +65,19 @@
 )
 
 (defalias
-  ;; GO TO
-  to_no_mods    (layer-switch L_NO_MODS)
-  to_nor_r      (layer-switch L_NOR_R)
-  to_ins        (layer-switch L_INS)
-  to_edit_nor   (layer-switch L_EDIT_NOR)
+  ;; SWITCH TO
+  sw_no_mods    (layer-switch L_NO_MODS)
+  sw_nor_r      (layer-switch L_NOR_R)
+  sw_ins        (layer-switch L_INS)
+  sw_edit_nor   (layer-switch L_EDIT_NOR)
 
   ;; ONE SHOT
-  ;;os_meh      (one-shot-press $one_shot_timeout C-A-S)
   os_ins_nav    (one-shot-press $one_shot_timeout (layer-while-held L_EDIT_INS))
   os_shortcuts  (one-shot-press $one_shot_timeout (layer-while-held L_SHORTCUTS))
   os_media      (one-shot-press $one_shot_timeout (layer-while-held L_MEDIA))
   os_nor_r      (one-shot-press $one_shot_timeout (layer-while-held L_NOR_R))
   os_nor_l      (one-shot-press $one_shot_timeout (layer-while-held L_NOR_L))
+  ;;os_meh      (one-shot-press $one_shot_timeout C-A-S)
 
   ;; WHILE HELD
   wh_numbers    (layer-while-held L_NUMBERS)
@@ -87,7 +87,7 @@
 
   caps_word (caps-word 2000)
   ;; fake keys for key repeating
-  tap (multi @to_no_mods (on-idle-fakekey fk_nomods tap 20))
+  tap (multi @sw_no_mods (on-idle-fakekey fk_no_mods tap 20))
 
   mod_tlp      @_tlp
   mod_tlr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlr @tap) lalt $lt_kbd)
@@ -123,12 +123,12 @@
   ch_al_brii  (chord CH_ALPHA ch_brii)
 
   ;; NUMBERS
-  nu_n0   (chord CH_NS ch_n0)
-  nu_n1   (chord CH_NS ch_n1)
-  nu_n3   (chord CH_NS ch_n3)
-  nu_n5   (chord CH_NS ch_n5)
-  nu_n6   (chord CH_NS ch_n6)
-  nu_n8   (chord CH_NS ch_n8)
+  nu_n0   (chord CH_NUM ch_n0)
+  nu_n1   (chord CH_NUM ch_n1)
+  nu_n3   (chord CH_NUM ch_n3)
+  nu_n5   (chord CH_NUM ch_n5)
+  nu_n6   (chord CH_NUM ch_n6)
+  nu_n8   (chord CH_NUM ch_n8)
 
   ;; FUNCTIONAL KEYS
   ff_f1   (chord CH_FF ch_f1)
@@ -140,37 +140,37 @@
   ff_f12  (chord CH_FF ch_f12)
 
   ;; NAVIGATION
-  ch_na_up     (chord CH_NA ch_up)
-  ch_na_dn     (chord CH_NA ch_dn)
-  ch_na_lt     (chord CH_NA ch_lt)
-  ch_na_rt     (chord CH_NA ch_rt)
-  ch_na_tab    (chord CH_NA ch_tab)
-  ch_na_bspc   (chord CH_NA ch_bspc)
+  ch_na_up     (chord CH_NAV ch_up)
+  ch_na_dn     (chord CH_NAV ch_dn)
+  ch_na_lt     (chord CH_NAV ch_lt)
+  ch_na_rt     (chord CH_NAV ch_rt)
+  ch_na_tab    (chord CH_NAV ch_tab)
+  ch_na_bspc   (chord CH_NAV ch_bspc)
   na_pgup      (tap-hold $tap_timeout $hold_timeout pgup lmet)
   na_pgdn      (tap-hold $tap_timeout $hold_timeout pgdn lsft)
 
   ;; NO MODS
-  ch_no_lt      (chord CH_NO ch_lt)
-  ch_no_rt      (chord CH_NO ch_rt)
+  ch_no_lt      (chord CH_NO_MODS ch_lt)
+  ch_no_rt      (chord CH_NO_MODS ch_rt)
 
   ;; EDIT NORMAL
-  ch_ed_up     (chord CH_EDIT_NOR ch_up)
-  ch_ed_dn     (chord CH_EDIT_NOR ch_dn)
-  ch_ed_lt     (chord CH_EDIT_NOR ch_lt)
-  ch_ed_rt     (chord CH_EDIT_NOR ch_rt)
-  ch_ed_wl     (chord CH_EDIT_NOR ch_wl)
-  ch_ed_wr     (chord CH_EDIT_NOR ch_wr)
+  ch_ed_up       (chord CH_EDIT_NOR ch_up)
+  ch_ed_dn       (chord CH_EDIT_NOR ch_dn)
+  ch_ed_lt       (chord CH_EDIT_NOR ch_lt)
+  ch_ed_rt       (chord CH_EDIT_NOR ch_rt)
+  ch_ed_wl       (chord CH_EDIT_NOR ch_wl)
+  ch_ed_wr       (chord CH_EDIT_NOR ch_wr)
   ch_ed_up10     (chord CH_EDIT_NOR ch_up_10)
   ch_ed_dn10     (chord CH_EDIT_NOR ch_dn_10)
 
   ;; Insert-Nav layer
-  in_home   (multi home @to_ins)
-  in_end    (multi end @to_ins)
-  in_up     (multi up end enter @to_ins)
-  in_dn     (multi end enter @to_ins)
-  in_left   (multi left @to_ins)
-  in_right  (multi right @to_ins)
-  in_del    (multi del @to_ins)
+  in_home   (multi home @sw_ins)
+  in_end    (multi end @sw_ins)
+  in_up     (multi up end enter @sw_ins)
+  in_dn     (multi end enter @sw_ins)
+  in_left   (multi left @sw_ins)
+  in_right  (multi right @sw_ins)
+  in_del    (multi del @sw_ins)
 )
 
 (defchords CH_ALPHA $chord_timeout
@@ -181,6 +181,10 @@
   ;; RIGHT
                        (ch_tri) @mod_tri    (ch_trm) @mod_trm    (ch_trr) @mod_trr
   (ch_brii) @_brii     (ch_bri) @mod_bri    (ch_brm) @mod_brm    (ch_brr) @mod_brr
+
+  ;;                  | | | | |
+  ;;                  |f|*|*|j|
+  (ch_blii ch_brii) @sw_no_mods
 
   ;;                  | | | | |     --     | | | | |  
   ;;                  | |*|*|*|     --     |*|*|*| |  
@@ -196,10 +200,10 @@
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_tlr ch_tlm         ) @to_edit_nor      (       ch_trm ch_trr) @to_edit_nor
+  (ch_tlr ch_tlm) @sw_edit_nor             (ch_trm ch_trr) @sw_edit_nor
 )
 
-(defchords CH_NS $chord_timeout
+(defchords CH_NUM $chord_timeout
   ;; NUMBER CHORDS
   (ch_n6) 6   (ch_n8) 8   (ch_n0) 0
   (ch_n1) 1   (ch_n3) 3   (ch_n5) 5
@@ -247,7 +251,7 @@
   (ch_f10 ch_f12)  f11
 )
 
-(defchords CH_NA $chord_timeout
+(defchords CH_NAV $chord_timeout
   ;; NAVIGATION CHORDS
   (ch_tab) tab   (ch_up) up     (ch_bspc) bspc
   (ch_lt) left   (ch_dn) down   (ch_rt) rght
@@ -261,10 +265,10 @@
   (        ch_dn  ch_bspc)      pgdn
 )
 
-(defchords CH_NO $chord_timeout
+(defchords CH_NO_MODS $chord_timeout
   (ch_lt) g (ch_rt) h
 
-  (ch_lt   ch_rt)        @to_nor_r
+  (ch_lt   ch_rt)        @sw_ins
 )
 
 (defchords CH_EDIT_NOR $chord_timeout
@@ -274,11 +278,12 @@
 )
 
 (deffakekeys
-  fk_nomods (layer-switch L_INS)
+  fk_no_mods (layer-switch L_INS)
 )
 
-;; Layer: base. Has modifiers and chords
-;;
+;; Layer: INSERT - Main/base layer with modifiers and chords
+;; Chords: "g + h" to switch to "L_NO_MODS"
+;; Chords: "s + d"|"k + l" to switch to "L_NOR_R"
 (deflayermap (L_INS)
   ;; LEFT
   q @mod_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
@@ -289,34 +294,38 @@
   h @ch_al_brii    j @ch_al_bri    k @ch_al_brm     l @ch_al_brr     ; @mod_brp
 )
 
-;; Layer: no modifiers (ideal for gaming)
-;; Go back to "normal" using chords: g + h
-(deflayermap (L_NO_MODS)
- q @_tlp    w @_tlr    e @_tlm    r @_tli
- a @_blp    s @_blr    d @_blm    f @_bli    g @ch_no_lt
- ;; RIGHT
-                u @_tri    i @_trm    o @_trr    p @_trp
- h @ch_no_rt    j @_bri    k @_brm    l @_brr    ; @_brp
-)
-
+;; Layer: NORMAL RIGHT - Normal/navigation layer with modifiers and chords
 (deflayermap (L_NOR_R)
   ;; LEFT
-  q @os_media        w lalt    e del        r @na_pgup
-  a @os_shortcuts    s lctl    d @to_ins    f @na_pgdn
+  q @os_media        w lalt    e XX         r @na_pgup
+  a @os_shortcuts    s lctl    d @sw_ins    f @na_pgdn
 
   ;; RIGHT
   u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p XX
   j @ch_na_lt     k @ch_na_dn    l @ch_na_rt      ; enter
 )
 
+;; Layer: NORMAL LEFT - The reverse of RIGHT
 (deflayermap (L_NOR_L)
   ;; LEFT
   q XX       w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
   a enter    s @ch_na_rt      d @ch_na_dn    f @ch_na_lt
 
   ;; RIGHT
-  u @na_pgup     i del        o lalt    p @os_media
-  j @na_pgdn     k @to_ins    l lctl    ; @os_shortcuts
+  u @na_pgup     i XX         o lalt    p @os_media
+  j @na_pgdn     k @sw_ins    l lctl    ; @os_shortcuts
+)
+
+;; Layer: no modifiers (ideal for gaming)
+;; Chords: "g + h" to switch to "L_NOR_R"
+(deflayermap (L_NO_MODS)
+  ;; LEFT
+  q @_tlp    w @_tlr    e @_tlm    r @_tli
+  a @_blp    s @_blr    d @_blm    f @_bli    g @ch_no_lt
+
+  ;; RIGHT
+                 u @_tri    i @_trm    o @_trr    p @_trp
+  h @ch_no_rt    j @_bri    k @_brm    l @_brr    ; @_brp
 )
 
 (deflayermap (L_EDIT_NOR)
@@ -331,8 +340,8 @@
 
 (deflayermap (L_EDIT_INS)
   ;; LEFT
-  q @to_nor_r    w XX    e XX    r XX
-  a @to_ins      s XX    d XX    f XX
+  q @sw_nor_r    w XX    e XX    r XX
+  a @sw_ins      s XX    d XX    f XX
 
   ;; RIGHT
   u @in_home    i @in_up     o @in_end      p @in_del
