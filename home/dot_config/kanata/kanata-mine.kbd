@@ -17,11 +17,6 @@
 )
 
 (defalias
-  ;; colemak-dh
-  ;; q w f p b     j l u y ;
-  ;; a r s t g     m n e i o
-  ;; z x c d v     k h , . /
-
   ;; KEYBOARD LAYOUT
   ;; LEFT
   _tlp q   _tlr w   _tlm e   _tli r
@@ -70,6 +65,7 @@
   sw_nor_r      (layer-switch L_NOR_R)
   sw_ins        (layer-switch L_INS)
   sw_edit_nor   (layer-switch L_EDIT_NOR)
+  sw_colemak    (layer-switch L_COLEMAK_DH)
 
   ;; ONE SHOT
   os_ins_nav    (one-shot-press $one_shot_timeout (layer-while-held L_EDIT_INS))
@@ -201,6 +197,10 @@
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
   (ch_tlr ch_tlm) @sw_edit_nor             (ch_trm ch_trr) @sw_edit_nor
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tlr ch_tli) @sw_colemak            (ch_tri ch_trr) @sw_colemak
 )
 
 (defchords CH_NUM $chord_timeout
@@ -326,6 +326,13 @@
   ;; RIGHT
                  u @_tri    i @_trm    o @_trr    p @_trp
   h @ch_no_rt    j @_bri    k @_brm    l @_brr    ; @_brp
+)
+
+;; Layer: colemak
+(deflayer (L_COLEMAK_DH)
+  q    w    f    p    b             j    l            u    y    ;
+  a    r    s    t    @ch_no_lt     m    n            e    i    o
+  z    x    c    d    v             k    @ch_no_rt    ,    .    / 
 )
 
 (deflayermap (L_EDIT_NOR)
