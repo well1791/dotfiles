@@ -5,9 +5,8 @@ abbr -a -- ll 'eza --all --long --tree --level=2'
 # |-- BAT
 abbr -a -- cat 'bat -p'
 
-# |-- ZELLIJ
-abbr -a -- j zellij
-abbr -a -- ja zellij attach
+# |-- EMACS
+abbr -a -- emacs "emacsclient -c -a 'emacs'"
 
 # |-- OTHERS
 abbr -a -- cmd command
