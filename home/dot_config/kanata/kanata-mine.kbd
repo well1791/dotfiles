@@ -25,22 +25,6 @@
   ;; ------RIGHT
            _tri u   _trm i   _trr o   _trp p
   _brii h  _bri j   _brm k   _brr l   _brp ;
-
-  ;; SHORTCUTS
-  ctl_pgup       (macro C-pgup)
-  ctl_pgdn       (macro C-pgdn)
-  ctl_tab        (macro C-tab)
-  ctl_w          (macro C-w)
-  ctl_sft_t      (macro C-S-t)
-  alt_9          (macro A-9)
-  sft_lt         (macro left S-left)
-  sft_rt         (macro right S-right)
-  sft_word_lt    (macro left C-left C-S-right)
-  sft_word_rt    (macro right C-right C-S-left)
-  ;;sft_up         (macro S-up)
-  ;;sft_dn         (macro S-down)
-  up_10  (macro up up up up up up up up up up)
-  dn_10  (macro down down down down down down down down down down)
 )
 
 (defvar
@@ -65,7 +49,7 @@
   sw_nor_r      (layer-switch L_NOR_R)
   sw_ins        (layer-switch L_INS)
   sw_edit_nor   (layer-switch L_EDIT_NOR)
-  sw_colemak    (layer-switch L_COLEMAK_DH)
+  sw_ins_16k    (layer-switch L_INS_16K)
 
   ;; ONE SHOT
   os_ins_nav    (one-shot-press $one_shot_timeout (layer-while-held L_EDIT_INS))
@@ -82,42 +66,114 @@
   wh_nor_l      (layer-while-held L_NOR_L)
 
   caps_word (caps-word 2000)
-  ;; fake keys for key repeating
+  ;; fake keys for key repetition
   tap (multi @sw_no_mods (on-idle-fakekey fk_no_mods tap 20))
 
-  mod_tlp      @_tlp
-  mod_tlr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlr @tap) lalt $lt_kbd)
-  mod_tlm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlm @tap) @wh_numbers $lt_kbd)
-  mod_tli      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tli @tap) lmet $lt_kbd)
-  mod_tri      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tri @tap) lmet $rt_kbd)
-  mod_trm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_trm @tap) @wh_numbers $rt_kbd)
-  mod_trr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_trr @tap) lalt $rt_kbd)
-  mod_trp      @_trp
-  mod_blp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blp @tap) @wh_nor_r $lt_kbd)
-  mod_blr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blr @tap) lctl $lt_kbd)
-  mod_blm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blm @tap) @wh_functions $lt_kbd)
-  mod_bli      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_bli @tap) lsft $lt_kbd)
-  mod_bri      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_bri @tap) lsft $rt_kbd)
-  mod_brm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brm @tap) @wh_functions $rt_kbd)
-  mod_brr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brr @tap) lctl $rt_kbd)
-  mod_brp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brp @tap) @wh_nor_l $rt_kbd)
+  ins_tlp      @_tlp
+  ins_tlr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlr @tap) lalt $lt_kbd)
+  ins_tlm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlm @tap) @wh_numbers $lt_kbd)
+  ins_tli      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tli @tap) lmet $lt_kbd)
+  ins_tri      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tri @tap) lmet $rt_kbd)
+  ins_trm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_trm @tap) @wh_numbers $rt_kbd)
+  ins_trr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_trr @tap) lalt $rt_kbd)
+  ins_trp      @_trp
+  ins_blp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blp @tap) @wh_nor_r $lt_kbd)
+  ins_blr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blr @tap) lctl $lt_kbd)
+  ins_blm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blm @tap) @wh_functions $lt_kbd)
+  ins_bli      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_bli @tap) lsft $lt_kbd)
+  ins_bri      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_bri @tap) lsft $rt_kbd)
+  ins_brm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brm @tap) @wh_functions $rt_kbd)
+  ins_brr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brr @tap) lctl $rt_kbd)
+  ins_brp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brp @tap) @wh_nor_l $rt_kbd)
 
-  ;; ALPHA
-  ch_al_tli   (chord CH_ALPHA ch_tli)
-  ch_al_tlm   (chord CH_ALPHA ch_tlm)
-  ch_al_tlr   (chord CH_ALPHA ch_tlr)
-  ch_al_bli   (chord CH_ALPHA ch_bli)
-  ch_al_blm   (chord CH_ALPHA ch_blm)
-  ch_al_blr   (chord CH_ALPHA ch_blr)
-  ch_al_tri   (chord CH_ALPHA ch_tri)
-  ch_al_trm   (chord CH_ALPHA ch_trm)
-  ch_al_trr   (chord CH_ALPHA ch_trr)
-  ch_al_bri   (chord CH_ALPHA ch_bri)
-  ch_al_brm   (chord CH_ALPHA ch_brm)
-  ch_al_brr   (chord CH_ALPHA ch_brr)
-  ch_al_blii  (chord CH_ALPHA ch_blii)
-  ch_al_brii  (chord CH_ALPHA ch_brii)
+  ;; 16k
+  16k_tlp      q
+  16k_tlr      (tap-hold $tap_timeout $hold_timeout r lalt)
+  16k_tlm      (tap-hold $tap_timeout $hold_timeout d @wh_numbers)
+  16k_tli      (tap-hold $tap_timeout $hold_timeout g lmet)
+  16k_tri      (tap-hold $tap_timeout $hold_timeout j lmet)
+  16k_trm      (tap-hold $tap_timeout $hold_timeout u @wh_numbers)
+  16k_trr      (tap-hold $tap_timeout $hold_timeout o lalt)
+  16k_trp      z
+  16k_blp      (tap-hold $tap_timeout $hold_timeout l @wh_nor_r)
+  16k_blr      (tap-hold $tap_timeout $hold_timeout n lctl)
+  16k_blm      (tap-hold $tap_timeout $hold_timeout t @wh_functions)
+  16k_bli      (tap-hold $tap_timeout $hold_timeout s lsft)
+  16k_bri      (tap-hold $tap_timeout $hold_timeout e lsft)
+  16k_brm      (tap-hold $tap_timeout $hold_timeout i @wh_functions)
+  16k_brr      (tap-hold $tap_timeout $hold_timeout a lctl)
+  16k_brp      (tap-hold $tap_timeout $hold_timeout h @wh_nor_l)
 
+  ;; Insert-Nav layer
+  in_home      (multi home @sw_ins)
+  in_end       (multi end @sw_ins)
+  in_up        (multi up end enter @sw_ins)
+  in_dn        (multi end enter @sw_ins)
+  in_left      (multi left @sw_ins)
+  in_right     (multi right @sw_ins)
+  in_del       (multi del @sw_ins)
+
+  ;; Navigation
+  na_pgup      (tap-hold $tap_timeout $hold_timeout pgup lmet)
+  na_pgdn      (tap-hold $tap_timeout $hold_timeout pgdn lsft)
+
+  ;; SHORTCUTS
+  ctl_pgup       (macro C-pgup)
+  ctl_pgdn       (macro C-pgdn)
+  ctl_tab        (macro C-tab)
+  ctl_w          (macro C-w)
+  ctl_sft_t      (macro C-S-t)
+  alt_9          (macro A-9)
+  sft_lt         (macro left S-left)
+  sft_rt         (macro right S-right)
+  sft_word_lt    (macro left C-left C-S-right)
+  sft_word_rt    (macro right C-right C-S-left)
+  ;;sft_up         (macro S-up)
+  ;;sft_dn         (macro S-down)
+  up_10          (macro up up up up up up up up up up)
+  dn_10          (macro down down down down down down down down down down)
+)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORDS ALIAS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(defalias
+  ;; L_INS (QWERTY)
+  ch_al_tli   (chord CH_INS ch_tli)
+  ch_al_tlm   (chord CH_INS ch_tlm)
+  ch_al_tlr   (chord CH_INS ch_tlr)
+  ch_al_bli   (chord CH_INS ch_bli)
+  ch_al_blm   (chord CH_INS ch_blm)
+  ch_al_blr   (chord CH_INS ch_blr)
+  ch_al_tri   (chord CH_INS ch_tri)
+  ch_al_trm   (chord CH_INS ch_trm)
+  ch_al_trr   (chord CH_INS ch_trr)
+  ch_al_bri   (chord CH_INS ch_bri)
+  ch_al_brm   (chord CH_INS ch_brm)
+  ch_al_brr   (chord CH_INS ch_brr)
+  ch_al_blii  (chord CH_INS ch_blii)
+  ch_al_brii  (chord CH_INS ch_brii)
+
+  ;; 16k CHORDS
+  ch_16k_tli   (chord CH_INS_16k ch_tli)
+  ch_16k_tlm   (chord CH_INS_16k ch_tlm)
+  ch_16k_tlr   (chord CH_INS_16k ch_tlr)
+  ch_16k_tlp   (chord CH_INS_16k ch_tlp)
+  ch_16k_bli   (chord CH_INS_16k ch_bli)
+  ch_16k_blm   (chord CH_INS_16k ch_blm)
+  ch_16k_blr   (chord CH_INS_16k ch_blr)
+  ch_16k_blp   (chord CH_INS_16k ch_blp)
+  ch_16k_tri   (chord CH_INS_16k ch_tri)
+  ch_16k_trm   (chord CH_INS_16k ch_trm)
+  ch_16k_trr   (chord CH_INS_16k ch_trr)
+  ch_16k_trp   (chord CH_INS_16k ch_trp)
+  ch_16k_bri   (chord CH_INS_16k ch_bri)
+  ch_16k_brm   (chord CH_INS_16k ch_brm)
+  ch_16k_brr   (chord CH_INS_16k ch_brr)
+  ch_16k_brp   (chord CH_INS_16k ch_brp)
+  ch_16k_blii  (chord CH_INS_16k ch_blii)
+  ch_16k_brii  (chord CH_INS_16k ch_brii)
+ 
   ;; NUMBERS
   nu_n0   (chord CH_NUM ch_n0)
   nu_n1   (chord CH_NUM ch_n1)
@@ -142,12 +198,10 @@
   ch_na_rt     (chord CH_NAV ch_rt)
   ch_na_tab    (chord CH_NAV ch_tab)
   ch_na_bspc   (chord CH_NAV ch_bspc)
-  na_pgup      (tap-hold $tap_timeout $hold_timeout pgup lmet)
-  na_pgdn      (tap-hold $tap_timeout $hold_timeout pgdn lsft)
 
   ;; NO MODS
-  ch_no_lt      (chord CH_NO_MODS ch_lt)
-  ch_no_rt      (chord CH_NO_MODS ch_rt)
+  ch_no_blii      (chord CH_NO_MODS ch_blii)
+  ch_no_brii      (chord CH_NO_MODS ch_brii)
 
   ;; EDIT NORMAL
   ch_ed_up       (chord CH_EDIT_NOR ch_up)
@@ -158,25 +212,20 @@
   ch_ed_wr       (chord CH_EDIT_NOR ch_wr)
   ch_ed_up10     (chord CH_EDIT_NOR ch_up_10)
   ch_ed_dn10     (chord CH_EDIT_NOR ch_dn_10)
-
-  ;; Insert-Nav layer
-  in_home   (multi home @sw_ins)
-  in_end    (multi end @sw_ins)
-  in_up     (multi up end enter @sw_ins)
-  in_dn     (multi end enter @sw_ins)
-  in_left   (multi left @sw_ins)
-  in_right  (multi right @sw_ins)
-  in_del    (multi del @sw_ins)
 )
 
-(defchords CH_ALPHA $chord_timeout
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORD KEYS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defchords CH_INS $chord_timeout
   ;; LEFT
-  (ch_tlr) @mod_tlr    (ch_tlm) @mod_tlm    (ch_tli) @mod_tli
-  (ch_blr) @mod_blr    (ch_blm) @mod_blm    (ch_bli) @mod_bli    (ch_blii) @_blii
+  (ch_tlr) @ins_tlr    (ch_tlm) @ins_tlm    (ch_tli) @ins_tli
+  (ch_blr) @ins_blr    (ch_blm) @ins_blm    (ch_bli) @ins_bli    (ch_blii) @_blii
 
   ;; RIGHT
-                       (ch_tri) @mod_tri    (ch_trm) @mod_trm    (ch_trr) @mod_trr
-  (ch_brii) @_brii     (ch_bri) @mod_bri    (ch_brm) @mod_brm    (ch_brr) @mod_brr
+                       (ch_tri) @ins_tri    (ch_trm) @ins_trm    (ch_trr) @ins_trr
+  (ch_brii) @_brii     (ch_bri) @ins_bri    (ch_brm) @ins_brm    (ch_brr) @ins_brr
 
   ;;                  | | | | |
   ;;                  |f|*|*|j|
@@ -184,23 +233,72 @@
 
   ;;                  | | | | |     --     | | | | |  
   ;;                  | |*|*|*|     --     |*|*|*| |  
-  ;;(ch_blr ch_blm ch_bli) spc             (ch_bri ch_brm ch_brr) spc
+  (ch_blr ch_blm ch_bli) spc               (ch_bri ch_brm ch_brr) spc
 
   ;;                  | |*|*|*|     --     |*|*|*| |
   ;;                  | | | | |     --     | | | | |
-  ;;(ch_tlr ch_tlm ch_tli) esc             (ch_tri ch_trm ch_trr) esc
+  (ch_tlr ch_tlm ch_tli) esc               (ch_tri ch_trm ch_trr) esc
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
   (ch_blr ch_blm) @os_nor_r                (ch_brm ch_brr) @os_nor_l
+)
+
+(defchords CH_INS_16k $chord_timeout
+  ;; LEFT
+  (ch_tlp) @16k_tlp    (ch_tlr) @16k_tlr    (ch_tlm) @16k_tlm    (ch_tli) @16k_tli
+  (ch_blp) @16k_blp    (ch_blr) @16k_blr    (ch_blm) @16k_blm    (ch_bli) @16k_bli    (ch_blii) @_blii
+
+  ;; RIGHT
+                       (ch_tri) @16k_tri    (ch_trm) @16k_trm    (ch_trr) @16k_trr    (ch_trp) @16k_trp
+  (ch_brii) @_brii     (ch_bri) @16k_bri    (ch_brm) @16k_brm    (ch_brr) @16k_brr    (ch_brp) @16k_brp
+
+  ;;                  | | | | |
+  ;;                  | |g|h| |
+  (ch_blii ch_brii) @sw_ins
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (ch_blr ch_blm) m                        (ch_brm ch_brr) f
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_blr ch_bli) w                        (ch_bri ch_brr) v
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_tlr ch_tlm) @sw_edit_nor             (ch_trm ch_trr) @sw_edit_nor
+  (ch_tlr ch_tlm) c                        (ch_trm ch_trr) y
 
-  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_tlr ch_bli) p                        (ch_bri ch_trr) k
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_blr ch_tlm) b                        (ch_trm ch_brr) x
+
+  ;;                  | | | | |     --     | | | | |  
+  ;;                  | |*|*|*|     --     |*|*|*| |  
+  (ch_blr ch_blm ch_bli) spc               (ch_bri ch_brm ch_brr) spc
+
+  ;;                  | |*|*|*|     --     |*|*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_tlr ch_tli) @sw_colemak            (ch_tri ch_trr) @sw_colemak
+  (ch_tlr ch_tlm ch_tli) esc               (ch_tri ch_trm ch_trr) esc
+
+  ;;                  | | | | |     --     | | | | |  
+  ;;                  |*|*|*| |     --     | |*|*|*|  
+  (ch_blp ch_blr ch_blm) @os_nor_r         (ch_brm ch_brr ch_brp) @os_nor_l
+
+  ;;                  |*|*|*| |     --     | |*|*|*|  
+  ;;                  | | | | |     --     | | | | |  
+  ;;(ch_tlp ch_tlr ch_tlm) TODO              (ch_trm ch_trr ch_trp) TODO
+)
+
+(defchords CH_NO_MODS $chord_timeout
+  (ch_blii) @_blii
+  (ch_brii) @_brii
+
+  (ch_blii ch_brii) @sw_ins_16k
 )
 
 (defchords CH_NUM $chord_timeout
@@ -265,12 +363,6 @@
   (        ch_dn  ch_bspc)      pgdn
 )
 
-(defchords CH_NO_MODS $chord_timeout
-  (ch_lt) g (ch_rt) h
-
-  (ch_lt   ch_rt)        @sw_ins
-)
-
 (defchords CH_EDIT_NOR $chord_timeout
   ;; RIGHT
   (ch_wl) @sft_word_lt    (ch_up) up      (ch_wr) @sft_word_rt    (ch_up_10) @up_10
@@ -281,17 +373,31 @@
   fk_no_mods (layer-switch L_INS)
 )
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; LAYERS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; Layer: INSERT - Main/base layer with modifiers and chords
 ;; Chords: "g + h" to switch to "L_NO_MODS"
 ;; Chords: "s + d"|"k + l" to switch to "L_NOR_R"
 (deflayermap (L_INS)
   ;; LEFT
-  q @mod_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
-  a @mod_blp    s @ch_al_blr     d @ch_al_blm     f @ch_al_bli    g @ch_al_blii
+  q @ins_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
+  a @ins_blp    s @ch_al_blr     d @ch_al_blm     f @ch_al_bli    g @ch_al_blii
 
   ;; RIGHT
-                   u @ch_al_tri    i @ch_al_trm     o @ch_al_trr     p @mod_trp
-  h @ch_al_brii    j @ch_al_bri    k @ch_al_brm     l @ch_al_brr     ; @mod_brp
+                   u @ch_al_tri    i @ch_al_trm     o @ch_al_trr     p @ins_trp
+  h @ch_al_brii    j @ch_al_bri    k @ch_al_brm     l @ch_al_brr     ; @ins_brp
+)
+
+(deflayermap (L_INS_16K)
+  ;; LEFT
+  q @ch_16k_tlp    w @ch_16k_tlr     e @ch_16k_tlm     r @ch_16k_tli
+  a @ch_16k_blp    s @ch_16k_blr     d @ch_16k_blm     f @ch_16k_bli    g @ch_16k_blii
+
+  ;; RIGHT
+                    u @ch_16k_tri    i @ch_16k_trm     o @ch_16k_trr     p @ch_16k_trp
+  h @ch_16k_brii    j @ch_16k_bri    k @ch_16k_brm     l @ch_16k_brr     ; @ch_16k_brp
 )
 
 ;; Layer: NORMAL RIGHT - Normal/navigation layer with modifiers and chords
@@ -321,18 +427,11 @@
 (deflayermap (L_NO_MODS)
   ;; LEFT
   q @_tlp    w @_tlr    e @_tlm    r @_tli
-  a @_blp    s @_blr    d @_blm    f @_bli    g @ch_no_lt
+  a @_blp    s @_blr    d @_blm    f @_bli    g @ch_no_blii
 
   ;; RIGHT
-                 u @_tri    i @_trm    o @_trr    p @_trp
-  h @ch_no_rt    j @_bri    k @_brm    l @_brr    ; @_brp
-)
-
-;; Layer: colemak
-(deflayer (L_COLEMAK_DH)
-  q    w    f    p    b             j    l            u    y    ;
-  a    r    s    t    @ch_no_lt     m    n            e    i    o
-  z    x    c    d    v             k    @ch_no_rt    ,    .    / 
+                   u @_tri    i @_trm    o @_trr    p @_trp
+  h @ch_no_brii    j @_bri    k @_brm    l @_brr    ; @_brp
 )
 
 (deflayermap (L_EDIT_NOR)
@@ -387,11 +486,11 @@
 
 (deflayermap (L_SHORTCUTS) ;; one-shot (hold) layer
   ;; LEFT
-  q XX    w @alt_9      e @ctl_pgup    r @ctl_sft_t
-  a XX    s @ctl_tab    d @ctl_pgdn    f @ctl_w
+  q @os_nor_l    w @alt_9      e @ctl_pgup    r @ctl_sft_t
+         a XX    s @ctl_tab    d @ctl_pgdn    f @ctl_w
 
   ;; RIGHT
-  u @ctl_sft_t    i @ctl_pgup    o @alt_9      p XX
+  u @ctl_sft_t    i @ctl_pgup    o @alt_9      p @os_nor_r
   j @ctl_w        k @ctl_pgdn    l @ctl_tab    ; XX
 )
 
