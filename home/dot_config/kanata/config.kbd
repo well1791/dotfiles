@@ -49,7 +49,6 @@
   sw_nor_r      (layer-switch L_NOR_R)
   sw_ins        (layer-switch L_INS)
   sw_edit_nor   (layer-switch L_EDIT_NOR)
-  sw_ins_16k    (layer-switch L_INS_16K)
 
   ;; ONE SHOT
   os_ins_nav    (one-shot-press $one_shot_timeout (layer-while-held L_EDIT_INS))
@@ -85,24 +84,6 @@
   ins_brm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brm @tap) @wh_functions $rt_kbd)
   ins_brr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brr @tap) lctl $rt_kbd)
   ins_brp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brp @tap) @wh_nor_l $rt_kbd)
-
-  ;; 16k
-  16k_tlp      q
-  16k_tlr      (tap-hold $tap_timeout $hold_timeout r lalt)
-  16k_tlm      (tap-hold $tap_timeout $hold_timeout d @wh_numbers)
-  16k_tli      (tap-hold $tap_timeout $hold_timeout g lmet)
-  16k_tri      (tap-hold $tap_timeout $hold_timeout j lmet)
-  16k_trm      (tap-hold $tap_timeout $hold_timeout u @wh_numbers)
-  16k_trr      (tap-hold $tap_timeout $hold_timeout o lalt)
-  16k_trp      z
-  16k_blp      (tap-hold $tap_timeout $hold_timeout l @wh_nor_r)
-  16k_blr      (tap-hold $tap_timeout $hold_timeout n lctl)
-  16k_blm      (tap-hold $tap_timeout $hold_timeout t @wh_functions)
-  16k_bli      (tap-hold $tap_timeout $hold_timeout s lsft)
-  16k_bri      (tap-hold $tap_timeout $hold_timeout e lsft)
-  16k_brm      (tap-hold $tap_timeout $hold_timeout i @wh_functions)
-  16k_brr      (tap-hold $tap_timeout $hold_timeout a lctl)
-  16k_brp      (tap-hold $tap_timeout $hold_timeout h @wh_nor_l)
 
   ;; Insert-Nav layer
   in_home      (multi home @sw_ins)
@@ -154,26 +135,6 @@
   ch_al_blii  (chord CH_INS ch_blii)
   ch_al_brii  (chord CH_INS ch_brii)
 
-  ;; 16k CHORDS
-  ch_16k_tli   (chord CH_INS_16k ch_tli)
-  ch_16k_tlm   (chord CH_INS_16k ch_tlm)
-  ch_16k_tlr   (chord CH_INS_16k ch_tlr)
-  ch_16k_tlp   (chord CH_INS_16k ch_tlp)
-  ch_16k_bli   (chord CH_INS_16k ch_bli)
-  ch_16k_blm   (chord CH_INS_16k ch_blm)
-  ch_16k_blr   (chord CH_INS_16k ch_blr)
-  ch_16k_blp   (chord CH_INS_16k ch_blp)
-  ch_16k_tri   (chord CH_INS_16k ch_tri)
-  ch_16k_trm   (chord CH_INS_16k ch_trm)
-  ch_16k_trr   (chord CH_INS_16k ch_trr)
-  ch_16k_trp   (chord CH_INS_16k ch_trp)
-  ch_16k_bri   (chord CH_INS_16k ch_bri)
-  ch_16k_brm   (chord CH_INS_16k ch_brm)
-  ch_16k_brr   (chord CH_INS_16k ch_brr)
-  ch_16k_brp   (chord CH_INS_16k ch_brp)
-  ch_16k_blii  (chord CH_INS_16k ch_blii)
-  ch_16k_brii  (chord CH_INS_16k ch_brii)
- 
   ;; NUMBERS
   nu_n0   (chord CH_NUM ch_n0)
   nu_n1   (chord CH_NUM ch_n1)
@@ -244,61 +205,11 @@
   (ch_blr ch_blm) @os_nor_r                (ch_brm ch_brr) @os_nor_l
 )
 
-(defchords CH_INS_16k $chord_timeout
-  ;; LEFT
-  (ch_tlp) @16k_tlp    (ch_tlr) @16k_tlr    (ch_tlm) @16k_tlm    (ch_tli) @16k_tli
-  (ch_blp) @16k_blp    (ch_blr) @16k_blr    (ch_blm) @16k_blm    (ch_bli) @16k_bli    (ch_blii) @_blii
-
-  ;; RIGHT
-                       (ch_tri) @16k_tri    (ch_trm) @16k_trm    (ch_trr) @16k_trr    (ch_trp) @16k_trp
-  (ch_brii) @_brii     (ch_bri) @16k_bri    (ch_brm) @16k_brm    (ch_brr) @16k_brr    (ch_brp) @16k_brp
-
-  ;;                  | | | | |
-  ;;                  | |g|h| |
-  (ch_blii ch_brii) @sw_ins
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*|*| |     --     | |*|*| |
-  (ch_blr ch_blm) m                        (ch_brm ch_brr) f
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*| |*|     --     |*| |*| |
-  (ch_blr ch_bli) w                        (ch_bri ch_brr) v
-
-  ;;                  | |*|*| |     --     | |*|*| |
-  ;;                  | | | | |     --     | | | | |
-  (ch_tlr ch_tlm) c                        (ch_trm ch_trr) y
-
-  ;;                  | |*| | |     --     | | |*| |
-  ;;                  | | | |*|     --     |*| | | |
-  (ch_tlr ch_bli) p                        (ch_bri ch_trr) k
-
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | |*| | |     --     | | |*| |
-  (ch_blr ch_tlm) b                        (ch_trm ch_brr) x
-
-  ;;                  | | | | |     --     | | | | |  
-  ;;                  | |*|*|*|     --     |*|*|*| |  
-  (ch_blr ch_blm ch_bli) spc               (ch_bri ch_brm ch_brr) spc
-
-  ;;                  | |*|*|*|     --     |*|*|*| |
-  ;;                  | | | | |     --     | | | | |
-  (ch_tlr ch_tlm ch_tli) esc               (ch_tri ch_trm ch_trr) esc
-
-  ;;                  | | | | |     --     | | | | |  
-  ;;                  |*|*|*| |     --     | |*|*|*|  
-  (ch_blp ch_blr ch_blm) @os_nor_r         (ch_brm ch_brr ch_brp) @os_nor_l
-
-  ;;                  |*|*|*| |     --     | |*|*|*|  
-  ;;                  | | | | |     --     | | | | |  
-  ;;(ch_tlp ch_tlr ch_tlm) TODO              (ch_trm ch_trr ch_trp) TODO
-)
-
 (defchords CH_NO_MODS $chord_timeout
   (ch_blii) @_blii
   (ch_brii) @_brii
 
-  (ch_blii ch_brii) @sw_ins_16k
+  (ch_blii ch_brii) @sw_ins
 )
 
 (defchords CH_NUM $chord_timeout
@@ -388,16 +299,6 @@
   ;; RIGHT
                    u @ch_al_tri    i @ch_al_trm     o @ch_al_trr     p @ins_trp
   h @ch_al_brii    j @ch_al_bri    k @ch_al_brm     l @ch_al_brr     ; @ins_brp
-)
-
-(deflayermap (L_INS_16K)
-  ;; LEFT
-  q @ch_16k_tlp    w @ch_16k_tlr     e @ch_16k_tlm     r @ch_16k_tli
-  a @ch_16k_blp    s @ch_16k_blr     d @ch_16k_blm     f @ch_16k_bli    g @ch_16k_blii
-
-  ;; RIGHT
-                    u @ch_16k_tri    i @ch_16k_trm     o @ch_16k_trr     p @ch_16k_trp
-  h @ch_16k_brii    j @ch_16k_bri    k @ch_16k_brm     l @ch_16k_brr     ; @ch_16k_brp
 )
 
 ;; Layer: NORMAL RIGHT - Normal/navigation layer with modifiers and chords
