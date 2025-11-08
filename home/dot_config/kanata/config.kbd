@@ -57,6 +57,10 @@
   os_nor_r      (one-shot-press $one_shot_timeout (layer-while-held L_NOR_R))
   os_nor_l      (one-shot-press $one_shot_timeout (layer-while-held L_NOR_L))
   ;;os_meh      (one-shot-press $one_shot_timeout C-A-S)
+  os_sft        (one-shot-press $one_shot_timeout lsft)
+  os_ctl        (one-shot-press $one_shot_timeout lctl)
+  os_alt        (one-shot-press $one_shot_timeout lalt)
+  os_met        (one-shot-press $one_shot_timeout lmet)
 
   ;; WHILE HELD
   wh_numbers    (layer-while-held L_NUMBERS)
@@ -123,15 +127,19 @@
   ch_al_tli   (chord CH_INS ch_tli)
   ch_al_tlm   (chord CH_INS ch_tlm)
   ch_al_tlr   (chord CH_INS ch_tlr)
+  ch_al_tlp   (chord CH_INS ch_tlp)
   ch_al_bli   (chord CH_INS ch_bli)
   ch_al_blm   (chord CH_INS ch_blm)
   ch_al_blr   (chord CH_INS ch_blr)
+  ch_al_blp   (chord CH_INS ch_blp)
   ch_al_tri   (chord CH_INS ch_tri)
   ch_al_trm   (chord CH_INS ch_trm)
   ch_al_trr   (chord CH_INS ch_trr)
+  ch_al_trp   (chord CH_INS ch_trp)
   ch_al_bri   (chord CH_INS ch_bri)
   ch_al_brm   (chord CH_INS ch_brm)
   ch_al_brr   (chord CH_INS ch_brr)
+  ch_al_brp   (chord CH_INS ch_brp)
   ch_al_blii  (chord CH_INS ch_blii)
   ch_al_brii  (chord CH_INS ch_brii)
 
@@ -181,12 +189,12 @@
 
 (defchords CH_INS $chord_timeout
   ;; LEFT
-  (ch_tlr) @ins_tlr    (ch_tlm) @ins_tlm    (ch_tli) @ins_tli
-  (ch_blr) @ins_blr    (ch_blm) @ins_blm    (ch_bli) @ins_bli    (ch_blii) @_blii
+  (ch_tlp) @ins_tlp    (ch_tlr) @ins_tlr    (ch_tlm) @ins_tlm    (ch_tli) @ins_tli
+  (ch_blp) @ins_blp    (ch_blr) @ins_blr    (ch_blm) @ins_blm    (ch_bli) @ins_bli    (ch_blii) @_blii
 
   ;; RIGHT
-                       (ch_tri) @ins_tri    (ch_trm) @ins_trm    (ch_trr) @ins_trr
-  (ch_brii) @_brii     (ch_bri) @ins_bri    (ch_brm) @ins_brm    (ch_brr) @ins_brr
+                       (ch_tri) @ins_tri    (ch_trm) @ins_trm    (ch_trr) @ins_trr    (ch_trp) @ins_trp
+  (ch_brii) @_brii     (ch_bri) @ins_bri    (ch_brm) @ins_brm    (ch_brr) @ins_brr    (ch_brp) @ins_brp
 
   ;;                  | | | | |
   ;;                  |f|*|*|j|
@@ -202,7 +210,27 @@
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (ch_blr ch_blm) @os_nor_r                (ch_brm ch_brr) @os_nor_l
+  (ch_blr ch_blm) @os_ctl                  (ch_brm ch_brr) @os_ctl
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tlr ch_tlm) @os_alt                  (ch_trm ch_trr) @os_alt
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (ch_blm ch_bli) @os_sft                  (ch_bri ch_brm) @os_sft
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tlm ch_tli) @os_met                  (ch_tri ch_trm) @os_met
+
+  ;;                  |*|*| | |     --     | | |*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_blp ch_blr) @os_shortcuts            (ch_brr ch_brp) @os_shortcuts
+
+  ;;                  |*|*| | |     --     | | |*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_tlp ch_tlr) @os_media                (ch_trr ch_trp) @os_media
 )
 
 (defchords CH_NO_MODS $chord_timeout
@@ -293,12 +321,12 @@
 ;; Chords: "s + d"|"k + l" to switch to "L_NOR_R"
 (deflayermap (L_INS)
   ;; LEFT
-  q @ins_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
-  a @ins_blp    s @ch_al_blr     d @ch_al_blm     f @ch_al_bli    g @ch_al_blii
+  q @ch_al_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
+  a @ch_al_blp    s @ch_al_blr     d @ch_al_blm     f @ch_al_bli    g @ch_al_blii
 
   ;; RIGHT
-                   u @ch_al_tri    i @ch_al_trm     o @ch_al_trr     p @ins_trp
-  h @ch_al_brii    j @ch_al_bri    k @ch_al_brm     l @ch_al_brr     ; @ins_brp
+                   u @ch_al_tri    i @ch_al_trm     o @ch_al_trr     p @ch_al_trp
+  h @ch_al_brii    j @ch_al_bri    k @ch_al_brm     l @ch_al_brr     ; @ch_al_brp
 )
 
 ;; Layer: NORMAL RIGHT - Normal/navigation layer with modifiers and chords
