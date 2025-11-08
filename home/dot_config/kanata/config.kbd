@@ -46,7 +46,8 @@
 (defalias
   ;; SWITCH TO
   sw_no_mods    (layer-switch L_NO_MODS)
-  sw_nor_r      (layer-switch L_NOR_R)
+  sw_nav_r      (layer-switch L_NAV_R)
+  sw_nav_l      (layer-switch L_NAV_L)
   sw_ins        (layer-switch L_INS)
   sw_edit_nor   (layer-switch L_EDIT_NOR)
 
@@ -54,8 +55,8 @@
   os_ins_nav    (one-shot-press $one_shot_timeout (layer-while-held L_EDIT_INS))
   os_shortcuts  (one-shot-press $one_shot_timeout (layer-while-held L_SHORTCUTS))
   os_media      (one-shot-press $one_shot_timeout (layer-while-held L_MEDIA))
-  os_nor_r      (one-shot-press $one_shot_timeout (layer-while-held L_NOR_R))
-  os_nor_l      (one-shot-press $one_shot_timeout (layer-while-held L_NOR_L))
+  os_nor_r      (one-shot-press $one_shot_timeout (layer-while-held L_NAV_R))
+  os_nor_l      (one-shot-press $one_shot_timeout (layer-while-held L_NAV_L))
   ;;os_meh      (one-shot-press $one_shot_timeout C-A-S)
   os_sft        (one-shot-press $one_shot_timeout lsft)
   os_ctl        (one-shot-press $one_shot_timeout lctl)
@@ -65,8 +66,8 @@
   ;; WHILE HELD
   wh_numbers    (layer-while-held L_NUMBERS)
   wh_functions  (layer-while-held L_F_1_12)
-  wh_nor_r      (layer-while-held L_NOR_R)
-  wh_nor_l      (layer-while-held L_NOR_L)
+  wh_nor_r      (layer-while-held L_NAV_R)
+  wh_nor_l      (layer-while-held L_NAV_L)
 
   caps_word (caps-word 2000)
   ;; fake keys for key repetition
@@ -318,7 +319,6 @@
 
 ;; Layer: INSERT - Main/base layer with modifiers and chords
 ;; Chords: "g + h" to switch to "L_NO_MODS"
-;; Chords: "s + d"|"k + l" to switch to "L_NOR_R"
 (deflayermap (L_INS)
   ;; LEFT
   q @ch_al_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
@@ -329,30 +329,30 @@
   h @ch_al_brii    j @ch_al_bri    k @ch_al_brm     l @ch_al_brr     ; @ch_al_brp
 )
 
-;; Layer: NORMAL RIGHT - Normal/navigation layer with modifiers and chords
-(deflayermap (L_NOR_R)
+;; Layer: NORMAL RIGHT - Navigation layer with modifiers and chords
+(deflayermap (L_NAV_R)
   ;; LEFT
-  q @os_media        w lalt    e XX         r @na_pgup
-  a @os_shortcuts    s lctl    d @sw_ins    f @na_pgdn
+  q @sw_nav_l        w lalt    e tab    r @na_pgup
+  a @os_shortcuts    s lctl    d esc    f @na_pgdn
 
   ;; RIGHT
-  u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p XX
+  u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p @sw_ins
   j @ch_na_lt     k @ch_na_dn    l @ch_na_rt      ; enter
 )
 
 ;; Layer: NORMAL LEFT - The reverse of RIGHT
-(deflayermap (L_NOR_L)
+(deflayermap (L_NAV_L)
   ;; LEFT
-  q XX       w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
-  a enter    s @ch_na_rt      d @ch_na_dn    f @ch_na_lt
+  q @sw_ins    w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
+  a enter      s @ch_na_rt      d @ch_na_dn    f @ch_na_lt
 
   ;; RIGHT
-  u @na_pgup     i XX         o lalt    p @os_media
-  j @na_pgdn     k @sw_ins    l lctl    ; @os_shortcuts
+  u @na_pgup     i tab    o lalt    p @sw_nav_r
+  j @na_pgdn     k esc    l lctl    ; @os_shortcuts
 )
 
 ;; Layer: no modifiers (ideal for gaming)
-;; Chords: "g + h" to switch to "L_NOR_R"
+;; Chords: "g + h" to switch to "L_INS"
 (deflayermap (L_NO_MODS)
   ;; LEFT
   q @_tlp    w @_tlr    e @_tlm    r @_tli
@@ -375,7 +375,7 @@
 
 (deflayermap (L_EDIT_INS)
   ;; LEFT
-  q @sw_nor_r    w XX    e XX    r XX
+  q @sw_nav_r    w XX    e XX    r XX
   a @sw_ins      s XX    d XX    f XX
 
   ;; RIGHT
