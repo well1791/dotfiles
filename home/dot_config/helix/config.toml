@@ -54,9 +54,9 @@ i = "move_visual_line_up"
 k = "move_visual_line_down"
 h = "undo"
 H = "redo"
-u = "goto_prev_paragraph"
+u = "goto_first_nonwhitespace"
 U = ":noop"
-o = "goto_next_paragraph"
+o = "goto_line_end"
 O = ":noop"
 "A-i" = [
   "extend_to_line_bounds",
@@ -73,6 +73,14 @@ O = ":noop"
   "goto_line_start",
   "normal_mode",
 ]  # Move line(s) down
+e = "select_regex"
+E = "split_selection"
+A-e = "split_selection_on_newline"
+w = "page_cursor_half_up"
+W = ":noop"
+s = "page_cursor_half_down"
+S = ":noop"
+A-s = ":noop"
 X = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.select]
@@ -83,39 +91,41 @@ i = "extend_visual_line_up"
 k = "extend_visual_line_down"
 h = "undo"
 H = "redo"
-u = "goto_prev_paragraph"
-o = "goto_next_paragraph"
+u = "extend_to_first_nonwhitespace"
+U = ":noop"
+o = "extend_to_line_end"
+O = ":noop"
 C = ":noop"
 A-c = ":noop"
+e = "select_regex"
+E = "split_selection"
+A-e = "split_selection_on_newline"
+w = "page_cursor_half_up"
+W = ":noop"
+s = "page_cursor_half_down"
+S = ":noop"
+A-s = ":noop"
 X = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.normal.a]
-l = "append_mode"
 j = "insert_mode"
-L = "insert_at_line_end"
-J = "insert_at_line_start"
+l = "append_mode"
+u = "insert_at_line_start"
+o = "insert_at_line_end"
 i = "open_above"
 k = "open_below"
-o = "change_selection"
-O = "change_selection_noyank"
+";" = "change_selection"
+":" = "change_selection_noyank"
 
 [keys.select.a]
-l = "append_mode"
 j = "insert_mode"
-L = "insert_at_line_end"
-J = "insert_at_line_start"
+l = "append_mode"
+u = "insert_at_line_start"
+o = "insert_at_line_end"
 i = "open_above"
 k = "open_below"
-o = "change_selection"
-O = "change_selection_noyank"
-
-[keys.normal.A]
-l = "insert_at_line_end"
-j = "insert_at_line_start"
-
-[keys.select.A]
-l = "insert_at_line_end"
-j = "insert_at_line_start"
+";" = "change_selection"
+":" = "change_selection_noyank"
 
 [keys.normal.b]
 r = [":reload-all", ":redraw"]
