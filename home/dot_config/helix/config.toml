@@ -50,22 +50,23 @@ mode.select = "S"
 esc = ["collapse_selection", "keep_primary_selection"]
 j = ["move_prev_word_start", "trim_selections"]
 l = ["move_next_word_end", "trim_selections"]
-i = "move_visual_line_up"
-k = "move_visual_line_down"
+i = "page_cursor_half_up"
+I = ":noop"
+k = "page_cursor_half_down"
 h = "undo"
 H = "redo"
 u = "goto_first_nonwhitespace"
 U = ":noop"
 o = "goto_line_end"
 O = ":noop"
-"A-i" = [
+A-i = [
   "extend_to_line_bounds",
   "delete_selection",
   "move_line_up",
   "paste_before",
   "flip_selections",
 ]  # Move line(s) up
-"A-k" = [
+A-k = [
   "extend_to_line_bounds",
   "delete_selection",
   "paste_after",
@@ -73,22 +74,17 @@ O = ":noop"
   "goto_line_start",
   "normal_mode",
 ]  # Move line(s) down
-e = "select_regex"
-E = "split_selection"
-A-e = "split_selection_on_newline"
-w = "page_cursor_half_up"
+w = ":noop"
 W = ":noop"
-s = "page_cursor_half_down"
-S = ":noop"
-A-s = ":noop"
 X = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.select]
 # esc = ["collapse_selection", "keep_primary_selection"]
 j = "extend_prev_word_start"
 l = "extend_next_word_end"
-i = "extend_visual_line_up"
-k = "extend_visual_line_down"
+i = "page_cursor_half_up"
+I = ":noop"
+k = "page_cursor_half_down"
 h = "undo"
 H = "redo"
 u = "extend_to_first_nonwhitespace"
@@ -97,14 +93,6 @@ o = "extend_to_line_end"
 O = ":noop"
 C = ":noop"
 A-c = ":noop"
-e = "select_regex"
-E = "split_selection"
-A-e = "split_selection_on_newline"
-w = "page_cursor_half_up"
-W = ":noop"
-s = "page_cursor_half_down"
-S = ":noop"
-A-s = ":noop"
 X = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.normal.a]
@@ -135,11 +123,12 @@ b = "buffer_picker"
 j = "goto_previous_buffer"
 l = "goto_next_buffer"
 c = ":write-buffer-close"
-d = ":write-buffer-close"
 C = ":write-buffer-close!"
+A-c = ":buffer-close-others"
+d = ":write-buffer-close"
 D = ":write-buffer-close"
-"A-c" = ":buffer-close-others"
-"A-d" = ":buffer-close-others"
+A-d = ":buffer-close-others"
+k = ":write-buffer-close"
 x = ":buffer-close-all"
 
 [keys.select.b]
@@ -150,11 +139,12 @@ b = "buffer_picker"
 j = "goto_previous_buffer"
 l = "goto_next_buffer"
 c = ":write-buffer-close"
-d = ":write-buffer-close"
 C = ":write-buffer-close!"
+A-c = ":buffer-close-others"
+d = ":write-buffer-close"
 D = ":write-buffer-close"
-"A-c" = ":buffer-close-others"
-"A-d" = ":buffer-close-others"
+A-d = ":buffer-close-others"
+k = ":write-buffer-close"
 x = ":buffer-close-all"
 
 [keys.normal.c]
