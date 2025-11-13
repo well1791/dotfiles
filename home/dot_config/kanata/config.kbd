@@ -317,7 +317,7 @@
 (deflayermap (L_NAV_L)
   ;; LEFT
   q @sw_ins    w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
-  a enter      s @ch_na_rt      d @ch_na_dn    f @ch_na_lt
+  a enter      s @ch_na_lt      d @ch_na_dn    f @ch_na_rt
 
   ;; RIGHT
   u @na_pgup     i tab    o lalt    p @sw_nav_r
