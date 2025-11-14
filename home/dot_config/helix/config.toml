@@ -83,12 +83,17 @@ C-o = ":noop"
 h = "undo"
 S-h = "redo"
 # LEFT
-w = ":noop"
+w = "page_cursor_half_up"
 S-w = ":noop"
-e = ":noop"
-S-e = ":noop"
+A-w = ":noop"
+s = "page_cursor_half_down"
+S-s = ":noop"
+A-s = ":noop"
+e = "select_regex"
+S-e = "split_selection"
+A-e = "split_selection_on_newline"
 C-d = ":noop"
-g = ":noop"
+# g = ":noop"
 S-x = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.select]
@@ -119,7 +124,7 @@ S-e = ":noop"
 C-d = ":noop"
 S-c = ":noop"
 A-c = ":noop"
-g = ":noop"
+# g = ":noop"
 S-x = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.normal.a]
