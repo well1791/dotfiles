@@ -52,28 +52,24 @@ esc = ["collapse_selection", "keep_primary_selection"]
 j = ["move_prev_word_start", "trim_selections"]
 l = ["move_next_word_end", "trim_selections"]
 i = "move_visual_line_up"
-S-i = "goto_prev_paragraph"
-C-i = "page_cursor_half_up"
-A-i = "goto_file_start"
-# A-i = [
-#   "extend_to_line_bounds",
-#   "delete_selection",
-#   "move_line_up",
-#   "paste_before",
-#   "flip_selections",
-# ]  # Move line(s) up
+S-i = "goto_file_start"
+A-i = [
+  "extend_to_line_bounds",
+  "delete_selection",
+  "move_line_up",
+  "paste_before",
+  "flip_selections",
+]  # Move line(s) up
 k = "move_visual_line_down"
-S-k = "goto_next_paragraph"
-C-k = "page_cursor_half_down"
-A-k = "goto_file_end"
-# A-k = [
-#   "extend_to_line_bounds",
-#   "delete_selection",
-#   "paste_after",
-#   "select_mode",
-#   "goto_line_start",
-#   "normal_mode",
-# ]  # Move line(s) down
+S-k = "goto_file_end"
+A-k = [
+  "extend_to_line_bounds",
+  "delete_selection",
+  "paste_after",
+  "select_mode",
+  "goto_line_start",
+  "normal_mode",
+]  # Move line(s) down
 u = "goto_first_nonwhitespace"
 S-u = ":noop"
 C-u = ":noop"
@@ -84,16 +80,17 @@ h = "undo"
 S-h = "redo"
 # LEFT
 w = "page_cursor_half_up"
-S-w = ":noop"
+S-w = "goto_prev_paragraph"
 A-w = ":noop"
 s = "page_cursor_half_down"
-S-s = ":noop"
+S-s = "goto_next_paragraph"
+# C-s = ":noop"
 A-s = ":noop"
 e = "select_regex"
 S-e = "split_selection"
+# C-e = ":noop"
 A-e = "split_selection_on_newline"
 C-d = ":noop"
-# g = ":noop"
 S-x = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.select]
@@ -101,30 +98,37 @@ S-x = ["extend_line_up", "extend_to_line_bounds"]
 j = "extend_prev_word_start"
 l = "extend_next_word_end"
 i = "extend_visual_line_up"
-S-i = "goto_prev_paragraph"
-C-i = "page_cursor_half_up"
-A-i = "extend_to_file_start"
+S-i = "extend_to_file_start"
+C-i = ":noop"
+A-i = ":noop"
 k = "extend_visual_line_down"
-S-k = "goto_next_paragraph"
-C-k = "page_cursor_half_down"
-A-k = "extend_to_file_end"
+S-k = "extend_to_file_end"
+C-k = ":noop"
+A-k = ":noop"
 u = "extend_to_first_nonwhitespace"
 S-u = ":noop"
 C-u = ":noop"
+A-u = ":noop"
 o = "extend_to_line_end"
 S-o = ":noop"
 C-o = ":noop"
 h = "undo"
 S-h = "redo"
 # LEFT
-w = ":noop"
-S-w = ":noop"
-e = ":noop"
-S-e = ":noop"
+w = "page_cursor_half_up"
+S-w = "goto_prev_paragraph"
+A-w = ":noop"
+s = "page_cursor_half_down"
+S-s = "goto_next_paragraph"
+# C-s = ":noop"
+# A-s = ":noop"
+e = "select_regex"
+S-e = "split_selection"
+# C-e = ":noop"
+A-e = "split_selection_on_newline"
 C-d = ":noop"
 S-c = ":noop"
 A-c = ":noop"
-# g = ":noop"
 S-x = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.normal.a]
