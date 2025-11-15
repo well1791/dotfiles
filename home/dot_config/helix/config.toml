@@ -53,6 +53,7 @@ j = ["move_prev_word_start", "trim_selections"]
 l = ["move_next_word_end", "trim_selections"]
 i = "move_visual_line_up"
 S-i = "goto_file_start"
+C-i = "goto_previous_buffer"
 A-i = [
   "extend_to_line_bounds",
   "delete_selection",
@@ -62,6 +63,7 @@ A-i = [
 ]  # Move line(s) up
 k = "move_visual_line_down"
 S-k = "goto_file_end"
+C-k = "goto_next_buffer"
 A-k = [
   "extend_to_line_bounds",
   "delete_selection",
@@ -88,9 +90,9 @@ S-s = "goto_next_paragraph"
 A-s = ":noop"
 e = "select_regex"
 S-e = "split_selection"
-# C-e = ":noop"
+C-e = "goto_previous_buffer"
 A-e = "split_selection_on_newline"
-C-d = ":noop"
+C-d = "goto_next_buffer"
 S-x = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.select]
@@ -99,11 +101,11 @@ j = "extend_prev_word_start"
 l = "extend_next_word_end"
 i = "extend_visual_line_up"
 S-i = "extend_to_file_start"
-C-i = ":noop"
+C-i = "goto_previous_buffer"
 A-i = ":noop"
 k = "extend_visual_line_down"
 S-k = "extend_to_file_end"
-C-k = ":noop"
+C-k = "goto_next_buffer"
 A-k = ":noop"
 u = "extend_to_first_nonwhitespace"
 S-u = ":noop"
@@ -121,12 +123,12 @@ A-w = ":noop"
 s = "page_cursor_half_down"
 S-s = "goto_next_paragraph"
 # C-s = ":noop"
-# A-s = ":noop"
+A-s = ":noop"
 e = "select_regex"
 S-e = "split_selection"
-# C-e = ":noop"
+C-e = "goto_previous_buffer"
 A-e = "split_selection_on_newline"
-C-d = ":noop"
+C-d = "goto_next_buffer"
 S-c = ":noop"
 A-c = ":noop"
 S-x = ["extend_line_up", "extend_to_line_bounds"]
@@ -226,8 +228,8 @@ u = "find_prev_char"
 o = "find_next_char"
 
 [keys.normal.p]
-i = "paste_before"
-k = "paste_after"
+i = ["add_newline_above", "move_visual_line_up", "paste_before"]
+k = ["add_newline_below", "move_visual_line_down", "paste_before"]
 j = "paste_before"
 l = "paste_after"
 
