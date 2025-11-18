@@ -208,13 +208,13 @@
   ;;                  | | | | |     --     | | | | |
   (ch_tlm ch_tli) @os_met                  (ch_tri ch_trm) @os_met
 
-  ;;                  |*|*| | |     --     | | |*|*|
   ;;                  | | | | |     --     | | | | |
-  (ch_blp ch_blr) @os_shortcuts            (ch_brr ch_brp) @os_shortcuts
+  ;;                  |*| | |*|     --     |*| | |*|
+  (ch_blp ch_bli) @os_shortcuts            (ch_bri ch_brp) @os_shortcuts
 
-  ;;                  |*|*| | |     --     | | |*|*|
+  ;;                  |*| | |*|     --     |*| | |*|
   ;;                  | | | | |     --     | | | | |
-  (ch_tlp ch_tlr) @os_media                (ch_trr ch_trp) @os_media
+  (ch_tlp ch_tli) @os_media                (ch_tri ch_trp) @os_media
 )
 
 (defchords CH_NO_MODS $chord_timeout
