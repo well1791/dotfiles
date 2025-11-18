@@ -59,6 +59,12 @@
   os_ctl        (one-shot-press $one_shot_timeout lctl)
   os_alt        (one-shot-press $one_shot_timeout lalt)
   os_met        (one-shot-press $one_shot_timeout lmet)
+  ;;os_ctl_sft    (one-shot-press $one_shot_timeout (multi lctl lsft))
+  ;;os_alt_sft    (one-shot-press $one_shot_timeout (multi lalt lsft))
+  ;;os_ctl_alt    (one-shot-press $one_shot_timeout (multi lctl lalt))
+  ;;os_sup_sft    (one-shot-press $one_shot_timeout (multi lmet lsft))
+  ;;os_sup_ctl    (one-shot-press $one_shot_timeout (multi lmet lctl))
+  ;;os_sup_alt    (one-shot-press $one_shot_timeout (multi lmet lalt))
   ;;os_meh      (one-shot-press $one_shot_timeout C-A-S)
 
   ;; WHILE HELD
@@ -360,21 +366,20 @@
 
 (deflayermap (L_MEDIA) ;; one-shot (hold) layer
   ;; LEFT
-  q XX    w prev   e volu      r mute
-  a XX    s next   d voldwn    f pp
+  q brup     w prev   e volu      r mute
+  a brdwn    s next   d voldwn    f pp
 
   ;; RIGHT
-  u mute    i volu     o prev    p XX
-  j pp      k voldwn   l next    ; XX
+  u mute    i volu     o prev    p brup
+  j pp      k voldwn   l next    ; brdwn
 )
 
 (deflayermap (L_SHORTCUTS) ;; one-shot (hold) layer
   ;; LEFT
-  q @os_nor_l    w @alt_9      e @ctl_pgup    r @ctl_sft_t
-         a XX    s @ctl_tab    d @ctl_pgdn    f @ctl_w
+  q @ctl_sft_t    w @alt_9      e @ctl_pgup    r @ctl_sft_t
+  a @ctl_w        s @ctl_tab    d @ctl_pgdn    f @ctl_w
 
   ;; RIGHT
-  u @ctl_sft_t    i @ctl_pgup    o @alt_9      p @os_nor_r
-  j @ctl_w        k @ctl_pgdn    l @ctl_tab    ; XX
+  u @ctl_sft_t    i @ctl_pgup    o @alt_9      p @ctl_sft_t
+  j @ctl_w        k @ctl_pgdn    l @ctl_tab    ; @ctl_w
 )
-
