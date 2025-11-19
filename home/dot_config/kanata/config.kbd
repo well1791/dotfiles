@@ -58,14 +58,14 @@
   os_sft        (one-shot-press $one_shot_timeout lsft)
   os_ctl        (one-shot-press $one_shot_timeout lctl)
   os_alt        (one-shot-press $one_shot_timeout lalt)
-  os_met        (one-shot-press $one_shot_timeout lmet)
-  ;;os_ctl_sft    (one-shot-press $one_shot_timeout (multi lctl lsft))
-  ;;os_alt_sft    (one-shot-press $one_shot_timeout (multi lalt lsft))
-  ;;os_ctl_alt    (one-shot-press $one_shot_timeout (multi lctl lalt))
-  ;;os_sup_sft    (one-shot-press $one_shot_timeout (multi lmet lsft))
-  ;;os_sup_ctl    (one-shot-press $one_shot_timeout (multi lmet lctl))
-  ;;os_sup_alt    (one-shot-press $one_shot_timeout (multi lmet lalt))
-  ;;os_meh      (one-shot-press $one_shot_timeout C-A-S)
+  os_sup        (one-shot-press $one_shot_timeout lmet)
+  os_ctl_sft    (one-shot-press $one_shot_timeout C-lsft)
+  os_alt_sft    (one-shot-press $one_shot_timeout A-lsft)
+  os_ctl_alt    (one-shot-press $one_shot_timeout C-lalt)
+  os_sup_sft    (one-shot-press $one_shot_timeout M-lsft)
+  os_sup_ctl    (one-shot-press $one_shot_timeout M-lctl)
+  os_sup_alt    (one-shot-press $one_shot_timeout M-lalt)
+  ;;os_meh      (one-shot-press $one_shot_timeout C-A-lsft)
 
   ;; WHILE HELD
   wh_numbers    (layer-while-held L_NUMBERS)
@@ -206,7 +206,31 @@
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | | | | |     --     | | | | |
-  (ch_tlm ch_tli) @os_met                  (ch_tri ch_trm) @os_met
+  (ch_tlm ch_tli) @os_sup                  (ch_tri ch_trm) @os_sup
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_blr ch_bli) @os_ctl_sft              (ch_bri ch_brr) @os_ctl_sft
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tlr ch_tli) @os_sup_alt              (ch_tri ch_trr) @os_sup_alt
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_tlr ch_bli) @os_alt_sft              (ch_bri ch_trr) @os_alt_sft
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_blr ch_tli) @os_sup_ctl              (ch_tri ch_brr) @os_sup_ctl
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_tlm ch_bli) @os_sup_sft              (ch_bri ch_trm) @os_sup_sft
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_blr ch_tlm) @os_ctl_alt              (ch_trm ch_brr) @os_ctl_alt
 
   ;;                  | | | | |     --     | | | | |
   ;;                  |*| | |*|     --     |*| | |*|
@@ -383,3 +407,4 @@
   u @ctl_sft_t    i @ctl_pgup    o @alt_9      p @ctl_sft_t
   j @ctl_w        k @ctl_pgdn    l @ctl_tab    ; @ctl_w
 )
+
