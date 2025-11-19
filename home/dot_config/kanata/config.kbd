@@ -70,28 +70,28 @@
   ;; WHILE HELD
   wh_numbers    (layer-while-held L_NUMBERS)
   wh_functions  (layer-while-held L_F_1_12)
-  wh_nor_r      (layer-while-held L_NAV_R)
-  wh_nor_l      (layer-while-held L_NAV_L)
+  wh_nav_r      (layer-while-held L_NAV_R)
+  wh_nav_l      (layer-while-held L_NAV_L)
 
   ;; fake keys for key repetition
   tap (multi @sw_no_mods (on-idle-fakekey fk_no_mods tap 20))
 
   ins_tlp      @_tlp
-  ins_tlr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlr @tap) lalt $lt_kbd)
+  ins_tlr      @_tlr
   ins_tlm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tlm @tap) @wh_numbers $lt_kbd)
-  ins_tli      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tli @tap) lmet $lt_kbd)
-  ins_tri      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_tri @tap) lmet $rt_kbd)
+  ins_tli      @_tli
+  ins_tri      @_tri
   ins_trm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_trm @tap) @wh_numbers $rt_kbd)
-  ins_trr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_trr @tap) lalt $rt_kbd)
+  ins_trr      @_trr
   ins_trp      @_trp
-  ins_blp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blp @tap) @wh_nor_r $lt_kbd)
-  ins_blr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blr @tap) lctl $lt_kbd)
+  ins_blp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blp @tap) @wh_nav_r $lt_kbd)
+  ins_blr      @_blr
   ins_blm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blm @tap) @wh_functions $lt_kbd)
-  ins_bli      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_bli @tap) lsft $lt_kbd)
-  ins_bri      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_bri @tap) lsft $rt_kbd)
+  ins_bli      @_bli
+  ins_bri      @_bri
   ins_brm      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brm @tap) @wh_functions $rt_kbd)
-  ins_brr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brr @tap) lctl $rt_kbd)
-  ins_brp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brp @tap) @wh_nor_l $rt_kbd)
+  ins_brr      @_brr
+  ins_brp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brp @tap) @wh_nav_l $rt_kbd)
 
   ;; Navigation
   na_pgup      (tap-hold $tap_timeout $hold_timeout pgup lmet)
