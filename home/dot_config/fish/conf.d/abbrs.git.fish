@@ -7,7 +7,7 @@ abbr -a -- gff 'git pull --ff-only --all --prune'
 
 # git push
 abbr -a -- gp 'git push --set-upstream origin (git branch --show-current)'
-abbr -a -- gpf 'git push --force-with-lease'
+abbr -a -- gp 'git push --set-upstream origin (git branch --show-current) --force-with-lease'
 
 # git add
 abbr -a -- ga 'git add'
