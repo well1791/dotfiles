@@ -237,9 +237,9 @@
   ;;                  |*| | |*|     --     |*| | |*|
   (ch_blp ch_bli) @os_shortcuts            (ch_bri ch_brp) @os_shortcuts
 
-  ;;                  |*| | |*|     --     |*| | |*|
-  ;;                  | | | | |     --     | | | | |
-  (ch_tlp ch_tli) @os_media                (ch_tri ch_trp) @os_media
+  ;;                  |*| | | |     --     | | | |*|
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_tlp ch_bli) @os_media                (ch_bri ch_trp) @os_media
 )
 
 (defchords CH_NO_MODS $chord_timeout
