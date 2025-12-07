@@ -73,6 +73,9 @@
   wh_nav_r      (layer-while-held L_NAV_R)
   wh_nav_l      (layer-while-held L_NAV_L)
 
+  ;; TAP HOLD
+  esc_sft      (tap-hold $tap_timeout $hold_timeout esc lsft)
+
   ;; fake keys for key repetition
   tap (multi @sw_no_mods (on-idle-fakekey fk_no_mods tap 20))
 
@@ -322,7 +325,7 @@
 ;; Layer: INSERT - Main/base layer with modifiers and chords
 ;; Chords: "g + h" to switch to "L_NO_MODS"
 (deflayermap (L_INS)
-  caps esc
+  caps @esc_sft
 
   ;; LEFT
   q @ch_al_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
@@ -358,7 +361,7 @@
 ;; Layer: no modifiers (ideal for gaming)
 ;; Chords: "g + h" to switch to "L_INS"
 (deflayermap (L_NO_MODS)
-  caps esc
+  caps @esc_sft
 
   ;; LEFT
   q @_tlp    w @_tlr    e @_tlm    r @_tli
