@@ -6,8 +6,8 @@
   ;; linux-dev /dev/input/by-id/usb-Kinesis_Kinesis_Adv360_360555127546-if01-event-kbd
   ;; linux-dev /dev/input/event4
 
-  rapid-event-delay 0
-  chords-v2-min-idle-experimental 5
+  rapid-event-delay 5             ;; Changed from 0 to 5 to help with laptop debounce
+  chords-v2-min-idle-experimental 30 ;; Higher idle protects fast typing
 )
 
 (defsrc
@@ -27,10 +27,10 @@
 )
 
 (defvar
-  chord_timeout      25 ;; ( 50-100)
-  tap_timeout       200 ;; (150-250)
-  hold_timeout      200 ;; (150-250)
-  one_shot_timeout  500 ;; dismiss after that time
+  chord_timeout      35
+  tap_timeout        170
+  hold_timeout       150
+  one_shot_timeout   500 ;; dismiss after that time
 
   lt_kbd ( ;; [l]ef[t]-hand keyboard
     q  w  e  r
