@@ -52,7 +52,7 @@ esc = ["collapse_selection", "keep_primary_selection"]
 j = ["move_prev_word_start", "trim_selections"]
 l = ["move_next_word_end", "trim_selections"]
 i = "move_visual_line_up"
-S-i = "goto_file_start"
+S-i = "page_cursor_half_up"
 C-i = "goto_previous_buffer"
 A-i = [
   "extend_to_line_bounds",
@@ -62,7 +62,7 @@ A-i = [
   "flip_selections",
 ]  # Move line(s) up
 k = "move_visual_line_down"
-S-k = "goto_file_end"
+S-k = "page_cursor_half_down"
 C-k = "goto_next_buffer"
 A-k = [
   "extend_to_line_bounds",
@@ -73,10 +73,10 @@ A-k = [
   "normal_mode",
 ]  # Move line(s) down
 u = "goto_first_nonwhitespace"
-S-u = ":noop"
+S-u = "goto_file_start"
 C-u = ":noop"
 o = "goto_line_end"
-S-o = ":noop"
+S-o = "goto_file_end"
 C-o = ":noop"
 h = "undo"
 S-h = "redo"
@@ -303,7 +303,9 @@ S-d = "page_cursor_half_down"
 
 [keys.normal.space]
 r = [":config-reload", ":redraw"]
-S-f = "file_picker_in_current_buffer_directory"
+S-f = ":noop"
+e = "file_explorer_in_current_buffer_directory"
+S-e = ":noop"
 c = ":noop"
 S-c = ":noop"
 A-c = ":noop"
