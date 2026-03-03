@@ -80,21 +80,140 @@
 
 (setq auto-save-visited-interval 3) ; Set interval in seconds
 (auto-save-visited-mode +1)          ; Enable the mode globally
-
 (setq confirm-kill-emacs nil)
-
-(setq-default tab-width 2)
-
-;; (map! :leader
-;;       (:prefix-map ("a" . "applications")
-;;        (:prefix ("j" . "journal")
-;;         :desc "New journal entry" "j" #'org-journal-new-entry
-;;         :desc "Search journal entry" "s" #'org-journal-search)))
-
 (map! :leader
       :desc "Comment line" "c c" #'comment-line)
 
-;; (map! :desc "Insert left" "a j" #'evil-insert)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Custom Configuration
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; --- Indentation: Use 2 spaces instead of tabs ---
+(setq-default indent-tabs-mode nil) ; Use spaces, not tabs
+(setq-default tab-width 2)
+(setq-default standard-indent 2)
+(after! evil (setq evil-shift-width 2))
+;; Common per-mode tweaks
+(setq js-indent-level 2
+      typescript-indent-level 2
+      python-indent-offset 2
+      css-indent-offset 2
+      yaml-indent-offset 2
+      c-basic-offset 2)
+(after! web-mode
+  (setq web-mode-markup-indent-offset 2
+        web-mode-code-indent-offset 2
+        web-mode-css-indent-offset 2
+        web-mode-attribute-indent-offset 2))
+
+(after! evil
+  ;; Make ',' the prefix for "inner" text objects
+  (define-key evil-operator-state-map "," evil-inner-text-objects-map)
+  (define-key evil-visual-state-map   "," evil-inner-text-objects-map)
+
+  ;; Make '.' the prefix for "around" text objects
+  (define-key evil-operator-state-map "." evil-outer-text-objects-map)
+  (define-key evil-visual-state-map   "." evil-outer-text-objects-map)
+  
+  ;; --- Core Navigation ---
+  (map! ;; j/l for word left/right
+        :nvo "j" #'evil-backward-word-begin
+        :nvo "l" #'evil-forward-word-end
+
+        ;; i/k for visual line up/down
+        :nv "i" #'evil-previous-visual-line
+        :nv "k" #'evil-next-visual-line
+
+        ;; I/K for scrolling up/down
+        :nv "I" #'evil-scroll-up
+        :nv "K" #'evil-scroll-down
+        ;; Move the original K command to g k
+        :n "g k" #'evil-lookup
+        
+        ;; u/o for beginning/end of line
+        :nv "u" #'evil-first-non-blank
+        :nv "o" #'evil-end-of-line
+
+        ;; U/O for first/last line of file
+        :nv "U" #'evil-goto-first-line
+        :nv "O" #'evil-goto-line)
+
+  ;; h/H for undo/redo
+  (map! (:when (fboundp 'undo-fu-only-undo) :n "h" #'undo-fu-only-undo)
+        (:unless (fboundp 'undo-fu-only-undo) :n "h" #'evil-undo)
+        (:when (fboundp 'undo-fu-only-redo) :n "H" #'undo-fu-only-redo)
+        (:unless (fboundp 'undo-fu-only-redo) :n "H" #'evil-redo))
+
+  ;; --- "a" prefix for actions ---
+  (map! :n "a i" #'evil-open-above
+        :n "a j" #'evil-insert
+        :n "a k" #'evil-open-below
+        :n "a l" #'evil-append
+        :n "a u" #'evil-insert-line
+        :n "a o" #'evil-append-line
+        :n "a ;" #'evil-change)
+
+  ;; --- Other Remaps ---
+  ;; Remap x to behave like V (visual-line)
+  (map! :nv "x" #'evil-visual-line)
+
+  ;; Remap b to SPC b prefix
+  (defun my-leader-b ()
+    (interactive)
+    (setq unread-command-events (listify-key-sequence (kbd "SPC b"))))
+  (map! :n "b" #'my-leader-b)
+  ;; Reopen recently closed buffer
+  (map! :leader
+        :desc "Reopen a recently closed buffer"
+        "b t" #'recentf-open-most-recent-file)
+) ;; End of (after! evil ...)
+
+;; --- Vterm configuration ---
+(after! vterm
+  ;; Always start vterm in insert state
+  (add-hook 'vterm-mode-hook #'evil-insert-state)
+  ;; Send common Ctrl keys to the terminal
+  (map! :map vterm-mode-map
+        :i "C-d" #'vterm-send-C-d
+        :i "C-c" #'vterm-send-C-c
+        :i "C-z" #'vterm-send-C-z
+        :i "C-a" #'vterm-send-C-a
+        :i "C-e" #'vterm-send-C-e
+        :i "C-k" #'vterm-send-C-k
+        :i "C-l" #'vterm-send-C-l
+        :i "C-r" #'vterm-send-C-r))
+
+;; --- High-priority override for scrolling ---
+;; This ensures 's' and 'w' for scrolling aren't overridden by minor modes
+(map! :map general-override-mode-map
+      :nv "w" #'evil-scroll-up
+      :nv "s" #'evil-scroll-down
+      :nv "W" nil
+      :nv "S" nil)
+
+;; 1. Prevent evil-snipe from creating its default keybindings.
+;;    This must be set BEFORE evil-snipe is loaded.
+(setq evil-snipe-suppress-f-keybindings t)
+(setq evil-snipe-suppress-t-keybindings t)
+(setq evil-snipe-suppress-s-keybindings t)
+;; This also prevents it from grabbing ',' for repeat, which we need for text objects.
+(setq evil-snipe-repeat-keys "")
+
+;; 2. After evil-snipe loads, create our own bindings in the correct modes.
+(after! evil-snipe
+  (map! :nvo "e" #'evil-snipe-s   ; 2-char search forward
+        :nvo "E" #'evil-snipe-S)) ; 2-char search backward
 
 
+(use-package! chezmoi
+      :after evil
+      :config
+      ;; This provides a nicer interface for viewing diffs if you use Magit.
+      (setq chezmoi-use-magit-popup t)
 
+      ;; --- Keybindings ---
+      (map! :leader
+            :desc "Chezmoi find/edit"  "e e" #'chezmoi-find
+            :desc "Chezmoi apply/save" "e a" #'chezmoi-write
+            :desc "Chezmoi diff"       "e d" #'chezmoi-diff))
+    

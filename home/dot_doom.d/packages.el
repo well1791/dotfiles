@@ -49,6 +49,7 @@
 ;; (unpin! t)
 
 (package! tldr)
+(package! chezmoi)
 
 ;; (package! typescript-mode :disable t)
 ;; (package! typescript-mode
