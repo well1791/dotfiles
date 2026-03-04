@@ -1,16 +1,31 @@
-# ijkl
+###
+# i/k for up/down | e/d for left-hand
+###
 i back-line
 k forw-line
-I back-scroll
-K forw-scroll
+e back-line
+d forw-line
 
+
+###
+# j/l for left/right
+###
 j left-scroll
 l right-scroll
+
+
+###
+# I/K for scroll up/down | w/s for left-hand
+###
+I back-scroll
+K forw-scroll
+w back-scroll
+s forw-scroll
+
+
+###
+# J/L dunno what back/forw-screen does
+###
 J back-screen
 L forw-screen
 
-# esdf
-e back-line
-d forw-line
-w back-scroll
-s forw-scroll
