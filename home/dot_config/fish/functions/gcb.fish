@@ -1,22 +1,16 @@
 function gcb --description "Clones a repo as bare and set up two worktrees."
     set repo "$argv[1]"
-    set dir "$argv[2]"
+    set proj_name "$argv[2]"
 
-    if test -z $dir
-        set dir (echo "$repo" | grep -o '[^/]*$')
-    end
+    mkdir "$proj_name"
+    cd "$proj_name"
 
-    set proj_name (string join . (string split . "$dir")[1..-2])
-
-    git clone --single-branch --bare "$repo" "$dir"
-
-    cd "$dir"
-
-    git fetch --all --prune
+    git clone --single-branch --bare "$repo" .git
     git config --local --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
-    git worktree add -b rename1 wt/1/$proj_name
-    git worktree add -b rename2 wt/2/$proj_name
-    git worktree add -b rename3 wt/3/$proj_name
+    git fetch --all --prune
+    git worktree add 1
+    git worktree add 2
+    git worktree add 3
 
-    cd wt/1/$proj_name
+    cd 1
 end
