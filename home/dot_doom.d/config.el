@@ -88,6 +88,9 @@
 ;; Custom Configuration
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; Set side margins
+(set-fringe-mode '(75 . 0))
+
 ;; --- Indentation: Use 2 spaces instead of tabs ---
 (setq-default indent-tabs-mode nil) ; Use spaces, not tabs
 (setq-default tab-width 2)
@@ -136,7 +139,13 @@
 
         ;; U/O for first/last line of file
         :nv "U" #'evil-goto-first-line
-        :nv "O" #'evil-goto-line)
+        :nv "O" #'evil-goto-line
+
+        ;; C-i/C-k to go to prev/next buffer
+        :nv "C-S-i" #'evil-prev-buffer
+        :nv "C-S-k" #'evil-next-buffer
+        ;; C-l to go to last visited buffer
+        :nv "C-S-l" #'mode-line-other-buffer)
 
   ;; h/H for undo/redo
   (map! (:when (fboundp 'undo-fu-only-undo) :n "h" #'undo-fu-only-undo)
@@ -174,14 +183,16 @@
   (add-hook 'vterm-mode-hook #'evil-insert-state)
   ;; Send common Ctrl keys to the terminal
   (map! :map vterm-mode-map
-        :i "C-d" #'vterm-send-C-d
-        :i "C-c" #'vterm-send-C-c
-        :i "C-z" #'vterm-send-C-z
-        :i "C-a" #'vterm-send-C-a
-        :i "C-e" #'vterm-send-C-e
-        :i "C-k" #'vterm-send-C-k
-        :i "C-l" #'vterm-send-C-l
-        :i "C-r" #'vterm-send-C-r))
+        :i "C-d" (lambda () (interactive) (vterm-send-key (kbd "C-d")))
+        :i "C-c" (lambda () (interactive) (vterm-send-key (kbd "C-c")))
+        :i "C-z" (lambda () (interactive) (vterm-send-key (kbd "C-z")))
+        :i "C-a" (lambda () (interactive) (vterm-send-key (kbd "C-a")))
+        :i "C-e" (lambda () (interactive) (vterm-send-key (kbd "C-e")))
+        :i "C-k" (lambda () (interactive) (vterm-send-key (kbd "C-k")))
+        :i "C-l" (lambda () (interactive) (vterm-send-key (kbd "C-l")))
+        :i "C-r" (lambda () (interactive) (vterm-send-key (kbd "C-r")))
+        :i "C-p" (lambda () (interactive) (vterm-send-key (kbd "C-p")))
+        :i "M-ESC" #'vterm-send-escape))
 
 ;; --- High-priority override for scrolling ---
 ;; This ensures 's' and 'w' for scrolling aren't overridden by minor modes
@@ -215,5 +226,6 @@
       (map! :leader
             :desc "Chezmoi find/edit"  "e e" #'chezmoi-find
             :desc "Chezmoi apply/save" "e a" #'chezmoi-write
+            :desc "Chezmoi save/apply" "e s" #'chezmoi-write
             :desc "Chezmoi diff"       "e d" #'chezmoi-diff))
     
