@@ -227,12 +227,6 @@ l = "find_till_char"
 u = "find_prev_char"
 o = "find_next_char"
 
-[keys.normal.p]
-i = ["add_newline_above", "move_visual_line_up", "paste_before"]
-k = ["add_newline_below", "move_visual_line_down", "paste_before"]
-j = "paste_before"
-l = "paste_after"
-
 [keys.normal.t]
 d = "goto_next_diag"
 S-d = "goto_last_diag"
