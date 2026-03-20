@@ -47,9 +47,11 @@
   fscache = true
 
 [interactive]
-  diffFilter = delta --color-only --features=interactive
+  # `--word-diff-regex='[^[:space:]]'` @see https://github.com/dandavison/delta/discussions/1575 
+  diffFilter = delta --color-only --features=interactive --word-diff-regex='[^[:space:]]'
 
 [delta]
+  dark = true
   navigate = true
   features = decorations
   whitespace-error-style = 22 reverse
@@ -83,7 +85,7 @@
 [merge]
   stat = true
   ff = false
-  conflictstyle = diff3
+  conflictstyle = zdiff3
 
 [grep]
   lineNumber = true
