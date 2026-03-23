@@ -18,12 +18,12 @@
 
 (defalias
   ;; LEFT
-  _tlp q   _tlr w   _tlm e   _tli r
-  _blp a   _blr s   _blm d   _bli f    _blii g
+  _tpl q   _trl w   _tml e   _til r
+  _hpl a   _hrl s   _hml d   _hil f   _sil g
 
   ;; RIGHT
-           _tri u   _trm i   _trr o   _trp p
-  _brii h  _bri j   _brm k   _brr l   _brp ;
+           _tir u   _tmr i   _trr o   _tpr p
+  _sir h   _hir j   _hmr k   _hrr l   _hpr ;
 )
 
 (defvar
@@ -78,22 +78,22 @@
   ;; fake keys for key repetition
   tap (multi @sw_no_mods (on-idle-fakekey fk_no_mods tap 20))
 
-  ins_tlp      @_tlp
-  ins_tlr      @_tlr
-  ins_tlm      @_tlm
-  ins_tli      @_tli
-  ins_tri      @_tri
-  ins_trm      @_trm
+  ins_tpl      @_tpl
+  ins_trl      @_trl
+  ins_tml      @_tml
+  ins_til      @_til
+  ins_tir      @_tir
+  ins_tmr      @_tmr
   ins_trr      @_trr
-  ins_trp      @_trp
-  ins_blp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_blp @tap) @wh_nav_r $lt_kbd)
-  ins_blr      @_blr
-  ins_blm      @_blm
-  ins_bli      @_bli
-  ins_bri      @_bri
-  ins_brm      @_brm
-  ins_brr      @_brr
-  ins_brp      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_brp @tap) @wh_nav_l $rt_kbd)
+  ins_tpr      @_tpr
+  ins_hpl      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_hpl @tap) @wh_nav_r $lt_kbd)
+  ins_hrl      @_hrl
+  ins_hml      @_hml
+  ins_hil      @_hil
+  ins_hir      @_hir
+  ins_hmr      @_hmr
+  ins_hrr      @_hrr
+  ins_hpr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_hpr @tap) @wh_nav_l $rt_kbd)
 
   ;; Navigation
   na_pgup      (tap-hold $tap_timeout $hold_timeout pgup lmet)
@@ -114,24 +114,24 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORDS ALIAS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defalias
-  ch_al_tli   (chord CH_INS ch_tli)
-  ch_al_tlm   (chord CH_INS ch_tlm)
-  ch_al_tlr   (chord CH_INS ch_tlr)
-  ch_al_tlp   (chord CH_INS ch_tlp)
-  ch_al_bli   (chord CH_INS ch_bli)
-  ch_al_blm   (chord CH_INS ch_blm)
-  ch_al_blr   (chord CH_INS ch_blr)
-  ch_al_blp   (chord CH_INS ch_blp)
-  ch_al_tri   (chord CH_INS ch_tri)
-  ch_al_trm   (chord CH_INS ch_trm)
+  ch_al_sil   (chord CH_INS ch_sil)
+  ch_al_til   (chord CH_INS ch_til)
+  ch_al_tml   (chord CH_INS ch_tml)
+  ch_al_trl   (chord CH_INS ch_trl)
+  ch_al_tpl   (chord CH_INS ch_tpl)
+  ch_al_hil   (chord CH_INS ch_hil)
+  ch_al_hml   (chord CH_INS ch_hml)
+  ch_al_hrl   (chord CH_INS ch_hrl)
+  ch_al_hpl   (chord CH_INS ch_hpl)
+  ch_al_tir   (chord CH_INS ch_tir)
+  ch_al_tmr   (chord CH_INS ch_tmr)
   ch_al_trr   (chord CH_INS ch_trr)
-  ch_al_trp   (chord CH_INS ch_trp)
-  ch_al_bri   (chord CH_INS ch_bri)
-  ch_al_brm   (chord CH_INS ch_brm)
-  ch_al_brr   (chord CH_INS ch_brr)
-  ch_al_brp   (chord CH_INS ch_brp)
-  ch_al_blii  (chord CH_INS ch_blii)
-  ch_al_brii  (chord CH_INS ch_brii)
+  ch_al_tpr   (chord CH_INS ch_tpr)
+  ch_al_hir   (chord CH_INS ch_hir)
+  ch_al_hmr   (chord CH_INS ch_hmr)
+  ch_al_hrr   (chord CH_INS ch_hrr)
+  ch_al_hpr   (chord CH_INS ch_hpr)
+  ch_al_sir   (chord CH_INS ch_sir)
 
   ;; NUMBERS
   ch_nu_n1    (chord CH_NUM ch_n1)
@@ -158,8 +158,8 @@
   ch_na_bspc   (chord CH_NAV ch_bspc)
 
   ;; NO MODS
-  ch_no_blii   (chord CH_NO_MODS ch_blii)
-  ch_no_brii   (chord CH_NO_MODS ch_brii)
+  ch_no_sil   (chord CH_NO_MODS ch_sil)
+  ch_no_sir   (chord CH_NO_MODS ch_sir)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -168,101 +168,101 @@
 
 (defchords CH_INS $chord_timeout
   ;; LEFT
-  (ch_tlp) @ins_tlp    (ch_tlr) @ins_tlr    (ch_tlm) @ins_tlm    (ch_tli) @ins_tli
-  (ch_blp) @ins_blp    (ch_blr) @ins_blr    (ch_blm) @ins_blm    (ch_bli) @ins_bli    (ch_blii) @_blii
+  (ch_tpl) @ins_tpl    (ch_trl) @ins_trl    (ch_tml) @ins_tml    (ch_til) @ins_til
+  (ch_hpl) @ins_hpl    (ch_hrl) @ins_hrl    (ch_hml) @ins_hml    (ch_hil) @ins_hil    (ch_sil) @_sil
 
   ;; RIGHT
-                       (ch_tri) @ins_tri    (ch_trm) @ins_trm    (ch_trr) @ins_trr    (ch_trp) @ins_trp
-  (ch_brii) @_brii     (ch_bri) @ins_bri    (ch_brm) @ins_brm    (ch_brr) @ins_brr    (ch_brp) @ins_brp
+                    (ch_tir) @ins_tir    (ch_tmr) @ins_tmr    (ch_trr) @ins_trr    (ch_tpr) @ins_tpr
+  (ch_sir) @_sir    (ch_hir) @ins_hir    (ch_hmr) @ins_hmr    (ch_hrr) @ins_hrr    (ch_hpr) @ins_hpr
 
   ;;                  | | | | |
   ;;                  |f|*|*|j|
-  (ch_blii ch_brii) @sw_no_mods
+  (ch_sil ch_sir) @sw_no_mods
 
   ;;======================================================================
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*|*|     --     |*|*|*| |
-  (ch_blr ch_blm ch_bli) spc               (ch_bri ch_brm ch_brr) spc
+  (ch_hrl ch_hml ch_hil) spc               (ch_hir ch_hmr ch_hrr) spc
 
   ;;                  | |*|*|*|     --     |*|*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_tlr ch_tlm ch_tli) esc               (ch_tri ch_trm ch_trr) esc
+  (ch_trl ch_tml ch_til) esc               (ch_tir ch_tmr ch_trr) esc
 
   ;;                  | | |*| |     --     | |*| | |
   ;;                  | |*| |*|     --     |*| |*| |
-  (ch_blr ch_tlm ch_bli) @os_nums          (ch_bri ch_trm ch_brr) @os_nums
+  (ch_hrl ch_tml ch_hil) @os_nums          (ch_hir ch_tmr ch_hrr) @os_nums
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | |*|     --     |*| | | |
-  ;;(ch_tlr ch_tlm ch_bli) ???             (ch_bri ch_trm ch_trr) ???
+  ;;(ch_trl ch_tml ch_hil) ???             (ch_hir ch_tmr ch_trr) ???
 
   ;;                  | |*| | |     --     | | |*| |
   ;;                  | | |*|*|     --     |*|*| | |
-  ;;(ch_tlr ch_blm ch_bli) ???              (ch_bri ch_brm ch_trr) ???
+  ;;(ch_trl ch_hml ch_hil) ???             (ch_hir ch_hmr ch_trr) ???
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | |*| | |     --     | | |*| |
-  (ch_blr ch_tlm ch_tli) @os_ffs           (ch_tri ch_trm ch_brr) @os_ffs
+  (ch_hrl ch_tml ch_til) @os_ffs           (ch_tir ch_tmr ch_hrr) @os_ffs
 
   ;;                  |*|*|*|*|     --     |*|*|*|*|
   ;;                  | | | | |     --     | | | | |
-  (ch_tlp ch_tlr ch_tlm ch_tli) caps       (ch_tri ch_trm ch_trr ch_trp) caps
+  (ch_tpl ch_trl ch_tml ch_til) caps       (ch_tir ch_tmr ch_trr ch_tpr) caps
 
   ;;                  | | | | |     --     | | | | |
   ;;                  |*| | |*|     --     |*| | |*|
-  (ch_blp ch_bli) @os_go                   (ch_bri ch_brp) @os_go
+  (ch_hpl ch_hil) @os_go                   (ch_hir ch_hpr) @os_go
 
   ;;                  |*| | | |     --     | | | |*|
   ;;                  | | | |*|     --     |*| | | |
-  (ch_tlp ch_bli) @os_media                (ch_bri ch_trp) @os_media
+  (ch_tpl ch_hil) @os_media                (ch_hir ch_tpr) @os_media
 
   ;;======================================================================
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (ch_blr ch_blm) @os_ctl                  (ch_brm ch_brr) @os_ctl
+  (ch_hrl ch_hml) @os_ctl                  (ch_hmr ch_hrr) @os_ctl
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_tlr ch_tlm) @os_alt                  (ch_trm ch_trr) @os_alt
+  (ch_trl ch_tml) @os_alt                  (ch_tmr ch_trr) @os_alt
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | | |*|*|     --     |*|*| | |
-  (ch_blm ch_bli) @os_sft                  (ch_bri ch_brm) @os_sft
+  (ch_hml ch_hil) @os_sft                  (ch_hir ch_hmr) @os_sft
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | | | | |     --     | | | | |
-  (ch_tlm ch_tli) @os_sup                  (ch_tri ch_trm) @os_sup
+  (ch_tml ch_til) @os_sup                  (ch_tir ch_tmr) @os_sup
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*| |*|     --     |*| |*| |
-  (ch_blr ch_bli) @os_ctl_sft              (ch_bri ch_brr) @os_ctl_sft
+  (ch_hrl ch_hil) @os_ctl_sft              (ch_hir ch_hrr) @os_ctl_sft
 
   ;;                  | |*| |*|     --     |*| |*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_tlr ch_tli) @os_sup_alt              (ch_tri ch_trr) @os_sup_alt
+  (ch_trl ch_til) @os_sup_alt              (ch_tir ch_trr) @os_sup_alt
 
   ;;                  | |*| | |     --     | | |*| |
   ;;                  | | | |*|     --     |*| | | |
-  (ch_tlr ch_bli) @os_alt_sft              (ch_bri ch_trr) @os_alt_sft
+  (ch_trl ch_hil) @os_alt_sft              (ch_hir ch_trr) @os_alt_sft
 
   ;;                  | | | |*|     --     |*| | | |
   ;;                  | |*| | |     --     | | |*| |
-  (ch_blr ch_tli) @os_sup_ctl              (ch_tri ch_brr) @os_sup_ctl
+  (ch_hrl ch_til) @os_sup_ctl              (ch_tir ch_hrr) @os_sup_ctl
 
   ;;                  | | |*| |     --     | |*| | |
   ;;                  | | | |*|     --     |*| | | |
-  (ch_tlm ch_bli) @os_sup_sft              (ch_bri ch_trm) @os_sup_sft
+  (ch_tml ch_hil) @os_sup_sft              (ch_hir ch_tmr) @os_sup_sft
 
   ;;                  | | |*| |     --     | |*| | |
   ;;                  | |*| | |     --     | | |*| |
-  (ch_blr ch_tlm) @os_ctl_alt              (ch_trm ch_brr) @os_ctl_alt
+  (ch_hrl ch_tml) @os_ctl_alt              (ch_tmr ch_hrr) @os_ctl_alt
 )
 
 (defchords CH_NO_MODS $chord_timeout
-  (ch_blii) @_blii
-  (ch_brii) @_brii
+  (ch_sil) @_sil
+  (ch_sir) @_sir
 
-  (ch_blii ch_brii) @sw_ins
+  (ch_sil ch_sir) @sw_ins
 )
 
 (defchords CH_NUM $chord_timeout
@@ -337,14 +337,14 @@
   caps @esc_sft
 
   ;; LEFT
-  q @ch_al_tlp    w @ch_al_tlr     e @ch_al_tlm     r @ch_al_tli
-  a @ch_al_blp    s @ch_al_blr     d @ch_al_blm     f @ch_al_bli    g @ch_al_blii
+  q @ch_al_tpl    w @ch_al_trl     e @ch_al_tml     r @ch_al_til
+  a @ch_al_hpl    s @ch_al_hrl     d @ch_al_hml     f @ch_al_hil    g @ch_al_sil
   z z             x x              c c              v v
 
   ;; RIGHT
-                   u @ch_al_tri    i @ch_al_trm     o @ch_al_trr     p @ch_al_trp
-  h @ch_al_brii    j @ch_al_bri    k @ch_al_brm     l @ch_al_brr     ; @ch_al_brp
-                   m m             , ,              . .              / /
+                  u @ch_al_tir    i @ch_al_tmr     o @ch_al_trr     p @ch_al_tpr
+  h @ch_al_sir    j @ch_al_hir    k @ch_al_hmr     l @ch_al_hrr     ; @ch_al_hpr
+                  m m             , ,              . .              / /
 )
 
 ;; Layer: no modifiers (ideal for gaming)
@@ -353,12 +353,12 @@
   caps @esc_sft
 
   ;; LEFT
-  q @_tlp    w @_tlr    e @_tlm    r @_tli
-  a @_blp    s @_blr    d @_blm    f @_bli    g @ch_no_blii
+  q @_tpl    w @_trl    e @_tml    r @_til
+  a @_hpl    s @_hrl    d @_hml    f @_hil    g @ch_no_sil
 
   ;; RIGHT
-                   u @_tri    i @_trm    o @_trr    p @_trp
-  h @ch_no_brii    j @_bri    k @_brm    l @_brr    ; @_brp
+                  u @_tir    i @_tmr    o @_trr    p @_tpr
+  h @ch_no_sir    j @_hir    k @_hmr    l @_hrr    ; @_hpr
 )
 
 ;; Layer: NORMAL RIGHT - Navigation layer with modifiers and chords
