@@ -47,19 +47,23 @@
   sw_no_mods    (layer-switch L_NO_MODS)
   sw_nav_r      (layer-switch L_NAV_R)
   sw_nav_l      (layer-switch L_NAV_L)
-  sw_ins        (layer-switch L_INS)
+  sw_al         (layer-switch L_ALPHA)
+
+  ;; WHILE HELD
+  wh_nav_r      (layer-while-held L_NAV_R)
+  wh_nav_l      (layer-while-held L_NAV_L)
 
   ;; ONE SHOT
   os_go         (one-shot-press $one_shot_timeout (layer-while-held L_GO))
   os_media      (one-shot-press $one_shot_timeout (layer-while-held L_MEDIA))
-  os_nor_r      (one-shot-press $one_shot_timeout (layer-while-held L_NAV_R))
-  os_nor_l      (one-shot-press $one_shot_timeout (layer-while-held L_NAV_L))
-  os_nums       (one-shot-press $one_shot_timeout (layer-while-held L_NUMBERS))
-  os_ffs        (one-shot-press $one_shot_timeout (layer-while-held L_FFS))
+  os_nums       (one-shot-press $one_shot_timeout (layer-while-held L_NUMS))
+  os_ff         (one-shot-press $one_shot_timeout (layer-while-held L_FF))
+  ;;----------------------------------------------------------------------
   os_sft        (one-shot-press $one_shot_timeout lsft)
   os_ctl        (one-shot-press $one_shot_timeout lctl)
   os_alt        (one-shot-press $one_shot_timeout lalt)
   os_sup        (one-shot-press $one_shot_timeout lmet)
+  ;;----------------------------------------------------------------------
   os_ctl_sft    (one-shot-press $one_shot_timeout C-lsft)
   os_alt_sft    (one-shot-press $one_shot_timeout A-lsft)
   os_ctl_alt    (one-shot-press $one_shot_timeout C-lalt)
@@ -68,32 +72,28 @@
   os_sup_alt    (one-shot-press $one_shot_timeout M-lalt)
   ;;os_meh      (one-shot-press $one_shot_timeout C-A-lsft)
 
-  ;; WHILE HELD
-  wh_nav_r      (layer-while-held L_NAV_R)
-  wh_nav_l      (layer-while-held L_NAV_L)
-
   ;; TAP HOLD
   esc_sft      (tap-hold $tap_timeout $hold_timeout esc lsft)
 
   ;; fake keys for key repetition
   tap (multi @sw_no_mods (on-idle-fakekey fk_no_mods tap 20))
 
-  ins_tpl      @_tpl
-  ins_trl      @_trl
-  ins_tml      @_tml
-  ins_til      @_til
-  ins_tir      @_tir
-  ins_tmr      @_tmr
-  ins_trr      @_trr
-  ins_tpr      @_tpr
-  ins_hpl      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_hpl @tap) @wh_nav_r $lt_kbd)
-  ins_hrl      @_hrl
-  ins_hml      @_hml
-  ins_hil      @_hil
-  ins_hir      @_hir
-  ins_hmr      @_hmr
-  ins_hrr      @_hrr
-  ins_hpr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_hpr @tap) @wh_nav_l $rt_kbd)
+  al_tpl      @_tpl
+  al_trl      @_trl
+  al_tml      @_tml
+  al_til      @_til
+  al_tir      @_tir
+  al_tmr      @_tmr
+  al_trr      @_trr
+  al_tpr      @_tpr
+  al_hpl      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_hpl @tap) @wh_nav_r $lt_kbd)
+  al_hrl      @_hrl
+  al_hml      @_hml
+  al_hil      @_hil
+  al_hir      @_hir
+  al_hmr      @_hmr
+  al_hrr      @_hrr
+  al_hpr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_hpr @tap) @wh_nav_l $rt_kbd)
 
   ;; Navigation
   na_pgup      (tap-hold $tap_timeout $hold_timeout pgup lmet)
@@ -114,48 +114,48 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORDS ALIAS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defalias
-  ch_al_sil   (chord CH_INS ch_sil)
-  ch_al_til   (chord CH_INS ch_til)
-  ch_al_tml   (chord CH_INS ch_tml)
-  ch_al_trl   (chord CH_INS ch_trl)
-  ch_al_tpl   (chord CH_INS ch_tpl)
-  ch_al_hil   (chord CH_INS ch_hil)
-  ch_al_hml   (chord CH_INS ch_hml)
-  ch_al_hrl   (chord CH_INS ch_hrl)
-  ch_al_hpl   (chord CH_INS ch_hpl)
-  ch_al_tir   (chord CH_INS ch_tir)
-  ch_al_tmr   (chord CH_INS ch_tmr)
-  ch_al_trr   (chord CH_INS ch_trr)
-  ch_al_tpr   (chord CH_INS ch_tpr)
-  ch_al_hir   (chord CH_INS ch_hir)
-  ch_al_hmr   (chord CH_INS ch_hmr)
-  ch_al_hrr   (chord CH_INS ch_hrr)
-  ch_al_hpr   (chord CH_INS ch_hpr)
-  ch_al_sir   (chord CH_INS ch_sir)
+  ch_al_sil   (chord CH_AL ch_sil)
+  ch_al_til   (chord CH_AL ch_til)
+  ch_al_tml   (chord CH_AL ch_tml)
+  ch_al_trl   (chord CH_AL ch_trl)
+  ch_al_tpl   (chord CH_AL ch_tpl)
+  ch_al_hil   (chord CH_AL ch_hil)
+  ch_al_hml   (chord CH_AL ch_hml)
+  ch_al_hrl   (chord CH_AL ch_hrl)
+  ch_al_hpl   (chord CH_AL ch_hpl)
+  ch_al_tir   (chord CH_AL ch_tir)
+  ch_al_tmr   (chord CH_AL ch_tmr)
+  ch_al_trr   (chord CH_AL ch_trr)
+  ch_al_tpr   (chord CH_AL ch_tpr)
+  ch_al_hir   (chord CH_AL ch_hir)
+  ch_al_hmr   (chord CH_AL ch_hmr)
+  ch_al_hrr   (chord CH_AL ch_hrr)
+  ch_al_hpr   (chord CH_AL ch_hpr)
+  ch_al_sir   (chord CH_AL ch_sir)
 
   ;; NUMBERS
-  ch_nu_n1    (chord CH_NUM ch_n1)
-  ch_nu_n3    (chord CH_NUM ch_n3)
-  ch_nu_n5    (chord CH_NUM ch_n5)
-  ch_nu_n6    (chord CH_NUM ch_n6)
-  ch_nu_n8    (chord CH_NUM ch_n8)
-  ch_nu_n0    (chord CH_NUM ch_n0)
+  ch_nu_n1    (chord CH_NS ch_n1)
+  ch_nu_n3    (chord CH_NS ch_n3)
+  ch_nu_n5    (chord CH_NS ch_n5)
+  ch_nu_n6    (chord CH_NS ch_n6)
+  ch_nu_n8    (chord CH_NS ch_n8)
+  ch_nu_n0    (chord CH_NS ch_n0)
 
-  ;; FUNCTIONALS
-  ch_ff_f1    (chord CH_FFS ch_f1)
-  ch_ff_f3    (chord CH_FFS ch_f3)
-  ch_ff_f5    (chord CH_FFS ch_f5)
-  ch_ff_f6    (chord CH_FFS ch_f6)
-  ch_ff_f8    (chord CH_FFS ch_f8)
-  ch_ff_f10   (chord CH_FFS ch_f10)
+  ;; FUNCTIONAL
+  ch_ff_f1    (chord CH_FF ch_f1)
+  ch_ff_f3    (chord CH_FF ch_f3)
+  ch_ff_f5    (chord CH_FF ch_f5)
+  ch_ff_f6    (chord CH_FF ch_f6)
+  ch_ff_f8    (chord CH_FF ch_f8)
+  ch_ff_f10   (chord CH_FF ch_f10)
 
   ;; NAVIGATION
-  ch_na_up     (chord CH_NAV ch_up)
-  ch_na_dn     (chord CH_NAV ch_dn)
-  ch_na_lt     (chord CH_NAV ch_lt)
-  ch_na_rt     (chord CH_NAV ch_rt)
-  ch_na_tab    (chord CH_NAV ch_tab)
-  ch_na_bspc   (chord CH_NAV ch_bspc)
+  ch_na_up     (chord CH_NA ch_up)
+  ch_na_dn     (chord CH_NA ch_dn)
+  ch_na_lt     (chord CH_NA ch_lt)
+  ch_na_rt     (chord CH_NA ch_rt)
+  ch_na_tab    (chord CH_NA ch_tab)
+  ch_na_bspc   (chord CH_NA ch_bspc)
 
   ;; NO MODS
   ch_no_sil   (chord CH_NO_MODS ch_sil)
@@ -166,55 +166,14 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORD KEYS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defchords CH_INS $chord_timeout
+(defchords CH_AL $chord_timeout
   ;; LEFT
-  (ch_tpl) @ins_tpl    (ch_trl) @ins_trl    (ch_tml) @ins_tml    (ch_til) @ins_til
-  (ch_hpl) @ins_hpl    (ch_hrl) @ins_hrl    (ch_hml) @ins_hml    (ch_hil) @ins_hil    (ch_sil) @_sil
+  (ch_tpl) @al_tpl    (ch_trl) @al_trl    (ch_tml) @al_tml    (ch_til) @al_til
+  (ch_hpl) @al_hpl    (ch_hrl) @al_hrl    (ch_hml) @al_hml    (ch_hil) @al_hil    (ch_sil) @_sil
 
   ;; RIGHT
-                    (ch_tir) @ins_tir    (ch_tmr) @ins_tmr    (ch_trr) @ins_trr    (ch_tpr) @ins_tpr
-  (ch_sir) @_sir    (ch_hir) @ins_hir    (ch_hmr) @ins_hmr    (ch_hrr) @ins_hrr    (ch_hpr) @ins_hpr
-
-  ;;                  | | | | |
-  ;;                  |f|*|*|j|
-  (ch_sil ch_sir) @sw_no_mods
-
-  ;;======================================================================
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*|*|*|     --     |*|*|*| |
-  (ch_hrl ch_hml ch_hil) spc               (ch_hir ch_hmr ch_hrr) spc
-
-  ;;                  | |*|*|*|     --     |*|*|*| |
-  ;;                  | | | | |     --     | | | | |
-  (ch_trl ch_tml ch_til) esc               (ch_tir ch_tmr ch_trr) esc
-
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | |*| |*|     --     |*| |*| |
-  (ch_hrl ch_tml ch_hil) @os_nums          (ch_hir ch_tmr ch_hrr) @os_nums
-
-  ;;                  | |*|*| |     --     | |*|*| |
-  ;;                  | | | |*|     --     |*| | | |
-  ;;(ch_trl ch_tml ch_hil) ???             (ch_hir ch_tmr ch_trr) ???
-
-  ;;                  | |*| | |     --     | | |*| |
-  ;;                  | | |*|*|     --     |*|*| | |
-  ;;(ch_trl ch_hml ch_hil) ???             (ch_hir ch_hmr ch_trr) ???
-
-  ;;                  | | |*|*|     --     |*|*| | |
-  ;;                  | |*| | |     --     | | |*| |
-  (ch_hrl ch_tml ch_til) @os_ffs           (ch_tir ch_tmr ch_hrr) @os_ffs
-
-  ;;                  |*|*|*|*|     --     |*|*|*|*|
-  ;;                  | | | | |     --     | | | | |
-  (ch_tpl ch_trl ch_tml ch_til) caps       (ch_tir ch_tmr ch_trr ch_tpr) caps
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  |*| | |*|     --     |*| | |*|
-  (ch_hpl ch_hil) @os_go                   (ch_hir ch_hpr) @os_go
-
-  ;;                  |*| | | |     --     | | | |*|
-  ;;                  | | | |*|     --     |*| | | |
-  (ch_tpl ch_hil) @os_media                (ch_hir ch_tpr) @os_media
+                    (ch_tir) @al_tir    (ch_tmr) @al_tmr    (ch_trr) @al_trr    (ch_tpr) @al_tpr
+  (ch_sir) @_sir    (ch_hir) @al_hir    (ch_hmr) @al_hmr    (ch_hrr) @al_hrr    (ch_hpr) @al_hpr
 
   ;;======================================================================
   ;;                  | | | | |     --     | | | | |
@@ -256,16 +215,64 @@
   ;;                  | | |*| |     --     | |*| | |
   ;;                  | |*| | |     --     | | |*| |
   (ch_hrl ch_tml) @os_ctl_alt              (ch_tmr ch_hrr) @os_ctl_alt
+
+  ;;======================================================================
+  ;;                  | | | | |
+  ;;                  |f|*|*|j|
+  (ch_sil ch_sir) @sw_no_mods
+
+  ;;======================================================================
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*| | |*|     --     |*| | |*|
+  (ch_hpl ch_hil) @os_go                   (ch_hir ch_hpr) @os_go
+
+  ;;                  |*| | | |     --     | | | |*|
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_tpl ch_hil) @os_media                (ch_hir ch_tpr) @os_media
+
+  ;;----------------------------------------------------------------------
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  (ch_hrl ch_hml ch_hil) spc               (ch_hir ch_hmr ch_hrr) spc
+
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_trl ch_tml ch_til) esc               (ch_tir ch_tmr ch_trr) esc
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_hrl ch_tml ch_hil) @os_nums          (ch_hir ch_tmr ch_hrr) @os_nums
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | |*|     --     |*| | | |
+  ;;(ch_trl ch_tml ch_hil) ???             (ch_hir ch_tmr ch_trr) ???
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;(ch_trl ch_hml ch_hil) ???             (ch_hir ch_hmr ch_trr) ???
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;(ch_hrl ch_tml ch_til) ???             (ch_tir ch_tmr ch_hrr) ???
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (ch_hrl ch_hml ch_til) @os_ff           (ch_tir ch_hmr ch_hrr) @os_ff
+
+  ;;----------------------------------------------------------------------
+  ;;                  |*|*|*|*|     --     |*|*|*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_tpl ch_trl ch_tml ch_til) caps       (ch_tir ch_tmr ch_trr ch_tpr) caps
 )
 
 (defchords CH_NO_MODS $chord_timeout
   (ch_sil) @_sil
   (ch_sir) @_sir
 
-  (ch_sil ch_sir) @sw_ins
+  (ch_sil ch_sir) @sw_al
 )
 
-(defchords CH_NUM $chord_timeout
+(defchords CH_NS $chord_timeout
   ;; NUMBER CHORDS
   (ch_n6) 6   (ch_n8) 8   (ch_n0) 0
   (ch_n1) 1   (ch_n3) 3   (ch_n5) 5
@@ -287,7 +294,7 @@
   (ch_n8  ch_n0) 9
 )
 
-(defchords CH_FFS $chord_timeout
+(defchords CH_FF $chord_timeout
   ;; NUMBER CHORDS
   (ch_f6) f6   (ch_f8) f8   (ch_f10) f10
   (ch_f1) f1   (ch_f3) f3   (ch_f5) f5
@@ -309,31 +316,50 @@
   (ch_f8  ch_f10) f9
 )
 
-(defchords CH_NAV $chord_timeout
+(defchords CH_NA $chord_timeout
   ;; NAVIGATION CHORDS
   (ch_tab) tab   (ch_up) up     (ch_bspc) bspc
   (ch_lt) left   (ch_dn) down   (ch_rt) rght
 
-  (ch_lt   ch_dn  ch_rt)        spc
-  (ch_tab  ch_up  ch_bspc)      esc
-  (ch_tab         ch_bspc)      home
-  (ch_lt          ch_rt)        end
-  (        ch_up  ch_bspc)      del
-  (ch_tab  ch_up         )      pgup
-  (        ch_dn  ch_bspc)      pgdn
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  (ch_lt ch_dn ch_rt) spc
+
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tab ch_up ch_bspc) esc
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tab ch_bspc) home
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_lt ch_rt) end
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_up  ch_bspc) del
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  ;;(ch_tab  ch_up) ???
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | |*| |     --     | |*| | |
+  ;;(ch_dn  ch_bspc) ???
 )
 
 (deffakekeys
-  fk_no_mods (layer-switch L_INS)
+  fk_no_mods (layer-switch L_ALPHA)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; LAYERS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Layer: INSERT - Main/base layer with modifiers and chords
-;; Chords: "g + h" to switch to "L_NO_MODS" (same layer with no modifiers)
-(deflayermap (L_INS)
+;; Chords: "g + h" switchs to "L_NO_MODS" (same layer with no modifiers - same combo to switch back)
+(deflayermap (L_ALPHA)
   caps @esc_sft
 
   ;; LEFT
@@ -348,7 +374,7 @@
 )
 
 ;; Layer: no modifiers (ideal for gaming)
-;; Chords: "g + h" to switch to "L_INS"
+;; Chords: "g + h" to switch to "L_ALPHA"
 (deflayermap (L_NO_MODS)
   caps @esc_sft
 
@@ -361,41 +387,41 @@
   h @ch_no_sir    j @_hir    k @_hmr    l @_hrr    ; @_hpr
 )
 
-;; Layer: NORMAL RIGHT - Navigation layer with modifiers and chords
+;; Layer: Navigation layer with modifiers and chords
 (deflayermap (L_NAV_R)
   ;; LEFT
   q @sw_nav_l    w lalt    e tab    r @na_pgup
   a @os_go       s lctl    d esc    f @na_pgdn
 
   ;; RIGHT
-  u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p @sw_ins
+  u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p @sw_al
   j @ch_na_lt     k @ch_na_dn    l @ch_na_rt      ; enter
 )
 
-;; Layer: NORMAL LEFT - The reverse of RIGHT
+;; Layer: The reverse of RIGHT
 (deflayermap (L_NAV_L)
   ;; LEFT
-  q @sw_ins    w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
-  a enter      s @ch_na_lt      d @ch_na_dn    f @ch_na_rt
+  q @sw_al    w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
+  a enter     s @ch_na_lt      d @ch_na_dn    f @ch_na_rt
 
   ;; RIGHT
   u @na_pgup     i tab    o lalt    p @sw_nav_r
   j @na_pgdn     k esc    l lctl    ; @os_go
 )
 
-(deflayermap (L_NUMBERS)
+(deflayermap (L_NUMS)
   ;; LEFT
-  q XX    w @ch_nu_n0    e @ch_nu_n8    r @ch_nu_n6
-  a XX    s @ch_nu_n5    d @ch_nu_n3    f @ch_nu_n1
-  z XX    x XX           c XX           v XX
+  q XX           w @ch_nu_n0    e @ch_nu_n8    r @ch_nu_n6
+  a @wh_nav_r    s @ch_nu_n5    d @ch_nu_n3    f @ch_nu_n1
+  z XX           x XX           c XX           v XX
 
   ;; RIGHT
   u @ch_nu_n6    i @ch_nu_n8    o @ch_nu_n0    p XX
-  j @ch_nu_n1    k @ch_nu_n3    l @ch_nu_n5    ; XX
+  j @ch_nu_n1    k @ch_nu_n3    l @ch_nu_n5    ; @wh_nav_l
   m XX           , XX           . XX           / XX
 )
 
-(deflayermap (L_FFS)
+(deflayermap (L_FF)
   ;; LEFT
   q f11    w @ch_ff_f10    e @ch_ff_f8     r @ch_ff_f6
   a f23    s @ch_ff_f5     d @ch_ff_f3     f @ch_ff_f1    g XX
@@ -407,7 +433,7 @@
            m XX          , XX          . XX              / XX
 )
 
-(deflayermap (L_MEDIA) ;; one-shot (hold) layer
+(deflayermap (L_MEDIA) ;;
   ;; LEFT
   q brup     w prev   e volu      r mute
   a brdwn    s next   d voldwn    f pp
@@ -417,7 +443,7 @@
   j pp      k voldwn   l next    ; brdwn
 )
 
-(deflayermap (L_GO) ;; one-shot (hold) layer
+(deflayermap (L_GO) ;; Go-to shortcuts
   ;; LEFT
   q @alt_9    w @alt_grv    e @ctl_pgup    r @ctl_sft_t
   a @alt_1    s @ctl_tab    d @ctl_pgdn    f @ctl_w
