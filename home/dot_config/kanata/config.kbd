@@ -16,16 +16,6 @@
           z  x  c  v  b       n  m  ,  .  /  
 )
 
-(defalias
-  ;; LEFT
-  _tpl q   _trl w   _tml e   _til r
-  _hpl a   _hrl s   _hml d   _hil f   _sil g
-
-  ;; RIGHT
-           _tir u   _tmr i   _trr o   _tpr p
-  _sir h   _hir j   _hmr k   _hrr l   _hpr ;
-)
-
 (defvar
   chord_timeout      35
   tap_timeout        170
@@ -73,31 +63,15 @@
   ;;os_meh      (one-shot-press $one_shot_timeout C-A-lsft)
 
   ;; TAP HOLD
-  esc_sft      (tap-hold $tap_timeout $hold_timeout esc lsft)
-
-  ;; fake keys for key repetition
-  tap (multi @sw_no_mods (on-idle-fakekey fk_no_mods tap 20))
-
-  al_tpl      @_tpl
-  al_trl      @_trl
-  al_tml      @_tml
-  al_til      @_til
-  al_tir      @_tir
-  al_tmr      @_tmr
-  al_trr      @_trr
-  al_tpr      @_tpr
-  al_hpl      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_hpl @tap) @wh_nav_r $lt_kbd)
-  al_hrl      @_hrl
-  al_hml      @_hml
-  al_hil      @_hil
-  al_hir      @_hir
-  al_hmr      @_hmr
-  al_hrr      @_hrr
-  al_hpr      (tap-hold-release-keys $tap_timeout $hold_timeout (multi @_hpr @tap) @wh_nav_l $rt_kbd)
-
+  esc_sft           (tap-hold $tap_timeout $hold_timeout esc lsft)
+  al_nav_a          (tap-hold $tap_timeout $hold_timeout a @wh_nav_r)
+  al_nav_semicolon  (tap-hold $tap_timeout $hold_timeout ; @wh_nav_l)
+  ;; Numbers and Symbols
+  ns_nav_quote_r      (tap-hold $tap_timeout $hold_timeout ' @wh_nav_l)
+  ns_nav_quote_l      (tap-hold $tap_timeout $hold_timeout ' @wh_nav_r)
   ;; Navigation
-  na_pgup      (tap-hold $tap_timeout $hold_timeout pgup lmet)
-  na_pgdn      (tap-hold $tap_timeout $hold_timeout pgdn lsft)
+  na_pgup           (tap-hold $tap_timeout $hold_timeout pgup lmet)
+  na_pgdn           (tap-hold $tap_timeout $hold_timeout pgdn lsft)
 
   ;; SHORTCUTS
   ctl_pgup       (macro C-pgup)
@@ -114,40 +88,54 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORDS ALIAS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defalias
-  ch_al_sil   (chord CH_AL ch_sil)
-  ch_al_til   (chord CH_AL ch_til)
-  ch_al_tml   (chord CH_AL ch_tml)
-  ch_al_trl   (chord CH_AL ch_trl)
-  ch_al_tpl   (chord CH_AL ch_tpl)
-  ch_al_hil   (chord CH_AL ch_hil)
-  ch_al_hml   (chord CH_AL ch_hml)
-  ch_al_hrl   (chord CH_AL ch_hrl)
-  ch_al_hpl   (chord CH_AL ch_hpl)
-  ch_al_tir   (chord CH_AL ch_tir)
-  ch_al_tmr   (chord CH_AL ch_tmr)
-  ch_al_trr   (chord CH_AL ch_trr)
-  ch_al_tpr   (chord CH_AL ch_tpr)
-  ch_al_hir   (chord CH_AL ch_hir)
-  ch_al_hmr   (chord CH_AL ch_hmr)
-  ch_al_hrr   (chord CH_AL ch_hrr)
-  ch_al_hpr   (chord CH_AL ch_hpr)
-  ch_al_sir   (chord CH_AL ch_sir)
+  al_sil      (chord CH_AL ch_sil)
+  al_hil      (chord CH_AL ch_hil)
+  al_hml      (chord CH_AL ch_hml)
+  al_hrl      (chord CH_AL ch_hrl)
+  al_hpl      (chord CH_AL ch_hpl)
+  al_til      (chord CH_AL ch_til)
+  al_tml      (chord CH_AL ch_tml)
+  al_trl      (chord CH_AL ch_trl)
+  al_tpl      (chord CH_AL ch_tpl)
+  al_bil      (chord CH_AL ch_bil)
+  al_bml      (chord CH_AL ch_bml)
+  al_brl      (chord CH_AL ch_brl)
+  al_bpl      (chord CH_AL ch_bpl)
+  al_sir      (chord CH_AL ch_sir)
+  al_hir      (chord CH_AL ch_hir)
+  al_hmr      (chord CH_AL ch_hmr)
+  al_hrr      (chord CH_AL ch_hrr)
+  al_hpr      (chord CH_AL ch_hpr)
+  al_tir      (chord CH_AL ch_tir)
+  al_tmr      (chord CH_AL ch_tmr)
+  al_trr      (chord CH_AL ch_trr)
+  al_tpr      (chord CH_AL ch_tpr)
+  al_bir      (chord CH_AL ch_bir)
+  al_bmr      (chord CH_AL ch_bmr)
+  al_brr      (chord CH_AL ch_brr)
+  al_bpr      (chord CH_AL ch_bpr)
 
   ;; NUMBERS
-  ch_nu_n1    (chord CH_NS ch_n1)
-  ch_nu_n3    (chord CH_NS ch_n3)
-  ch_nu_n5    (chord CH_NS ch_n5)
-  ch_nu_n6    (chord CH_NS ch_n6)
-  ch_nu_n8    (chord CH_NS ch_n8)
-  ch_nu_n0    (chord CH_NS ch_n0)
+  ns_si       (chord CH_NS ch_ns_si)
+  ns_hi       (chord CH_NS ch_ns_hi)
+  ns_hm       (chord CH_NS ch_ns_hm)
+  ns_hr       (chord CH_NS ch_ns_hr)
+  ns_hpl      (chord CH_NS ch_ns_hpl)
+  ns_hpr      (chord CH_NS ch_ns_hpr)
+  ns_ti       (chord CH_NS ch_ns_ti)
+  ns_tm       (chord CH_NS ch_ns_tm)
+  ns_tr       (chord CH_NS ch_ns_tr)
+  ns_tp       (chord CH_NS ch_ns_tp)
+  ns_bi       (chord CH_NS ch_ns_bi)
+  ns_bm       (chord CH_NS ch_ns_bm)
 
   ;; FUNCTIONAL
-  ch_ff_f1    (chord CH_FF ch_f1)
-  ch_ff_f3    (chord CH_FF ch_f3)
-  ch_ff_f5    (chord CH_FF ch_f5)
-  ch_ff_f6    (chord CH_FF ch_f6)
-  ch_ff_f8    (chord CH_FF ch_f8)
-  ch_ff_f10   (chord CH_FF ch_f10)
+  ff_hi       (chord CH_FF ch_ff_hi)
+  ff_hm       (chord CH_FF ch_ff_hm)
+  ff_hr       (chord CH_FF ch_ff_hr)
+  ff_ti       (chord CH_FF ch_ff_ti)
+  ff_tm       (chord CH_FF ch_ff_tm)
+  ff_tr       (chord CH_FF ch_ff_tr)
 
   ;; NAVIGATION
   ch_na_up     (chord CH_NA ch_up)
@@ -166,69 +154,78 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORD KEYS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defchords CH_NO_MODS $chord_timeout
+  (ch_sil) g
+  (ch_sir) h
+
+  (ch_sil ch_sir) @sw_al
+)
+
 (defchords CH_AL $chord_timeout
   ;; LEFT
-  (ch_tpl) @al_tpl    (ch_trl) @al_trl    (ch_tml) @al_tml    (ch_til) @al_til
-  (ch_hpl) @al_hpl    (ch_hrl) @al_hrl    (ch_hml) @al_hml    (ch_hil) @al_hil    (ch_sil) @_sil
+                (ch_tpl) q            (ch_trl) w    (ch_tml) e    (ch_til) r
+                (ch_hpl) @al_nav_a    (ch_hrl) s    (ch_hml) d    (ch_hil) f    (ch_sil) g
+                (ch_bpl) z            (ch_brl) x    (ch_bml) c    (ch_bil) v
 
   ;; RIGHT
-                    (ch_tir) @al_tir    (ch_tmr) @al_tmr    (ch_trr) @al_trr    (ch_tpr) @al_tpr
-  (ch_sir) @_sir    (ch_hir) @al_hir    (ch_hmr) @al_hmr    (ch_hrr) @al_hrr    (ch_hpr) @al_hpr
+                (ch_tir) u    (ch_tmr) i    (ch_trr) o    (ch_tpr) p
+  (ch_sir) h    (ch_hir) j    (ch_hmr) k    (ch_hrr) l    (ch_hpr) @al_nav_semicolon
+                (ch_bir) m    (ch_bmr) ,    (ch_brr) .    (ch_bpr) /
 
-  ;;======================================================================
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*|*| |     --     | |*|*| |
-  (ch_hrl ch_hml) @os_ctl                  (ch_hmr ch_hrr) @os_ctl
-
-  ;;                  | |*|*| |     --     | |*|*| |
-  ;;                  | | | | |     --     | | | | |
-  (ch_trl ch_tml) @os_alt                  (ch_tmr ch_trr) @os_alt
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | | |*|*|     --     |*|*| | |
-  (ch_hml ch_hil) @os_sft                  (ch_hir ch_hmr) @os_sft
-
-  ;;                  | | |*|*|     --     |*|*| | |
-  ;;                  | | | | |     --     | | | | |
-  (ch_tml ch_til) @os_sup                  (ch_tir ch_tmr) @os_sup
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*| |*|     --     |*| |*| |
-  (ch_hrl ch_hil) @os_ctl_sft              (ch_hir ch_hrr) @os_ctl_sft
-
-  ;;                  | |*| |*|     --     |*| |*| |
-  ;;                  | | | | |     --     | | | | |
-  (ch_trl ch_til) @os_sup_alt              (ch_tir ch_trr) @os_sup_alt
-
-  ;;                  | |*| | |     --     | | |*| |
-  ;;                  | | | |*|     --     |*| | | |
-  (ch_trl ch_hil) @os_alt_sft              (ch_hir ch_trr) @os_alt_sft
-
-  ;;                  | | | |*|     --     |*| | | |
-  ;;                  | |*| | |     --     | | |*| |
-  (ch_hrl ch_til) @os_sup_ctl              (ch_tir ch_hrr) @os_sup_ctl
-
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | | | |*|     --     |*| | | |
-  (ch_tml ch_hil) @os_sup_sft              (ch_hir ch_tmr) @os_sup_sft
-
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | |*| | |     --     | | |*| |
-  (ch_hrl ch_tml) @os_ctl_alt              (ch_tmr ch_hrr) @os_ctl_alt
-
-  ;;======================================================================
+  ;;----------------------------------------------------------------------
   ;;                  | | | | |
   ;;                  |f|*|*|j|
   (ch_sil ch_sir) @sw_no_mods
 
-  ;;======================================================================
+  ;;-----------------------------------------------------------------------
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;(ch_hrl ch_hml) ???                    (ch_hmr ch_hrr) ???
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  ;;(ch_trl ch_tml) ???                    (ch_tmr ch_trr) ???
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;(ch_hml ch_hil) ???                    (ch_hir ch_hmr) ???
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  ;;(ch_tml ch_til) ???                    (ch_tir ch_tmr) ???
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;(ch_hrl ch_hil) ???                    (ch_hir ch_hrr) ???
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  ;;(ch_trl ch_til) ???                    (ch_tir ch_trr) ???
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | | |*|     --     |*| | | |
+  ;;(ch_trl ch_hil) ???                    (ch_hir ch_trr) ???
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;(ch_hrl ch_til) ???                    (ch_tir ch_hrr) ???
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | | | |*|     --     |*| | | |
+  ;;(ch_tml ch_hil) ???                    (ch_hir ch_tmr) ???
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;(ch_hrl ch_tml) ???                    (ch_tmr ch_hrr) ???
+
+  ;;----------------------------------------------------------------------
   ;;                  | | | | |     --     | | | | |
   ;;                  |*| | |*|     --     |*| | |*|
-  (ch_hpl ch_hil) @os_go                   (ch_hir ch_hpr) @os_go
+  ;;(ch_hpl ch_hil) ???                    (ch_hir ch_hpr) ???
 
   ;;                  |*| | | |     --     | | | |*|
   ;;                  | | | |*|     --     |*| | | |
-  (ch_tpl ch_hil) @os_media                (ch_hir ch_tpr) @os_media
+  ;;(ch_tpl ch_hil) ???                    (ch_hir ch_tpr) ???
 
   ;;----------------------------------------------------------------------
   ;;                  | | | | |     --     | | | | |
@@ -245,11 +242,11 @@
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | |*|     --     |*| | | |
-  ;;(ch_trl ch_tml ch_hil) ???             (ch_hir ch_tmr ch_trr) ???
+  (ch_trl ch_tml ch_hil) @os_go            (ch_hir ch_tmr ch_trr) @os_go
 
   ;;                  | |*| | |     --     | | |*| |
   ;;                  | | |*|*|     --     |*|*| | |
-  ;;(ch_trl ch_hml ch_hil) ???             (ch_hir ch_hmr ch_trr) ???
+  (ch_trl ch_hml ch_hil) @os_media         (ch_hir ch_hmr ch_trr) @os_media
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | |*| | |     --     | | |*| |
@@ -257,7 +254,43 @@
 
   ;;                  | | | |*|     --     |*| | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (ch_hrl ch_hml ch_til) @os_ff           (ch_tir ch_hmr ch_hrr) @os_ff
+  (ch_hrl ch_hml ch_til) @os_ff            (ch_tir ch_hmr ch_hrr) @os_ff
+
+  ;;----------------------------------------------------------------------
+  ;;                   | | | | |    --     | | | | |
+  ;;                   | | |*| |    --     | |*| | |
+  ;;                       | |*|    --     |*| |
+  (ch_bil ch_hml) @os_sft                  (ch_bir ch_hmr) @os_sft
+
+  ;;                   | | | | |    --     | | | | |
+  ;;                   | |*| | |    --     | | |*| |
+  ;;                       | |*|    --     |*| |
+  (ch_bil ch_hrl) @os_ctl                  (ch_bir ch_hrr) @os_ctl
+
+  ;;                   | | | | |    --     | | | | |
+  ;;                   |*| | | |    --     | | | |*|
+  ;;                       | |*|    --     |*| |
+  (ch_bil ch_hpl) @os_alt                  (ch_bir ch_hpr) @os_alt
+
+  ;;                   | | | | |    --     | | | | |
+  ;;                   | | | | |    --     | | | | |
+  ;;                       |*|*|    --     |*|*|
+  (ch_bil ch_bml) @os_sup                  (ch_bir ch_bmr) @os_sup
+
+  ;;                   | | | | |    --     | | | | |
+  ;;                   | |*| | |    --     | | |*| |
+  ;;                       |*| |    --     | |*|
+  ;;(ch_bml ch_hrl) ???                    (ch_bmr ch_hrr) ???
+
+  ;;                   | | | | |    --     | | | | |
+  ;;                   | |*|*| |    --     | |*|*| |
+  ;;                       | |*|    --     |*| |
+  ;;(ch_bil ch_hml ch_hrl) ???             (ch_bir ch_hmr ch_hrr) ???
+
+  ;;                   | | | | |    --     | | | | |
+  ;;                   | |*| | |    --     | | |*| |
+  ;;                       |*|*|    --     |*|*|
+  ;;(ch_bil ch_bml ch_hrl) ???             (ch_bir ch_bmr ch_hrr) ???
 
   ;;----------------------------------------------------------------------
   ;;                  |*|*|*|*|     --     |*|*|*|*|
@@ -265,55 +298,174 @@
   (ch_tpl ch_trl ch_tml ch_til) caps       (ch_tir ch_tmr ch_trr ch_tpr) caps
 )
 
-(defchords CH_NO_MODS $chord_timeout
-  (ch_sil) @_sil
-  (ch_sir) @_sir
-
-  (ch_sil ch_sir) @sw_al
-)
-
 (defchords CH_NS $chord_timeout
   ;; NUMBER CHORDS
-  (ch_n6) 6   (ch_n8) 8   (ch_n0) 0
-  (ch_n1) 1   (ch_n3) 3   (ch_n5) 5
+                    (ch_ns_ti) 6      (ch_ns_tm) 8      (ch_ns_tr) 0    (ch_ns_tp) S-8
+  (ch_ns_si) S-2    (ch_ns_hi) 1      (ch_ns_hm) 3      (ch_ns_hr) 5
+                    (ch_ns_bi) S-=    (ch_ns_bm) S-3
+  (ch_ns_hpl) @ns_nav_quote_l
+  (ch_ns_hpr) @ns_nav_quote_r
 
+  ;; --------------------------------------------------------
   ;;                  | | | | |     --     | | | | |
   ;;                  | | |*|*|     --     |*|*| | |
-  (ch_n1  ch_n3) 2
+  (ch_ns_hi  ch_ns_hm) 2
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (ch_n3  ch_n5) 4
+  (ch_ns_hm  ch_ns_hr) 4
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | | | | |     --     | | | | |
-  (ch_n6  ch_n8) 7
+  (ch_ns_ti  ch_ns_tm) 7
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_n8  ch_n0) 9
+  (ch_ns_tm  ch_ns_tr) 9
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_ns_hr ch_ns_hi) S-9 ;; (
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tr ch_ns_ti) S-0 ;; )
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*| | |*|     --     |*| | |*|
+  (ch_ns_hpl ch_ns_hi) [
+  (ch_ns_hpr ch_ns_hi) [
+
+  ;;                  |*| | |*|     --     |*| | |*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tp ch_ns_ti) ]
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                      | |*|     --     |*| |
+  (ch_ns_hm ch_ns_bi) S-[ ;; {
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                      |*| |     --     | |*|
+  (ch_ns_hr ch_ns_bm) S-] ;; }
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                      | |*|     --     |*| |
+  (ch_ns_hr ch_ns_bi) S-, ;; <
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*| | | |     --     | | | |*|
+  ;;                      | |*|     --     |*| |
+  (ch_ns_hpl ch_ns_bi) S-. ;; >
+  (ch_ns_hpr ch_ns_bi) S-. ;; >
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_ns_hi ch_ns_tm) ,
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_ns_hr ch_ns_tm) .
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_ns_tr ch_ns_hi) /
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_ns_hr ch_ns_ti) \
+
+  ;;                  |*| | | |     --     | | | |*|
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_ns_tp ch_ns_hi) -
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  |*| | | |     --     | | | |*|
+  (ch_ns_hpl ch_ns_ti) S--
+  (ch_ns_hpr ch_ns_ti) S--
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*|*| | |     --     | | |*|*|
+  (ch_ns_hpl ch_ns_hr) S-'
+  (ch_ns_hpr ch_ns_hr) S-'
+
+  ;;                  |*|*| | |     --     | | |*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tp ch_ns_tr) S-5
+
+  ;; --------------------------------------------------------
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  (ch_ns_hr ch_ns_hm ch_ns_hi) S-1
+
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tr ch_ns_tm ch_ns_ti) S-/
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_ns_hr ch_ns_tm ch_ns_hi) ;
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_ns_tr ch_ns_tm ch_ns_hi) S-;
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (ch_ns_tr ch_ns_hm ch_ns_hi) S-7
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_ns_hr ch_ns_tm ch_ns_ti) S-\
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*|*|*| |     --     | |*|*|*|
+  (ch_ns_hpl ch_ns_hr ch_ns_hm) `
+  (ch_ns_hpr ch_ns_hr ch_ns_hm) `
+
+  ;;                  |*|*|*| |     --     | |*|*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tp ch_ns_tr ch_ns_tm) S-`
+
+  ;; --------------------------------------------------------
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | | | |     --     | | | | |
+  ;;                      |*|*|     --     |*|*|
+  (ch_ns_bm ch_ns_bi) = 
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                      | |*|     --     |*| |
+  (ch_ns_hr ch_ns_hm ch_ns_bi) S-4
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                      |*|*|     --     |*|*|
+  (ch_ns_hr ch_ns_bm ch_ns_bi) S-6
 )
 
 (defchords CH_FF $chord_timeout
   ;; NUMBER CHORDS
-  (ch_f6) f6   (ch_f8) f8   (ch_f10) f10
-  (ch_f1) f1   (ch_f3) f3   (ch_f5) f5
+  (ch_ff_ti) f6   (ch_ff_tm) f8   (ch_ff_tr) f10
+  (ch_ff_hi) f1   (ch_ff_hm) f3   (ch_ff_hr) f5
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | | |*|*|     --     |*|*| | |
-  (ch_f1  ch_f3) f2
+  (ch_ff_hi  ch_ff_hm) f2
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (ch_f3  ch_f5) f4
+  (ch_ff_hm  ch_ff_hr) f4
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | | | | |     --     | | | | |
-  (ch_f6  ch_f8) f7
+  (ch_ff_ti  ch_ff_tm) f7
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_f8  ch_f10) f9
+  (ch_ff_tm  ch_ff_tr) f9
 )
 
 (defchords CH_NA $chord_timeout
@@ -350,10 +502,6 @@
   ;;(ch_dn  ch_bspc) ???
 )
 
-(deffakekeys
-  fk_no_mods (layer-switch L_ALPHA)
-)
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; LAYERS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -363,14 +511,14 @@
   caps @esc_sft
 
   ;; LEFT
-  q @ch_al_tpl    w @ch_al_trl     e @ch_al_tml     r @ch_al_til
-  a @ch_al_hpl    s @ch_al_hrl     d @ch_al_hml     f @ch_al_hil    g @ch_al_sil
-  z z             x x              c c              v v
+  q @al_tpl    w @al_trl     e @al_tml     r @al_til
+  a @al_hpl    s @al_hrl     d @al_hml     f @al_hil    g @al_sil
+  z @al_bpl    x @al_brl     c @al_bml     v @al_bil
 
   ;; RIGHT
-                  u @ch_al_tir    i @ch_al_tmr     o @ch_al_trr     p @ch_al_tpr
-  h @ch_al_sir    j @ch_al_hir    k @ch_al_hmr     l @ch_al_hrr     ; @ch_al_hpr
-                  m m             , ,              . .              / /
+               u @al_tir    i @al_tmr     o @al_trr     p @al_tpr
+  h @al_sir    j @al_hir    k @al_hmr     l @al_hrr     ; @al_hpr
+               m @al_bir    , @al_bmr     . @al_brr     / @al_bpr
 )
 
 ;; Layer: no modifiers (ideal for gaming)
@@ -379,79 +527,87 @@
   caps @esc_sft
 
   ;; LEFT
-  q @_tpl    w @_trl    e @_tml    r @_til
-  a @_hpl    s @_hrl    d @_hml    f @_hil    g @ch_no_sil
+                  q q     w w     e e     r r
+                  a z     s s     d d     f f    g @ch_no_sil
+                  z XX    x XX    c XX    v XX
 
   ;; RIGHT
-                  u @_tir    i @_tmr    o @_trr    p @_tpr
-  h @ch_no_sir    j @_hir    k @_hmr    l @_hrr    ; @_hpr
+                  u u     i i     o o     p p
+  h @ch_no_sir    j j     k k     l l     ; ;
+                  m XX    , XX    . XX    / XX
 )
 
 ;; Layer: Navigation layer with modifiers and chords
 (deflayermap (L_NAV_R)
   ;; LEFT
-  q @sw_nav_l    w lalt    e tab    r @na_pgup
-  a @os_go       s lctl    d esc    f @na_pgdn
+          q @sw_nav_l    w lalt    e tab    r @na_pgup
+          a @os_go       s lctl    d esc    f @na_pgdn    g XX
+          z XX           x XX      c XX     v XX
 
   ;; RIGHT
-  u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p @sw_al
-  j @ch_na_lt     k @ch_na_dn    l @ch_na_rt      ; enter
+          u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p @sw_al
+  h XX    j @ch_na_lt     k @ch_na_dn    l @ch_na_rt      ; enter
+          m XX            , XX           . XX             / XX
 )
 
 ;; Layer: The reverse of RIGHT
 (deflayermap (L_NAV_L)
   ;; LEFT
-  q @sw_al    w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
-  a enter     s @ch_na_lt      d @ch_na_dn    f @ch_na_rt
+          q @sw_al    w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
+          a enter     s @ch_na_lt      d @ch_na_dn    f @ch_na_rt    g XX
+          z XX        x XX             c XX           v XX
 
   ;; RIGHT
-  u @na_pgup     i tab    o lalt    p @sw_nav_r
-  j @na_pgdn     k esc    l lctl    ; @os_go
+          u @na_pgup    i tab    o lalt    p @sw_nav_r
+  h XX    j @na_pgdn    k esc    l lctl    ; @os_go
+          m XX          , XX     . XX      / XX
 )
 
 (deflayermap (L_NUMS)
   ;; LEFT
-  q XX           w @ch_nu_n0    e @ch_nu_n8    r @ch_nu_n6
-  a @wh_nav_r    s @ch_nu_n5    d @ch_nu_n3    f @ch_nu_n1
-  z XX           x XX           c XX           v XX
+              q @ns_tp     w @ns_tr    e @ns_tm    r @ns_ti
+              a @ns_hpl    s @ns_hr    d @ns_hm    f @ns_hi    g @ns_si
+              z XX         x XX        c @ns_bm    v @ns_bi
 
   ;; RIGHT
-  u @ch_nu_n6    i @ch_nu_n8    o @ch_nu_n0    p XX
-  j @ch_nu_n1    k @ch_nu_n3    l @ch_nu_n5    ; @wh_nav_l
-  m XX           , XX           . XX           / XX
+              u @ns_ti    i @ns_tm    o @ns_tr    p @ns_tp
+  h @ns_si    j @ns_hi    k @ns_hm    l @ns_hr    ; @ns_hpr
+              m @ns_bi    , @ns_bm    . XX        / XX
 )
 
 (deflayermap (L_FF)
   ;; LEFT
-  q f11    w @ch_ff_f10    e @ch_ff_f8     r @ch_ff_f6
-  a f23    s @ch_ff_f5     d @ch_ff_f3     f @ch_ff_f1    g XX
-  z XX     x XX            c XX            v XX
+          q f11    w @ff_tr    e @ff_tm     r @ff_ti
+          a f23    s @ff_hr    d @ff_hm     f @ff_hi    g XX
+          z XX     x XX        c XX         v XX
 
   ;; RIGHT
-           j @ch_ff_f1    k @ch_ff_f3    l @ch_ff_f5     ; f12
-  h XX     u @ch_ff_f6    i @ch_ff_f8    o @ch_ff_f10    p f11
-           m XX          , XX          . XX              / XX
+          u @ff_ti    i @ff_tm    o @ff_tr    p f11
+  h XX    j @ff_hi    k @ff_hm    l @ff_hr    ; f12
+          m XX        , XX        . XX        / XX
 )
 
 (deflayermap (L_MEDIA) ;;
   ;; LEFT
-  q brup     w prev   e volu      r mute
-  a brdwn    s next   d voldwn    f pp
+          q brup     w prev   e volu      r mute
+          a brdwn    s next   d voldwn    f pp      g XX
+          z XX       x XX     c XX        v XX
 
   ;; RIGHT
-  u mute    i volu     o prev    p brup
-  j pp      k voldwn   l next    ; brdwn
+          u mute    i volu     o prev    p brup
+  h XX    j pp      k voldwn   l next    ; brdwn
+          m XX      , XX       . XX      / XX
 )
 
 (deflayermap (L_GO) ;; Go-to shortcuts
   ;; LEFT
-  q @alt_9    w @alt_grv    e @ctl_pgup    r @ctl_sft_t
-  a @alt_1    s @ctl_tab    d @ctl_pgdn    f @ctl_w
-  z XX        x XX          c XX           v XX
+          q @alt_9    w @alt_grv    e @ctl_pgup    r @ctl_sft_t
+          a @alt_1    s @ctl_tab    d @ctl_pgdn    f @ctl_w        g XX
+          z XX        x XX          c XX           v XX
 
   ;; RIGHT
-  u @ctl_sft_t    i @ctl_pgup    o @alt_grv    p @alt_9
-  j @ctl_w        k @ctl_pgdn    l @ctl_tab    ; @alt_1
-  m XX            , XX           . XX          / XX
+          u @ctl_sft_t    i @ctl_pgup    o @alt_grv    p @alt_9
+  h XX    j @ctl_w        k @ctl_pgdn    l @ctl_tab    ; @alt_1
+          m XX            , XX           . XX          / XX
 )
 
