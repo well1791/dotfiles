@@ -310,25 +310,3 @@ S-f = "file_picker_in_current_buffer_directory"
 c = ":noop"
 S-c = ":noop"
 A-c = ":noop"
-
-# |-- CHEZMOI
-[keys.normal.space.m]
-w = [
-  ":write-all!",
-  ":sh chezmoi apply -k --force",
-  ":redraw",
-  ":config-reload",  # not working
-]
-s = [
-  ":write-all!",
-  ":sh chezmoi apply -k --force",
-  ":redraw",
-  ":config-reload",  # not working
-]
-c = [
-  ":write-all!",
-  ":sh chezmoi apply -k --force",
-  ":write-buffer-close!",
-  ":redraw",
-  ":config-reload",  # not working
-]
