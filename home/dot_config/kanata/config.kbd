@@ -300,9 +300,9 @@
 
 (defchords CH_NS $chord_timeout
   ;; NUMBER CHORDS
-                    (ch_ns_ti) 6      (ch_ns_tm) 8      (ch_ns_tr) 0    (ch_ns_tp) S-8
-  (ch_ns_si) S-2    (ch_ns_hi) 1      (ch_ns_hm) 3      (ch_ns_hr) 5
-                    (ch_ns_bi) S-=    (ch_ns_bm) S-3
+                    (ch_ns_ti) 6    (ch_ns_tm) 8      (ch_ns_tr) 0    (ch_ns_tp) S-8
+  (ch_ns_si) S-2    (ch_ns_hi) 1    (ch_ns_hm) 3      (ch_ns_hr) 5
+                    (ch_ns_bi) =    (ch_ns_bm) S-+
   (ch_ns_hpl) @ns_nav_quote_l
   (ch_ns_hpr) @ns_nav_quote_r
 
@@ -363,11 +363,11 @@
 
   ;;                  | | |*| |     --     | |*| | |
   ;;                  | | | |*|     --     |*| | | |
-  (ch_ns_hi ch_ns_tm) ,
+  (ch_ns_hi ch_ns_tm) .
 
   ;;                  | | |*| |     --     | |*| | |
   ;;                  | |*| | |     --     | | |*| |
-  (ch_ns_hr ch_ns_tm) .
+  (ch_ns_hr ch_ns_tm) ,
 
   ;;                  | |*| | |     --     | | |*| |
   ;;                  | | | |*|     --     |*| | | |
@@ -433,7 +433,7 @@
   ;;                  | | | | |     --     | | | | |
   ;;                  | | | | |     --     | | | | |
   ;;                      |*|*|     --     |*|*|
-  (ch_ns_bm ch_ns_bi) = 
+  (ch_ns_bm ch_ns_bi) S-3 
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
