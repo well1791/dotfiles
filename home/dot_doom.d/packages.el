@@ -50,6 +50,9 @@
 
 (package! tldr)
 (package! chezmoi)
+(package! shell-maker)
+(package! acp)
+(package! agent-shell)
 
 ;; (package! typescript-mode :disable t)
 ;; (package! typescript-mode
