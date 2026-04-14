@@ -8,3 +8,8 @@ fish_add_path -m ~/.local/bin
 # |-- BUN
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
+
+# |-- TV
+if status is-interactive
+    tv init fish | source
+end
