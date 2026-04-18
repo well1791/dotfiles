@@ -67,8 +67,8 @@
   al_nav_a          (tap-hold $tap_timeout $hold_timeout a @wh_nav_r)
   al_nav_semicolon  (tap-hold $tap_timeout $hold_timeout ; @wh_nav_l)
   ;; Numbers and Symbols
-  ns_nav_quote_r      (tap-hold $tap_timeout $hold_timeout ' @wh_nav_l)
-  ns_nav_quote_l      (tap-hold $tap_timeout $hold_timeout ' @wh_nav_r)
+  ns_nav_quote_r    (tap-hold $tap_timeout $hold_timeout ' @wh_nav_l)
+  ns_nav_quote_l    (tap-hold $tap_timeout $hold_timeout ' @wh_nav_r)
   ;; Navigation
   na_pgup           (tap-hold $tap_timeout $hold_timeout pgup lmet)
   na_pgdn           (tap-hold $tap_timeout $hold_timeout pgdn lsft)
@@ -146,8 +146,8 @@
   ch_na_bspc   (chord CH_NA ch_bspc)
 
   ;; NO MODS
-  ch_no_sil   (chord CH_NO_MODS ch_sil)
-  ch_no_sir   (chord CH_NO_MODS ch_sir)
+  ch_no_sil    (chord CH_NO_MODS ch_sil)
+  ch_no_sir    (chord CH_NO_MODS ch_sir)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
