@@ -1,15 +1,18 @@
 #!/bin/bash
 FILE=$1
-MESSAGE=$(cat $FILE)
-TICKET=[$(
-  git rev-parse --abbrev-ref HEAD |
-  grep -Eo '(\w+/)?(\w+[-_])?[0-9]+' |
-  grep -Eo '(\w+[-])?[0-9]+' |
-  tr "[:lower:]" "[:upper:]"
-)]
+MESSAGE=$(cat "$FILE")
+BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "")
 
-if [[ $TICKET == "[]" || "$MESSAGE" == "$TICKET"* ]];then
-  exit 0;
+TICKET=$(
+  echo "$BRANCH" |
+  grep -Eo '[A-Za-z]+[-][0-9]+' |
+  tr "[:lower:]" "[:upper:]" |
+  sed 's/.*\(.*\)/[\0]/' |
+  tr -d '\n'
+)
+
+if [[ -z "$TICKET" || "$MESSAGE" == "$TICKET"* ]]; then
+  exit 0
 fi
 
-echo "$TICKET $MESSAGE" > $FILE
+echo "$TICKET $MESSAGE" > "$FILE"
