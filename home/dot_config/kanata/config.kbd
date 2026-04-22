@@ -49,6 +49,7 @@
   os_media      (one-shot-press $one_shot_timeout (layer-while-held L_MEDIA))
   os_nums       (one-shot-press $one_shot_timeout (layer-while-held L_NUMS))
   os_ff         (one-shot-press $one_shot_timeout (layer-while-held L_FF))
+  os_cw         (caps-word 1500)
   ;;----------------------------------------------------------------------
   os_sft        (one-shot-press $one_shot_timeout lsft)
   os_ctl        (one-shot-press $one_shot_timeout lctl)
@@ -254,7 +255,7 @@
 
   ;;                  | |*| | |     --     | | |*| |
   ;;                  | | |*|*|     --     |*|*| | |
-  (ch_trl ch_hml ch_hil) caps              (ch_hir ch_hmr ch_trr) caps
+  (ch_trl ch_hml ch_hil) @os_cw          (ch_hir ch_hmr ch_trr) @os_cw
 
   ;;                  | | | |*|     --     |*| | | |
   ;;                  | |*|*| |     --     | |*|*| |
