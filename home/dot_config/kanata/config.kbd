@@ -234,27 +234,27 @@
 
   ;;                  | |*|*|*|     --     |*|*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_trl ch_tml ch_til) esc               (ch_tir ch_tmr ch_trr) esc
+  (ch_trl ch_tml ch_til) @os_go            (ch_tir ch_tmr ch_trr) @os_go
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_trl ch_tml ch_hil) @os_nums          (ch_hir ch_tmr ch_trr) @os_nums
 
   ;;                  | | |*| |     --     | |*| | |
   ;;                  | |*| |*|     --     |*| |*| |
-  (ch_hrl ch_tml ch_hil) @os_nums          (ch_hir ch_tmr ch_hrr) @os_nums
-
-  ;;                  | |*|*| |     --     | |*|*| |
-  ;;                  | | | |*|     --     |*| | | |
-  (ch_trl ch_tml ch_hil) @os_go            (ch_hir ch_tmr ch_trr) @os_go
-
-  ;;                  | |*| | |     --     | | |*| |
-  ;;                  | | |*|*|     --     |*|*| | |
-  (ch_trl ch_hml ch_hil) @os_media         (ch_hir ch_hmr ch_trr) @os_media
+  (ch_hrl ch_tml ch_hil) @os_media         (ch_hir ch_tmr ch_hrr) @os_media
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | |*| | |     --     | | |*| |
-  ;;(ch_hrl ch_tml ch_til) ???             (ch_tir ch_tmr ch_hrr) ???
+  (ch_hrl ch_tml ch_til) @os_ff            (ch_tir ch_tmr ch_hrr) @os_ff
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (ch_trl ch_hml ch_hil) caps              (ch_hir ch_hmr ch_trr) caps
 
   ;;                  | | | |*|     --     |*| | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (ch_hrl ch_hml ch_til) @os_ff            (ch_tir ch_hmr ch_hrr) @os_ff
+  ;;(ch_hrl ch_hml ch_til) ???               (ch_tir ch_hmr ch_hrr) ???
 
   ;;----------------------------------------------------------------------
   ;;                   | | | | |    --     | | | | |
@@ -295,7 +295,7 @@
   ;;----------------------------------------------------------------------
   ;;                  |*|*|*|*|     --     |*|*|*|*|
   ;;                  | | | | |     --     | | | | |
-  (ch_tpl ch_trl ch_tml ch_til) caps       (ch_tir ch_tmr ch_trr ch_tpr) caps
+  ;;(ch_tpl ch_trl ch_tml ch_til) ???       (ch_tir ch_tmr ch_trr ch_tpr) ???
 )
 
 (defchords CH_NS $chord_timeout
