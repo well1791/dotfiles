@@ -6,6 +6,7 @@
   ;; linux-dev /dev/input/by-id/usb-Kinesis_Kinesis_Adv360_360555127546-if01-event-kbd
   ;; linux-dev /dev/input/event4
 
+  danger-enable-cmd yes
   rapid-event-delay 5             ;; Changed from 0 to 5 to help with laptop debounce
   chords-v2-min-idle-experimental 30 ;; Higher idle protects fast typing
 )
@@ -82,6 +83,9 @@
   alt_9          (macro A-9)
   alt_1          (macro A-1)
   alt_grv        (macro A-grv)
+
+  ;; COMMANDS
+  restart_kanata (cmd sh -c "systemctl --user restart kanata.service")
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -589,9 +593,9 @@
 
 (deflayermap (L_MEDIA) ;;
   ;; LEFT
-          q brup     w prev   e volu      r mute
-          a brdwn    s next   d voldwn    f pp      g XX
-          z XX       x XX     c XX        v XX
+          q brup              w prev   e volu      r mute
+          a brdwn             s next   d voldwn    f pp      g XX
+          z @restart_kanata   x XX     c XX        v XX
 
   ;; RIGHT
           u mute    i volu     o prev    p brup
