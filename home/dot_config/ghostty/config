@@ -21,6 +21,8 @@
 # reloaded while running; some only apply to new windows and others may require
 # a full restart to take effect.
 
+copy-on-select = clipboard
+right-click-action = paste
 font-size = 15
 window-padding-x = 4
 window-decoration = none
