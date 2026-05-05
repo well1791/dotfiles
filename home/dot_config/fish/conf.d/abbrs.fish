@@ -11,3 +11,4 @@ abbr -a -- cat 'bat -p'
 # |-- OTHERS
 abbr -a -- cmd command
 abbr -a rgd --set-cursor 'rg --json -C 2 % | delta'
+abbr -a q --set-cursor 'pi --model big-pickle -p "%"'
