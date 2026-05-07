@@ -1,0 +1,56 @@
+/*
+ * debug: env GTK_DEBUG=interactive ghostty
+ * https://docs.gtk.org/gtk4/css-overview.html
+ * https://docs.gtk.org/gtk4/css-properties.html
+ *
+ * Theme: Ghostty Default Style Dark
+ */
+
+:root {
+  --bg: #282c34;
+  --bg-highlight: #353a44;
+  --fg: #ffffff;
+  --fg-dim: #c4c8c6;
+}
+
+/* Remove all borders/separators around tab bar */
+tabbar, tabbar * {
+  border: none;
+  box-shadow: none;
+  border-image: none;
+}
+
+separator {
+  background: transparent;
+  min-height: 0;
+  min-width: 0;
+}
+
+/* Tab bar container */
+tabbar {
+  background-color: var(--bg);
+}
+
+tabbar tabbox {
+  min-height: 40px;
+  background-color: var(--bg);
+  border-bottom: none;
+
+  font-family: monospace;
+}
+
+/* Individual tabs */
+tabbar tabbox tab {
+  background-color: var(--bg);
+  color: var(--fg-dim);
+}
+
+tabbar tabbox tab:selected {
+  background-color: var(--bg-highlight);
+  color: var(--fg);
+}
+
+tabbar tabbox tabboxchild, tabbar tabbox tab {
+  border-radius: 0px;
+  font-size: 16px;
+}

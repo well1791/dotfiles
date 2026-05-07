@@ -21,10 +21,25 @@
 # reloaded while running; some only apply to new windows and others may require
 # a full restart to take effect.
 
+# Main theme
+theme = Ghostty Default Style Dark
+
+# Mouse actions
 copy-on-select = clipboard
 right-click-action = paste
-font-size = 15
-window-padding-x = 4
+
+# Main theme
+font-size = 16
+window-padding-x = 16
+
+# UI styles
+scrollbar = never
+gtk-wide-tabs = false
 window-decoration = none
-# IR Black
-theme = Material Darker
+window-show-tab-bar = always
+
+# Default behavior
+maximize = true
+
+# Custom css
+gtk-custom-css = tab-style.css
