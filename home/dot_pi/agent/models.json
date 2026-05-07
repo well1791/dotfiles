@@ -1,0 +1,20 @@
+{
+  "providers": {
+    "github-copilot": {
+      "modelOverrides": {
+        "claude-sonnet-3.5": {
+          "cost": {
+            "input": 3,
+            "output": 15
+          }
+        },
+        "claude-opus-4.6": {
+          "cost": {
+            "input": 15,
+            "output": 75
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "lastChangelogVersion": "0.73.0",
+  "defaultProvider": "github-copilot",
+  "defaultModel": "claude-sonnet-4.5",
+  "defaultThinkingLevel": "medium",
+  "skills": [
+    "/home/well/.local/share/superpowers/skills"
+  ]
+}
