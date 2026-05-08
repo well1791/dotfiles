@@ -15,8 +15,3 @@ abbr -a -- cmd command
 # | usage:
 # |        rgd text-to-search path/to/file
 abbr -a rgd --set-cursor 'rg --json -C 2 % | delta'
-
-# |-- Question to big-pickle
-# | usage:
-# |        q "question?"
-abbr -a q --set-cursor 'pi --no-session --model big-pickle -p "%"'
