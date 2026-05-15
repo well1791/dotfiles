@@ -1,0 +1,37 @@
+#!/bin/sh
+# mkp - mkdir -p enhanced: create directories and/or files with parent paths
+set -e
+
+if [ $# -eq 0 ]; then
+    echo "Usage: mkp <path>"
+    echo "  If path ends with /, creates directory tree"
+    echo "  Otherwise, creates directory tree and empty file"
+    echo ""
+    echo "Examples:"
+    echo "  mkp ~/.config/bin/          # Creates directory tree"
+    echo "  mkp ~/.config/mcp/mcp.json  # Creates directory tree and file"
+    exit 1
+fi
+
+path="$1"
+
+# Expand tilde
+case "$path" in
+    ~/*) path="$HOME/${path#~/}" ;;
+    ~) path="$HOME" ;;
+esac
+
+# Check if path ends with /
+case "$path" in
+    */)
+        # Directory only
+        mkdir -p "$path"
+        ;;
+    *)
+        # File: create parent directories and file
+        mkdir -p "$(dirname "$path")"
+        touch "$path"
+        ;;
+esac
+
+echo "Created: $path"
