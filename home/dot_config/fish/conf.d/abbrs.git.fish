@@ -23,7 +23,8 @@ abbr -a -- gbr 'git branch'
 abbr -a -- gbra 'git branch --all'
 abbr -a -- gbrx 'git branch --delete --force'
 abbr -a -- gbrm 'git branch --move'
-abbr -a -- gbrc 'git switch --copy'
+abbr -a -- gbrc 'git switch --create'
+abbr -a -- gbry 'git switch --copy'
 
 # git status
 abbr -a -- gst 'git status --short'
