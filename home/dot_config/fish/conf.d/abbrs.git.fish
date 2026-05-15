@@ -1,12 +1,10 @@
-# git rush
+# git push in a rush
 abbr -a -- gg 'git add . && git commit -m "WIP" -an && git push --set-upstream origin (git branch --show-current) --force-with-lease'
 
 # git fetch
 abbr -a -- gf 'git fetch --all --prune'
-abbr -a -- gff 'git pull --ff-only --all --prune'
 
 # git push
-abbr -a -- gp 'git push --set-upstream origin (git branch --show-current)'
 abbr -a -- gp 'git push --set-upstream origin (git branch --show-current) --force-with-lease'
 
 # git add
@@ -14,58 +12,59 @@ abbr -a -- ga 'git add'
 abbr -a -- gaa 'git add .'
 
 # git diff
-abbr -a -- gd 'git diff --no-ext-diff'
-abbr -a -- gds 'git diff --no-ext-diff --cached'
+abbr -a -- gdi 'git diff --no-ext-diff'
+abbr -a -- gdis 'git diff --no-ext-diff --cached'
+
+# git edit
 abbr -a -- ged 'git diff --name-only HEAD | xargs helix'
 
 # git branch
-abbr -a -- gb 'git branch'
-abbr -a -- gba 'git branch -a'
-abbr -a -- gbx 'git branch -D'
-abbr -a -- gbm 'git branch -m'
-abbr -a -- gbc 'git checkout -b'
-
-# git checkout
-abbr -a -- go 'git checkout'
-abbr -a -- goc 'git checkout -- .'
-abbr -a -- god 'git checkout origin/dev'
-abbr -a -- gom 'git checkout origin/main'
-
-# git commit
-abbr -a -- gc 'git commit --verbose'
-abbr -a gcm --set-cursor 'git commit --message "%"'
-abbr -a gcma --set-cursor 'git commit -a --message "%"'
-abbr -a -- gce 'git commit --verbose --amend'
-abbr -a -- gcf 'git commit --amend --reuse-message HEAD'
-
-# git merge
-abbr -a -- gm 'git merge'
-abbr -a -- gmc 'git merge --continue'
-abbr -a -- gma 'git merge --abort'
+abbr -a -- gbr 'git branch'
+abbr -a -- gbra 'git branch --all'
+abbr -a -- gbrx 'git branch --delete --force'
+abbr -a -- gbrm 'git branch --move'
+abbr -a -- gbrc 'git switch --copy'
 
 # git status
-abbr -a -- gs 'git status --short'
-abbr -a -- gss 'git status --verbose'
+abbr -a -- gst 'git status --short'
+abbr -a -- gsts 'git status --short'
+abbr -a -- gstv 'git status --verbose'
 
-# git worktree
-abbr -a -- gw 'git worktree'
+# git switch
+abbr -a -- gsw 'git switch'
+abbr -a -- gswd 'git switch --detach'
+abbr -a -- gswdv 'git switch --detach origin/dev'
+
+# git restore
+abbr -a -- grs 'git restore .'
+
+# git commit
+abbr -a -- gco 'git commit --verbose'
+abbr -a gcom --set-cursor 'git commit --message "%"'
+abbr -a -- gcoe 'git commit --verbose --amend'
+abbr -a -- gcof 'git commit --amend --reuse-message HEAD'
+
+# git merge
+abbr -a -- gme 'git merge'
+abbr -a -- gmec 'git merge --continue'
+abbr -a -- gmea 'git merge --abort'
 
 # git rebase
-abbr -a -- gr 'git rebase'
-abbr -a -- gri 'git rebase -i'
-abbr -a -- grc 'git rebase --continue'
-abbr -a -- gra 'git rebase --abort'
-abbr -a -- grd 'git rebase origin/dev'
-abbr -a -- grm 'git rebase origin/dev'
+abbr -a -- grb 'git rebase'
+abbr -a -- grbi 'git rebase --interactive'
+abbr -a -- grbc 'git rebase --continue'
+abbr -a -- grba 'git rebase --abort'
+abbr -a -- grbd 'git rebase origin/dev'
+abbr -a -- grbm 'git rebase origin/dev'
 
 # git reset
-abbr -a -- ge 'git reset --hard'
+abbr -a -- gre 'git reset --hard && git clean -fd'
 
 # git log
 set -g _git_log_fuller_format '%C(bold yellow)commit %h%C(auto)%d%n%C(bold)Author: %C(blue)%an <%ae >%C(reset)%C(cyan)%ai (%ar)%n%C(bold)Commit: %C(blue)%cn <%ce >%C(reset)%C(cyan)%ci (%cr)%C(reset)%n%+B'
 set -g _git_log_oneline_format '%C(bold yellow)%h%C(reset) %s%C(auto)%d%C(reset)'
 
-abbr -a -- gl 'git log --topo-order --pretty=format:(echo $_git_log_oneline_format) -11'
-abbr -a -- gll 'git log --topo-order --pretty=format:(echo $_git_log_fuller_format) -11'
-abbr -a -- gld 'git log --topo-order --stat --patch --pretty=format:(echo $_git_log_fuller_format) -11'
-abbr -a -- gls 'git log --topo-order --stat --pretty=format:(echo $_git_log_fuller_format) -11'
+abbr -a -- glo 'git log --topo-order --pretty=format:(echo $_git_log_oneline_format) -11'
+abbr -a -- glol 'git log --topo-order --pretty=format:(echo $_git_log_fuller_format) -11'
+abbr -a -- glod 'git log --topo-order --stat --patch --pretty=format:(echo $_git_log_fuller_format) -11'
+abbr -a -- glos 'git log --topo-order --stat --pretty=format:(echo $_git_log_fuller_format) -11'
