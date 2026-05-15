@@ -1,0 +1,65 @@
+#!/bin/sh
+# Install Bun (fast all-in-one JavaScript runtime)
+# https://bun.sh
+
+set -e
+
+# Check if bun is already installed
+if command -v bun >/dev/null 2>&1; then
+    echo "✓ bun already installed ($(bun --version 2>&1 | head -1))"
+    exit 0
+fi
+
+echo "Installing bun..."
+
+# Check if unzip is available (required for installation)
+if ! command -v unzip >/dev/null 2>&1; then
+    echo "⚠ unzip is required for bun installation"
+    
+    # Try to install unzip
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        
+        case "$ID" in
+            arch|cachyos|manjaro|endeavouros)
+                echo "Installing unzip with pacman..."
+                sudo pacman -S --noconfirm --needed unzip
+                ;;
+            ubuntu|debian|linuxmint|pop)
+                echo "Installing unzip with apt..."
+                sudo apt-get update
+                sudo apt-get install -y unzip
+                ;;
+            fedora|rhel|centos|rocky|almalinux)
+                echo "Installing unzip with dnf..."
+                sudo dnf install -y unzip
+                ;;
+            alpine)
+                echo "Installing unzip with apk..."
+                sudo apk add unzip
+                ;;
+            *)
+                echo "Error: Please install unzip manually first" >&2
+                exit 1
+                ;;
+        esac
+    fi
+fi
+
+# Install Bun using the official installer
+if command -v curl >/dev/null 2>&1; then
+    curl -fsSL https://bun.sh/install | bash
+elif command -v wget >/dev/null 2>&1; then
+    wget -qO- https://bun.sh/install | bash
+else
+    echo "Error: curl or wget is required to install bun" >&2
+    exit 1
+fi
+
+# Verify installation
+if [ -x "$HOME/.bun/bin/bun" ]; then
+    echo "✓ bun installed successfully ($($HOME/.bun/bin/bun --version 2>&1 | head -1))"
+    echo "⚠ You may need to restart your shell or run: export PATH=\"\$HOME/.bun/bin:\$PATH\""
+else
+    echo "⚠ bun installation may have failed. Check logs above."
+fi

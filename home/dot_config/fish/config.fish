@@ -6,6 +6,12 @@ set -g SUDO_EDITOR helix
 
 fish_add_path -m ~/.local/bin
 
+# |-- API KEYS
+# Load API keys from separate file (not tracked in git)
+if test -f ~/.config/fish/api-keys.fish
+    source ~/.config/fish/api-keys.fish
+end
+
 # |-- BUN
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH

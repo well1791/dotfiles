@@ -1,1 +1,5 @@
-.opencode/
+# Age encryption private key (never commit!)
+# Back this up securely - without it you cannot decrypt your secrets
+key.txt
+
+.opencode

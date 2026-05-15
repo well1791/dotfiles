@@ -1,0 +1,67 @@
+#!/bin/sh
+# Install age (simple, modern encryption tool)
+# https://github.com/FiloSottile/age
+
+set -e
+
+# Check if age is already installed
+if command -v age >/dev/null 2>&1; then
+    echo "✓ age already installed ($(age --version 2>&1 | head -1))"
+    exit 0
+fi
+
+echo "Installing age..."
+
+# Detect package manager and install
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+
+    case "$ID" in
+        arch|cachyos|manjaro|endeavouros)
+            echo "Detected Arch-based system, using pacman..."
+            sudo pacman -S --noconfirm --needed age
+            ;;
+        ubuntu|debian|linuxmint|pop)
+            echo "Detected Debian/Ubuntu-based system, using apt..."
+            sudo apt-get update
+            sudo apt-get install -y age
+            ;;
+        fedora|rhel|centos|rocky|almalinux)
+            echo "Detected Red Hat-based system, using dnf..."
+            sudo dnf install -y age
+            ;;
+        alpine)
+            echo "Detected Alpine Linux, using apk..."
+            sudo apk add age
+            ;;
+        *)
+            # Try to detect by ID_LIKE
+            if echo "$ID_LIKE" | grep -q "arch"; then
+                echo "Detected Arch-like system, using pacman..."
+                sudo pacman -S --noconfirm --needed age
+            elif echo "$ID_LIKE" | grep -q "debian"; then
+                echo "Detected Debian-like system, using apt..."
+                sudo apt-get update
+                sudo apt-get install -y age
+            elif echo "$ID_LIKE" | grep -q "rhel\|fedora"; then
+                echo "Detected Red Hat-like system, using dnf..."
+                sudo dnf install -y age
+            else
+                echo "⚠ Unsupported distribution: $ID"
+                echo "  Please install age manually: https://github.com/FiloSottile/age#installation"
+                exit 0
+            fi
+            ;;
+    esac
+else
+    echo "⚠ Cannot detect Linux distribution"
+    echo "  Please install age manually: https://github.com/FiloSottile/age#installation"
+    exit 0
+fi
+
+# Verify installation
+if command -v age >/dev/null 2>&1; then
+    echo "✓ age installed successfully ($(age --version 2>&1 | head -1))"
+else
+    echo "⚠ age installation may have failed. Check logs above."
+fi
