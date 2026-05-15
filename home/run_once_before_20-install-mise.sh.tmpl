@@ -1,0 +1,32 @@
+#!/bin/sh
+# Install mise (polyglot runtime manager)
+# https://mise.jdx.dev
+
+set -e
+
+# Check if mise is already installed
+if command -v mise >/dev/null 2>&1; then
+    echo "✓ mise already installed ($(mise --version 2>&1 | head -1))"
+    exit 0
+fi
+
+echo "Installing mise..."
+
+# Install mise using the official installer
+# Installs to ~/.local/bin/mise by default
+if command -v curl >/dev/null 2>&1; then
+    curl -fsSL https://mise.jdx.dev/install.sh | sh
+elif command -v wget >/dev/null 2>&1; then
+    wget -qO- https://mise.jdx.dev/install.sh | sh
+else
+    echo "Error: curl or wget is required to install mise" >&2
+    exit 1
+fi
+
+# Verify installation
+if command -v mise >/dev/null 2>&1; then
+    echo "✓ mise installed successfully ($(mise --version 2>&1 | head -1))"
+else
+    echo "⚠ mise installed but not in PATH yet. Restart your shell or run:"
+    echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
+fi

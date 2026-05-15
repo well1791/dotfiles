@@ -1,0 +1,39 @@
+#!/bin/sh
+# Install devenv (declarative developer environments)
+# https://devenv.sh
+# Requires: Nix package manager
+
+set -e
+
+# Check if devenv is already installed
+if command -v devenv >/dev/null 2>&1; then
+    echo "✓ devenv already installed ($(devenv version 2>&1 | head -1))"
+    exit 0
+fi
+
+# Check if Nix is installed (required)
+if ! command -v nix >/dev/null 2>&1; then
+    echo "⚠ devenv requires Nix. Skipping devenv installation."
+    echo "  Nix should have been installed by the previous script."
+    echo "  If installation failed, restart your shell and run 'chezmoi apply' again."
+    exit 0
+fi
+
+echo "Installing devenv..."
+
+# Install devenv using the official installer (which uses Nix)
+if command -v curl >/dev/null 2>&1; then
+    curl -fsSL https://devenv.sh/install.sh | bash
+elif command -v wget >/dev/null 2>&1; then
+    wget -qO- https://devenv.sh/install.sh | bash
+else
+    echo "Error: curl or wget is required to install devenv" >&2
+    exit 1
+fi
+
+# Verify installation
+if command -v devenv >/dev/null 2>&1; then
+    echo "✓ devenv installed successfully ($(devenv version 2>&1 | head -1))"
+else
+    echo "⚠ devenv installed but may not be in PATH yet. Restart your shell."
+fi

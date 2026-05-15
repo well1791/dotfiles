@@ -1,0 +1,76 @@
+#!/bin/sh
+# Install podman (daemonless container engine)
+# https://podman.io
+
+set -e
+
+# Check if podman is already installed
+if command -v podman >/dev/null 2>&1; then
+    echo "✓ podman already installed ($(podman --version 2>&1 | head -1))"
+    exit 0
+fi
+
+echo "Installing podman..."
+
+# Detect package manager and install
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    
+    case "$ID" in
+        arch|cachyos|manjaro|endeavouros)
+            echo "Detected Arch-based system, using pacman..."
+            sudo pacman -S --noconfirm --needed podman
+            ;;
+        ubuntu|debian|linuxmint|pop)
+            echo "Detected Debian/Ubuntu-based system, using apt..."
+            sudo apt-get update
+            sudo apt-get install -y podman
+            ;;
+        fedora|rhel|centos|rocky|almalinux)
+            echo "Detected Red Hat-based system, using dnf..."
+            sudo dnf install -y podman
+            ;;
+        alpine)
+            echo "Detected Alpine Linux, using apk..."
+            sudo apk add podman
+            ;;
+        *)
+            # Try to detect by ID_LIKE
+            if echo "$ID_LIKE" | grep -q "arch"; then
+                echo "Detected Arch-like system, using pacman..."
+                sudo pacman -S --noconfirm --needed podman
+            elif echo "$ID_LIKE" | grep -q "debian"; then
+                echo "Detected Debian-like system, using apt..."
+                sudo apt-get update
+                sudo apt-get install -y podman
+            elif echo "$ID_LIKE" | grep -q "rhel\|fedora"; then
+                echo "Detected Red Hat-like system, using dnf..."
+                sudo dnf install -y podman
+            else
+                echo "⚠ Unsupported distribution: $ID"
+                echo "  Please install podman manually: https://podman.io/getting-started/installation"
+                exit 0
+            fi
+            ;;
+    esac
+else
+    echo "⚠ Cannot detect Linux distribution"
+    echo "  Please install podman manually: https://podman.io/getting-started/installation"
+    exit 0
+fi
+
+# Verify installation
+if command -v podman >/dev/null 2>&1; then
+    echo "✓ podman installed successfully ($(podman --version 2>&1 | head -1))"
+    
+    # Enable user namespaces for rootless mode (if needed)
+    if [ -f /proc/sys/kernel/unprivileged_userns_clone ]; then
+        if [ "$(cat /proc/sys/kernel/unprivileged_userns_clone)" = "0" ]; then
+            echo "⚠ Rootless mode requires user namespaces. Run:"
+            echo "  echo 'kernel.unprivileged_userns_clone=1' | sudo tee /etc/sysctl.d/99-rootless.conf"
+            echo "  sudo sysctl --system"
+        fi
+    fi
+else
+    echo "⚠ podman installation may have failed. Check logs above."
+fi
