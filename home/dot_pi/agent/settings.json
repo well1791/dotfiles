@@ -5,5 +5,10 @@
   "defaultThinkingLevel": "medium",
   "skills": [
     "/home/well/.local/share/superpowers/skills"
+  ],
+  "packages": [
+    "npm:pi-subagents",
+    "npm:pi-intercom",
+    "npm:pi-mcp-adapter"
   ]
 }
