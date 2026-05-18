@@ -12,3 +12,4 @@ abbr -a mf --set-cursor 'chezmoi edit --watch ~/.config/fish/%'
 abbr -a -- mh chezmoi edit --watch ~/.config/helix/config.toml
 abbr -a -- mk chezmoi edit --watch ~/.config/kanata/config.kbd
 abbr -a -- mg chezmoi edit --watch ~/.config/ghostty/config
+abbr -a -- mj chezmoi edit --watch ~/.config/zellij/config.kdl

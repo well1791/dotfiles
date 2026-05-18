@@ -36,7 +36,6 @@ window-padding-x = 16
 scrollbar = never
 gtk-wide-tabs = false
 window-decoration = none
-window-show-tab-bar = always
 
 # Default behavior
 maximize = true
