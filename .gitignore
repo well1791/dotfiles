@@ -3,3 +3,7 @@
 key.txt
 
 .opencode
+
+# devenv artifacts (should not be in dotfiles repo)
+.devenv/
+devenv.lock

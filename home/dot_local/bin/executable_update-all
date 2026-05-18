@@ -109,7 +109,8 @@ fi
 # ============================================================================
 if command -v devenv >/dev/null 2>&1; then
     print_status "Updating devenv..."
-    devenv update || print_warning "devenv update failed (this is sometimes expected)"
+    # Run in home directory to avoid creating .devenv/ in unintended locations
+    (cd "$HOME" && devenv update) || print_warning "devenv update failed (this is sometimes expected)"
 else
     print_warning "devenv not found, skipping"
 fi
