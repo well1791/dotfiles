@@ -1,5 +1,5 @@
 ---
-name: describe-pr
+name: pr-description
 description: Use when work on a branch is complete and you need to generate a PR description summarizing the changes for review
 ---
 
