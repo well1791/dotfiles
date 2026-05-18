@@ -9,6 +9,7 @@
   "packages": [
     "npm:pi-subagents",
     "npm:pi-intercom",
-    "npm:pi-mcp-adapter"
+    "npm:pi-mcp-adapter",
+    "npm:pi-web-access"
   ]
 }
