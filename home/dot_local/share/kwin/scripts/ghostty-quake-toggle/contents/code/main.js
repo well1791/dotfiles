@@ -10,6 +10,7 @@ const POLL_TIMEOUT = 3000; // ms
 // Note: KWin config API may return window ID as string "null" or number; loadState() handles coercion
 let ghosttyWindowId = null;
 let isLaunching = false;
+let autoHideConnection = null;  // Track focus loss signal connection
 
 // Load stored window ID on script initialization
 function loadState() {
@@ -25,6 +26,9 @@ function loadState() {
             console.log("[ghostty-quake] Stored window ID is stale, clearing");
             ghosttyWindowId = null;
             saveState();
+        } else {
+            // Set up auto-hide for existing window
+            setupAutoHide(window);
         }
     }
 }
@@ -114,11 +118,37 @@ function showWindow(window) {
     window.skipSwitcher = false;
     window.setMaximize(true, true); // vertical, horizontal
     workspace.activeWindow = window;
+    
+    // Set up auto-hide on focus loss
+    setupAutoHide(window);
 }
 
 // Check if window is currently visible
 function isWindowVisible(window) {
     return !window.minimized;
+}
+
+// Set up auto-hide when window loses focus
+function setupAutoHide(window) {
+    // Disconnect previous connection if any
+    if (autoHideConnection !== null) {
+        try {
+            window.activeChanged.disconnect(autoHideConnection);
+        } catch (e) {
+            // Ignore if already disconnected
+        }
+    }
+    
+    // Connect to activeChanged signal
+    autoHideConnection = function() {
+        if (!window.active && isWindowVisible(window)) {
+            console.log("[ghostty-quake] Window lost focus, auto-hiding");
+            hideWindow(window);
+        }
+    };
+    
+    window.activeChanged.connect(autoHideConnection);
+    console.log("[ghostty-quake] Auto-hide on focus loss enabled");
 }
 
 // Main toggle function
@@ -139,6 +169,8 @@ function toggleGhosttyQuake() {
             console.log("[ghostty-quake] Found existing Ghostty window:", window.internalId);
             ghosttyWindowId = window.internalId;
             saveState();
+            // Set up auto-hide for newly found window
+            setupAutoHide(window);
         }
     }
     
