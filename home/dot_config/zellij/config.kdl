@@ -207,7 +207,6 @@ keybinds clear-defaults=true {
         // |-- TAB NAVIGATION
         bind "Ctrl PageUp" { GoToPreviousTab; SwitchToMode "Normal"; }
         bind "Ctrl PageDown" { GoToNextTab; SwitchToMode "Normal"; }
-        bind "Ctrl Tab" { GoToNextTab; SwitchToMode "Normal"; }
 
         // |-- SESSION
         bind "Alt w" {
