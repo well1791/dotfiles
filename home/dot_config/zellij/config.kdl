@@ -172,8 +172,8 @@ keybinds clear-defaults=true {
         }
 
         // |-- FOCUS
-        bind "Alt j" { MoveFocusOrTab "Left"; }
-        bind "Alt l" { MoveFocusOrTab "Right"; }
+        bind "Alt j" { MoveFocus "Left"; }
+        bind "Alt l" { MoveFocus "Right"; }
         bind "Alt i" { MoveFocus "Up"; }
         bind "Alt k" { MoveFocus "Down"; }
         bind "Alt 1" { GoToTab 1; SwitchToMode "Normal"; }
@@ -191,8 +191,8 @@ keybinds clear-defaults=true {
         bind "Alt Ctrl L" { MovePane "Right"; }
         bind "Alt Ctrl I" { MovePane "Up"; }
         bind "Alt Ctrl K" { MovePane "Down"; }
-        bind "Alt Ctrl U" { MoveTab "Left"; }
-        bind "Alt Ctrl O" { MoveTab "Right"; }
+        // bind "Alt Ctrl U" { MoveTab "Left"; }
+        // bind "Alt Ctrl O" { MoveTab "Right"; }
 
         // |-- RESIZE
         bind "Alt =" { Resize "Increase"; }
@@ -201,7 +201,12 @@ keybinds clear-defaults=true {
         // |-- NEW
         bind "Alt r" { NewPane "Right"; }
         bind "Alt d" { NewPane "Down"; }
-        bind "Alt f" { NewTab; SwitchToMode "Normal"; }
+        bind "Ctrl Shift t" { NewTab; SwitchToMode "Normal"; }
+
+        // |-- TAB NAVIGATION
+        bind "Ctrl PageUp" { GoToPreviousTab; SwitchToMode "Normal"; }
+        bind "Ctrl PageDown" { GoToNextTab; SwitchToMode "Normal"; }
+        bind "Ctrl Tab" { GoToNextTab; SwitchToMode "Normal"; }
 
         // |-- SESSION
         bind "Alt w" {
