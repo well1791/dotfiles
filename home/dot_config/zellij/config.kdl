@@ -263,17 +263,8 @@ plugins {
     configuration location="zellij:configuration"
     plugin-manager location="zellij:plugin-manager"
     about location="zellij:about"
-    zjframes location="file:~/.zellij/plugins/zjframes.wasm"
-    zjstatus location="file:~/.zellij/plugins/zjstatus.wasm"
-}
-
-load_plugins {
-    "https://github.com/dj95/zjstatus/releases/latest/download/zjframes.wasm" {
-        hide_frame_for_single_pane       "true"
-        hide_frame_except_for_search     "true"
-        hide_frame_except_for_scroll     "false"
-        hide_frame_except_for_fullscreen "false"
-    }
+    zjframes location="file:~/.config/zellij/plugins/zjframes.wasm"
+    zjstatus location="file:~/.config/zellij/plugins/zjstatus.wasm"
 }
 
 // Auto-grant permissions for trusted local plugins
@@ -281,16 +272,16 @@ load_plugins {
 auto_grant_permissions {
     // zjstatus needs state access to display tabs, mode, session info
     "file:~/.config/zellij/plugins/zjstatus.wasm" {
-        // ReadApplicationState = true
-        // ChangeApplicationState = false
-        // RunCommands = false
+        ReadApplicationState = true
+        ChangeApplicationState = false
+        RunCommands = false
     }
     
     // zjframes needs state access to manage pane frames
     "file:~/.config/zellij/plugins/zjframes.wasm" {
-        // ReadApplicationState = true
-        // ChangeApplicationState = false
-        // RunCommands = false
+        ReadApplicationState = true
+        ChangeApplicationState = false
+        RunCommands = false
     }
 
 }
