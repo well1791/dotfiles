@@ -45,7 +45,7 @@ function findWindowById(windowId) {
     const id = Number(windowId);
     const windows = workspace.windowList();
     for (let i = 0; i < windows.length; i++) {
-        if (windows[i].windowId === id) {
+        if (windows[i].internalId === id) {
             return windows[i];
         }
     }
@@ -105,10 +105,10 @@ function launchGhostty(callback) {
         
         const window = findGhosttyWindow();
         if (window) {
-            console.log("[ghostty-quake] Found new Ghostty window:", window.windowId);
+            console.log("[ghostty-quake] Found new Ghostty window:", window.internalId);
             pollTimer.stop();
             isLaunching = false;  // Reset on success
-            ghosttyWindowId = window.windowId;
+            ghosttyWindowId = window.internalId;
             saveState();
             callback(window);
         } else if (elapsed >= POLL_TIMEOUT) {
@@ -161,8 +161,8 @@ function toggleGhosttyQuake() {
         console.log("[ghostty-quake] Searching for Ghostty window...");
         window = findGhosttyWindow();
         if (window) {
-            console.log("[ghostty-quake] Found existing Ghostty window:", window.windowId);
-            ghosttyWindowId = window.windowId;
+            console.log("[ghostty-quake] Found existing Ghostty window:", window.internalId);
+            ghosttyWindowId = window.internalId;
             saveState();
         }
     }
