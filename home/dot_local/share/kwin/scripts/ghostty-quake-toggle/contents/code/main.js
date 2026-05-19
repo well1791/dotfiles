@@ -202,4 +202,27 @@ registerShortcut(
 // Initialize
 isLaunching = false; // Reset launch flag on script init
 loadState();
+
+// Set up auto-hide on desktop switch
+workspace.currentDesktopChanged.connect(function(previous, current, output) {
+    if (ghosttyWindowId !== null) {
+        const window = findWindowById(ghosttyWindowId);
+        if (window && isWindowVisible(window)) {
+            console.log("[ghostty-quake] Desktop changed, auto-hiding");
+            hideWindow(window);
+        }
+    }
+});
+
+// Set up auto-hide on activity switch
+workspace.currentActivityChanged.connect(function(id) {
+    if (ghosttyWindowId !== null) {
+        const window = findWindowById(ghosttyWindowId);
+        if (window && isWindowVisible(window)) {
+            console.log("[ghostty-quake] Activity changed, auto-hiding");
+            hideWindow(window);
+        }
+    }
+});
+
 console.log("[ghostty-quake] Script initialized");
