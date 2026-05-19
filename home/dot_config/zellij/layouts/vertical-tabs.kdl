@@ -1,9 +1,12 @@
-// Vertical tabs layout - tabs displayed vertically on the left
+// Vertical tabs layout - tabs displayed vertically on the right
 // Based on the zellij-vertical-tabs plugin
 
 layout {
     pane split_direction="vertical" {
-        // Vertical tab bar on the left (18 columns wide)
+        // Main content area
+        pane
+        
+        // Vertical tab bar on the right (18 columns wide)
         pane size=18 borderless=true {
             plugin location="file:~/.config/zellij/plugins/zellij-vertical-tabs.wasm" {
                 // Tab format (inactive tabs)
@@ -20,8 +23,8 @@ layout {
                 // Maximum name length before truncation
                 max_name_length 12
                 
-                // Right border
-                border "#[fg=240]│"
+                // Left border (separates tab bar from content)
+                border "│#[fg=240]"
                 
                 // Start tab numbering from 1
                 start_index 1
@@ -31,9 +34,6 @@ layout {
                 overflow_below "  v +{count}"
             }
         }
-        
-        // Main content area
-        pane
     }
     
     // Status bar at the bottom
@@ -130,6 +130,45 @@ layout {
             pane focus=true { x "50%"; y "55%"; width "45%"; height "45%"; }
             pane { x "1%"; y "1%"; width "45%"; height "45%"; }
             pane { x "50%"; y "1%"; width "45%"; height "45%"; }
+        }
+    }
+    
+    // Template for all new tabs - ensures consistent vertical tabs on the right
+    default_tab_template {
+        pane split_direction="vertical" {
+            // Main content area (left) - user's panes go here
+            pane {
+                children
+            }
+            
+            // Vertical tab bar (right) - always present for every tab
+            pane size=18 borderless=true {
+                plugin location="file:~/.config/zellij/plugins/zellij-vertical-tabs.wasm" {
+                    // Tab format (inactive tabs)
+                    format "{index}:{name}"
+                    
+                    // Active tab format (with fill for full row highlight)
+                    format_active "#[bg=236,fill]{index}:{name}*"
+                    
+                    // Status indicators
+                    indicator_active "*"
+                    indicator_fullscreen "Z"
+                    indicator_sync "S"
+                    
+                    // Maximum name length before truncation
+                    max_name_length 12
+                    
+                    // Left border (separates tab bar from content)
+                    border "│#[fg=240]"
+                    
+                    // Start tab numbering from 1
+                    start_index 1
+                    
+                    // Overflow indicators
+                    overflow_above "  ^ +{count}"
+                    overflow_below "  v +{count}"
+                }
+            }
         }
     }
 }

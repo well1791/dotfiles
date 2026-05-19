@@ -153,12 +153,27 @@ zellij --layout vertical-tabs
 ```
 
 **Features**:
-- 18-column vertical tab bar on the left
+- 18-column vertical tab bar on the **right** side
 - Mouse clickable tabs
 - Status indicators: `*` (active), `Z` (fullscreen), `S` (sync)
 - Tab format: `1:shell`, `2:editor`, etc.
+- **Automatic**: New tabs (Ctrl+Shift+t) and pane splits preserve the vertical tab bar
 
 **Permissions**: Requires `ReadApplicationState` and `ChangeApplicationState` (press `y` to grant on first use)
+
+**Behavior**:
+- ✅ All new tabs automatically have vertical tabs on the right
+- ✅ Pane splits (Alt+d, Alt+r) preserve tab bar position
+- ✅ Consistent layout across all tabs in the session
+
+**Applying to running sessions**:
+```bash
+# Override layout in current tab (and future tabs in this session)
+zellij action override-layout vertical-tabs
+
+# Or start a new session with vertical tabs
+zellij --layout vertical-tabs
+```
 
 ### zjstatus
 

@@ -72,54 +72,28 @@ function launchGhostty(callback) {
         console.log("[ghostty-quake] Launch already in progress, ignoring");
         return;
     }
-    isLaunching = true;
+    isLaunching = false;  // Don't actually launch - require manual startup
     
-    console.log("[ghostty-quake] Launching Ghostty...");
+    console.log("[ghostty-quake] Ghostty not running. Please launch Ghostty manually.");
+    console.log("[ghostty-quake] Once Ghostty is running, press Super+O to toggle it.");
     
-    const success = workspace.launchApplication(LAUNCH_COMMAND);
-    if (!success) {
-        console.error("[ghostty-quake] Failed to launch Ghostty");
-        isLaunching = false;
-        return;
-    }
-    
-    // Poll for new window
-    let elapsed = 0;
-    let pollTimer;
-    
+    // Show notification to user
     try {
-        pollTimer = Qt.createQmlObject(
-            'import QtQuick 2.0; Timer {}',
-            workspace
-        );
+        callDBus("org.freedesktop.Notifications",
+                 "/org/freedesktop/Notifications",
+                 "org.freedesktop.Notifications",
+                 "Notify",
+                 "Ghostty Quake Terminal",
+                 0,
+                 "ghostty",
+                 "Ghostty Not Running",
+                 "Please launch Ghostty manually, then press Super+O to toggle.",
+                 [],
+                 {},
+                 5000);
     } catch (e) {
-        console.error("[ghostty-quake] Failed to create timer:", e);
-        console.error("[ghostty-quake] Manual intervention required - check for orphaned Ghostty process");
-        isLaunching = false;
-        return;
+        console.log("[ghostty-quake] Could not show notification:", e);
     }
-    
-    pollTimer.interval = POLL_INTERVAL;
-    pollTimer.repeat = true;
-    pollTimer.triggered.connect(function() {
-        elapsed += POLL_INTERVAL;
-        
-        const window = findGhosttyWindow();
-        if (window) {
-            console.log("[ghostty-quake] Found new Ghostty window:", window.internalId);
-            pollTimer.stop();
-            isLaunching = false;  // Reset on success
-            ghosttyWindowId = window.internalId;
-            saveState();
-            callback(window);
-        } else if (elapsed >= POLL_TIMEOUT) {
-            console.error("[ghostty-quake] Timeout waiting for Ghostty window");
-            pollTimer.stop();
-            isLaunching = false;  // Reset on timeout
-        }
-    });
-    
-    pollTimer.start();
 }
 
 // Hide window (minimize + skip taskbar/pager/switcher)
@@ -168,9 +142,9 @@ function toggleGhosttyQuake() {
         }
     }
     
-    // If no window exists, launch Ghostty
+    // If no window exists, show notification
     if (!window) {
-        console.log("[ghostty-quake] No Ghostty window found, launching...");
+        console.log("[ghostty-quake] No Ghostty window found");
         launchGhostty(function(newWindow) {
             showWindow(newWindow);
         });
@@ -194,5 +168,6 @@ registerShortcut(
 );
 
 // Initialize
+isLaunching = false; // Reset launch flag on script init
 loadState();
 console.log("[ghostty-quake] Script initialized");
