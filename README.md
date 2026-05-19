@@ -51,6 +51,7 @@ Installed via system package manager (pacman/apt/dnf):
 - **[duf](https://github.com/muesli/duf)** - Modern disk usage tool
 - **[eza](https://eza.rocks/)** - Modern ls replacement
 - **[glow](https://github.com/charmbracelet/glow)** - Terminal markdown reader with TUI
+- **[serpl](https://github.com/yassinebridi/serpl)** - TUI search and replace tool
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
@@ -64,7 +65,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow)
+- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow, serpl)
 - ✅ mise and mise-managed runtimes (go, node, etc.)
 - ✅ uv (Python package manager)
 - ✅ Nix channels and packages

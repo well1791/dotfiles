@@ -12,12 +12,12 @@
 # - Custom installation methods (nix, mise, uv, bun)
 # - Post-install configuration (podman rootless setup)
 #
-# Tools: helix, ripgrep, yazi, bat, duf, eza, glow
+# Tools: helix, ripgrep, yazi, bat, duf, eza, glow, serpl
 
 set -e
 
 # List of tools to install
-TOOLS="helix ripgrep yazi bat duf eza glow"
+TOOLS="helix ripgrep yazi bat duf eza glow serpl"
 
 # Check which tools are already installed
 MISSING=""
@@ -41,7 +41,7 @@ done
 
 # If all tools are installed, exit early
 if [ -z "$MISSING" ]; then
-    echo "✓ All CLI tools already installed (helix, ripgrep, yazi, bat, duf, eza, glow)"
+    echo "✓ All CLI tools already installed (helix, ripgrep, yazi, bat, duf, eza, glow, serpl)"
     exit 0
 fi
 
