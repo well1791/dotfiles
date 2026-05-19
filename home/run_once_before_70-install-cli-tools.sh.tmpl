@@ -1,6 +1,18 @@
 #!/bin/sh
-# Install essential CLI tools
-# helix, ripgrep, yazi, bat, duf, eza, glow
+# Install essential CLI tools (grouped)
+#
+# These tools are grouped because they:
+# - All use the system package manager (pacman/apt/dnf)
+# - Require no post-installation configuration
+# - Are optional utilities (not critical dependencies)
+# - Are conceptually related (modern CLI replacements)
+#
+# Tools needing individual scripts:
+# - Critical dependencies (age for chezmoi secrets)
+# - Custom installation methods (nix, mise, uv, bun)
+# - Post-install configuration (podman rootless setup)
+#
+# Tools: helix, ripgrep, yazi, bat, duf, eza, glow
 
 set -e
 
