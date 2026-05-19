@@ -1,0 +1,19 @@
+# Glow configuration
+# Reference: https://github.com/charmbracelet/glow
+
+# Always use pager mode
+pager: true
+
+# Style name or JSON path
+style: "auto"
+
+# Word-wrap at width
+width: 80
+
+# Show all files, including hidden (TUI-mode only)
+all: false
+
+# Mouse support (TUI-mode only)
+mouse: true
+
+preserveNewLines: true

@@ -1,11 +1,11 @@
 #!/bin/sh
 # Install essential CLI tools
-# helix, ripgrep, yazi, bat, duf, eza
+# helix, ripgrep, yazi, bat, duf, eza, glow
 
 set -e
 
 # List of tools to install
-TOOLS="helix ripgrep yazi bat duf eza"
+TOOLS="helix ripgrep yazi bat duf eza glow"
 
 # Check which tools are already installed
 MISSING=""
@@ -29,7 +29,7 @@ done
 
 # If all tools are installed, exit early
 if [ -z "$MISSING" ]; then
-    echo "✓ All CLI tools already installed (helix, ripgrep, yazi, bat, duf, eza)"
+    echo "✓ All CLI tools already installed (helix, ripgrep, yazi, bat, duf, eza, glow)"
     exit 0
 fi
 
