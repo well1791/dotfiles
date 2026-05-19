@@ -15,7 +15,7 @@
 **Current State:**
 - `main.kdl` loads zjstatus from remote URL: `https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm`
 - `plugins.toml` declares zjstatus v0.21.0 but the plugin was never installed locally
-- `plugins/` directory only contains `zjframes.wasm` and `zellij-vertical-tabs.wasm`
+- `plugins/` directory only contains `zjframes.wasm`
 - Zellij asks for permissions on every remote plugin load (security feature)
 
 **Why this happens:**
@@ -41,7 +41,6 @@ ls -lh ~/.config/zellij/plugins/
 Expected output:
 ```
 zjframes.wasm
-zellij-vertical-tabs.wasm
 ```
 
 Note: zjstatus.wasm is missing
@@ -59,7 +58,6 @@ Expected output:
 Installing zellij plugins from: ~/.config/zellij/plugins.toml
 Target directory: ~/.config/zellij/plugins
 
-✓ zellij-vertical-tabs (v0.1.0) already installed
 ✓ zjframes (v0.21.0) already installed
   → Downloading zjstatus (v0.21.0)...
     Fetching from: https://github.com/dj95/zjstatus/releases/download/v0.21.0/zjstatus.wasm
@@ -212,13 +210,6 @@ auto_grant_permissions {
         ChangeApplicationState = false
         RunCommands = false
     }
-    
-    // Vertical tabs plugin
-    "file:~/.config/zellij/plugins/zellij-vertical-tabs.wasm" {
-        ReadApplicationState = true
-        ChangeApplicationState = false
-        RunCommands = false
-    }
 }
 ```
 
@@ -347,7 +338,6 @@ Local plugins in `~/.config/zellij/plugins/` have auto-granted permissions confi
 |--------|------|--------|-----|
 | zjstatus.wasm | ✓ | ✗ | ✗ |
 | zjframes.wasm | ✓ | ✗ | ✗ |
-| zellij-vertical-tabs.wasm | ✓ | ✗ | ✗ |
 
 ### Why Auto-Grant?
 

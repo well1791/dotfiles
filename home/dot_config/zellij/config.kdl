@@ -292,13 +292,7 @@ auto_grant_permissions {
         // ChangeApplicationState = false
         // RunCommands = false
     }
-    
-    // Vertical tabs plugin
-    "file:~/.config/zellij/plugins/zellij-vertical-tabs.wasm" {
-        // ReadApplicationState = true
-        // ChangeApplicationState = false
-        // RunCommands = false
-    }
+
 }
 
 // Choose what to do when zellij receives SIGTERM, SIGINT, SIGQUIT or SIGHUP

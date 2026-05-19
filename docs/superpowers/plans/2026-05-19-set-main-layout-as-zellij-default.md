@@ -1,5 +1,7 @@
 # Set Main Layout as Zellij Default Implementation Plan
 
+> **DEPRECATED:** This plan references the vertical-tabs layout which has been removed from the repository as of 2026-05-19. The default layout is already set to "main".
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Change zellij's default layout from "vertical-tabs" to "main" so all new zellij sessions use the main.kdl layout without requiring explicit `--layout` flag.

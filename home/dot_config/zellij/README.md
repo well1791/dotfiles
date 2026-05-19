@@ -25,12 +25,10 @@ This follows the same pattern as:
 │   ├── install-plugins.sh        # Install plugins from manifest
 │   └── update-plugins.sh         # Check for and update to latest versions
 ├── plugins/                      # Installed plugins (not tracked in git)
-│   ├── zellij-vertical-tabs.wasm
 │   ├── zjstatus.wasm
 │   └── zjframes.wasm
 └── layouts/                      # Zellij layouts
-    ├── main.kdl
-    └── vertical-tabs.kdl
+    └── main.kdl
 ```
 
 ## Quick Start
@@ -141,47 +139,13 @@ This uses the `run_onchange_before_install-zellij-plugins.sh.tmpl` hook, which:
 
 ## Installed Plugins
 
-### zellij-vertical-tabs
-
-Vertical tab bar plugin for zellij.
-
-**Repository**: https://github.com/cfal/zellij-vertical-tabs
-
-**Usage**:
-```bash
-zellij --layout vertical-tabs
-```
-
-**Features**:
-- 18-column vertical tab bar on the **right** side
-- Mouse clickable tabs
-- Status indicators: `*` (active), `Z` (fullscreen), `S` (sync)
-- Tab format: `1:shell`, `2:editor`, etc.
-- **Automatic**: New tabs (Ctrl+Shift+t) and pane splits preserve the vertical tab bar
-
-**Permissions**: Requires `ReadApplicationState` and `ChangeApplicationState` (press `y` to grant on first use)
-
-**Behavior**:
-- ✅ All new tabs automatically have vertical tabs on the right
-- ✅ Pane splits (Alt+d, Alt+r) preserve tab bar position
-- ✅ Consistent layout across all tabs in the session
-
-**Applying to running sessions**:
-```bash
-# Override layout in current tab (and future tabs in this session)
-zellij action override-layout vertical-tabs
-
-# Or start a new session with vertical tabs
-zellij --layout vertical-tabs
-```
-
 ### zjstatus
 
 Status bar plugin with customizable formatting.
 
 **Repository**: https://github.com/dj95/zjstatus
 
-**Usage**: Configured in layouts (see `layouts/main.kdl` and `layouts/vertical-tabs.kdl`)
+**Usage**: Configured in layouts (see `layouts/main.kdl`)
 
 **Features**:
 - Customizable status bar with mode indicators
@@ -394,6 +358,5 @@ Automatically update plugins in CI:
 
 ## Credits
 
-- **zellij-vertical-tabs**: [cfal/zellij-vertical-tabs](https://github.com/cfal/zellij-vertical-tabs)
 - **zjstatus**: [dj95/zjstatus](https://github.com/dj95/zjstatus)
 - **zjframes**: [dj95/zjstatus](https://github.com/dj95/zjstatus)

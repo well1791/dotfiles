@@ -18,13 +18,6 @@
 #   sha256  - SHA256 checksum for integrity verification (optional, leave empty to skip)
 
 [[plugin]]
-name = "zellij-vertical-tabs"
-repo = "cfal/zellij-vertical-tabs"
-version = "v0.1.0"
-url = "https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm"
-sha256 = "531091b56ab3bc0008bd14de19f71985e3ab8585110ee021ef8ee413556202a2"
-
-[[plugin]]
 name = "zjstatus"
 repo = "dj95/zjstatus"
 version = "v0.21.0"
