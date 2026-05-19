@@ -11,7 +11,8 @@ let ghosttyWindowId = null;
 
 // Load stored window ID on script initialization
 function loadState() {
-    ghosttyWindowId = readConfig("ghosttyWindowId", null);
+    const raw = readConfig("ghosttyWindowId", null);
+    ghosttyWindowId = (raw === null || raw === "null" || raw === "") ? null : Number(raw);
     console.log("[ghostty-quake] Loaded window ID:", ghosttyWindowId);
     
     // Validate that stored window still exists
@@ -33,9 +34,11 @@ function saveState() {
 
 // Find window by ID
 function findWindowById(windowId) {
+    if (windowId === null) return null;
+    const id = Number(windowId);
     const windows = workspace.windowList();
     for (let i = 0; i < windows.length; i++) {
-        if (windows[i].windowId === windowId) {
+        if (windows[i].windowId === id) {
             return windows[i];
         }
     }
@@ -43,6 +46,8 @@ function findWindowById(windowId) {
 }
 
 // Find Ghostty window by resource class
+// If multiple windows exist, returns the first one found (undefined order)
+// In practice, the stored window ID is used; this is only a fallback
 function findGhosttyWindow() {
     const windows = workspace.windowList();
     for (let i = 0; i < windows.length; i++) {
@@ -65,10 +70,17 @@ function launchGhostty(callback) {
     
     // Poll for new window
     let elapsed = 0;
-    const pollTimer = Qt.createQmlObject(
-        'import QtQuick 2.0; Timer {}',
-        workspace
-    );
+    let pollTimer;
+    
+    try {
+        pollTimer = Qt.createQmlObject(
+            'import QtQuick 2.0; Timer {}',
+            workspace
+        );
+    } catch (e) {
+        console.error("[ghostty-quake] Failed to create timer:", e);
+        return;
+    }
     
     pollTimer.interval = POLL_INTERVAL;
     pollTimer.repeat = true;
