@@ -4,9 +4,16 @@
 
 **Goal:** Make Ghostty behave like a quake-style dropdown terminal toggled via Super+O, always appearing maximized.
 
-**Architecture:** KWin JavaScript script manages window lifecycle (launch/hide/show), stores window ID persistently, and registers global shortcut. Chezmoi deploys script files and automates KDE configuration via run_once script.
+**Architecture:** KWin JavaScript script manages window lifecycle (hide/show toggle), stores window ID persistently, and registers global shortcut. Chezmoi deploys script files and automates KDE configuration via run_once script.
 
 **Tech Stack:** KWin scripting API (JavaScript), chezmoi, kwriteconfig6, qdbus
+
+**NOTE:** Implementation differs from original plan:
+- ✅ Window toggle (hide/show) works perfectly
+- ✅ Uses `internalId` (UUID) for Wayland compatibility instead of `windowId`
+- ⚠️ Auto-launch removed: KWin scripting API lacks reliable process launching
+- ✅ Shows notification when Ghostty not found (user launches manually at login)
+- ✅ Design matches Yakuake/Guake: persistent daemon + hotkey toggle
 
 ---
 
