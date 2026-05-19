@@ -91,12 +91,14 @@ keybinds clear-defaults=true {
         bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // |-- NAV
-        bind "i" "w" { ScrollUp; }
-        bind "k" "s" { ScrollDown; }
-        bind "e" "u" { HalfPageScrollUp; }
-        bind "d" { HalfPageScrollDown; }
-        bind "j" { PageScrollUp; }
-        bind "l" { PageScrollDown; }
+        bind "i" "w"    { ScrollUp; }
+        bind "k" "s"    { ScrollDown; }
+        bind "e" "u"    { HalfPageScrollUp; }
+        bind "d" "o"    { HalfPageScrollDown; }
+        bind "PageUp"   { PageScrollUp; }
+        bind "PageDown" { PageScrollDown; }
+        bind "Shift u"  { ScrollToTop; }
+        bind "Shift o"  { ScrollToBottom; }
 
         // |-- SEARCH NAV
         bind "p" "I" { Search "up"; }
