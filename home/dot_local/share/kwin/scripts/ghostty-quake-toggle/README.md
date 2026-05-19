@@ -5,6 +5,7 @@ A KWin script that makes Ghostty behave like a quake-style dropdown terminal (si
 ## Features
 
 - **Global Hotkey:** Press `Super+O` (Meta+O) to show/hide Ghostty
+- **Auto-Hide on Focus Loss:** Window automatically hides when you click elsewhere or switch to another window
 - **Always Maximized:** Window fills the entire screen when visible
 - **Hidden When Not in Use:** Window is completely invisible (no taskbar, no Alt+Tab, no pager)
 - **Persistent State:** Remembers your Ghostty window across KWin restarts
@@ -51,8 +52,13 @@ EOF
 
 1. **Log in** → Ghostty starts automatically in the background
 2. **Press `Super+O`** → Ghostty appears maximized
-3. **Press `Super+O`** again → Window hides (but Ghostty keeps running)
-4. Use `Super+O` anytime to toggle the terminal
+3. **Click anywhere else** (or press `Super+O`) → Window hides (but Ghostty keeps running)
+4. **Press `Super+O`** anytime to bring it back
+
+**Auto-hide behavior:**
+- When you click outside Ghostty or switch to another window, it automatically hides
+- This keeps your workspace clean while keeping the terminal instantly accessible
+- You can still manually toggle with `Super+O` at any time
 
 ### If Ghostty Is Not Running
 
@@ -72,6 +78,7 @@ The script:
 - Stores the window's internal ID (UUID on Wayland) persistently
 - Toggles visibility by setting `minimized`, `skipTaskbar`, `skipPager`, and `skipSwitcher` properties
 - Maximizes the window both vertically and horizontally when showing
+- Automatically hides the window when it loses focus (via `window.activeChanged` signal)
 
 ### Multiple Ghostty Windows
 
@@ -155,7 +162,7 @@ kwriteconfig6 --file kglobalshortcutsrc --group ghostty-quake-toggle --key toggl
 - **Script Location:** `~/.local/share/kwin/scripts/ghostty-quake-toggle/`
 - **Configuration:** Stored in KWin's config system via `readConfig`/`writeConfig`
 - **Window ID Type:** UUID string (Wayland) or numeric ID (X11)
-- **KWin API:** Uses `workspace.windowList()`, window properties, and `workspace.windowAdded` signal
+- **KWin API:** Uses `workspace.windowList()`, window properties, `workspace.windowAdded` signal, and `window.activeChanged` signal for auto-hide
 
 ## License
 
