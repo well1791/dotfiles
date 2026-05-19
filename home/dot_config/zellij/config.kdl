@@ -272,16 +272,16 @@ plugins {
 auto_grant_permissions {
     // zjstatus needs state access to display tabs, mode, session info
     "file:~/.config/zellij/plugins/zjstatus.wasm" {
-        ReadApplicationState = true
-        ChangeApplicationState = false
-        RunCommands = false
+        ReadApplicationState true
+        ChangeApplicationState false
+        RunCommands false
     }
     
     // zjframes needs state access to manage pane frames
     "file:~/.config/zellij/plugins/zjframes.wasm" {
-        ReadApplicationState = true
-        ChangeApplicationState = false
-        RunCommands = false
+        ReadApplicationState true
+        ChangeApplicationState false
+        RunCommands false
     }
 
 }
