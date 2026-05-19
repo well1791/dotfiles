@@ -57,12 +57,6 @@ function findGhosttyWindow() {
 function launchGhostty(callback) {
     console.log("[ghostty-quake] Launching Ghostty...");
     
-    // Start the process
-    callDBus("org.kde.kglobalaccel", "/component/krunner",
-             "org.kde.kglobalaccel.Component", "invokeShortcut",
-             LAUNCH_COMMAND);
-    
-    // Alternative: use KWin's built-in command execution
     const success = workspace.launchApplication(LAUNCH_COMMAND);
     if (!success) {
         console.error("[ghostty-quake] Failed to launch Ghostty");
