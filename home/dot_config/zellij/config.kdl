@@ -276,6 +276,31 @@ load_plugins {
     }
 }
 
+// Auto-grant permissions for trusted local plugins
+// Eliminates permission prompts on every session start
+auto_grant_permissions {
+    // zjstatus needs state access to display tabs, mode, session info
+    "file:~/.config/zellij/plugins/zjstatus.wasm" {
+        ReadApplicationState = true
+        ChangeApplicationState = false
+        RunCommands = false
+    }
+    
+    // zjframes needs state access to manage pane frames
+    "file:~/.config/zellij/plugins/zjframes.wasm" {
+        ReadApplicationState = true
+        ChangeApplicationState = false
+        RunCommands = false
+    }
+    
+    // Vertical tabs plugin
+    "file:~/.config/zellij/plugins/zellij-vertical-tabs.wasm" {
+        ReadApplicationState = true
+        ChangeApplicationState = false
+        RunCommands = false
+    }
+}
+
 // Choose what to do when zellij receives SIGTERM, SIGINT, SIGQUIT or SIGHUP
 // eg. when terminal window with an active zellij session is closed
 // (Requires restart)
