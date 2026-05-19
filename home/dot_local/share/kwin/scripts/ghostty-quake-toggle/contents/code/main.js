@@ -14,7 +14,8 @@ let isLaunching = false;
 // Load stored window ID on script initialization
 function loadState() {
     const raw = readConfig("ghosttyWindowId", null);
-    ghosttyWindowId = (raw === null || raw === "null" || raw === "" || raw === undefined) ? null : Number(raw);
+    // Wayland uses UUID strings, X11 uses numbers - keep as-is without Number() conversion
+    ghosttyWindowId = (raw === null || raw === "null" || raw === "" || raw === undefined) ? null : raw;
     console.log("[ghostty-quake] Loaded window ID:", ghosttyWindowId);
     
     // Validate that stored window still exists
@@ -30,7 +31,7 @@ function loadState() {
 
 // Save window ID to persistent storage
 function saveState() {
-    if (ghosttyWindowId !== null && !isNaN(ghosttyWindowId) && isFinite(ghosttyWindowId)) {
+    if (ghosttyWindowId !== null && ghosttyWindowId !== undefined && ghosttyWindowId !== "") {
         writeConfig("ghosttyWindowId", ghosttyWindowId);
         console.log("[ghostty-quake] Saved window ID:", ghosttyWindowId);
     } else {
@@ -42,10 +43,10 @@ function saveState() {
 // Find window by ID
 function findWindowById(windowId) {
     if (windowId === null) return null;
-    const id = Number(windowId);
+    // Wayland uses UUID strings, X11 uses numbers - compare directly without conversion
     const windows = workspace.windowList();
     for (let i = 0; i < windows.length; i++) {
-        if (windows[i].internalId === id) {
+        if (windows[i].internalId === windowId) {
             return windows[i];
         }
     }
