@@ -36,8 +36,8 @@ keybinds clear-defaults=true {
         bind "Alt Ctrl p" { SwitchToMode "Normal"; }
 
         // |-- NEW
-        bind "k" { NewPane "Down"; SwitchToMode "Normal"; }
-        bind "l" { NewPane "Right"; SwitchToMode "Normal"; }
+        // bind "k" { NewPane "Down"; SwitchToMode "Normal"; }
+        // bind "l" { NewPane "Right"; SwitchToMode "Normal"; }
         // bind "s" { NewPane "stacked"; SwitchToMode "Normal"; } // ERROR?
 
         // |-- FLOATING
@@ -61,7 +61,6 @@ keybinds clear-defaults=true {
 
         // |-- OTHERS
         bind "r" { SwitchToMode "RenameTab"; TabNameInput 0; }
-        bind "n" { NewTab; SwitchToMode "Normal"; }
         bind "x" { CloseTab; SwitchToMode "Normal"; }
         bind "s" { ToggleActiveSyncTab; SwitchToMode "Normal"; }
     }
@@ -71,12 +70,14 @@ keybinds clear-defaults=true {
         bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // |-- NAV
-        bind "i" "w" { ScrollUp; }
-        bind "k" "s" { ScrollDown; }
-        bind "e" "u" { HalfPageScrollUp; }
-        bind "d" { HalfPageScrollDown; }
-        bind "j" { PageScrollUp; }
-        bind "l" { PageScrollDown; }
+        bind "i" "w"    { ScrollUp; }
+        bind "k" "s"    { ScrollDown; }
+        bind "e" "u"    { HalfPageScrollUp; }
+        bind "d" "o"    { HalfPageScrollDown; }
+        bind "PageUp"   { PageScrollUp; }
+        bind "PageDown" { PageScrollDown; }
+        bind "Shift u"  { ScrollToTop; }
+        bind "Shift o"  { ScrollToBottom; }
 
         // |-- OTHERS
         bind "/" "f" { SwitchToMode "EnterSearch"; SearchInput 0; }
@@ -87,7 +88,7 @@ keybinds clear-defaults=true {
 
     search {
         bind "Alt s" { SwitchToMode "Normal"; }
-        bind "Ctrl c" { ScrollToBottom; SwitchToMode "Normal"; }
+        bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // |-- NAV
         bind "i" "w" { ScrollUp; }
