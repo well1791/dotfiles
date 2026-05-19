@@ -43,6 +43,7 @@ abbr -a -- grss 'git restore --stagged'
 # git commit
 abbr -a -- gco 'git commit --verbose'
 abbr -a gcom --set-cursor 'git commit --message "%"'
+abbr -a gcoma --set-cursor 'git commit --message "%" -a'
 abbr -a -- gcoe 'git commit --verbose --amend'
 abbr -a -- gcof 'git commit --amend --reuse-message HEAD'
 
