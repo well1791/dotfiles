@@ -1,0 +1,39 @@
+# Zellij Plugin Manifest
+#
+# This file declares zellij plugins to be installed via the install-plugins.sh script.
+# Plugins are downloaded from GitHub releases and verified with SHA256 checksums.
+#
+# To add a new plugin:
+#   1. Add a [[plugin]] entry with name, repo, version, and url
+#   2. Run: ./scripts/install-plugins.sh
+#
+# To update plugins:
+#   Run: ./scripts/update-plugins.sh
+#
+# Format:
+#   name    - Plugin filename (without .wasm extension)
+#   repo    - GitHub repository (owner/repo)
+#   version - Git tag/release version
+#   url     - Direct download URL for the WASM binary
+#   sha256  - SHA256 checksum for integrity verification (optional, leave empty to skip)
+
+[[plugin]]
+name = "zellij-vertical-tabs"
+repo = "cfal/zellij-vertical-tabs"
+version = "v0.1.0"
+url = "https://github.com/cfal/zellij-vertical-tabs/releases/download/v0.1.0/zellij-vertical-tabs.wasm"
+sha256 = "531091b56ab3bc0008bd14de19f71985e3ab8585110ee021ef8ee413556202a2"
+
+[[plugin]]
+name = "zjstatus"
+repo = "dj95/zjstatus"
+version = "v0.21.0"
+url = "https://github.com/dj95/zjstatus/releases/download/v0.21.0/zjstatus.wasm"
+sha256 = "a7a2539c0ca29b44f74e42731a1122b737372693e8bcbe64ee36fc82ffa82c3e"
+
+[[plugin]]
+name = "zjframes"
+repo = "dj95/zjstatus"
+version = "v0.21.0"
+url = "https://github.com/dj95/zjstatus/releases/download/v0.21.0/zjframes.wasm"
+sha256 = "7448eed12910a05e75edc2578cb098cc0be35cd18773bab2d2e4841dfc661ec8"

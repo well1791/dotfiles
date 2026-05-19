@@ -7,3 +7,6 @@ key.txt
 # devenv artifacts (should not be in dotfiles repo)
 .devenv/
 devenv.lock
+
+# Zellij plugins (downloaded via manifest, not tracked in git)
+home/dot_config/zellij/plugins/*.wasm

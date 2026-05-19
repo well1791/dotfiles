@@ -200,8 +200,8 @@ keybinds clear-defaults=true {
         bind "Alt -" { Resize "Decrease"; }
 
         // |-- NEW
-        bind "Alt r" { NewPane "Right"; }
-        bind "Alt d" { NewPane "Down"; }
+        bind "Alt r" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "Alt d" { NewPane "Down"; SwitchToMode "Normal"; }
         bind "Ctrl Shift t" { NewTab; SwitchToMode "Normal"; }
 
         // |-- TAB NAVIGATION
