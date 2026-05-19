@@ -7,12 +7,14 @@ const POLL_INTERVAL = 100; // ms
 const POLL_TIMEOUT = 3000; // ms
 
 // Persistent state
+// Note: KWin config API may return window ID as string "null" or number; loadState() handles coercion
 let ghosttyWindowId = null;
+let isLaunching = false;
 
 // Load stored window ID on script initialization
 function loadState() {
     const raw = readConfig("ghosttyWindowId", null);
-    ghosttyWindowId = (raw === null || raw === "null" || raw === "") ? null : Number(raw);
+    ghosttyWindowId = (raw === null || raw === "null" || raw === "" || raw === undefined) ? null : Number(raw);
     console.log("[ghostty-quake] Loaded window ID:", ghosttyWindowId);
     
     // Validate that stored window still exists
@@ -28,8 +30,13 @@ function loadState() {
 
 // Save window ID to persistent storage
 function saveState() {
-    writeConfig("ghosttyWindowId", ghosttyWindowId);
-    console.log("[ghostty-quake] Saved window ID:", ghosttyWindowId);
+    if (ghosttyWindowId !== null && !isNaN(ghosttyWindowId) && isFinite(ghosttyWindowId)) {
+        writeConfig("ghosttyWindowId", ghosttyWindowId);
+        console.log("[ghostty-quake] Saved window ID:", ghosttyWindowId);
+    } else {
+        writeConfig("ghosttyWindowId", null);
+        console.log("[ghostty-quake] Cleared invalid window ID:", ghosttyWindowId);
+    }
 }
 
 // Find window by ID
@@ -60,11 +67,18 @@ function findGhosttyWindow() {
 
 // Launch Ghostty and wait for window to appear
 function launchGhostty(callback) {
+    if (isLaunching) {
+        console.log("[ghostty-quake] Launch already in progress, ignoring");
+        return;
+    }
+    isLaunching = true;
+    
     console.log("[ghostty-quake] Launching Ghostty...");
     
     const success = workspace.launchApplication(LAUNCH_COMMAND);
     if (!success) {
         console.error("[ghostty-quake] Failed to launch Ghostty");
+        isLaunching = false;
         return;
     }
     
@@ -79,6 +93,8 @@ function launchGhostty(callback) {
         );
     } catch (e) {
         console.error("[ghostty-quake] Failed to create timer:", e);
+        console.error("[ghostty-quake] Manual intervention required - check for orphaned Ghostty process");
+        isLaunching = false;
         return;
     }
     
@@ -91,12 +107,14 @@ function launchGhostty(callback) {
         if (window) {
             console.log("[ghostty-quake] Found new Ghostty window:", window.windowId);
             pollTimer.stop();
+            isLaunching = false;  // Reset on success
             ghosttyWindowId = window.windowId;
             saveState();
             callback(window);
         } else if (elapsed >= POLL_TIMEOUT) {
             console.error("[ghostty-quake] Timeout waiting for Ghostty window");
             pollTimer.stop();
+            isLaunching = false;  // Reset on timeout
         }
     });
     
