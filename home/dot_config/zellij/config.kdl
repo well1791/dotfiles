@@ -70,10 +70,10 @@ keybinds clear-defaults=true {
         bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // |-- NAV
-        bind "i" "w"    { ScrollUp; }
-        bind "k" "s"    { ScrollDown; }
-        bind "e" "u"    { HalfPageScrollUp; }
-        bind "d" "o"    { HalfPageScrollDown; }
+        bind "i" "e"    { ScrollUp; }
+        bind "k" "d"    { ScrollDown; }
+        bind "w" "u"    { HalfPageScrollUp; }
+        bind "s" "o"    { HalfPageScrollDown; }
         bind "PageUp"   { PageScrollUp; }
         bind "PageDown" { PageScrollDown; }
         bind "Shift u"  { ScrollToTop; }
@@ -91,10 +91,10 @@ keybinds clear-defaults=true {
         bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // |-- NAV
-        bind "i" "w"    { ScrollUp; }
-        bind "k" "s"    { ScrollDown; }
-        bind "e" "u"    { HalfPageScrollUp; }
-        bind "d" "o"    { HalfPageScrollDown; }
+        bind "i" "e"    { ScrollUp; }
+        bind "k" "d"    { ScrollDown; }
+        bind "w" "u"    { HalfPageScrollUp; }
+        bind "s" "o"    { HalfPageScrollDown; }
         bind "PageUp"   { PageScrollUp; }
         bind "PageDown" { PageScrollDown; }
         bind "Shift u"  { ScrollToTop; }
