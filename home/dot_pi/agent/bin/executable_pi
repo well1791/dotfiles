@@ -1,0 +1,2 @@
+#!/bin/sh
+exec /home/well/.local/share/mise/installs/node/26.1.0/bin/node /home/well/.bun/bin/pi "$@"
