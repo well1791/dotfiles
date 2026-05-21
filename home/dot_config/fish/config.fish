@@ -16,6 +16,9 @@ end
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
 
+# |-- PI (must come after BUN to take precedence)
+set --export PATH ~/.pi/agent/bin $PATH
+
 # |-- TV
 if status is-interactive
     tv init fish | source

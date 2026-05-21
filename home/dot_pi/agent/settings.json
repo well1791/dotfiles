@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.75.3",
+  "lastChangelogVersion": "0.75.4",
   "defaultProvider": "github-copilot",
   "defaultModel": "claude-sonnet-4.5",
   "defaultThinkingLevel": "medium",
@@ -10,7 +10,11 @@
     "npm:pi-subagents",
     "npm:pi-intercom",
     "npm:pi-mcp-adapter",
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    "npm:pi-btw"
+  ],
+  "npmCommand": [
+    "bun"
   ],
   "hideThinkingBlock": false
 }

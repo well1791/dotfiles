@@ -42,7 +42,13 @@ During the initial setup, the following tools are automatically installed:
 - Installed to `~/.bun/bin/bun`
 - Update: `bun upgrade`
 
-### 7. **Essential CLI Tools** - Modern command-line utilities
+### 7. **[pi](https://pi.dev)** - Terminal coding agent
+- Minimal terminal coding harness with AI-powered assistance
+- Installed via bun: `~/.bun/bin/pi`
+- Package: `@earendil-works/pi-coding-agent`
+- Update: `bun install -g @earendil-works/pi-coding-agent`
+
+### 8. **Essential CLI Tools** - Modern command-line utilities
 Installed via system package manager (pacman/apt/dnf):
 - **[Helix](https://helix-editor.com/)** - Modern modal text editor
 - **[ripgrep](https://github.com/BurntSushi/ripgrep)** - Fast grep alternative (`rg`)
@@ -71,6 +77,7 @@ This single command updates:
 - ✅ Nix channels and packages
 - ✅ devenv
 - ✅ Bun (if installed)
+- ✅ pi coding agent (if installed via bun)
 
 The script automatically detects your package manager and updates everything accordingly.
 
