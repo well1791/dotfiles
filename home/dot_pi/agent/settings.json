@@ -11,7 +11,8 @@
     "npm:pi-intercom",
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
-    "npm:pi-btw"
+    "npm:pi-btw",
+    "npm:@mrclrchtr/supi-extras"
   ],
   "npmCommand": [
     "bun"
