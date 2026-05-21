@@ -12,7 +12,8 @@
     "npm:pi-mcp-adapter",
     "npm:pi-web-access",
     "npm:pi-btw",
-    "npm:@mrclrchtr/supi-extras"
+    "npm:@mrclrchtr/supi-extras",
+    "npm:gentle-engram@0.1.7"
   ],
   "npmCommand": [
     "bun"

@@ -126,7 +126,78 @@ else
 fi
 
 # ============================================================================
-# 7. pi coding agent (if installed via bun)
+# 7. engram (AI task manager)
+# ============================================================================
+if command -v engram >/dev/null 2>&1; then
+    print_status "Updating engram..."
+    
+    # Detect architecture
+    ARCH=$(uname -m)
+    case "$ARCH" in
+        x86_64)
+            ARCH_NAME="amd64"
+            ;;
+        aarch64|arm64)
+            ARCH_NAME="arm64"
+            ;;
+        *)
+            print_warning "Unsupported architecture for engram: $ARCH"
+            ARCH_NAME=""
+            ;;
+    esac
+    
+    if [ -n "$ARCH_NAME" ]; then
+        # Fetch latest version
+        if command -v curl >/dev/null 2>&1; then
+            LATEST_VERSION=$(curl -s https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+        elif command -v wget >/dev/null 2>&1; then
+            LATEST_VERSION=$(wget -qO- https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+        else
+            print_warning "curl or wget required to update engram"
+            LATEST_VERSION=""
+        fi
+        
+        if [ -n "$LATEST_VERSION" ]; then
+            VERSION_NUM=$(echo "$LATEST_VERSION" | sed 's/^v//')
+            DOWNLOAD_URL="https://github.com/Gentleman-Programming/engram/releases/download/${LATEST_VERSION}/engram_${VERSION_NUM}_linux_${ARCH_NAME}.tar.gz"
+            
+            # Create temporary directory
+            TMP_DIR=$(mktemp -d)
+            trap "rm -rf $TMP_DIR" EXIT INT TERM
+            
+            # Download and extract
+            if command -v curl >/dev/null 2>&1; then
+                curl -L -o "$TMP_DIR/engram.tar.gz" "$DOWNLOAD_URL" 2>/dev/null
+            else
+                wget -O "$TMP_DIR/engram.tar.gz" "$DOWNLOAD_URL" 2>/dev/null
+            fi
+            
+            if [ -f "$TMP_DIR/engram.tar.gz" ]; then
+                cd "$TMP_DIR"
+                tar -xzf engram.tar.gz 2>/dev/null
+                
+                if [ -f "engram" ]; then
+                    mv engram "$HOME/.local/bin/engram"
+                    chmod +x "$HOME/.local/bin/engram"
+                    print_status "✓ engram updated to $LATEST_VERSION"
+                else
+                    print_warning "Could not extract engram binary"
+                    FAILED=$((FAILED + 1))
+                fi
+            else
+                print_warning "Could not download engram"
+                FAILED=$((FAILED + 1))
+            fi
+        else
+            print_warning "Could not fetch latest engram version"
+        fi
+    fi
+else
+    print_warning "engram not found, skipping"
+fi
+
+# ============================================================================
+# 8. pi coding agent (if installed via bun)
 # ============================================================================
 if command -v pi >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
     # Check if pi is installed via bun (not a standalone binary)
