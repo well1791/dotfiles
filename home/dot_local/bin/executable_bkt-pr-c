@@ -1,0 +1,192 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# bkt-pr-c - Bitbucket PR create with automatic description generation
+# Part of the pr-workflows package
+
+show_usage() {
+    cat <<EOF
+Usage: bkt-pr-c TARGET_BRANCH [OPTIONS]
+
+Create a Bitbucket PR with automatically generated description.
+
+Arguments:
+  TARGET_BRANCH    Required. The base/target branch for the PR.
+                   Example: dev, main, staging
+
+The script automatically:
+  - Detects current branch as source
+  - Generates PR description using pr-describe
+  - Extracts title from first commit message
+  - Adds --close-source and --with-default-reviewers flags
+  - Creates PR without draft status
+
+Options:
+  --title TITLE      Override auto-detected title
+  --description TEXT Override auto-generated description (skips pr-describe)
+  --help             Show this help message
+
+Exit Codes:
+  0    Success - PR created
+  1    Validation or execution error
+  2    Usage error - missing or invalid arguments
+
+Examples:
+  # Create PR targeting dev branch
+  bkt-pr-c dev
+
+  # Create PR targeting main branch
+  bkt-pr-c main
+
+  # Override title
+  bkt-pr-c dev --title "Custom PR Title"
+
+  # Provide custom description (skip pr-describe)
+  bkt-pr-c dev --description "Custom description"
+
+Requirements:
+  - bkt CLI (Bitbucket command-line tool)
+  - pr-describe command (for automatic description generation)
+  - Git repository with commits ahead of target branch
+
+EOF
+}
+
+# Parse arguments
+if [[ $# -eq 0 ]]; then
+    echo "Error: TARGET_BRANCH argument required" >&2
+    echo "" >&2
+    show_usage >&2
+    exit 2
+fi
+
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+    show_usage
+    exit 0
+fi
+
+# First argument is the target branch
+TARGET_BRANCH="$1"
+shift
+
+# Optional overrides
+TITLE=""
+DESCRIPTION=""
+
+# Parse remaining options
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --title)
+            TITLE="$2"
+            shift 2
+            ;;
+        --description)
+            DESCRIPTION="$2"
+            shift 2
+            ;;
+        --help|-h)
+            show_usage
+            exit 0
+            ;;
+        *)
+            echo "Unknown option: $1" >&2
+            show_usage >&2
+            exit 1
+            ;;
+    esac
+done
+
+# Validate we're in a git repo
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Error: Not in a git repository" >&2
+    exit 1
+fi
+
+# Check if bkt is available
+if ! command -v bkt &> /dev/null; then
+    echo "Error: bkt command not found. Please install it first." >&2
+    exit 1
+fi
+
+# Get current branch
+CURRENT_BRANCH=$(git branch --show-current)
+if [[ -z "$CURRENT_BRANCH" ]]; then
+    echo "Error: Not on a branch (detached HEAD?)" >&2
+    exit 1
+fi
+
+echo "Source branch: $CURRENT_BRANCH" >&2
+echo "Target branch: $TARGET_BRANCH" >&2
+
+# Get title from first non-merged commit if not provided
+if [[ -z "$TITLE" ]]; then
+    # Find commits on current branch not in target
+    TITLE=$(git log --pretty=format:"%s" "origin/${TARGET_BRANCH}..HEAD" | tail -n 1)
+    
+    if [[ -z "$TITLE" ]]; then
+        echo "Error: Could not auto-detect title. No commits ahead of origin/${TARGET_BRANCH}" >&2
+        echo "Hint: Use --title to specify manually" >&2
+        exit 1
+    fi
+    
+    echo "Auto-detected title: $TITLE" >&2
+fi
+
+# Generate description using pr-describe if not provided
+if [[ -z "$DESCRIPTION" ]]; then
+    echo "" >&2
+    echo "Generating PR description using pr-describe..." >&2
+    
+    # Check if pr-describe command is available
+    if ! command -v pr-describe &> /dev/null; then
+        echo "Error: pr-describe command not found" >&2
+        echo "" >&2
+        echo "Please either:" >&2
+        echo "  1. Run 'chezmoi apply' to install pr-describe" >&2
+        echo "  2. Provide description with --description flag" >&2
+        exit 1
+    fi
+    
+    # Invoke pr-describe to generate description
+    # Capture stderr separately to show progress, stdout has the file path
+    DESCRIPTION_FILE=$(pr-describe "origin/${TARGET_BRANCH}" 2>&1 | tee >(grep -v "^/" >&2) | grep "^/")
+    
+    if [[ $? -ne 0 || -z "$DESCRIPTION_FILE" || ! -f "$DESCRIPTION_FILE" ]]; then
+        echo "Error: Failed to generate PR description" >&2
+        echo "" >&2
+        echo "Please either:" >&2
+        echo "  1. Fix the issue above and try again" >&2
+        echo "  2. Provide description with --description flag" >&2
+        exit 1
+    fi
+    
+    # Read description from generated file
+    DESCRIPTION=$(cat "$DESCRIPTION_FILE")
+    
+    if [[ -z "$DESCRIPTION" ]]; then
+        echo "Error: Generated description is empty" >&2
+        exit 1
+    fi
+    
+    echo "Description generated successfully ($(echo "$DESCRIPTION" | wc -l) lines)" >&2
+fi
+
+# Build the bkt pr create command
+CMD=(
+    bkt pr create
+    --source "$CURRENT_BRANCH"
+    --target "$TARGET_BRANCH"
+    --close-source
+    --with-default-reviewers
+    --title "$TITLE"
+    --description "$DESCRIPTION"
+)
+
+# Show the command being executed (for debugging)
+echo "" >&2
+echo "Creating PR..." >&2
+echo "Command: bkt pr create --source \"$CURRENT_BRANCH\" --target \"$TARGET_BRANCH\" --close-source --with-default-reviewers --title \"$TITLE\" --description <generated>" >&2
+echo "" >&2
+
+# Execute the command
+"${CMD[@]}"
