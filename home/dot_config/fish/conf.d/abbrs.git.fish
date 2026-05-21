@@ -61,7 +61,7 @@ abbr -a -- grbd 'git rebase origin/dev'
 abbr -a -- grbm 'git rebase origin/dev'
 
 # git reset
-abbr -a gre --set-cursor 'git reset --hard "%" && git clean -fd'
+abbr -a -- gre 'git reset'
 
 # git log
 set -g _git_log_fuller_format '%C(bold yellow)commit %h%C(auto)%d%n%C(bold)Author: %C(blue)%an <%ae >%C(reset)%C(cyan)%ai (%ar)%n%C(bold)Commit: %C(blue)%cn <%ce >%C(reset)%C(cyan)%ci (%cr)%C(reset)%n%+B'

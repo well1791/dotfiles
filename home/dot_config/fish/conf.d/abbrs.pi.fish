@@ -1,4 +1,5 @@
-abbr -a -- p 'pi -r'
+abbr -a -- pic 'pi -c'
+abbr -a -- pir 'pi -r'
 
 # |-- Question to big-pickle
 # | usage:
