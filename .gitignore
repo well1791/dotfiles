@@ -13,3 +13,4 @@ home/dot_config/zellij/plugins/*.wasm
 
 # Agent output
 plan.md
+docs/superpowers/
