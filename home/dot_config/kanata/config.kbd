@@ -56,13 +56,13 @@
   os_alt        (one-shot-press $one_shot_timeout lalt)
   os_sup        (one-shot-press $one_shot_timeout lmet)
   ;;----------------------------------------------------------------------
+  os_meh        (one-shot-press $one_shot_timeout C-A-lsft)
   os_ctl_sft    (one-shot-press $one_shot_timeout C-lsft)
   os_alt_sft    (one-shot-press $one_shot_timeout A-lsft)
   os_ctl_alt    (one-shot-press $one_shot_timeout C-lalt)
   os_sup_sft    (one-shot-press $one_shot_timeout M-lsft)
   os_sup_ctl    (one-shot-press $one_shot_timeout M-lctl)
   os_sup_alt    (one-shot-press $one_shot_timeout M-lalt)
-  ;;os_meh      (one-shot-press $one_shot_timeout C-A-lsft)
 
   ;; TAP HOLD
   esc_sft           (tap-hold $tap_timeout $hold_timeout esc lsft)
@@ -182,56 +182,6 @@
   ;;                  |f|*|*|j|
   (ch_sil ch_sir) @sw_no_mods
 
-  ;;-----------------------------------------------------------------------
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*|*| |     --     | |*|*| |
-  ;;(ch_hrl ch_hml) ???                    (ch_hmr ch_hrr) ???
-
-  ;;                  | |*|*| |     --     | |*|*| |
-  ;;                  | | | | |     --     | | | | |
-  ;;(ch_trl ch_tml) ???                    (ch_tmr ch_trr) ???
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | | |*|*|     --     |*|*| | |
-  ;;(ch_hml ch_hil) ???                    (ch_hir ch_hmr) ???
-
-  ;;                  | | |*|*|     --     |*|*| | |
-  ;;                  | | | | |     --     | | | | |
-  ;;(ch_tml ch_til) ???                    (ch_tir ch_tmr) ???
-
-  ;;                  | | | | |     --     | | | | |
-  ;;                  | |*| |*|     --     |*| |*| |
-  ;;(ch_hrl ch_hil) ???                    (ch_hir ch_hrr) ???
-
-  ;;                  | |*| |*|     --     |*| |*| |
-  ;;                  | | | | |     --     | | | | |
-  ;;(ch_trl ch_til) ???                    (ch_tir ch_trr) ???
-
-  ;;                  | |*| | |     --     | | |*| |
-  ;;                  | | | |*|     --     |*| | | |
-  ;;(ch_trl ch_hil) ???                    (ch_hir ch_trr) ???
-
-  ;;                  | | | |*|     --     |*| | | |
-  ;;                  | |*| | |     --     | | |*| |
-  ;;(ch_hrl ch_til) ???                    (ch_tir ch_hrr) ???
-
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | | | |*|     --     |*| | | |
-  ;;(ch_tml ch_hil) ???                    (ch_hir ch_tmr) ???
-
-  ;;                  | | |*| |     --     | |*| | |
-  ;;                  | |*| | |     --     | | |*| |
-  ;;(ch_hrl ch_tml) ???                    (ch_tmr ch_hrr) ???
-
-  ;;----------------------------------------------------------------------
-  ;;                  | | | | |     --     | | | | |
-  ;;                  |*| | |*|     --     |*| | |*|
-  ;;(ch_hpl ch_hil) ???                    (ch_hir ch_hpr) ???
-
-  ;;                  |*| | | |     --     | | | |*|
-  ;;                  | | | |*|     --     |*| | | |
-  ;;(ch_tpl ch_hil) ???                    (ch_hir ch_tpr) ???
-
   ;;----------------------------------------------------------------------
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*|*|     --     |*|*|*| |
@@ -290,7 +240,7 @@
   ;;                   | | | | |    --     | | | | |
   ;;                   | |*|*| |    --     | |*|*| |
   ;;                       | |*|    --     |*| |
-  ;;(ch_bil ch_hml ch_hrl) ???             (ch_bir ch_hmr ch_hrr) ???
+  (ch_bil ch_hml ch_hrl) @os_meh           (ch_bir ch_hmr ch_hrr) @os_meh
 
   ;;                   | | | | |    --     | | | | |
   ;;                   | |*| | |    --     | | |*| |
