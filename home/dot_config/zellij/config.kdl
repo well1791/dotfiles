@@ -175,10 +175,10 @@ keybinds clear-defaults=true {
         }
 
         // |-- FOCUS
-        bind "Alt j" { MoveFocus "Left"; }
-        bind "Alt l" { MoveFocus "Right"; }
-        bind "Alt i" { MoveFocus "Up"; }
-        bind "Alt k" { MoveFocus "Down"; }
+        bind "Alt Shift j" { MoveFocus "Left"; }
+        bind "Alt Shift l" { MoveFocus "Right"; }
+        bind "Alt Shift i" { MoveFocus "Up"; }
+        bind "Alt Shift k" { MoveFocus "Down"; }
         bind "Alt 1" { GoToTab 1; SwitchToMode "Normal"; }
         bind "Alt 2" { GoToTab 2; SwitchToMode "Normal"; }
         bind "Alt 3" { GoToTab 3; SwitchToMode "Normal"; }
@@ -190,10 +190,10 @@ keybinds clear-defaults=true {
         bind "Alt 9" { GoToTab 9; SwitchToMode "Normal"; }
 
         // |-- MOVE
-        bind "Alt Ctrl J" { MovePane "Left"; }
-        bind "Alt Ctrl L" { MovePane "Right"; }
-        bind "Alt Ctrl I" { MovePane "Up"; }
-        bind "Alt Ctrl K" { MovePane "Down"; }
+        bind "Alt Ctrl j" { MovePane "Left"; }
+        bind "Alt Ctrl l" { MovePane "Right"; }
+        bind "Alt Ctrl i" { MovePane "Up"; }
+        bind "Alt Ctrl k" { MovePane "Down"; }
         // bind "Alt Ctrl U" { MoveTab "Left"; }
         // bind "Alt Ctrl O" { MoveTab "Right"; }
 
@@ -224,6 +224,7 @@ keybinds clear-defaults=true {
             };
             SwitchToMode "Normal"
         }
+        bind "Alt x" { Detach; }
 
         // |-- TOGGLES
         bind "Alt e" { ToggleFloatingPanes; }
