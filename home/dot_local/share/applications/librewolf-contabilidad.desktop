@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=LibreWolf - Contabilidad
+GenericName=Web Browser (Contabilidad Profile)
+Comment=Browse the web with LibreWolf contabilidad profile
+Icon=librewolf
+Exec=/home/well/.local/bin/librewolf-profile-launch.sh contabilidad
+Categories=Network;WebBrowser;Office;
+Keywords=web;browser;internet;librewolf;contabilidad;accounting;
+Terminal=false
+StartupNotify=true
+StartupWMClass=librewolf

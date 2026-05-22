@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=LibreWolf - Personal
+GenericName=Web Browser (Personal Profile)
+Comment=Browse the web with LibreWolf personal profile
+Icon=librewolf
+Exec=/home/well/.local/bin/librewolf-profile-launch.sh well
+Categories=Network;WebBrowser;
+Keywords=web;browser;internet;librewolf;personal;
+Terminal=false
+StartupNotify=true
+StartupWMClass=librewolf

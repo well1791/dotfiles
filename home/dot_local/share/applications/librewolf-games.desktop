@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=LibreWolf - Games
+GenericName=Web Browser (Games Profile)
+Comment=Browse the web with LibreWolf games profile
+Icon=librewolf
+Exec=/home/well/.local/bin/librewolf-profile-launch.sh games
+Categories=Network;WebBrowser;Game;
+Keywords=web;browser;internet;librewolf;games;gaming;
+Terminal=false
+StartupNotify=true
+StartupWMClass=librewolf
