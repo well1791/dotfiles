@@ -23,3 +23,6 @@ set --export PATH ~/.pi/agent/bin $PATH
 if status is-interactive
     tv init fish | source
 end
+
+# atlcli
+fish_add_path /home/well/.atlcli/bin
