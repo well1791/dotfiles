@@ -1,0 +1,56 @@
+#!/bin/sh
+# Install Rust via rustup
+# https://rustup.rs
+
+set -e
+
+# Check if rustup is already installed
+if command -v rustup >/dev/null 2>&1; then
+    echo "✓ rustup already installed ($(rustup --version 2>&1 | head -1))"
+    exit 0
+fi
+
+# Check if rust/cargo is installed (but not rustup)
+if command -v cargo >/dev/null 2>&1 && ! command -v rustup >/dev/null 2>&1; then
+    echo "⚠ Rust is installed but not via rustup"
+    echo "  Consider uninstalling system rust and using rustup instead"
+    echo "  Skipping rustup installation to avoid conflicts"
+    exit 0
+fi
+
+echo "Installing Rust via rustup..."
+
+# Check for required tools
+if ! command -v curl >/dev/null 2>&1; then
+    echo "⚠ curl is required but not installed"
+    echo "  Please install curl first: sudo pacman -S curl"
+    exit 1
+fi
+
+# Download and run rustup installer
+# -y flag: non-interactive, default installation
+# Installs to ~/.cargo and ~/.rustup
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+
+# Verify installation
+if [ -f "$HOME/.cargo/env" ]; then
+    # Source the cargo environment for this script
+    . "$HOME/.cargo/env"
+    
+    if command -v rustup >/dev/null 2>&1; then
+        echo ""
+        echo "✓ Rust installed successfully"
+        echo "  rustup: $(rustup --version 2>&1 | head -1)"
+        echo "  rustc: $(rustc --version 2>&1 | head -1)"
+        echo "  cargo: $(cargo --version 2>&1 | head -1)"
+        echo ""
+        echo "Note: Restart your shell or run: source ~/.cargo/env"
+    else
+        echo "⚠ Installation completed but rustup command not found"
+        echo "  You may need to add ~/.cargo/bin to your PATH"
+        exit 1
+    fi
+else
+    echo "⚠ Installation failed: ~/.cargo/env not found"
+    exit 1
+fi

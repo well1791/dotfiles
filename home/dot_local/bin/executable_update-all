@@ -92,7 +92,17 @@ else
 fi
 
 # ============================================================================
-# 4. Nix packages
+# 4. Rust (rustup)
+# ============================================================================
+if command -v rustup >/dev/null 2>&1; then
+    print_status "Updating Rust toolchain..."
+    rustup update || FAILED=$((FAILED + 1))
+else
+    print_warning "rustup not found, skipping"
+fi
+
+# ============================================================================
+# 5. Nix packages
 # ============================================================================
 if command -v nix >/dev/null 2>&1; then
     print_status "Updating Nix channels..."
@@ -105,7 +115,7 @@ else
 fi
 
 # ============================================================================
-# 5. devenv
+# 6. devenv
 # ============================================================================
 if command -v devenv >/dev/null 2>&1; then
     print_status "Updating devenv..."
@@ -116,7 +126,7 @@ else
 fi
 
 # ============================================================================
-# 6. Bun (if installed)
+# 7. Bun (if installed)
 # ============================================================================
 if command -v bun >/dev/null 2>&1; then
     print_status "Updating Bun..."
@@ -126,7 +136,7 @@ else
 fi
 
 # ============================================================================
-# 7. engram (AI task manager)
+# 8. engram (AI task manager)
 # ============================================================================
 if command -v engram >/dev/null 2>&1; then
     print_status "Updating engram..."
@@ -197,7 +207,7 @@ else
 fi
 
 # ============================================================================
-# 8. pi coding agent (if installed via bun)
+# 9. pi coding agent (if installed via bun)
 # ============================================================================
 if command -v pi >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
     # Check if pi is installed via bun (not a standalone binary)

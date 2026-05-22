@@ -16,6 +16,11 @@ end
 set --export BUN_INSTALL "$HOME/.bun"
 set --export PATH $BUN_INSTALL/bin $PATH
 
+# |-- RUST/CARGO
+if test -d ~/.cargo/bin
+    set --export PATH ~/.cargo/bin $PATH
+end
+
 # |-- PI (must come after BUN to take precedence)
 set --export PATH ~/.pi/agent/bin $PATH
 

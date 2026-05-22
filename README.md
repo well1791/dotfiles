@@ -32,28 +32,34 @@ During the initial setup, the following tools are automatically installed:
 - Installed to `~/.local/bin/uv` and `~/.local/bin/uvx`
 - Update: `uv self update`
 
-### 5. **[Podman](https://podman.io)** - Daemonless container engine
+### 5. **[Rust](https://www.rust-lang.org/)** - Systems programming language
+- Installed via [rustup](https://rustup.rs) (official Rust toolchain installer)
+- Includes: rustc (compiler), cargo (package manager), rustup (toolchain manager)
+- Installed to `~/.cargo/bin/`
+- Update: `rustup update`
+
+### 6. **[Podman](https://podman.io)** - Daemonless container engine
 - Docker-compatible, rootless container support
 - Installed via system package manager (pacman/apt/dnf)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
-### 6. **[Bun](https://bun.sh)** - Fast all-in-one JavaScript runtime
+### 7. **[Bun](https://bun.sh)** - Fast all-in-one JavaScript runtime
 - Drop-in replacement for Node.js, with built-in bundler, test runner, package manager
 - Installed to `~/.bun/bin/bun`
 - Update: `bun upgrade`
 
-### 7. **[engram](https://github.com/Gentleman-Programming/engram)** - AI task and workflow manager
+### 8. **[engram](https://github.com/Gentleman-Programming/engram)** - AI task and workflow manager
 - CLI tool for managing AI-powered tasks and workflows
 - Installed to `~/.local/bin/engram` (via GitHub binary)
 - Update: Run installation script again or use `update-all`
 
-### 8. **[pi](https://pi.dev)** - Terminal coding agent
+### 9. **[pi](https://pi.dev)** - Terminal coding agent
 - Minimal terminal coding harness with AI-powered assistance
 - Installed via bun: `~/.bun/bin/pi`
 - Package: `@earendil-works/pi-coding-agent`
 - Update: `bun install -g @earendil-works/pi-coding-agent`
 
-### 9. **Essential CLI Tools** - Modern command-line utilities
+### 10. **Essential CLI Tools** - Modern command-line utilities
 Installed via system package manager (pacman/apt/dnf):
 - **[Helix](https://helix-editor.com/)** - Modern modal text editor
 - **[ripgrep](https://github.com/BurntSushi/ripgrep)** - Fast grep alternative (`rg`)
@@ -63,6 +69,7 @@ Installed via system package manager (pacman/apt/dnf):
 - **[eza](https://eza.rocks/)** - Modern ls replacement
 - **[glow](https://github.com/charmbracelet/glow)** - Terminal markdown reader with TUI
 - **[serpl](https://github.com/yassinebridi/serpl)** - TUI search and replace tool
+- **[just](https://github.com/casey/just)** - Command runner (like make, but better)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
@@ -76,9 +83,10 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow, serpl)
+- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just)
 - ✅ mise and mise-managed runtimes (go, node, etc.)
 - ✅ uv (Python package manager)
+- ✅ Rust (rustup update)
 - ✅ Nix channels and packages
 - ✅ devenv
 - ✅ Bun (if installed)
