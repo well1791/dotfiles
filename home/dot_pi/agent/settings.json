@@ -13,7 +13,8 @@
     "npm:pi-web-access",
     "npm:pi-btw",
     "npm:@mrclrchtr/supi-extras",
-    "npm:gentle-engram@0.1.7"
+    "npm:gentle-engram@0.1.7",
+    "npm:pi-confluence"
   ],
   "npmCommand": [
     "bun"
