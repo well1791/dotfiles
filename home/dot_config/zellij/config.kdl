@@ -204,7 +204,13 @@ keybinds clear-defaults=true {
         // |-- NEW
         bind "Alt r" { NewPane "Right"; SwitchToMode "Normal"; }
         bind "Alt d" { NewPane "Down"; SwitchToMode "Normal"; }
-        bind "Ctrl Shift t" { NewTab; SwitchToMode "Normal"; }
+        // bind "Ctrl Shift t" { NewTab; SwitchToMode "Normal"; }
+        bind "Ctrl Shift t" {
+            MessagePlugin "file:~/.config/zellij/plugins/zellij-new-tab-next-to-current.wasm" {
+                name "new-tab-right"
+                launch_new false
+            }
+        }
 
         // |-- TAB NAVIGATION
         bind "Ctrl PageUp" { GoToPreviousTab; SwitchToMode "Normal"; }
@@ -248,6 +254,11 @@ keybinds clear-defaults=true {
     shared_except "tab" "locked" {
         bind "Alt Ctrl t" { SwitchToMode "Tab"; }
     }
+}
+
+// Pre-load the plugin at startup (runs in background, no visible pane)
+load_plugins {
+    "file:~/.config/zellij/plugins/zellij-new-tab-next-to-current.wasm"
 }
 
 plugins {
