@@ -15,9 +15,6 @@ abbr -a -- gaa 'git add .'
 abbr -a -- gdi 'git diff --no-ext-diff'
 abbr -a -- gdis 'git diff --no-ext-diff --cached'
 
-# git edit
-abbr -a -- ged 'git diff --name-only HEAD | xargs helix'
-
 # git branch
 abbr -a -- gbr 'git branch'
 abbr -a -- gbra 'git branch --all'
