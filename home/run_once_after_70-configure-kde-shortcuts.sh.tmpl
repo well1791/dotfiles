@@ -1,0 +1,120 @@
+#!/bin/bash
+# Configure KDE global shortcuts for application focus/launch
+# Runs once after chezmoi apply
+
+set -e
+
+echo "==> KDE Global Shortcuts Setup for Application Launchers"
+echo ""
+echo "Prerequisites check:"
+
+# Check prerequisites
+if ! command -v kdotool &> /dev/null; then
+    echo "❌ ERROR: kdotool not found. Install with: paru -S kdotool" >&2
+    exit 1
+fi
+
+if [ ! -f "$HOME/.local/bin/run-or-cycle.sh" ]; then
+    echo "❌ ERROR: run-or-cycle.sh not found at ~/.local/bin/run-or-cycle.sh" >&2
+    exit 1
+fi
+
+if [ ! -f "$HOME/.local/bin/librewolf-profile-launch.sh" ]; then
+    echo "❌ ERROR: librewolf-profile-launch.sh not found at ~/.local/bin/librewolf-profile-launch.sh" >&2
+    exit 1
+fi
+
+echo "✅ kdotool found: $(kdotool --version | head -1)"
+echo "✅ run-or-cycle.sh installed"
+echo "✅ librewolf-profile-launch.sh installed"
+echo ""
+
+# Verify LibreWolf profiles exist
+echo "Checking LibreWolf profiles:"
+PROFILES=(
+    "$HOME/.librewolf/o41o5ode.default-default|Personal|well"
+    "$HOME/.librewolf/mciafwfd.default|Work|work"
+    "$HOME/.librewolf/1sjfzdyz.games|Games|games"
+    "$HOME/.librewolf/iyky5wwk.contabilidad|Contabilidad|contabilidad"
+)
+
+for profile_entry in "${PROFILES[@]}"; do
+    IFS='|' read -r path name profile_name <<< "$profile_entry"
+    if [ -d "$path" ]; then
+        echo "✅ $name profile (name: $profile_name): $path"
+    else
+        echo "⚠️  WARNING: $name profile not found: $path"
+    fi
+done
+
+echo ""
+echo "=========================================="
+echo "⚠️  MANUAL CONFIGURATION REQUIRED ⚠️"
+echo "=========================================="
+echo ""
+echo "KDE global shortcuts must be registered manually in System Settings."
+echo "Follow these steps:"
+echo ""
+echo "1. Open System Settings → Keyboard → Shortcuts"
+echo "2. Click 'Add New' → 'Command or Script'"
+echo "3. Add each shortcut below (copy/paste the commands):"
+echo ""
+echo "────────────────────────────────────────"
+echo "Shortcut: Ctrl+Alt+Shift+T"
+echo "Name: Launch/Focus Microsoft Teams"
+echo "Command:"
+echo "  $HOME/.local/bin/run-or-cycle.sh teams-for-linux teams-for-linux"
+echo ""
+echo "────────────────────────────────────────"
+echo "Shortcut: Ctrl+Alt+Shift+Y"
+echo "Name: Launch/Focus YouTube Music"
+echo "Command:"
+echo "  $HOME/.local/bin/run-or-cycle.sh com.github.th_ch.youtube_music youtube-music"
+echo ""
+echo "────────────────────────────────────────"
+echo "Shortcut: Ctrl+Alt+Shift+D"
+echo "Name: Launch/Focus Dolphin"
+echo "Command:"
+echo "  $HOME/.local/bin/run-or-cycle.sh org.kde.dolphin dolphin"
+echo ""
+echo "────────────────────────────────────────"
+echo "Shortcut: Ctrl+Alt+Shift+O"
+echo "Name: Launch/Focus Ghostty"
+echo "Command:"
+echo "  $HOME/.local/bin/run-or-cycle.sh com.mitchellh.ghostty ghostty"
+echo ""
+echo "────────────────────────────────────────"
+echo "Shortcut: Ctrl+Alt+Shift+M"
+echo "Name: Launch/Focus LibreWolf (Personal)"
+echo "Command:"
+echo "  $HOME/.local/bin/librewolf-profile-launch.sh well"
+echo ""
+echo "────────────────────────────────────────"
+echo "Shortcut: Ctrl+Alt+Shift+W"
+echo "Name: Launch/Focus LibreWolf (Work)"
+echo "Command:"
+echo "  $HOME/.local/bin/librewolf-profile-launch.sh work"
+echo ""
+echo "────────────────────────────────────────"
+echo "Shortcut: Ctrl+Alt+Shift+G"
+echo "Name: Launch/Focus LibreWolf (Games)"
+echo "Command:"
+echo "  $HOME/.local/bin/librewolf-profile-launch.sh games"
+echo ""
+echo "────────────────────────────────────────"
+echo "Shortcut: Ctrl+Alt+Shift+C"
+echo "Name: Launch/Focus LibreWolf (Contabilidad)"
+echo "Command:"
+echo "  $HOME/.local/bin/librewolf-profile-launch.sh contabilidad"
+echo ""
+echo "=========================================="
+echo ""
+echo "4. Test each shortcut after adding"
+echo "5. If a shortcut doesn't work:"
+echo "   - Verify the application is installed"
+echo "   - Check window class with: kdotool getactivewindow | xargs kdotool getwindowclassname"
+echo "   - Check logs with: journalctl --user -xe"
+echo ""
+echo "✅ Setup script complete!"
+echo "📝 Save this output for reference when configuring System Settings"
+echo ""
