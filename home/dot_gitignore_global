@@ -54,3 +54,6 @@ pycache/
 .log
 npm-debug.log
 yarn-error.log*
+
+# Zellij
+.zellij-*
