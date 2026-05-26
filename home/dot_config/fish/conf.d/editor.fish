@@ -18,3 +18,5 @@ if not set -q EDITOR
     set -gx EDITOR vim
     set -gx VISUAL vim
 end
+
+set -gx SUDO_EDITOR $EDITOR

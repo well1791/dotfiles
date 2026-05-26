@@ -1,8 +1,7 @@
 # |-- DEFAULT
-set -g fish_greeting
-set -gx LESS "--no-init --RAW-CONTROL-CHARS --ignore-case --quit-if-one-screen --silent --tabs=4 --window=2"
-set -g XDG_CONFIG_HOME "$HOME/.config"
-set -g SUDO_EDITOR helix
+set --global fish_greeting
+set --global XDG_CONFIG_HOME "$HOME/.config"
+set --global --export LESS "--no-init --RAW-CONTROL-CHARS --ignore-case --quit-if-one-screen --silent --tabs=4 --window=2"
 
 fish_add_path -m ~/.local/bin
 
@@ -34,5 +33,5 @@ if status is-interactive
     atuin init fish | source
 end
 
-# atlcli
+# |-- atlcli
 fish_add_path /home/well/.atlcli/bin
