@@ -211,6 +211,13 @@ keybinds clear-defaults=true {
         }
 
         // |-- SESSION
+        bind "Alt w" {
+            LaunchOrFocusPlugin "session-manager" {
+                floating true
+                move_to_focused_tab true
+            };
+            SwitchToMode "Normal"
+        }
         bind "Alt x" { Detach; }
 
         // |-- TOGGLES
