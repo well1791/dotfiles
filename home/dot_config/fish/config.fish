@@ -29,5 +29,10 @@ if status is-interactive
     tv init fish | source
 end
 
+# |-- ATUIN (shell history)
+if status is-interactive
+    atuin init fish | source
+end
+
 # atlcli
 fish_add_path /home/well/.atlcli/bin

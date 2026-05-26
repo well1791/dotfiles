@@ -207,7 +207,29 @@ else
 fi
 
 # ============================================================================
-# 9. pi coding agent (if installed via bun)
+# 9. atuin (shell history)
+# ============================================================================
+if command -v atuin >/dev/null 2>&1; then
+    print_status "Updating atuin..."
+    atuin update || {
+        # If atuin update fails, try system package manager
+        if command -v pacman >/dev/null 2>&1; then
+            sudo pacman -S --noconfirm atuin || FAILED=$((FAILED + 1))
+        elif command -v apt-get >/dev/null 2>&1; then
+            sudo apt-get update && sudo apt-get install -y atuin || FAILED=$((FAILED + 1))
+        elif command -v dnf >/dev/null 2>&1; then
+            sudo dnf install -y atuin || FAILED=$((FAILED + 1))
+        else
+            print_warning "Could not update atuin"
+            FAILED=$((FAILED + 1))
+        fi
+    }
+else
+    print_warning "atuin not found, skipping"
+fi
+
+# ============================================================================
+# 10. pi coding agent (if installed via bun)
 # ============================================================================
 if command -v pi >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
     # Check if pi is installed via bun (not a standalone binary)

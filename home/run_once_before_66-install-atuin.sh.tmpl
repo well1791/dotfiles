@@ -1,0 +1,56 @@
+#!/bin/sh
+# Install atuin (magical shell history)
+# https://atuin.sh/
+
+set -e
+
+# Check if atuin is already installed
+if command -v atuin >/dev/null 2>&1; then
+    echo "✓ atuin already installed ($(atuin --version 2>&1 | head -1))"
+    exit 0
+fi
+
+echo "Installing atuin..."
+
+# Detect package manager and install
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    
+    case "$ID" in
+        arch|cachyos|manjaro|endeavouros)
+            echo "Detected Arch-based system, using pacman..."
+            sudo pacman -S --noconfirm --needed atuin
+            ;;
+        ubuntu|debian|linuxmint|pop)
+            echo "Detected Debian/Ubuntu-based system..."
+            echo "⚠ atuin not in default Ubuntu repos"
+            echo "  Installing via shell script..."
+            curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh -s -- --non-interactive
+            ;;
+        fedora|rhel|centos|rocky|almalinux)
+            echo "Detected Red Hat-based system, using dnf..."
+            sudo dnf install -y atuin || {
+                echo "⚠ atuin not in default repos, installing via shell script..."
+                curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh -s -- --non-interactive
+            }
+            ;;
+        *)
+            echo "Using shell script installer..."
+            curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh -s -- --non-interactive
+            ;;
+    esac
+else
+    echo "Cannot detect Linux distribution, using shell script installer..."
+    curl --proto '=https' --tlsv1.2 -LsSf https://setup.atuin.sh | sh -s -- --non-interactive
+fi
+
+# Verify installation
+echo ""
+if command -v atuin >/dev/null 2>&1; then
+    echo "✓ atuin installed successfully: $(atuin --version 2>&1 | head -1)"
+    echo ""
+    echo "Note: Fish shell integration will be added to your config.fish"
+else
+    echo "✗ atuin installation failed"
+    exit 1
+fi
