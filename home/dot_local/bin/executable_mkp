@@ -3,35 +3,39 @@
 set -e
 
 if [ $# -eq 0 ]; then
-    echo "Usage: mkp <path>"
+    echo "Usage: mkp <path> [<path> ...]"
     echo "  If path ends with /, creates directory tree"
     echo "  Otherwise, creates directory tree and empty file"
     echo ""
     echo "Examples:"
     echo "  mkp ~/.config/bin/          # Creates directory tree"
     echo "  mkp ~/.config/mcp/mcp.json  # Creates directory tree and file"
+    echo "  mkp ~/.config/file1 ./folder1/folder2/ ~/.config/folder1/folder2/file1.ext"
     exit 1
 fi
 
-path="$1"
-
-# Expand tilde
-case "$path" in
-    ~/*) path="$HOME/${path#~/}" ;;
-    ~) path="$HOME" ;;
-esac
-
-# Check if path ends with /
-case "$path" in
-    */)
-        # Directory only
-        mkdir -p "$path"
-        ;;
-    *)
-        # File: create parent directories and file
-        mkdir -p "$(dirname "$path")"
-        touch "$path"
-        ;;
-esac
-
-echo "Created: $path"
+# Process each argument
+for arg in "$@"; do
+    path="$arg"
+    
+    # Expand tilde
+    case "$path" in
+        ~/*) path="$HOME/${path#~/}" ;;
+        ~) path="$HOME" ;;
+    esac
+    
+    # Check if path ends with /
+    case "$path" in
+        */)
+            # Directory only
+            mkdir -p "$path"
+            ;;
+        *)
+            # File: create parent directories and file
+            mkdir -p "$(dirname "$path")"
+            touch "$path"
+            ;;
+    esac
+    
+    echo "Created: $path"
+done
