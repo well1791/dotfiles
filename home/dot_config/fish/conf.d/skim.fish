@@ -7,14 +7,14 @@ if not command -v sk >/dev/null 2>&1
 end
 
 # Default skim options
-set -gx SKIM_DEFAULT_OPTIONS "--height 40% --reverse --border"
+set -gx SKIM_DEFAULT_OPTIONS --height 40% --reverse --border
 
 # Skim command configuration (similar to FZF_DEFAULT_COMMAND)
 # Use fd if available, otherwise fall back to find
 if command -v fd >/dev/null 2>&1
-    set -gx SKIM_DEFAULT_COMMAND 'fd --type f --hidden --follow --exclude .git'
+    set -gx SKIM_DEFAULT_COMMAND fd --type f --hidden --follow --exclude .git
 else if command -v rg >/dev/null 2>&1
-    set -gx SKIM_DEFAULT_COMMAND 'rg --files --hidden --follow --glob "!.git/*"'
+    set -gx SKIM_DEFAULT_COMMAND rg --files --hidden --follow --glob "!.git/*"
 end
 
 # Key bindings for skim in fish
@@ -39,13 +39,6 @@ function __skim_find_file
     eval $cmd | sk -m $SKIM_DEFAULT_OPTIONS $SKIM_CTRL_T_OPTS --query "$skim_query" | while read -l result
         echo $result
     end
-end
-
-# Ctrl-R: Paste the selected command from history into the command line
-function __skim_history
-    history -z | sk --read0 --tiebreak=index $SKIM_DEFAULT_OPTIONS $SKIM_CTRL_R_OPTS --query=(commandline) | read -lz result
-    and commandline -- $result
-    commandline -f repaint
 end
 
 # Alt-C: cd into the selected directory
@@ -91,10 +84,7 @@ end
 if status is-interactive
     # Ctrl-T: Find file
     bind \ct '__skim_find_file | while read -l result; echo $result; end | commandline -i'
-    
-    # Ctrl-R: Search history
-    bind \cr __skim_history
-    
+
     # Alt-C: Change directory
     bind \ec __skim_cd
 end
@@ -104,7 +94,7 @@ end
 function __skim_complete
     set -l commandline (commandline -o)
     set -l cmd $commandline[1]
-    
+
     # Get completion candidates
     complete -C | sk --height 40% --reverse --border | read -l result
     and commandline -t -- $result
