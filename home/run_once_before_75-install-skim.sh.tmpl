@@ -1,0 +1,48 @@
+#!/bin/sh
+# Install skim (fuzzy finder in Rust)
+# https://github.com/skim-rs/skim
+
+set -e
+
+# Check if skim is already installed
+if command -v sk >/dev/null 2>&1; then
+    echo "✓ skim already installed ($(sk --version))"
+    exit 0
+fi
+
+echo "Installing skim..."
+
+# Check if cargo is available
+if ! command -v cargo >/dev/null 2>&1; then
+    echo "⚠ cargo is required to install skim"
+    echo "  Install Rust first: https://rustup.rs"
+    exit 1
+fi
+
+# Check rustc version and update if necessary
+# skim 4.7.0+ requires rustc 1.91+
+if command -v rustup >/dev/null 2>&1; then
+    RUSTC_VERSION=$(rustc --version | awk '{print $2}')
+    echo "Current rustc version: $RUSTC_VERSION"
+    
+    # Update to latest stable toolchain
+    echo "Updating Rust toolchain to ensure compatibility..."
+    rustup update stable
+    rustup default stable
+    
+    RUSTC_VERSION=$(rustc --version | awk '{print $2}')
+    echo "Updated rustc version: $RUSTC_VERSION"
+fi
+
+# Install skim via cargo
+# This installs to ~/.cargo/bin/sk
+cargo install skim
+
+# Verify installation
+if command -v sk >/dev/null 2>&1; then
+    echo "✓ skim installed successfully ($(sk --version))"
+else
+    echo "⚠ skim installed but not in PATH yet. Restart your shell or run:"
+    echo "  source ~/.cargo/env"
+    exit 1
+fi
