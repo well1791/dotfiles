@@ -1,9 +1,9 @@
 # Navi configuration
 # https://github.com/denisidoro/navi/blob/master/docs/configuration/README.md
 
-# Finder configuration (using skim as fzf alternative)
+# Finder configuration (using fzf - installed as dependency of navi)
 finder:
-  command: skim  # Use skim (already installed)
+  command: fzf
   # Override options for cheats selection
   overrides: --height 60% --preview-window right:50%
   # Override options for variable value selection
