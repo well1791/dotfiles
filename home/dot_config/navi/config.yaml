@@ -3,7 +3,7 @@
 
 # Finder configuration (using skim as fzf alternative)
 finder:
-  command: sk  # Use skim (already installed)
+  command: skim  # Use skim (already installed)
   # Override options for cheats selection
   overrides: --height 60% --preview-window right:50%
   # Override options for variable value selection
