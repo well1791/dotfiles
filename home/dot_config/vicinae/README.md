@@ -130,15 +130,22 @@ Install extensions via GUI:
 ## Troubleshooting
 
 ### Vicinae doesn't open
+**Note:** Vicinae auto-starts its server when you run `vicinae toggle`.
+You typically **don't need** to manually start the server.
+
 ```bash
 # Check if server is running
 pgrep -a vicinae
 
-# Start server manually
-vicinae server
+# If keybind doesn't work, try from terminal:
+vicinae toggle
 
-# View logs
-journalctl --user -u vicinae
+# Clean up stale socket/PID files if connection refused:
+rm -rf /run/user/$(id -u)/vicinae/
+vicinae toggle
+
+# Clear failed systemd units:
+systemctl --user reset-failed
 ```
 
 ### Keybind not working
