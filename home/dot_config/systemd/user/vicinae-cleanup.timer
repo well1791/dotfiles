@@ -1,6 +1,5 @@
 [Unit]
 Description=Run vicinae-cleanup hourly
-Documentation=~/.config/vicinae/README.md
 
 [Timer]
 OnCalendar=hourly
