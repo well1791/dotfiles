@@ -24,7 +24,7 @@ Navi is installed via the `run_once_before_90-install-navi.sh.tmpl` script.
 
 ### Current Configuration
 
-**Finder**: Uses `skim` (already installed)
+**Finder**: Uses `fzf` (installed as navi dependency)
 - Cheats selection: 60% height with preview
 - Variable selection: 40% height
 
