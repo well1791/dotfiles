@@ -1,0 +1,10 @@
+# Espanso packages to install
+# Format: package-name
+# Lines starting with # are ignored
+# Add one package per line
+
+# Auto-exported packages:
+lorem
+vim-digraphs
+
+# Add custom packages below:

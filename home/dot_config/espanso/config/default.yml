@@ -1,0 +1,68 @@
+# espanso default configuration
+# https://espanso.org/docs/configuration/
+
+# Backend configuration
+# 'inject' is recommended for Wayland, 'clipboard' for compatibility
+# Using clipboard for vim-digraphs Unicode character support
+# Note: This will add single characters to Klipper history (acceptable trade-off)
+backend: clipboard
+
+# Keyboard layout (required for Wayland with non-US layouts)
+# For US layout, this can be omitted or explicitly set
+keyboard_layout:
+  layout: "us"
+
+# Toggle key: quick way to enable/disable espanso
+# Options: CTRL, ALT, SHIFT, META (Windows/Command key), OFF
+# Example: toggle_key: ALT
+toggle_key: OFF
+
+# Enable/disable espanso on startup
+enable: true
+
+# Search trigger: character sequence to open the search bar
+# Set to empty string to disable
+search_trigger: "::"
+
+# Search shortcut: keyboard shortcut to open the search bar
+# Options: ALT+SPACE, CTRL+SPACE, etc.
+# Uncomment to enable:
+# search_shortcut: ALT+SPACE
+
+# Preserve clipboard content when using clipboard backend
+preserve_clipboard: true
+
+# Auto-restart espanso when configuration changes
+auto_restart: true
+
+# Show notifications for espanso events
+show_notifications: true
+
+# Undo backspace: how many characters to delete before expansion
+# Default is to delete the trigger
+undo_backspace: true
+
+# Word separators: characters that mark word boundaries
+# Note: Comma removed to support vim-digraphs package (triggers like ,SP)
+word_separators:
+  - " "
+  # - ","  # Disabled for vim-digraphs compatibility
+  - "."
+  - "!"
+  - "?"
+  - "\n"
+  - "\t"
+
+# Backspace limit: maximum number of backspaces for trigger deletion
+# Set to 0 for unlimited (default)
+backspace_limit: 3
+
+# Apply patch: handle some edge cases in text injection
+apply_patch: true
+
+# Pre-paste delay: milliseconds to wait before pasting (useful for slow apps)
+# pre_paste_delay: 100
+
+# Paste shortcut: which keyboard shortcut to use for pasting
+# Default: CTRL+V on Linux/Windows, CMD+V on macOS
+# paste_shortcut: CTRL+V

@@ -1,0 +1,49 @@
+#!/bin/sh
+# Install espanso packages from packages.txt
+# This runs whenever packages.txt changes
+
+set -e
+
+# Check if espanso is installed
+if ! command -v espanso >/dev/null 2>&1; then
+    echo "⚠ espanso not installed, skipping package installation"
+    exit 0
+fi
+
+PACKAGES_FILE="$HOME/.config/espanso/packages.txt"
+
+if [ ! -f "$PACKAGES_FILE" ]; then
+    echo "⚠ No packages.txt found at $PACKAGES_FILE"
+    exit 0
+fi
+
+# Read packages.txt and install each package
+echo "Installing espanso packages from packages.txt..."
+INSTALLED=0
+SKIPPED=0
+
+while IFS= read -r line; do
+    # Skip empty lines and comments
+    case "$line" in
+        ''|'#'*) continue ;;
+    esac
+    
+    # Extract package name (remove any trailing comments)
+    package=$(echo "$line" | cut -d'#' -f1 | xargs)
+    
+    if [ -n "$package" ]; then
+        echo "Installing: $package"
+        if espanso install "$package" --force; then
+            INSTALLED=$((INSTALLED + 1))
+        else
+            echo "⚠ Failed to install: $package"
+            SKIPPED=$((SKIPPED + 1))
+        fi
+    fi
+done < "$PACKAGES_FILE"
+
+echo ""
+echo "✓ Installed: $INSTALLED packages"
+if [ $SKIPPED -gt 0 ]; then
+    echo "⚠ Skipped/Failed: $SKIPPED packages"
+fi

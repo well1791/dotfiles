@@ -1,0 +1,71 @@
+#!/bin/sh
+# Install espanso (text expander)
+# https://espanso.org
+
+set -e
+
+# Check if espanso is already installed
+if command -v espanso >/dev/null 2>&1; then
+    echo "✓ espanso already installed ($(espanso --version))"
+    exit 0
+fi
+
+echo "Installing espanso..."
+
+# Detect display server (X11 or Wayland)
+DISPLAY_SERVER="${XDG_SESSION_TYPE:-x11}"
+echo "Detected display server: $DISPLAY_SERVER"
+
+# Check for AUR helpers (CachyOS is Arch-based)
+if command -v paru >/dev/null 2>&1; then
+    AUR_HELPER="paru"
+elif command -v yay >/dev/null 2>&1; then
+    AUR_HELPER="yay"
+else
+    echo "⚠ No AUR helper found (paru or yay required for CachyOS/Arch)"
+    echo "  Install paru first: sudo pacman -S paru"
+    echo ""
+    echo "Alternative: compile from source (requires base-devel, git, dbus, wl-clipboard, libxkbcommon, wxwidgets-gtk3)"
+    exit 1
+fi
+
+# Install appropriate package based on display server
+if [ "$DISPLAY_SERVER" = "wayland" ]; then
+    echo "Installing espanso-wayland from AUR..."
+    $AUR_HELPER -S --needed --noconfirm espanso-wayland
+else
+    echo "Installing espanso (X11) from AUR..."
+    $AUR_HELPER -S --needed --noconfirm espanso
+fi
+
+# Verify installation
+if ! command -v espanso >/dev/null 2>&1; then
+    echo "⚠ espanso installation failed"
+    exit 1
+fi
+
+echo "✓ espanso installed ($(espanso --version))"
+
+# Set required capabilities for Wayland
+if [ "$DISPLAY_SERVER" = "wayland" ]; then
+    echo "Setting required capabilities for Wayland..."
+    sudo setcap "cap_dac_override+p" $(which espanso)
+    echo "✓ Capabilities set"
+fi
+
+# Register espanso as a systemd service
+echo "Registering espanso systemd service..."
+espanso service register || {
+    echo "⚠ Service registration failed (may already be registered)"
+}
+
+echo ""
+echo "✓ espanso setup complete!"
+echo ""
+echo "To start espanso:"
+echo "  espanso start"
+echo ""
+echo "To edit configuration:"
+echo "  espanso edit"
+echo ""
+echo "Note: On Wayland, non-US keyboard layouts need explicit configuration in ~/.config/espanso/config/default.yml"

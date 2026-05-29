@@ -1,0 +1,84 @@
+#!/bin/sh
+# Helper script: Sync and install espanso packages
+#
+# Usage:
+#   espanso-syncstall              # Sync packages.txt with installed packages
+#   espanso-syncstall <package>    # Install package and update packages.txt
+#   espanso-syncstall <pkg1> <pkg2> ... # Install multiple packages
+
+set -e
+
+if ! command -v espanso >/dev/null 2>&1; then
+    echo "Error: espanso not installed" >&2
+    exit 1
+fi
+
+PACKAGES_FILE="$HOME/.config/espanso/packages.txt"
+
+# Function to export installed packages to packages.txt
+export_packages() {
+    echo "Exporting installed espanso packages to $PACKAGES_FILE"
+    echo ""
+
+    # Create header
+    cat > "$PACKAGES_FILE" << 'EOF'
+# Espanso packages to install
+# Format: package-name
+# Lines starting with # are ignored
+# Add one package per line
+
+# Auto-exported packages:
+EOF
+
+    # List installed packages and append to file
+    # espanso package list output format: "- package-name (vX.Y.Z)"
+    # We extract just the package name
+    espanso package list | grep '^-' | sed 's/^- \([^ ]*\).*/\1/' >> "$PACKAGES_FILE"
+
+    # Add footer
+    cat >> "$PACKAGES_FILE" << 'EOF'
+
+# Add custom packages below:
+EOF
+
+    echo "✓ Exported $(espanso package list | grep -c '^-' || echo 0) packages to $PACKAGES_FILE"
+    echo ""
+    echo "Review the file and commit it to your dotfiles:"
+    echo "  chezmoi add ~/.config/espanso/packages.txt"
+    echo "  chezmoi cd && git commit -m 'Update espanso packages'"
+}
+
+# If no arguments, just export
+if [ $# -eq 0 ]; then
+    export_packages
+    exit 0
+fi
+
+# If arguments provided, install packages and then export
+echo "Installing espanso packages..."
+echo ""
+
+INSTALLED=0
+FAILED=0
+
+for package in "$@"; do
+    echo "Installing: $package"
+    if espanso install "$package"; then
+        echo "✓ Successfully installed: $package"
+        INSTALLED=$((INSTALLED + 1))
+    else
+        echo "✗ Failed to install: $package" >&2
+        FAILED=$((FAILED + 1))
+    fi
+    echo ""
+done
+
+echo "---"
+echo "Installed: $INSTALLED package(s)"
+if [ $FAILED -gt 0 ]; then
+    echo "Failed: $FAILED package(s)"
+fi
+echo ""
+
+# Export to packages.txt
+export_packages

@@ -1,0 +1,80 @@
+# espanso base matches
+# https://espanso.org/docs/matches/basics/
+
+# Simple text expansions
+matches:
+  # Email shortcuts
+  - trigger: ":wmail"
+    replace: "wellsaint91@gmail.com"
+  - trigger: ":lmail"
+    replace: "lilyzam1993@gmail.com"
+
+  # Date and time
+  - trigger: ":date"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%Y-%m-%d"
+
+  - trigger: ":time"
+    replace: "{{mytime}}"
+    vars:
+      - name: mytime
+        type: date
+        params:
+          format: "%H:%M"
+
+  - trigger: ":now"
+    replace: "{{mynow}}"
+    vars:
+      - name: mynow
+        type: date
+        params:
+          format: "%Y-%m-%d %H:%M"
+
+  # Common phrases
+  - trigger: ":shrug"
+    replace: "¯\\_(ツ)_/¯"
+
+  # Code snippets
+  - trigger: ":lorem"
+    replace: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+
+# Cursor positioning
+  # - trigger: ":fn"
+  #   replace: "function $|$() {\n\t\n}"
+
+# Multi-line expansions
+  # - trigger: ":signature"
+  #   replace: |
+  #     Best regards,
+  #     Your Name
+  #     your.email@example.com
+
+
+# Example with forms (espanso will prompt for input)
+  # - trigger: ":greet"
+  #   replace: "Hello {{name}}, how are you?"
+  #   vars:
+  #     - name: "name"
+  #       type: "form"
+  #       params:
+  #         layout: "Hi, what's your name? [[name]]"
+
+# Shell command expansion example
+  - trigger: ":ip"
+    replace: "{{output}}"
+    vars:
+      - name: output
+        type: shell
+        params:
+          cmd: "curl -s https://api.ipify.org"
+
+# Clipboard content
+  - trigger: ":pst"
+    replace: "{{pst}}"
+    vars:
+      - name: clipboard
+        type: clipboard
