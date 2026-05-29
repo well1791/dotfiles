@@ -1,0 +1,19 @@
+#!/bin/sh
+# Install global menu support for GTK applications
+# Required for proper integration with KDE Plasma global menu
+
+set -e
+
+# Check if packages are already installed
+if pacman -Qi appmenu-gtk-module >/dev/null 2>&1 && \
+   pacman -Qi libdbusmenu-glib >/dev/null 2>&1; then
+    echo "✓ Global menu packages already installed"
+    exit 0
+fi
+
+echo "Installing global menu support..."
+sudo pacman -S --noconfirm --needed appmenu-gtk-module libdbusmenu-glib
+
+echo ""
+echo "✓ Global menu support installed"
+echo "  Restart affected GTK applications to see global menu integration"

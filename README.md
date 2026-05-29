@@ -76,6 +76,7 @@ Installed via system package manager (pacman/apt/dnf):
 - **[glow](https://github.com/charmbracelet/glow)** - Terminal markdown reader with TUI
 - **[serpl](https://github.com/yassinebridi/serpl)** - TUI search and replace tool
 - **[just](https://github.com/casey/just)** - Command runner (like make, but better)
+- **[tealdeer](https://tealdeer-rs.github.io/tealdeer/)** - Fast tldr client in Rust (`tldr`)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
@@ -89,7 +90,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just)
+- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just, tealdeer)
 - ✅ mise and mise-managed runtimes (go, node, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)
@@ -152,3 +153,90 @@ Your API keys are already configured and encrypted in `~/.config/fish/api-keys.f
   - Already configured: `BRAVE_API_KEY`
 
 **⚠️ Important:** Back up `~/.config/chezmoi/key.txt` securely! Without it, you cannot decrypt your API keys.
+
+## System Configuration (CachyOS Post-Install)
+
+Additional system-level configurations aligned with [CachyOS post-install recommendations](https://wiki.cachyos.org/configuration/post_install_setup/):
+
+### Security
+
+#### Firewall (UFW)
+
+Enabled with default deny incoming, allow outgoing policy.
+
+**What's Protected:**
+- ✅ localhost/127.0.0.1 is unaffected (local dev servers work normally)
+- ✅ All outgoing connections allowed (API calls, downloads, git, npm, cargo, etc.)
+- ✅ Docker/Podman container networking unaffected
+- ❌ Incoming connections from external network/internet are blocked
+
+**Common Commands:**
+
+```bash
+# Check firewall status
+sudo ufw status verbose
+sudo ufw status numbered  # Show rule numbers for deletion
+
+# Allow specific ports
+sudo ufw allow 22         # SSH
+sudo ufw allow 80         # HTTP
+sudo ufw allow 443        # HTTPS
+sudo ufw allow 8080       # Custom port
+
+# Allow port range
+sudo ufw allow 3000:9000/tcp
+
+# Allow from specific network (for dev servers accessed from phone/tablet)
+sudo ufw allow from 192.168.0.0/16 to any port 3000:9999 proto tcp
+
+# Delete a rule
+sudo ufw status numbered  # Find rule number
+sudo ufw delete <number>  # Delete by number
+
+# Disable/Enable firewall
+sudo ufw disable          # Stop firewall (temporary until reboot)
+sudo ufw enable           # Start firewall
+
+# Disable on boot (permanent)
+sudo systemctl disable ufw.service
+
+# Enable on boot
+sudo systemctl enable ufw.service
+
+# Reset all rules (nuclear option)
+sudo ufw reset
+
+# Completely remove UFW
+sudo ufw disable
+sudo systemctl disable ufw.service
+sudo pacman -Rs ufw
+```
+
+**Quick Reference:**
+
+| Action | Command |
+|--------|--------|
+| Check status | `sudo ufw status verbose` |
+| Stop firewall now | `sudo ufw disable` |
+| Start firewall now | `sudo ufw enable` |
+| Disable on boot | `sudo systemctl disable ufw.service` |
+| Enable on boot | `sudo systemctl enable ufw.service` |
+| Allow port | `sudo ufw allow <port>` |
+| Delete rule | `sudo ufw delete <rule-number>` |
+| Reset all rules | `sudo ufw reset` |
+
+### Desktop Integration
+- **Global Menu Support**: Installed for GTK applications
+  - Packages: `appmenu-gtk-module`, `libdbusmenu-glib`
+  - Enables KDE Plasma global menu for GTK apps
+  - Restart affected applications after installation
+
+### Network Optimization
+- **Wi-Fi Regulatory Domain**: Spain (ES)
+  - ⚠️ Manual configuration required (country-specific)
+  - See: `run_once_after_85-configure-wifi-regdom.sh` output for instructions
+  - Benefits: Unlock all Wi-Fi channels, enable full 5GHz/6GHz spectrum, optimize transmit power
+  - Verify: `iw reg get` (should show `country ES: DFS-ETSI`)
+
+### Documentation
+See `cachyos-postinstall-audit.md` for the complete audit comparing this setup with CachyOS recommendations.

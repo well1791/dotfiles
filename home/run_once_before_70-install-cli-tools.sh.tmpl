@@ -12,12 +12,12 @@
 # - Custom installation methods (nix, mise, uv, bun)
 # - Post-install configuration (podman rootless setup)
 #
-# Tools: helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just
+# Tools: helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just, tealdeer
 
 set -e
 
 # List of tools to install
-TOOLS="helix ripgrep yazi bat duf eza glow serpl just"
+TOOLS="helix ripgrep yazi bat duf eza glow serpl just tealdeer"
 
 # Check which tools are already installed
 MISSING=""
@@ -32,6 +32,11 @@ for tool in $TOOLS; do
         if ! command -v rg >/dev/null 2>&1; then
             MISSING="$MISSING $tool"
         fi
+    # Special case: tealdeer binary is 'tldr'
+    elif [ "$tool" = "tealdeer" ]; then
+        if ! command -v tldr >/dev/null 2>&1; then
+            MISSING="$MISSING $tool"
+        fi
     else
         if ! command -v $tool >/dev/null 2>&1; then
             MISSING="$MISSING $tool"
@@ -41,7 +46,7 @@ done
 
 # If all tools are installed, exit early
 if [ -z "$MISSING" ]; then
-    echo "✓ All CLI tools already installed (helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just)"
+    echo "✓ All CLI tools already installed (helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just, tealdeer)"
     exit 0
 fi
 
@@ -149,6 +154,12 @@ for tool in $TOOLS; do
             echo "✓ ripgrep: $(rg --version 2>&1 | head -1)"
         else
             echo "✗ ripgrep: not found"
+        fi
+    elif [ "$tool" = "tealdeer" ]; then
+        if command -v tldr >/dev/null 2>&1; then
+            echo "✓ tealdeer: $(tldr --version 2>&1 | head -1)"
+        else
+            echo "✗ tealdeer: not found"
         fi
     else
         if command -v $tool >/dev/null 2>&1; then
