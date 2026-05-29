@@ -4,7 +4,6 @@
 # Backend configuration
 # 'inject' is recommended for Wayland, 'clipboard' for compatibility
 # Using clipboard for vim-digraphs Unicode character support
-# Note: This will add single characters to Klipper history (acceptable trade-off)
 backend: clipboard
 
 # Keyboard layout (required for Wayland with non-US layouts)
@@ -22,12 +21,12 @@ enable: true
 
 # Search trigger: character sequence to open the search bar
 # Set to empty string to disable
-search_trigger: "::"
+search_trigger: ":::"
 
 # Search shortcut: keyboard shortcut to open the search bar
 # Options: ALT+SPACE, CTRL+SPACE, etc.
 # Uncomment to enable:
-# search_shortcut: ALT+SPACE
+search_shortcut: off
 
 # Preserve clipboard content when using clipboard backend
 preserve_clipboard: true
@@ -36,7 +35,7 @@ preserve_clipboard: true
 auto_restart: true
 
 # Show notifications for espanso events
-show_notifications: true
+show_notifications: false
 
 # Undo backspace: how many characters to delete before expansion
 # Default is to delete the trigger
