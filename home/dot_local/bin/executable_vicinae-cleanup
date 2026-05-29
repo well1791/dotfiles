@@ -1,0 +1,34 @@
+#!/bin/sh
+# Clean up short clipboard entries (likely from espanso)
+# Run this manually or add to cron/systemd timer
+
+VICINAE_DB="$HOME/.local/share/vicinae/clipboard.db"
+
+if [ ! -f "$VICINAE_DB" ]; then
+    echo "Vicinae clipboard database not found"
+    exit 1
+fi
+
+echo "Cleaning up short clipboard entries (≤3 characters)..."
+
+# Delete selections with data offers ≤ 3 characters
+sqlite3 "$VICINAE_DB" <<EOF
+DELETE FROM selection 
+WHERE id IN (
+    SELECT DISTINCT s.id 
+    FROM selection s 
+    JOIN data_offer d ON s.id = d.selection_id 
+    WHERE d.size <= 3 
+    AND s.pinned_at IS NULL
+);
+
+-- Clean up orphaned data offers
+DELETE FROM data_offer 
+WHERE selection_id NOT IN (SELECT id FROM selection);
+
+-- Vacuum to reclaim space
+VACUUM;
+EOF
+
+echo "✓ Cleanup complete"
+echo "Total entries: $(sqlite3 "$VICINAE_DB" "SELECT COUNT(*) FROM selection;")"

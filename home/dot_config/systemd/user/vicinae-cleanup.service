@@ -1,0 +1,7 @@
+[Unit]
+Description=Clean up short clipboard entries from Vicinae
+Documentation=~/.config/vicinae/README.md
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/vicinae-cleanup

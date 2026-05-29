@@ -153,13 +153,82 @@ systemctl --user reset-failed
 - Try different key combination
 - Ensure `vicinae toggle` command works from terminal first
 
-### Clipboard history not working
-Check clipboard server status in logs:
+## Clipboard Management
+
+### Replace Klipper with Vicinae
+
+Vicinae includes a powerful built-in clipboard manager. To use it instead of Klipper:
+
+**1. Disable Klipper:**
 ```bash
-vicinae server 2>&1 | grep clipboard
+# Stop Klipper if running
+kquitapp5 klipper
+
+# Disable from KDE session startup
+kwriteconfig5 --file ksmserverrc --group General --key excludeApps "klipper"
 ```
 
-Should show: `Activated clipboard server "data-control"`
+**2. Access Vicinae Clipboard:**
+- Open vicinae and type "clipboard" or "clip"
+- Or set it as a favorite in settings
+
+### Filtering Espanso Clipboard Noise
+
+**The Problem:**
+Espanso uses clipboard for text expansion, creating many short entries (single characters) that clutter clipboard history.
+
+**Current Limitation:**
+Vicinae doesn't have built-in filtering by:
+- Application name (source field is empty)
+- Content length
+- Custom patterns
+
+**Solution 1: Manual Cleanup**
+```bash
+# Run cleanup script (removes entries ≤3 characters)
+vicinae-cleanup
+```
+
+**Solution 2: Automatic Cleanup (Recommended)**
+```bash
+# Enable hourly cleanup
+systemctl --user enable --now vicinae-cleanup.timer
+
+# Check status
+systemctl --user status vicinae-cleanup.timer
+
+# Run manually
+systemctl --user start vicinae-cleanup.service
+```
+
+**Solution 3: Adjust Cleanup Threshold**
+Edit `~/.local/bin/vicinae-cleanup` and change:
+```bash
+WHERE d.size <= 3  # Change 3 to your preferred threshold
+```
+
+### Clipboard History Details
+
+- **Storage**: `~/.local/share/vicinae/clipboard.db` (SQLite)
+- **Display limit**: 1,000 entries (when no search)
+- **Auto-exclude**: Password manager content (KDE hints)
+- **Encryption**: Optional AES256-GCM (enable in settings)
+
+### Manual Database Operations
+
+```bash
+# Count total entries
+sqlite3 ~/.local/share/vicinae/clipboard.db "SELECT COUNT(*) FROM selection;"
+
+# Count short entries
+sqlite3 ~/.local/share/vicinae/clipboard.db "SELECT COUNT(*) FROM selection s JOIN data_offer d ON s.id = d.selection_id WHERE d.size <= 3;"
+
+# Clear all history
+vicinae toggle  # Then use "Remove all" action in clipboard history
+
+# Or via database
+sqlite3 ~/.local/share/vicinae/clipboard.db "DELETE FROM selection; VACUUM;"
+```
 
 ## Resources
 

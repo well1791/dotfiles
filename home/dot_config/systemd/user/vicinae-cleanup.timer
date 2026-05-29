@@ -1,0 +1,10 @@
+[Unit]
+Description=Run vicinae-cleanup hourly
+Documentation=~/.config/vicinae/README.md
+
+[Timer]
+OnCalendar=hourly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
