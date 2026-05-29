@@ -1,0 +1,40 @@
+# Navi configuration
+# https://github.com/denisidoro/navi/blob/master/docs/configuration/README.md
+
+# Finder configuration (using skim as fzf alternative)
+finder:
+  command: sk  # Use skim (already installed)
+  # Override options for cheats selection
+  overrides: --height 60% --preview-window right:50%
+  # Override options for variable value selection
+  overrides_var: --height 40%
+  # Custom delimiter for parsing selected results
+  # delimiter_var: \s\s+
+
+# Shell configuration
+shell:
+  command: fish        # Use fish for command execution
+  finder_command: fish # Use fish inside fzf/skim
+
+# Cheatsheet paths (in addition to default ~/.local/share/navi/cheats/)
+cheats:
+  paths:
+    # Custom dotfiles-specific cheatsheets
+    - ~/.config/navi/custom-cheats
+    # Add more custom cheatsheet directories here
+    # - ~/path/to/custom/cheats
+
+# Style configuration
+style:
+  tag:
+    color: cyan
+    width_percentage: 25
+    # min_width: 20
+  comment:
+    color: blue
+    width_percentage: 40
+    # min_width: 30
+  snippet:
+    color: white
+    width_percentage: 35
+    # min_width: 40

@@ -1,0 +1,54 @@
+#!/bin/sh
+# Install navi (interactive cheatsheet tool)
+# https://github.com/denisidoro/navi
+
+set -e
+
+# Check if navi is already installed
+if command -v navi >/dev/null 2>&1; then
+    echo "✓ navi already installed ($(navi --version))"
+    exit 0
+fi
+
+echo "Installing navi..."
+
+# Check for AUR helpers (CachyOS is Arch-based)
+if command -v paru >/dev/null 2>&1; then
+    AUR_HELPER="paru"
+elif command -v yay >/dev/null 2>&1; then
+    AUR_HELPER="yay"
+else
+    echo "⚠ No AUR helper found (paru or yay required for CachyOS/Arch)"
+    echo "  Install paru first: sudo pacman -S paru"
+    exit 1
+fi
+
+# Install navi (available in CachyOS repos)
+echo "Installing navi from CachyOS repos..."
+$AUR_HELPER -S --needed --noconfirm navi
+
+# Verify installation
+if ! command -v navi >/dev/null 2>&1; then
+    echo "⚠ navi installation failed"
+    exit 1
+fi
+
+echo "✓ navi installed ($(navi --version))"
+
+echo ""
+echo "✓ navi setup complete!"
+echo ""
+echo "Usage:"
+echo "  navi                     # Launch interactive mode"
+echo "  navi --print             # Print command without executing"
+echo "  navi repo browse         # Browse featured cheatsheet repos"
+echo "  navi repo add <repo>     # Add custom cheatsheet repository"
+echo ""
+echo "Fish shell widget:"
+echo "  Ctrl+G                   # Open navi (configured in fish config)"
+echo ""
+echo "Configuration:"
+echo "  Config file: ~/.config/navi/config.yaml"
+echo "  Cheats dir: ~/.local/share/navi/cheats/"
+echo ""
+echo "First run will prompt to download default cheatsheets."

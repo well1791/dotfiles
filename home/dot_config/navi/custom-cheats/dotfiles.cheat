@@ -1,0 +1,141 @@
+% chezmoi, dotfiles
+
+# Apply dotfiles changes
+chezmoi apply
+
+# Show diff before applying
+chezmoi diff
+
+# Edit a file
+chezmoi edit <file>
+
+# Add new file to dotfiles
+chezmoi add <file>
+
+# Update from source
+chezmoi update
+
+# Show current status
+chezmoi status
+
+$ file: chezmoi managed | sk
+
+% fish, shell
+
+# Reload fish configuration
+source ~/.config/fish/config.fish
+
+# List all abbreviations
+abbr --show
+
+# Add new abbreviation
+abbr --add <name> <expansion>
+
+# Edit fish config
+$EDITOR ~/.config/fish/config.fish
+
+% systemd, service
+
+# Start service
+systemctl --user start <service>
+
+# Stop service
+systemctl --user stop <service>
+
+# Enable service (start on boot)
+systemctl --user enable <service>
+
+# Check service status
+systemctl --user status <service>
+
+# View service logs
+journalctl --user -u <service> -f
+
+# List all services
+systemctl --user list-units --type=service
+
+$ service: systemctl --user list-unit-files --type=service | awk '{print $1}' | sk
+
+% git, version-control
+
+# Interactive rebase last N commits
+git rebase -i HEAD~<number>
+
+# Show commit history with graph
+git log --oneline --graph --all
+
+# Undo last commit (keep changes)
+git reset --soft HEAD~1
+
+# Show changes in specific commit
+git show <commit>
+
+# Cherry-pick a commit
+git cherry-pick <commit>
+
+# Create and push new branch
+git checkout -b <branch> && git push -u origin <branch>
+
+$ commit: git log --oneline | sk --no-multi | awk '{print $1}'
+$ branch: git branch | awk '{print $NF}' | sk
+$ number: echo -e "1\n2\n3\n5\n10\n20" | sk
+
+% docker, container
+
+# Stop all running containers
+docker stop $(docker ps -q)
+
+# Remove all stopped containers
+docker container prune -f
+
+# View container logs (follow)
+docker logs -f <container>
+
+# Execute command in running container
+docker exec -it <container> <command>
+
+# Copy file from container
+docker cp <container>:<source-path> <dest-path>
+
+# Show container resource usage
+docker stats <container>
+
+$ container: docker ps --format "{{.ID}}\t{{.Names}}" | sk --delimiter '\t' --with-nth 2 | awk '{print $1}'
+$ command: echo -e "bash\nsh\nfish" | sk
+
+% espanso, text-expander
+
+# Restart espanso
+espanso restart
+
+# Edit configuration
+espanso edit
+
+# Show current status
+espanso status
+
+# View match list
+espanso match list | less
+
+# Install package
+espanso-syncstall <package-name>
+
+# View logs
+espanso log
+
+% vicinae, launcher
+
+# Toggle launcher
+vicinae toggle
+
+# Open settings
+vicinae settings
+
+# Check configuration
+cat ~/.config/vicinae/settings.json
+
+# Cleanup short clipboard entries
+vicinae-cleanup
+
+# View clipboard history (manual)
+sqlite3 ~/.local/share/vicinae/clipboard.db "SELECT COUNT(*) FROM selection;"
