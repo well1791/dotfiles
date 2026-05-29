@@ -35,6 +35,11 @@ fi
 
 echo "✓ vicinae installed"
 
+# Enable and start vicinae systemd service
+echo "Enabling vicinae systemd service..."
+systemctl --user enable --now vicinae.service
+echo "✓ vicinae service enabled"
+
 echo ""
 echo "✓ vicinae setup complete!"
 echo ""

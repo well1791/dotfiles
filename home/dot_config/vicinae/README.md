@@ -38,6 +38,8 @@ vicinae config default
 
 ## Setup Keybind
 
+**Note:** The installation script automatically enables `vicinae.service` which starts the server on login.
+
 ### KDE Plasma
 1. Open **System Settings** → **Shortcuts** → **Custom Shortcuts**
 2. Click **Edit** → **New** → **Global Shortcut** → **Command/URL**
