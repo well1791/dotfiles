@@ -1,0 +1,51 @@
+#!/bin/sh
+# Install vicinae (keyboard-driven application launcher)
+# https://docs.vicinae.com
+
+set -e
+
+# Check if vicinae is already installed
+if command -v vicinae >/dev/null 2>&1; then
+    echo "✓ vicinae already installed"
+    exit 0
+fi
+
+echo "Installing vicinae..."
+
+# Check for AUR helpers (CachyOS is Arch-based)
+if command -v paru >/dev/null 2>&1; then
+    AUR_HELPER="paru"
+elif command -v yay >/dev/null 2>&1; then
+    AUR_HELPER="yay"
+else
+    echo "⚠ No AUR helper found (paru or yay required for CachyOS/Arch)"
+    echo "  Install paru first: sudo pacman -S paru"
+    exit 1
+fi
+
+# Install vicinae-bin (pre-compiled binary for faster installation)
+echo "Installing vicinae-bin from AUR..."
+$AUR_HELPER -S --needed --noconfirm vicinae-bin
+
+# Verify installation
+if ! command -v vicinae >/dev/null 2>&1; then
+    echo "⚠ vicinae installation failed"
+    exit 1
+fi
+
+echo "✓ vicinae installed"
+
+echo ""
+echo "✓ vicinae setup complete!"
+echo ""
+echo "To launch vicinae:"
+echo "  vicinae toggle           # Open/close launcher"
+echo "  vicinae settings         # Open settings"
+echo ""
+echo "Default keybinds:"
+echo "  Super+Space              # Toggle launcher (set in system settings)"
+echo "  Ctrl+'                   # Open settings window"
+echo ""
+echo "Configure vicinae:"
+echo "  - Open settings: vicinae settings"
+echo "  - Config file: ~/.config/vicinae/"
