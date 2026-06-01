@@ -143,7 +143,7 @@ Your API keys are already configured and encrypted in `~/.config/fish/api-keys.f
    ```bash
    cd ~/.local/share/chezmoi
    git add home/dot_config/fish/encrypted_api-keys.fish.age
-   git commit -m "chore: Update API keys"
+   git commit -m "chore(api-keys): update api keys"
    ```
 
 ### Available API integrations:
