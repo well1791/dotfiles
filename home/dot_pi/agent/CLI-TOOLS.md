@@ -13,6 +13,8 @@ This document provides comprehensive usage patterns for modern CLI tools preferr
 | View git diffs | `delta` | raw diff | Syntax highlighting, side-by-side view |
 | Navigate directories | `zoxide` | `cd` | Smart directory jumping based on frecency |
 | Browse files | `yazi` | - | Terminal file manager with preview |
+| Copy to clipboard | `wl-copy` | `xclip` | Native Wayland clipboard, no X11 dependency |
+| Paste from clipboard | `wl-paste` | `xclip -o` | Native Wayland clipboard, no X11 dependency |
 
 ## fd - File/Directory Search
 
@@ -303,6 +305,67 @@ yazi --cwd-file="$tmp"
 ### User Function
 
 System has `y` function that integrates yazi with directory change on exit.
+
+## wl-copy / wl-paste - Wayland Clipboard
+
+**Installation verified:** `/usr/bin/wl-copy`, `/usr/bin/wl-paste`
+
+### Common Usage
+
+```sh
+# Copy text to clipboard
+echo "hello" | wl-copy
+
+# Copy file contents to clipboard
+wl-copy < file.txt
+
+# Copy with specific MIME type
+wl-copy --type text/html < page.html
+
+# Paste clipboard contents
+wl-paste
+
+# Paste to a file
+wl-paste > output.txt
+
+# Paste specific MIME type
+wl-paste --type text/plain
+
+# List available MIME types in clipboard
+wl-paste --list-types
+
+# Copy to primary selection (middle-click paste)
+echo "hello" | wl-copy --primary
+
+# Paste from primary selection
+wl-paste --primary
+
+# Clear clipboard
+wl-copy --clear
+```
+
+### When to Use
+
+- Copying command output for the user to paste elsewhere
+- Piping content to the clipboard for easy sharing
+- Reading clipboard contents for processing
+- Any task requiring clipboard interaction on Wayland
+
+### Integration Examples
+
+```sh
+# Copy a file path to clipboard
+fd pattern | wl-copy
+
+# Copy search results to clipboard
+rg pattern -l | wl-copy
+
+# Copy git diff to clipboard
+git diff | wl-copy
+
+# Process clipboard contents
+wl-paste | rg pattern
+```
 
 ## Integration Patterns
 
