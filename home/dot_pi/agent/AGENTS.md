@@ -138,6 +138,18 @@ A subagent call blocks the main agent, so main agent + 1 subagent is sequential 
 
 Before declaring completion, confirm the change solves the stated problem, relevant validation ran or gaps are stated, no known unintended side effects were introduced, and no secrets were added or exposed.
 
+## Tool Preferences
+
+**Required:** Use modern CLI tools over traditional Unix utilities:
+- `fd` → file/directory search (`find` replacement)
+- `rg` → text search (`grep` replacement)
+- `bat` → file viewing (`cat` replacement)
+- `eza` → directory listing (`ls` replacement)
+- `delta` → git diff viewing
+
+These tools are faster, have better defaults, and clearer output.
+For usage patterns and examples, see [CLI-TOOLS.md](./CLI-TOOLS.md).
+
 ## Response Format
 
 **Default tone: concise and direct.** No filler, intros, or restated requirements.
