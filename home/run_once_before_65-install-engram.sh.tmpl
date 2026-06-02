@@ -1,16 +1,12 @@
-#!/bin/sh
-# Install engram (CLI tool for managing AI-powered tasks and workflows)
+{{ template "install-header.sh.tmpl" . }}
+# Install engram (persistent memory for AI agents)
 # https://github.com/Gentleman-Programming/engram
 
-set -e
-
-# Check if engram is already installed
-if command -v engram >/dev/null 2>&1; then
-    echo "✓ engram already installed ($(engram version 2>&1 | head -1))"
+# Skip if already installed
+if check_command engram; then
+    log_success "engram already installed" "$(engram version 2>&1 | head -1)"
     exit 0
 fi
-
-echo "Installing engram..."
 
 # Detect architecture
 ARCH=$(uname -m)
@@ -22,75 +18,57 @@ case "$ARCH" in
         ARCH_NAME="arm64"
         ;;
     *)
-        echo "⚠ Unsupported architecture: $ARCH"
-        echo "  Please install engram manually: https://github.com/Gentleman-Programming/engram"
+        log_warn "Unsupported architecture: $ARCH"
+        log_info "  Please install engram manually: https://github.com/Gentleman-Programming/engram"
         exit 0
         ;;
 esac
 
-# Check for required tools
-if ! command -v curl >/dev/null 2>&1 && ! command -v wget >/dev/null 2>&1; then
-    echo "Error: curl or wget is required to install engram" >&2
-    exit 1
-fi
-
-if ! command -v tar >/dev/null 2>&1; then
-    echo "Error: tar is required to install engram" >&2
-    exit 1
-fi
+# Check dependencies
+require_any_command "curl or wget required to install engram" curl wget
+require_command tar "tar is required to install engram"
 
 # Fetch latest version from GitHub API
-echo "Fetching latest version..."
-if command -v curl >/dev/null 2>&1; then
-    LATEST_VERSION=$(curl -s https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-else
-    LATEST_VERSION=$(wget -qO- https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-fi
+log_info "Fetching latest engram version..."
+LATEST_VERSION=$(fetch_url "https://api.github.com/repos/Gentleman-Programming/engram/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
 
 if [ -z "$LATEST_VERSION" ]; then
-    echo "⚠ Could not fetch latest version. Using v1.15.15 as fallback."
+    log_warn "Could not fetch latest version. Using v1.15.15 as fallback."
     LATEST_VERSION="v1.15.15"
 fi
 
-# Strip 'v' prefix for filename
 VERSION_NUM=$(echo "$LATEST_VERSION" | sed 's/^v//')
-
-# Construct download URL
 DOWNLOAD_URL="https://github.com/Gentleman-Programming/engram/releases/download/${LATEST_VERSION}/engram_${VERSION_NUM}_linux_${ARCH_NAME}.tar.gz"
 
-echo "Downloading engram ${LATEST_VERSION} for linux_${ARCH_NAME}..."
+log_info "Downloading engram ${LATEST_VERSION} for linux_${ARCH_NAME}..."
 
-# Create temporary directory
-TMP_DIR=$(mktemp -d)
-trap "rm -rf $TMP_DIR" EXIT
-
-# Download the binary
-if command -v curl >/dev/null 2>&1; then
-    curl -L -o "$TMP_DIR/engram.tar.gz" "$DOWNLOAD_URL"
-else
-    wget -O "$TMP_DIR/engram.tar.gz" "$DOWNLOAD_URL"
+if is_dry_run; then
+    log_info "[DRY RUN] Would download: $DOWNLOAD_URL"
+    log_info "[DRY RUN] Would install to: ~/.local/bin/engram"
+    exit 0
 fi
 
-# Extract the binary
-echo "Extracting engram..."
+# Download and extract
+TMP_DIR=$(mktemp -d)
+trap 'rm -rf "$TMP_DIR"' EXIT
+
+fetch_url "$DOWNLOAD_URL" "$TMP_DIR/engram.tar.gz"
 cd "$TMP_DIR"
 tar -xzf engram.tar.gz
 
 # Install to ~/.local/bin
 mkdir -p "$HOME/.local/bin"
-
 if [ -f "engram" ]; then
     mv engram "$HOME/.local/bin/engram"
     chmod +x "$HOME/.local/bin/engram"
 else
-    echo "⚠ Could not find engram binary in archive"
-    exit 1
+    die "Could not find engram binary in archive"
 fi
 
-# Verify installation
-if command -v engram >/dev/null 2>&1; then
-    echo "✓ engram installed successfully ($(engram version 2>&1 | head -1))"
+# Verify
+if check_command engram; then
+    log_success "engram installed successfully" "$(engram version 2>&1 | head -1)"
 else
-    echo "⚠ engram installed to ~/.local/bin/engram but not in PATH yet."
-    echo "  Restart your shell or ensure ~/.local/bin is in your PATH"
+    log_warn "engram installed to ~/.local/bin/engram but not in PATH yet."
+    log_info "  Restart your shell or ensure ~/.local/bin is in your PATH"
 fi

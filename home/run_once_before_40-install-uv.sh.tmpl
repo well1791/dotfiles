@@ -1,32 +1,20 @@
-#!/bin/sh
+{{ template "install-header.sh.tmpl" . }}
 # Install uv (fast Python package manager)
 # https://github.com/astral-sh/uv
 
-set -e
-
-# Check if uv is already installed
-if command -v uv >/dev/null 2>&1; then
-    echo "✓ uv already installed ($(uv --version))"
+# Skip if already installed
+if log_version uv; then
     exit 0
 fi
 
-echo "Installing uv..."
+# Install via official installer
+require_any_command "curl or wget required to install uv" curl wget
+download_and_run "https://astral.sh/uv/install.sh" "Installing uv..."
 
-# Install uv using the official installer
-# This installs to ~/.local/bin/uv and ~/.local/bin/uvx
-if command -v curl >/dev/null 2>&1; then
-    curl -LsSf https://astral.sh/uv/install.sh | sh
-elif command -v wget >/dev/null 2>&1; then
-    wget -qO- https://astral.sh/uv/install.sh | sh
+# Verify
+if check_command uv; then
+    log_success "uv installed successfully" "$(get_version uv)"
 else
-    echo "Error: curl or wget is required to install uv" >&2
-    exit 1
-fi
-
-# Verify installation
-if command -v uv >/dev/null 2>&1; then
-    echo "✓ uv installed successfully ($(uv --version))"
-else
-    echo "⚠ uv installed but not in PATH yet. Restart your shell or run:"
-    echo "  export PATH=\"\$HOME/.local/bin:\$PATH\""
+    log_warn "uv installed but not in PATH yet. Restart your shell or run:"
+    echo '  export PATH="$HOME/.local/bin:$PATH"'
 fi

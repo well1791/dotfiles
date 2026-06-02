@@ -1,171 +1,45 @@
-#!/bin/sh
-# Install essential CLI tools (grouped)
-#
-# These tools are grouped because they:
-# - All use the system package manager (pacman/apt/dnf)
-# - Require no post-installation configuration
-# - Are optional utilities (not critical dependencies)
-# - Are conceptually related (modern CLI replacements)
-#
-# Tools needing individual scripts:
-# - Critical dependencies (age for chezmoi secrets)
-# - Custom installation methods (nix, mise, uv, bun)
-# - Post-install configuration (podman rootless setup)
-#
+{{ template "install-header.sh.tmpl" . }}
+# Install essential CLI tools (modern replacements)
 # Tools: helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just, tealdeer
+{{- $tools := dict
+    "helix" (list "helix" "hx")
+    "ripgrep" (list "rg")
+    "yazi" (list "yazi")
+    "bat" (list "bat")
+    "duf" (list "duf")
+    "eza" (list "eza")
+    "glow" (list "glow")
+    "serpl" (list "serpl")
+    "just" (list "just")
+    "tealdeer" (list "tldr")
+}}
 
-set -e
-
-# List of tools to install
-TOOLS="helix ripgrep yazi bat duf eza glow serpl just tealdeer"
-
-# Check which tools are already installed
+# Check which tools are missing
 MISSING=""
-for tool in $TOOLS; do
-    # Special case: helix binary is often named 'hx' or 'helix'
-    if [ "$tool" = "helix" ]; then
-        if ! command -v helix >/dev/null 2>&1 && ! command -v hx >/dev/null 2>&1; then
-            MISSING="$MISSING $tool"
-        fi
-    # Special case: ripgrep binary is 'rg'
-    elif [ "$tool" = "ripgrep" ]; then
-        if ! command -v rg >/dev/null 2>&1; then
-            MISSING="$MISSING $tool"
-        fi
-    # Special case: tealdeer binary is 'tldr'
-    elif [ "$tool" = "tealdeer" ]; then
-        if ! command -v tldr >/dev/null 2>&1; then
-            MISSING="$MISSING $tool"
-        fi
-    else
-        if ! command -v $tool >/dev/null 2>&1; then
-            MISSING="$MISSING $tool"
-        fi
-    fi
-done
+{{- range $pkg, $cmds := $tools }}
+{{- $primary := index $cmds 0 }}
+if ! check_any_command {{ join " " $cmds }}; then
+    MISSING="$MISSING {{ $pkg }}"
+fi
+{{- end }}
 
-# If all tools are installed, exit early
+# Exit early if all installed
 if [ -z "$MISSING" ]; then
-    echo "✓ All CLI tools already installed (helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just, tealdeer)"
+    log_success "All CLI tools already installed"
     exit 0
 fi
 
-echo "Installing CLI tools:$MISSING"
+log_info "Installing CLI tools:$MISSING"
+install_packages $MISSING
 
-# Detect package manager and install
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    
-    case "$ID" in
-        arch|cachyos|manjaro|endeavouros)
-            echo "Detected Arch-based system, using pacman..."
-            sudo pacman -S --noconfirm --needed $MISSING
-            ;;
-        ubuntu|debian|linuxmint|pop)
-            echo "Detected Debian/Ubuntu-based system, using apt..."
-            # Note: Some packages may have different names on Debian/Ubuntu
-            # helix might need to be installed via snap or from source
-            # eza was previously called 'exa' on some distros
-            sudo apt-get update
-            
-            # Try to install each tool, handle special cases
-            for tool in $MISSING; do
-                case "$tool" in
-                    helix)
-                        # Helix might not be in default Ubuntu repos
-                        if apt-cache show helix >/dev/null 2>&1; then
-                            sudo apt-get install -y helix
-                        else
-                            echo "⚠ helix not in apt repos, skipping (install manually or via snap)"
-                        fi
-                        ;;
-                    eza)
-                        # eza might be called exa on older distros
-                        if apt-cache show eza >/dev/null 2>&1; then
-                            sudo apt-get install -y eza
-                        elif apt-cache show exa >/dev/null 2>&1; then
-                            sudo apt-get install -y exa
-                        else
-                            echo "⚠ eza/exa not in apt repos, skipping"
-                        fi
-                        ;;
-                    duf)
-                        # duf might not be in default repos
-                        if apt-cache show duf >/dev/null 2>&1; then
-                            sudo apt-get install -y duf
-                        else
-                            echo "⚠ duf not in apt repos, skipping"
-                        fi
-                        ;;
-                    *)
-                        sudo apt-get install -y $tool || echo "⚠ Could not install $tool"
-                        ;;
-                esac
-            done
-            ;;
-        fedora|rhel|centos|rocky|almalinux)
-            echo "Detected Red Hat-based system, using dnf..."
-            sudo dnf install -y $MISSING
-            ;;
-        alpine)
-            echo "Detected Alpine Linux, using apk..."
-            sudo apk add $MISSING
-            ;;
-        *)
-            # Try to detect by ID_LIKE
-            if echo "$ID_LIKE" | grep -q "arch"; then
-                echo "Detected Arch-like system, using pacman..."
-                sudo pacman -S --noconfirm --needed $MISSING
-            elif echo "$ID_LIKE" | grep -q "debian"; then
-                echo "Detected Debian-like system, using apt..."
-                sudo apt-get update
-                sudo apt-get install -y $MISSING
-            elif echo "$ID_LIKE" | grep -q "rhel\|fedora"; then
-                echo "Detected Red Hat-like system, using dnf..."
-                sudo dnf install -y $MISSING
-            else
-                echo "⚠ Unsupported distribution: $ID"
-                echo "  Please install these tools manually: $MISSING"
-                exit 0
-            fi
-            ;;
-    esac
-else
-    echo "⚠ Cannot detect Linux distribution"
-    echo "  Please install these tools manually: $MISSING"
-    exit 0
-fi
-
-# Verify installation
+# Verify installations
 echo ""
-echo "Verifying installations:"
-for tool in $TOOLS; do
-    # Check with appropriate binary name
-    if [ "$tool" = "helix" ]; then
-        if command -v helix >/dev/null 2>&1; then
-            echo "✓ helix: $(helix --version 2>&1 | head -1)"
-        elif command -v hx >/dev/null 2>&1; then
-            echo "✓ helix (hx): $(hx --version 2>&1 | head -1)"
-        else
-            echo "✗ helix: not found"
-        fi
-    elif [ "$tool" = "ripgrep" ]; then
-        if command -v rg >/dev/null 2>&1; then
-            echo "✓ ripgrep: $(rg --version 2>&1 | head -1)"
-        else
-            echo "✗ ripgrep: not found"
-        fi
-    elif [ "$tool" = "tealdeer" ]; then
-        if command -v tldr >/dev/null 2>&1; then
-            echo "✓ tealdeer: $(tldr --version 2>&1 | head -1)"
-        else
-            echo "✗ tealdeer: not found"
-        fi
-    else
-        if command -v $tool >/dev/null 2>&1; then
-            echo "✓ $tool: $($tool --version 2>&1 | head -1)"
-        else
-            echo "✗ $tool: not found"
-        fi
-    fi
-done
+log_info "Verifying installations:"
+{{- range $pkg, $cmds := $tools }}
+{{- $primary := index $cmds 0 }}
+if check_any_command {{ join " " $cmds }}; then
+    log_success "{{ $pkg }}" "$(get_version {{ $primary }})"
+else
+    log_error "{{ $pkg }}: not found"
+fi
+{{- end }}

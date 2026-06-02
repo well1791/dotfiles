@@ -1,32 +1,20 @@
-#!/bin/sh
-# Install Nix package manager using Determinate Systems installer
+{{ template "install-header.sh.tmpl" . }}
+# Install Nix package manager (Determinate Systems installer)
 # https://github.com/DeterminateSystems/nix-installer
 
-set -e
-
-# Check if Nix is already installed
-if command -v nix >/dev/null 2>&1; then
-    echo "✓ Nix already installed ($(nix --version 2>&1 | head -1))"
+# Skip if already installed
+if log_version nix; then
     exit 0
 fi
 
-echo "Installing Nix (Determinate Systems installer)..."
+# Install via Determinate Systems installer
+require_any_command "curl or wget required to install Nix" curl wget
+download_and_run "https://install.determinate.systems/nix" "Installing Nix..."
 
-# Install Nix using the Determinate Systems installer
-# This is more robust than the official installer and handles macOS upgrades better
-if command -v curl >/dev/null 2>&1; then
-    curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install
-elif command -v wget >/dev/null 2>&1; then
-    wget -qO- https://install.determinate.systems/nix | sh -s -- install
+# Verify
+if check_command nix; then
+    log_success "Nix installed successfully" "$(get_version nix)"
+    log_warn "Restart your shell or run: source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
 else
-    echo "Error: curl or wget is required to install Nix" >&2
-    exit 1
-fi
-
-# Verify installation
-if command -v nix >/dev/null 2>&1; then
-    echo "✓ Nix installed successfully ($(nix --version 2>&1 | head -1))"
-    echo "⚠ You may need to restart your shell or run: source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
-else
-    echo "⚠ Nix installed but not in PATH yet. Restart your shell."
+    log_warn "Nix installed but not in PATH yet. Restart your shell."
 fi

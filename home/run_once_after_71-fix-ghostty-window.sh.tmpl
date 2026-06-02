@@ -1,0 +1,37 @@
+{{ template "install-header.sh.tmpl" . }}
+# Fix ghostty window properties to show in taskbar and Alt+Tab
+
+log_info "Fixing Ghostty window properties"
+
+# Check if ghostty is running
+if ! pgrep -x ghostty >/dev/null 2>&1; then
+    log_warn "Ghostty is not running. Launch ghostty and run this script again."
+    exit 0
+fi
+
+# Require kdotool
+require_command kdotool "kdotool is required to fix window properties"
+
+# Find ghostty window
+GHOSTTY_WID=$(kdotool search --class com.mitchellh.ghostty 2>/dev/null | head -1)
+
+if [ -z "$GHOSTTY_WID" ]; then
+    log_warn "Could not find ghostty window. Make sure ghostty is visible."
+    exit 0
+fi
+
+log_info "Found ghostty window: $GHOSTTY_WID"
+
+# Remove skip properties to make it visible in taskbar and Alt+Tab
+log_info "Removing SKIP_TASKBAR property..."
+kdotool windowstate --remove SKIP_TASKBAR "$GHOSTTY_WID" 2>/dev/null || log_info "  (property not set or already removed)"
+
+log_info "Removing SKIP_PAGER property..."
+kdotool windowstate --remove SKIP_PAGER "$GHOSTTY_WID" 2>/dev/null || log_info "  (property not set or already removed)"
+
+log_info "Removing SKIP_SWITCHER property..."
+kdotool windowstate --remove SKIP_SWITCHER "$GHOSTTY_WID" 2>/dev/null || log_info "  (not supported or already removed)"
+
+log_success "Ghostty window properties updated"
+log_info "If ghostty still hides, restart it completely:"
+echo "   pkill ghostty && ghostty &"

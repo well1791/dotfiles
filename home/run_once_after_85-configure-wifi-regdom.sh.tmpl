@@ -1,17 +1,15 @@
-#!/bin/bash
+{{ template "install-header.sh.tmpl" . }}
 # Configure Wi-Fi regulatory domain for Spain (ES)
 # See: https://wiki.archlinux.org/title/Wireless_network_configuration#Respecting_the_regulatory_domain
 
-set -e
+log_info "Wi-Fi Regulatory Domain Configuration"
 
-echo "==> Wi-Fi Regulatory Domain Configuration"
-echo ""
-
-# Install wireless-regdb package
-if ! pacman -Qi wireless-regdb >/dev/null 2>&1; then
-    echo "Installing wireless-regdb..."
-    sudo pacman -S --noconfirm --needed wireless-regdb
-    echo ""
+# Install wireless-regdb package if missing
+if check_command pacman; then
+    if ! pacman -Qi wireless-regdb >/dev/null 2>&1; then
+        log_info "Installing wireless-regdb..."
+        install_packages wireless-regdb
+    fi
 fi
 
 # Check current setting
@@ -21,16 +19,14 @@ if [ -f /etc/conf.d/wireless-regdom ]; then
 fi
 
 if echo "$CURRENT_REGDOM" | grep -q 'WIRELESS_REGDOM="ES"'; then
-    echo "✓ Wi-Fi regulatory domain already set to ES (Spain)"
-    echo ""
-    echo "Current configuration:"
-    iw reg get
+    log_success "Wi-Fi regulatory domain already set to ES (Spain)"
+    iw reg get 2>/dev/null || true
     exit 0
 fi
 
-echo "⚠️  MANUAL CONFIGURATION REQUIRED"
+log_warn "MANUAL CONFIGURATION REQUIRED"
 echo ""
-echo "📍 Country: Spain (ES)"
+echo "Country: Spain (ES)"
 echo ""
 echo "To configure Wi-Fi regulatory domain:"
 echo ""
@@ -38,25 +34,17 @@ echo "1. Edit the configuration file:"
 echo "   sudo micro /etc/conf.d/wireless-regdom"
 echo ""
 echo "2. Find and uncomment this line:"
-echo "   WIRELESS_REGDOM=\"ES\""
+echo '   WIRELESS_REGDOM="ES"'
 echo ""
-echo "   (Make sure to comment out any other WIRELESS_REGDOM lines)"
+echo "3. Reboot to apply changes"
 echo ""
-echo "3. Save and exit"
-echo ""
-echo "4. Reboot to apply changes"
-echo ""
-echo "5. Verify configuration after reboot:"
+echo "4. Verify after reboot:"
 echo "   iw reg get"
 echo ""
-echo "Expected output should show:"
-echo "   country ES: DFS-ETSI"
+log_info "Benefits:"
+log_info "  - Unlock all Wi-Fi channels available in Spain"
+log_info "  - Enable full 5GHz/6GHz spectrum (Wi-Fi 6E)"
+log_info "  - Optimize transmit power for EU regulations"
 echo ""
-echo "📡 Benefits:"
-echo "  • Unlock all Wi-Fi channels available in Spain"
-echo "  • Enable full 5GHz/6GHz spectrum (Wi-Fi 6E)"
-echo "  • Optimize transmit power for EU regulations"
-echo "  • Improve connection quality and performance"
-echo ""
-echo "Current status:"
-iw reg get || echo "  (Unable to query current regulatory domain)"
+log_info "Current status:"
+iw reg get 2>/dev/null || log_info "  (Unable to query current regulatory domain)"

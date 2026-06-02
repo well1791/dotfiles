@@ -1,26 +1,24 @@
-#!/bin/sh
+{{ template "install-header.sh.tmpl" . }}
 # Update tealdeer (tldr) cache
 # This should run after tealdeer is installed
 
-set -e
-
 # Check if tealdeer is installed
-if ! command -v tldr >/dev/null 2>&1; then
-    echo "⚠ tealdeer not installed, skipping cache update"
+if ! check_command tldr; then
+    log_warn "tealdeer not installed, skipping cache update"
     exit 0
 fi
 
-# Check if cache is already populated
+# Update cache
 if [ -d "$HOME/.cache/tealdeer" ] && [ -n "$(ls -A "$HOME/.cache/tealdeer" 2>/dev/null)" ]; then
-    echo "✓ tealdeer cache already populated, updating..."
-    tldr --update
+    log_info "Updating tealdeer cache..."
 else
-    echo "Populating tealdeer cache for the first time..."
+    log_info "Populating tealdeer cache for the first time..."
+fi
+
+if ! is_dry_run; then
     tldr --update
 fi
 
-echo ""
-echo "✓ tealdeer ready to use"
-echo "  Try: tldr tar"
-echo "  Try: tldr git commit"
-echo "  Try: tldr rsync"
+log_success "tealdeer ready to use"
+log_info "  Try: tldr tar"
+log_info "  Try: tldr git commit"

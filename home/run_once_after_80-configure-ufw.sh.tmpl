@@ -1,64 +1,52 @@
-#!/bin/bash
+{{ template "install-header.sh.tmpl" . }}
 # Install and enable ufw firewall
 # Configured for web development (localhost unaffected)
 
-set -e
-
 # Install ufw if not present
-if ! command -v ufw >/dev/null 2>&1; then
-    echo "Installing ufw..."
-    sudo pacman -S --noconfirm --needed ufw
+if ! check_command ufw; then
+    log_info "Installing ufw..."
+    install_packages ufw
 fi
 
 # Check if already enabled
-if sudo ufw status | grep -q "Status: active"; then
-    echo "✓ ufw already enabled"
+if sudo ufw status 2>/dev/null | grep -q "Status: active"; then
+    log_success "ufw already enabled"
     sudo ufw status verbose
     exit 0
 fi
 
-echo "Configuring ufw firewall..."
+log_info "Configuring ufw firewall..."
+
+if is_dry_run; then
+    log_info "[DRY RUN] Would configure ufw: deny incoming, allow outgoing"
+    log_info "[DRY RUN] Would enable ufw and systemd service"
+    exit 0
+fi
 
 # Basic configuration
-sudo ufw default deny incoming
-sudo ufw default allow outgoing
-
-# Optional: Allow access to local dev servers from other devices on your network
-# Uncomment the following line if you need to access localhost:3000, :8080, etc.
-# from your phone, tablet, or other computers on your local network
-#
-# sudo ufw allow from 192.168.0.0/16 to any port 3000:9999 proto tcp comment 'Dev servers'
-#
-# Adjust the IP range to match your network (common ranges: 192.168.0.0/16, 10.0.0.0/8)
+run_privileged ufw default deny incoming
+run_privileged ufw default allow outgoing
 
 # Enable firewall
-sudo ufw --force enable
+run_privileged ufw --force enable
 
 # Enable ufw service to start on boot
-sudo systemctl enable ufw.service
+run_privileged systemctl enable ufw.service
 
+log_success "ufw enabled and configured"
 echo ""
-echo "✓ ufw enabled and configured"
-echo ""
-echo "📋 Firewall Status:"
+echo "Firewall Status:"
 sudo ufw status verbose
 echo ""
-echo "💡 Notes:"
-echo "  • localhost/127.0.0.1 is UNAFFECTED (local dev servers work normally)"
-echo "  • All outgoing connections are ALLOWED (API calls, downloads, etc.)"
-echo "  • Incoming connections from outside are DENIED by default"
+log_info "Notes:"
+log_info "  - localhost/127.0.0.1 is UNAFFECTED (local dev servers work normally)"
+log_info "  - All outgoing connections are ALLOWED"
+log_info "  - Incoming connections from outside are DENIED by default"
 echo ""
-echo "🌐 Network Access to Dev Servers:"
-echo "  If you need to access your dev servers (e.g., localhost:3000) from"
-echo "  another device on your network (phone, tablet), run:"
-echo ""
+log_info "Network Access to Dev Servers:"
 echo "  sudo ufw allow from 192.168.0.0/16 to any port 3000:9999 proto tcp"
 echo ""
-echo "  (Adjust 192.168.0.0/16 to match your local network range)"
-echo ""
-echo "🔧 Common Commands:"
+log_info "Common Commands:"
 echo "  Check status:        sudo ufw status verbose"
 echo "  Allow port:          sudo ufw allow <port>"
-echo "  Delete rule:         sudo ufw delete <rule-number>"
-echo "  Show rule numbers:   sudo ufw status numbered"
 echo "  Disable firewall:    sudo ufw disable"

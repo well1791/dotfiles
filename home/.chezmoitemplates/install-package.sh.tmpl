@@ -1,0 +1,5 @@
+{{- /* install-package.sh.tmpl - Install via system package manager */ -}}
+{{- /* Usage: {{ template "install-package.sh.tmpl" (dict "packages" "age" "name" "age") }} */ -}}
+{{- /* Params: .packages (space-separated package names), .name (tool display name) */ -}}
+log_info "Installing {{ .name }}..."
+install_packages {{ .packages }}

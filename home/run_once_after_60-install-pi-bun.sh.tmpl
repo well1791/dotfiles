@@ -1,34 +1,32 @@
-#!/bin/sh
+{{ template "install-header.sh.tmpl" . }}
 # Install pi coding agent via bun
 # https://pi.dev
 
-set -e
-
-# Check if pi is already installed
-if command -v pi >/dev/null 2>&1; then
-    echo "✓ pi already installed ($(pi --version 2>&1 | head -1))"
+# Skip if already installed
+if log_version pi; then
     exit 0
 fi
 
-# Check if bun is available
-if ! command -v bun >/dev/null 2>&1; then
-    echo "⚠ bun not found, skipping pi installation"
-    echo "  pi requires bun to be installed first"
+# Requires bun
+if ! check_command bun; then
+    log_warn "bun not found, skipping pi installation"
+    log_info "  pi requires bun to be installed first"
     exit 0
 fi
 
-echo "Installing pi coding agent via bun..."
-
-# Install pi globally using bun
-if bun install -g @earendil-works/pi-coding-agent; then
-    # Verify installation
-    if command -v pi >/dev/null 2>&1; then
-        echo "✓ pi installed successfully: $(pi --version 2>&1 | head -1)"
-    else
-        echo "⚠ pi installed but not found in PATH"
-        echo "  You may need to add ~/.bun/bin to your PATH"
-    fi
+# Install pi globally
+log_info "Installing pi coding agent via bun..."
+if is_dry_run; then
+    log_info "[DRY RUN] Would run: bun install -g @anthropic-ai/claude-code"
 else
-    echo "✗ Failed to install pi"
-    exit 1
+    if bun install -g @anthropic-ai/claude-code; then
+        if check_command pi; then
+            log_success "pi installed successfully" "$(get_version pi)"
+        else
+            log_warn "pi installed but not found in PATH"
+            log_info "  You may need to add ~/.bun/bin to your PATH"
+        fi
+    else
+        die "Failed to install pi"
+    fi
 fi

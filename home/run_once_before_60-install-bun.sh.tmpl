@@ -1,65 +1,26 @@
-#!/bin/sh
+{{ template "install-header.sh.tmpl" . }}
 # Install Bun (fast all-in-one JavaScript runtime)
 # https://bun.sh
 
-set -e
-
-# Check if bun is already installed
-if command -v bun >/dev/null 2>&1; then
-    echo "✓ bun already installed ($(bun --version 2>&1 | head -1))"
+# Skip if already installed
+if log_version bun; then
     exit 0
 fi
 
-echo "Installing bun..."
-
-# Check if unzip is available (required for installation)
-if ! command -v unzip >/dev/null 2>&1; then
-    echo "⚠ unzip is required for bun installation"
-    
-    # Try to install unzip
-    if [ -f /etc/os-release ]; then
-        . /etc/os-release
-        
-        case "$ID" in
-            arch|cachyos|manjaro|endeavouros)
-                echo "Installing unzip with pacman..."
-                sudo pacman -S --noconfirm --needed unzip
-                ;;
-            ubuntu|debian|linuxmint|pop)
-                echo "Installing unzip with apt..."
-                sudo apt-get update
-                sudo apt-get install -y unzip
-                ;;
-            fedora|rhel|centos|rocky|almalinux)
-                echo "Installing unzip with dnf..."
-                sudo dnf install -y unzip
-                ;;
-            alpine)
-                echo "Installing unzip with apk..."
-                sudo apk add unzip
-                ;;
-            *)
-                echo "Error: Please install unzip manually first" >&2
-                exit 1
-                ;;
-        esac
-    fi
+# Ensure unzip dependency is available
+if ! check_command unzip; then
+    log_info "Installing required dependency: unzip"
+    install_packages unzip
 fi
 
-# Install Bun using the official installer
-if command -v curl >/dev/null 2>&1; then
-    curl -fsSL https://bun.sh/install | bash
-elif command -v wget >/dev/null 2>&1; then
-    wget -qO- https://bun.sh/install | bash
-else
-    echo "Error: curl or wget is required to install bun" >&2
-    exit 1
-fi
+# Install via official installer
+require_any_command "curl or wget required to install bun" curl wget
+download_and_run "https://bun.sh/install" "Installing bun..."
 
-# Verify installation
+# Verify
 if [ -x "$HOME/.bun/bin/bun" ]; then
-    echo "✓ bun installed successfully ($($HOME/.bun/bin/bun --version 2>&1 | head -1))"
-    echo "⚠ You may need to restart your shell or run: export PATH=\"\$HOME/.bun/bin:\$PATH\""
+    log_success "bun installed successfully" "$("$HOME/.bun/bin/bun" --version 2>&1 | head -1)"
+    log_warn "Restart your shell or run: export PATH=\"\$HOME/.bun/bin:\$PATH\""
 else
-    echo "⚠ bun installation may have failed. Check logs above."
+    log_warn "bun installation may have failed. Check logs above."
 fi

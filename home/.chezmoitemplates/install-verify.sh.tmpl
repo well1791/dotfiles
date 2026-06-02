@@ -1,0 +1,15 @@
+{{- /* install-verify.sh.tmpl - Verify tool was installed successfully */ -}}
+{{- /* Usage: {{ template "install-verify.sh.tmpl" (dict "commands" (list "mise") "name" "mise") }} */ -}}
+{{- /* Params: .commands (list of commands to check), .name (display name) */ -}}
+{{- $name := .name -}}
+{{- $found := false -}}
+{{- range .commands -}}
+{{- if not $found }}
+if check_command {{ . }}; then
+    log_success "{{ $name }} installed successfully" "$(get_version {{ . }})"
+{{- $found = true }}
+{{- end -}}
+{{- end }}
+else
+    log_warn "{{ $name }} installed but not in PATH yet. Restart your shell."
+fi

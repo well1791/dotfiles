@@ -1,56 +1,44 @@
-#!/bin/sh
+{{ template "install-header.sh.tmpl" . }}
 # Install Rust via rustup
 # https://rustup.rs
 
-set -e
-
-# Check if rustup is already installed
-if command -v rustup >/dev/null 2>&1; then
-    echo "✓ rustup already installed ($(rustup --version 2>&1 | head -1))"
+# Skip if rustup already installed
+if check_command rustup; then
+    log_success "rustup already installed" "$(get_version rustup)"
     exit 0
 fi
 
-# Check if rust/cargo is installed (but not rustup)
-if command -v cargo >/dev/null 2>&1 && ! command -v rustup >/dev/null 2>&1; then
-    echo "⚠ Rust is installed but not via rustup"
-    echo "  Consider uninstalling system rust and using rustup instead"
-    echo "  Skipping rustup installation to avoid conflicts"
+# Detect system rust without rustup (conflict)
+if check_command cargo && ! check_command rustup; then
+    log_warn "Rust is installed but not via rustup"
+    log_info "  Consider uninstalling system rust and using rustup instead"
+    log_info "  Skipping rustup installation to avoid conflicts"
     exit 0
 fi
 
-echo "Installing Rust via rustup..."
+# Install via rustup
+require_command curl "curl is required to install rustup"
+log_info "Installing Rust via rustup..."
 
-# Check for required tools
-if ! command -v curl >/dev/null 2>&1; then
-    echo "⚠ curl is required but not installed"
-    echo "  Please install curl first: sudo pacman -S curl"
-    exit 1
+if is_dry_run; then
+    log_info "[DRY RUN] Would run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y"
+else
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 fi
 
-# Download and run rustup installer
-# -y flag: non-interactive, default installation
-# Installs to ~/.cargo and ~/.rustup
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-
-# Verify installation
+# Verify
 if [ -f "$HOME/.cargo/env" ]; then
-    # Source the cargo environment for this script
     . "$HOME/.cargo/env"
-    
-    if command -v rustup >/dev/null 2>&1; then
-        echo ""
-        echo "✓ Rust installed successfully"
-        echo "  rustup: $(rustup --version 2>&1 | head -1)"
-        echo "  rustc: $(rustc --version 2>&1 | head -1)"
-        echo "  cargo: $(cargo --version 2>&1 | head -1)"
-        echo ""
-        echo "Note: Restart your shell or run: source ~/.cargo/env"
+    if check_command rustup; then
+        log_success "Rust installed successfully"
+        log_info "  rustup: $(get_version rustup)"
+        log_info "  rustc: $(get_version rustc)"
+        log_info "  cargo: $(get_version cargo)"
+        log_warn "Restart your shell or run: source ~/.cargo/env"
     else
-        echo "⚠ Installation completed but rustup command not found"
-        echo "  You may need to add ~/.cargo/bin to your PATH"
-        exit 1
+        log_warn "Installation completed but rustup command not found"
+        log_info "  You may need to add ~/.cargo/bin to your PATH"
     fi
 else
-    echo "⚠ Installation failed: ~/.cargo/env not found"
-    exit 1
+    die "Installation failed: ~/.cargo/env not found"
 fi

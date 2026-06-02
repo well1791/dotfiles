@@ -1,54 +1,37 @@
-#!/bin/sh
+{{ template "install-header.sh.tmpl" . }}
 # Install navi (interactive cheatsheet tool)
 # https://github.com/denisidoro/navi
 
-set -e
-
-# Check if navi is already installed
-if command -v navi >/dev/null 2>&1; then
-    echo "✓ navi already installed ($(navi --version))"
+# Skip if already installed
+if log_version navi; then
     exit 0
 fi
 
-echo "Installing navi..."
-
-# Check for AUR helpers (CachyOS is Arch-based)
-if command -v paru >/dev/null 2>&1; then
+# Require AUR helper
+AUR_HELPER=""
+if check_command paru; then
     AUR_HELPER="paru"
-elif command -v yay >/dev/null 2>&1; then
+elif check_command yay; then
     AUR_HELPER="yay"
 else
-    echo "⚠ No AUR helper found (paru or yay required for CachyOS/Arch)"
-    echo "  Install paru first: sudo pacman -S paru"
-    exit 1
+    die "No AUR helper found (paru or yay required for CachyOS/Arch)"
 fi
 
-# Install navi (available in CachyOS repos)
-echo "Installing navi from CachyOS repos..."
-$AUR_HELPER -S --needed --noconfirm navi
-
-# Verify installation
-if ! command -v navi >/dev/null 2>&1; then
-    echo "⚠ navi installation failed"
-    exit 1
+# Install navi
+log_info "Installing navi..."
+if ! is_dry_run; then
+    $AUR_HELPER -S --needed --noconfirm navi
+else
+    log_info "[DRY RUN] Would run: $AUR_HELPER -S --needed --noconfirm navi"
 fi
 
-echo "✓ navi installed ($(navi --version))"
+# Verify
+if ! check_command navi; then
+    die "navi installation failed"
+fi
 
-echo ""
-echo "✓ navi setup complete!"
-echo ""
-echo "Usage:"
-echo "  navi                     # Launch interactive mode"
-echo "  navi --print             # Print command without executing"
-echo "  navi repo browse         # Browse featured cheatsheet repos"
-echo "  navi repo add <repo>     # Add custom cheatsheet repository"
-echo ""
-echo "Fish shell widget:"
-echo "  Ctrl+G                   # Open navi (configured in fish config)"
-echo ""
-echo "Configuration:"
-echo "  Config file: ~/.config/navi/config.yaml"
-echo "  Cheats dir: ~/.local/share/navi/cheats/"
-echo ""
-echo "First run will prompt to download default cheatsheets."
+log_success "navi installed" "$(get_version navi)"
+log_info "  Usage: navi (interactive mode)"
+log_info "  Fish widget: Ctrl+G"
+log_info "  Config: ~/.config/navi/config.yaml"
+log_info "  Cheats: ~/.local/share/navi/cheats/"

@@ -1,24 +1,23 @@
-#!/bin/sh
+{{ template "install-header.sh.tmpl" . }}
 # Install espanso packages from packages.txt
 # This runs whenever packages.txt changes
-
-set -e
+# packages.txt hash: {{ include "dot_config/espanso/packages.txt" | sha256sum }}
 
 # Check if espanso is installed
-if ! command -v espanso >/dev/null 2>&1; then
-    echo "⚠ espanso not installed, skipping package installation"
+if ! check_command espanso; then
+    log_warn "espanso not installed, skipping package installation"
     exit 0
 fi
 
 PACKAGES_FILE="$HOME/.config/espanso/packages.txt"
 
 if [ ! -f "$PACKAGES_FILE" ]; then
-    echo "⚠ No packages.txt found at $PACKAGES_FILE"
+    log_warn "No packages.txt found at $PACKAGES_FILE"
     exit 0
 fi
 
 # Read packages.txt and install each package
-echo "Installing espanso packages from packages.txt..."
+log_info "Installing espanso packages from packages.txt..."
 INSTALLED=0
 SKIPPED=0
 
@@ -27,23 +26,25 @@ while IFS= read -r line; do
     case "$line" in
         ''|'#'*) continue ;;
     esac
-    
-    # Extract package name (remove any trailing comments)
+
+    # Extract package name (remove trailing comments)
     package=$(echo "$line" | cut -d'#' -f1 | xargs)
-    
+
     if [ -n "$package" ]; then
-        echo "Installing: $package"
-        if espanso install "$package" --force; then
+        log_info "Installing: $package"
+        if is_dry_run; then
+            log_info "[DRY RUN] Would install espanso package: $package"
+            INSTALLED=$((INSTALLED + 1))
+        elif espanso install "$package" --force; then
             INSTALLED=$((INSTALLED + 1))
         else
-            echo "⚠ Failed to install: $package"
+            log_warn "Failed to install: $package"
             SKIPPED=$((SKIPPED + 1))
         fi
     fi
 done < "$PACKAGES_FILE"
 
-echo ""
-echo "✓ Installed: $INSTALLED packages"
+log_success "Installed: $INSTALLED packages"
 if [ $SKIPPED -gt 0 ]; then
-    echo "⚠ Skipped/Failed: $SKIPPED packages"
+    log_warn "Skipped/Failed: $SKIPPED packages"
 fi

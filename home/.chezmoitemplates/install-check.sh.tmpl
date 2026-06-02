@@ -1,0 +1,8 @@
+{{- /* install-check.sh.tmpl - Check if tool already installed, exit if so */ -}}
+{{- /* Usage: {{ template "install-check.sh.tmpl" (dict "commands" (list "mise") "name" "mise") }} */ -}}
+{{- /* Params: .commands (list of commands to check), .name (tool display name) */ -}}
+{{- range .commands }}
+if log_version {{ . }}; then
+    exit 0
+fi
+{{- end }}

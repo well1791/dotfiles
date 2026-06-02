@@ -1,56 +1,46 @@
-#!/bin/sh
+{{ template "install-header.sh.tmpl" . }}
 # Install vicinae (keyboard-driven application launcher)
 # https://docs.vicinae.com
 
-set -e
-
-# Check if vicinae is already installed
-if command -v vicinae >/dev/null 2>&1; then
-    echo "✓ vicinae already installed"
+# Skip if already installed
+if check_command vicinae; then
+    log_success "vicinae already installed"
     exit 0
 fi
 
-echo "Installing vicinae..."
-
-# Check for AUR helpers (CachyOS is Arch-based)
-if command -v paru >/dev/null 2>&1; then
+# Require AUR helper
+AUR_HELPER=""
+if check_command paru; then
     AUR_HELPER="paru"
-elif command -v yay >/dev/null 2>&1; then
+elif check_command yay; then
     AUR_HELPER="yay"
 else
-    echo "⚠ No AUR helper found (paru or yay required for CachyOS/Arch)"
-    echo "  Install paru first: sudo pacman -S paru"
-    exit 1
+    die "No AUR helper found (paru or yay required for CachyOS/Arch)"
 fi
 
-# Install vicinae-bin (pre-compiled binary for faster installation)
-echo "Installing vicinae-bin from AUR..."
-$AUR_HELPER -S --needed --noconfirm vicinae-bin
-
-# Verify installation
-if ! command -v vicinae >/dev/null 2>&1; then
-    echo "⚠ vicinae installation failed"
-    exit 1
+# Install vicinae-bin from AUR
+log_info "Installing vicinae-bin from AUR..."
+if ! is_dry_run; then
+    $AUR_HELPER -S --needed --noconfirm vicinae-bin
+else
+    log_info "[DRY RUN] Would run: $AUR_HELPER -S --needed --noconfirm vicinae-bin"
 fi
 
-echo "✓ vicinae installed"
+# Verify
+if ! check_command vicinae; then
+    die "vicinae installation failed"
+fi
 
-# Enable and start vicinae systemd service
-echo "Enabling vicinae systemd service..."
-systemctl --user enable --now vicinae.service
-echo "✓ vicinae service enabled"
+log_success "vicinae installed"
 
-echo ""
-echo "✓ vicinae setup complete!"
-echo ""
-echo "To launch vicinae:"
-echo "  vicinae toggle           # Open/close launcher"
-echo "  vicinae settings         # Open settings"
-echo ""
-echo "Default keybinds:"
-echo "  Super+Space              # Toggle launcher (set in system settings)"
-echo "  Ctrl+'                   # Open settings window"
-echo ""
-echo "Configure vicinae:"
-echo "  - Open settings: vicinae settings"
-echo "  - Config file: ~/.config/vicinae/"
+# Enable systemd service
+log_info "Enabling vicinae systemd service..."
+if ! is_dry_run; then
+    systemctl --user enable --now vicinae.service
+fi
+log_success "vicinae service enabled"
+
+log_success "vicinae setup complete!"
+log_info "  Toggle launcher: Super+Space"
+log_info "  Open settings: vicinae settings"
+log_info "  Config: ~/.config/vicinae/"

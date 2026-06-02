@@ -1,0 +1,657 @@
+# Dotfiles Tool Installation Configurations
+# Used by chezmoi Go templates to generate installation scripts
+# sourcing the shared library from .chezmoitemplates/install-lib.sh
+#
+# Schema:
+#   name:           Tool identifier (used in script naming)
+#   description:    What the tool does
+#   type:           run_once_before | run_once_after | run_onchange
+#   priority:       Numeric ordering (lower = earlier, from filename convention)
+#   check:          Command(s) to verify installation
+#     commands:     List of commands to check (first found = installed)
+#     version_flag: Flag to get version (default: --version)
+#   install:
+#     method:       package | download | cargo | aur | custom
+#     url:          For download method
+#     packages:     Package name(s) - string or per-OS map
+#     aur_package:  AUR package name (for aur method)
+#   dependencies:   Required tools/packages that must exist first
+#   os_support:     List of OS families or "all"
+#   post_install:   Shell commands to run after installation
+#   skip_if_exists: Skip installation if command already exists (default: true)
+#   notes:          Additional info or manual steps
+
+tools:
+  # ─────────────────────────────────────────────────────
+  # PHASE: run_once_before (installations, priority 00-99)
+  # ─────────────────────────────────────────────────────
+
+  - name: kdotool
+    description: KDE-compatible xdotool alternative for Wayland
+    type: run_once_before
+    priority: 0
+    check:
+      commands: [kdotool]
+      version_flag: "--version"
+    install:
+      method: aur
+      aur_package: kdotool
+    os_support: [arch]
+    skip_if_exists: true
+
+  - name: age
+    description: Simple, modern encryption tool
+    type: run_once_before
+    priority: 5
+    check:
+      commands: [age]
+      version_flag: "--version"
+    install:
+      method: package
+      packages: age
+    os_support: [arch, debian, fedora, alpine]
+    skip_if_exists: true
+
+  - name: nix
+    description: Nix package manager (Determinate Systems installer)
+    type: run_once_before
+    priority: 10
+    check:
+      commands: [nix]
+      version_flag: "--version"
+    install:
+      method: download
+      url: "https://install.determinate.systems/nix"
+      run_args: "install"
+    dependencies: [curl]
+    os_support: all
+    skip_if_exists: true
+    post_install:
+      - 'echo "⚠ You may need to restart your shell or run: source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"'
+
+  - name: mise
+    description: Polyglot runtime manager
+    type: run_once_before
+    priority: 20
+    check:
+      commands: [mise]
+      version_flag: "--version"
+    install:
+      method: download
+      url: "https://mise.jdx.dev/install.sh"
+    os_support: all
+    skip_if_exists: true
+    post_install:
+      - 'echo "⚠ Restart your shell or run: export PATH=\"$HOME/.local/bin:$PATH\""'
+
+  - name: devenv
+    description: Declarative developer environments (requires Nix)
+    type: run_once_before
+    priority: 30
+    check:
+      commands: [devenv]
+      version_flag: "version"
+    install:
+      method: download
+      url: "https://devenv.sh/install.sh"
+      shell: bash
+    dependencies: [nix]
+    os_support: all
+    skip_if_exists: true
+
+  - name: uv
+    description: Fast Python package manager
+    type: run_once_before
+    priority: 40
+    check:
+      commands: [uv]
+      version_flag: "--version"
+    install:
+      method: download
+      url: "https://astral.sh/uv/install.sh"
+    os_support: all
+    skip_if_exists: true
+    post_install:
+      - 'echo "⚠ Restart your shell or run: export PATH=\"$HOME/.local/bin:$PATH\""'
+
+  - name: rust
+    description: Rust programming language via rustup
+    type: run_once_before
+    priority: 45
+    check:
+      commands: [rustup]
+      version_flag: "--version"
+    install:
+      method: download
+      url: "https://sh.rustup.rs"
+      run_args: "-y"
+      downloader: curl_only
+      curl_flags: "--proto '=https' --tlsv1.2 -sSf"
+    dependencies: [curl]
+    os_support: all
+    skip_if_exists: true
+    custom_skip_logic: |
+      # Check if cargo exists without rustup (system rust)
+      if command -v cargo >/dev/null 2>&1 && ! command -v rustup >/dev/null 2>&1; then
+          log_warn "Rust is installed but not via rustup, skipping to avoid conflicts"
+          exit 0
+      fi
+    post_install:
+      - '. "$HOME/.cargo/env"'
+      - 'log_version rustc'
+      - 'log_version cargo'
+
+  - name: podman
+    description: Daemonless container engine
+    type: run_once_before
+    priority: 50
+    check:
+      commands: [podman]
+      version_flag: "--version"
+    install:
+      method: package
+      packages: podman
+    os_support: [arch, debian, fedora, alpine]
+    skip_if_exists: true
+    post_install:
+      - |
+        # Check rootless mode support
+        if [ -f /proc/sys/kernel/unprivileged_userns_clone ]; then
+            if [ "$(cat /proc/sys/kernel/unprivileged_userns_clone)" = "0" ]; then
+                log_warn "Rootless mode requires user namespaces. Run:"
+                echo "  echo 'kernel.unprivileged_userns_clone=1' | sudo tee /etc/sysctl.d/99-rootless.conf"
+                echo "  sudo sysctl --system"
+            fi
+        fi
+
+  - name: bun
+    description: Fast all-in-one JavaScript runtime
+    type: run_once_before
+    priority: 60
+    check:
+      commands: [bun]
+      version_flag: "--version"
+    install:
+      method: download
+      url: "https://bun.sh/install"
+      dependencies_packages:
+        arch: [unzip]
+        debian: [unzip]
+        fedora: [unzip]
+        alpine: [unzip]
+    os_support: [arch, debian, fedora, alpine]
+    skip_if_exists: true
+    post_install:
+      - 'echo "⚠ Restart your shell or run: export PATH=\"$HOME/.bun/bin:$PATH\""'
+
+  - name: engram
+    description: Persistent memory system for AI agents
+    type: run_once_before
+    priority: 65
+    check:
+      commands: [engram]
+      version_flag: "version"
+    install:
+      method: custom
+      script: |
+        # Detect architecture
+        ARCH=$(uname -m)
+        case "$ARCH" in
+            x86_64) ARCH_NAME="amd64" ;;
+            aarch64|arm64) ARCH_NAME="arm64" ;;
+            *) die "Unsupported architecture: $ARCH" ;;
+        esac
+
+        require_any_command "curl or wget required" curl wget
+        require_command tar "tar is required"
+
+        # Fetch latest version from GitHub API
+        log_info "Fetching latest version..."
+        if check_command curl; then
+            LATEST_VERSION=$(curl -s https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+        else
+            LATEST_VERSION=$(wget -qO- https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+        fi
+
+        if [ -z "$LATEST_VERSION" ]; then
+            log_warn "Could not fetch latest version. Using v1.15.15 as fallback."
+            LATEST_VERSION="v1.15.15"
+        fi
+
+        VERSION_NUM=$(echo "$LATEST_VERSION" | sed 's/^v//')
+        DOWNLOAD_URL="https://github.com/Gentleman-Programming/engram/releases/download/${LATEST_VERSION}/engram_${VERSION_NUM}_linux_${ARCH_NAME}.tar.gz"
+
+        log_info "Downloading engram ${LATEST_VERSION} for linux_${ARCH_NAME}..."
+
+        TMP_DIR=$(mktemp -d)
+        trap "rm -rf $TMP_DIR" EXIT
+
+        fetch_url "$DOWNLOAD_URL" "$TMP_DIR/engram.tar.gz"
+        cd "$TMP_DIR"
+        tar -xzf engram.tar.gz
+
+        mkdir -p "$HOME/.local/bin"
+        if [ -f "engram" ]; then
+            mv engram "$HOME/.local/bin/engram"
+            chmod +x "$HOME/.local/bin/engram"
+        else
+            die "Could not find engram binary in archive"
+        fi
+    dependencies: [curl, tar]
+    os_support: all
+    skip_if_exists: true
+
+  - name: atuin
+    description: Magical shell history
+    type: run_once_before
+    priority: 66
+    check:
+      commands: [atuin]
+      version_flag: "--version"
+    install:
+      method: package
+      packages:
+        arch: atuin
+        debian: null  # Not in default repos, use download fallback
+        fedora: atuin
+      fallback:
+        method: download
+        url: "https://setup.atuin.sh"
+        run_args: "-- --non-interactive"
+        curl_flags: "--proto '=https' --tlsv1.2 -LsSf"
+    os_support: [arch, debian, fedora]
+    skip_if_exists: true
+
+  - name: cli-tools
+    description: Essential CLI tools (modern replacements)
+    type: run_once_before
+    priority: 70
+    check:
+      # Multiple tools, check individually
+      commands_map:
+        helix: [helix, hx]
+        ripgrep: [rg]
+        yazi: [yazi]
+        bat: [bat]
+        duf: [duf]
+        eza: [eza]
+        glow: [glow]
+        serpl: [serpl]
+        just: [just]
+        tealdeer: [tldr]
+    install:
+      method: package
+      packages_list:
+        - name: helix
+          commands: [helix, hx]
+          packages:
+            arch: helix
+            debian: helix
+            fedora: helix
+        - name: ripgrep
+          commands: [rg]
+          packages:
+            arch: ripgrep
+            debian: ripgrep
+            fedora: ripgrep
+        - name: yazi
+          commands: [yazi]
+          packages:
+            arch: yazi
+            debian: yazi
+            fedora: yazi
+        - name: bat
+          commands: [bat]
+          packages:
+            arch: bat
+            debian: bat
+            fedora: bat
+        - name: duf
+          commands: [duf]
+          packages:
+            arch: duf
+            debian: duf
+            fedora: duf
+        - name: eza
+          commands: [eza]
+          packages:
+            arch: eza
+            debian: eza
+            fedora: eza
+        - name: glow
+          commands: [glow]
+          packages:
+            arch: glow
+            debian: glow
+            fedora: glow
+        - name: serpl
+          commands: [serpl]
+          packages:
+            arch: serpl
+            debian: serpl
+            fedora: serpl
+        - name: just
+          commands: [just]
+          packages:
+            arch: just
+            debian: just
+            fedora: just
+        - name: tealdeer
+          commands: [tldr]
+          packages:
+            arch: tealdeer
+            debian: tealdeer
+            fedora: tealdeer
+    os_support: [arch, debian, fedora, alpine]
+    skip_if_exists: true
+
+  - name: global-menu
+    description: Global menu support for GTK applications (KDE Plasma)
+    type: run_once_before
+    priority: 75
+    check:
+      # Check via pacman query instead of command
+      custom_check: |
+        pacman -Qi appmenu-gtk-module >/dev/null 2>&1 && pacman -Qi libdbusmenu-glib >/dev/null 2>&1
+    install:
+      method: package
+      packages_list:
+        - name: appmenu-gtk-module
+          packages:
+            arch: appmenu-gtk-module
+        - name: libdbusmenu-glib
+          packages:
+            arch: libdbusmenu-glib
+    os_support: [arch]
+    skip_if_exists: true
+
+  - name: skim
+    description: Fuzzy finder written in Rust
+    type: run_once_before
+    priority: 75
+    check:
+      commands: [sk]
+      version_flag: "--version"
+    install:
+      method: cargo
+      crate: skim
+      pre_install:
+        - |
+          # Update Rust toolchain for compatibility (skim 4.7.0+ requires rustc 1.91+)
+          if command -v rustup >/dev/null 2>&1; then
+              log_info "Updating Rust toolchain..."
+              rustup update stable
+              rustup default stable
+          fi
+    dependencies: [cargo]
+    os_support: all
+    skip_if_exists: true
+
+  - name: espanso
+    description: Text expander for Linux (Wayland/X11)
+    type: run_once_before
+    priority: 80
+    check:
+      commands: [espanso]
+      version_flag: "--version"
+    install:
+      method: aur
+      aur_package_wayland: espanso-wayland
+      aur_package_x11: espanso
+      detect_display_server: true
+    dependencies: [paru, yay]  # At least one AUR helper
+    os_support: [arch]
+    skip_if_exists: true
+    post_install:
+      - |
+        # Set required capabilities for Wayland
+        if [ "${XDG_SESSION_TYPE:-x11}" = "wayland" ]; then
+            log_info "Setting required capabilities for Wayland..."
+            sudo setcap "cap_dac_override+p" $(which espanso)
+            log_success "Capabilities set"
+        fi
+      - |
+        # Register espanso as a systemd service
+        log_info "Registering espanso systemd service..."
+        espanso service register || log_warn "Service registration failed (may already be registered)"
+
+  - name: vicinae
+    description: Keyboard-driven application launcher
+    type: run_once_before
+    priority: 85
+    check:
+      commands: [vicinae]
+    install:
+      method: aur
+      aur_package: vicinae-bin
+    dependencies: [paru, yay]  # At least one AUR helper
+    os_support: [arch]
+    skip_if_exists: true
+    post_install:
+      - |
+        log_info "Enabling vicinae systemd service..."
+        systemctl --user enable --now vicinae.service
+        log_success "vicinae service enabled"
+
+  - name: navi
+    description: Interactive cheatsheet tool
+    type: run_once_before
+    priority: 90
+    check:
+      commands: [navi]
+      version_flag: "--version"
+    install:
+      method: aur
+      aur_package: navi
+    dependencies: [paru, yay]  # At least one AUR helper
+    os_support: [arch]
+    skip_if_exists: true
+
+  # ─────────────────────────────────────────────────────
+  # PHASE: run_once_after (configuration, priority 60-99)
+  # ─────────────────────────────────────────────────────
+
+  - name: pi
+    description: Pi coding agent (installed via bun)
+    type: run_once_after
+    priority: 60
+    check:
+      commands: [pi]
+      version_flag: "--version"
+    install:
+      method: custom
+      script: |
+        require_command bun "bun is required to install pi"
+        log_info "Installing pi coding agent via bun..."
+        bun install -g @earendil-works/pi-coding-agent
+    dependencies: [bun]
+    os_support: all
+    skip_if_exists: true
+
+  - name: kde-shortcuts
+    description: KDE global shortcuts configuration guide
+    type: run_once_after
+    priority: 70
+    check:
+      custom_check: "true"  # Always run (outputs instructions)
+    install:
+      method: custom
+      script: |
+        require_command kdotool "kdotool is required"
+        require "-f $HOME/.local/bin/run-or-cycle.sh" "run-or-cycle.sh not found at ~/.local/bin/"
+        require "-f $HOME/.local/bin/librewolf-profile-launch.sh" "librewolf-profile-launch.sh not found at ~/.local/bin/"
+        log_success "Prerequisites verified"
+    dependencies: [kdotool]
+    os_support: [arch]
+    skip_if_exists: false
+    notes: "Outputs manual configuration instructions for KDE System Settings"
+
+  - name: ghostty-window-fix
+    description: Fix ghostty window properties for taskbar/Alt+Tab
+    type: run_once_after
+    priority: 71
+    check:
+      custom_check: "true"  # Always run
+    install:
+      method: custom
+      script: |
+        if ! pgrep -x ghostty >/dev/null; then
+            log_warn "Ghostty is not running. Launch ghostty and run again."
+            exit 0
+        fi
+        GHOSTTY_WID=$(kdotool search --class com.mitchellh.ghostty 2>/dev/null | head -1)
+        if [ -z "$GHOSTTY_WID" ]; then
+            log_warn "Could not find ghostty window."
+            exit 0
+        fi
+        log_info "Found ghostty window: $GHOSTTY_WID"
+        kdotool windowstate --remove SKIP_TASKBAR "$GHOSTTY_WID" 2>/dev/null || true
+        kdotool windowstate --remove SKIP_PAGER "$GHOSTTY_WID" 2>/dev/null || true
+        kdotool windowstate --remove SKIP_SWITCHER "$GHOSTTY_WID" 2>/dev/null || true
+        log_success "Ghostty window properties updated"
+    dependencies: [kdotool]
+    os_support: [arch]
+    skip_if_exists: false
+
+  - name: tealdeer-cache
+    description: Update tealdeer (tldr) cache
+    type: run_once_after
+    priority: 71
+    check:
+      commands: [tldr]
+    install:
+      method: custom
+      script: |
+        require_command tldr "tealdeer not installed"
+        if [ -d "$HOME/.cache/tealdeer" ] && [ -n "$(ls -A "$HOME/.cache/tealdeer" 2>/dev/null)" ]; then
+            log_info "Updating tealdeer cache..."
+        else
+            log_info "Populating tealdeer cache for the first time..."
+        fi
+        tldr --update
+        log_success "tealdeer ready to use"
+    dependencies: [tldr]
+    os_support: all
+    skip_if_exists: false
+
+  - name: ufw
+    description: Uncomplicated Firewall configuration
+    type: run_once_after
+    priority: 80
+    check:
+      commands: [ufw]
+    install:
+      method: package
+      packages:
+        arch: ufw
+    os_support: [arch]
+    skip_if_exists: false
+    post_install:
+      - |
+        # Check if already enabled
+        if sudo ufw status | grep -q "Status: active"; then
+            log_success "ufw already enabled"
+            sudo ufw status verbose
+            exit 0
+        fi
+        log_info "Configuring ufw firewall..."
+        sudo ufw default deny incoming
+        sudo ufw default allow outgoing
+        sudo ufw --force enable
+        run_privileged systemctl enable ufw.service
+        log_success "ufw enabled and configured"
+
+  - name: wifi-regdom
+    description: Wi-Fi regulatory domain configuration (Spain/ES)
+    type: run_once_after
+    priority: 85
+    check:
+      custom_check: |
+        grep -q 'WIRELESS_REGDOM="ES"' /etc/conf.d/wireless-regdom 2>/dev/null
+    install:
+      method: package
+      packages:
+        arch: wireless-regdb
+    os_support: [arch]
+    skip_if_exists: false
+    notes: "Outputs manual configuration instructions for regulatory domain"
+
+  # ─────────────────────────────────────────────────────
+  # PHASE: run_onchange (triggered by file changes)
+  # ─────────────────────────────────────────────────────
+
+  - name: espanso-packages
+    description: Install espanso packages from packages.txt
+    type: run_onchange
+    priority: 0
+    trigger_file: "dot_config/espanso/packages.txt"
+    check:
+      commands: [espanso]
+    install:
+      method: custom
+      script: |
+        require_command espanso "espanso not installed"
+        PACKAGES_FILE="$HOME/.config/espanso/packages.txt"
+        if [ ! -f "$PACKAGES_FILE" ]; then
+            log_warn "No packages.txt found at $PACKAGES_FILE"
+            exit 0
+        fi
+        INSTALLED=0
+        SKIPPED=0
+        while IFS= read -r line; do
+            case "$line" in ''|'#'*) continue ;; esac
+            package=$(echo "$line" | cut -d'#' -f1 | xargs)
+            if [ -n "$package" ]; then
+                log_info "Installing: $package"
+                if espanso install "$package" --force; then
+                    INSTALLED=$((INSTALLED + 1))
+                else
+                    log_warn "Failed to install: $package"
+                    SKIPPED=$((SKIPPED + 1))
+                fi
+            fi
+        done < "$PACKAGES_FILE"
+        log_success "Installed: $INSTALLED packages"
+        [ $SKIPPED -gt 0 ] && log_warn "Skipped/Failed: $SKIPPED packages"
+    dependencies: [espanso]
+    os_support: all
+
+  - name: zellij-plugins
+    description: Install/update zellij plugins when manifest changes
+    type: run_onchange
+    priority: 0
+    trigger_file: "dot_config/zellij/plugins.toml"
+    check:
+      custom_check: "true"
+    install:
+      method: custom
+      script: |
+        PLUGIN_SCRIPT="$HOME/.config/zellij/scripts/install-plugins.sh"
+        if [ ! -f "$PLUGIN_SCRIPT" ]; then
+            log_warn "Plugin install script not found: $PLUGIN_SCRIPT"
+            exit 0
+        fi
+        chmod +x "$PLUGIN_SCRIPT"
+        log_info "Zellij plugin manifest changed, updating plugins..."
+        "$PLUGIN_SCRIPT" --force
+    os_support: all
+
+# ─────────────────────────────────────────────────────
+# METADATA
+# ─────────────────────────────────────────────────────
+
+# Root install.sh is the bootstrap script and doesn't use this config
+# It bootstraps chezmoi itself and must remain standalone
+
+install_methods:
+  package: "Install via system package manager (pacman/apt/dnf/apk)"
+  download: "Download and execute installation script"
+  cargo: "Install via cargo (Rust package manager)"
+  aur: "Install via AUR helper (paru/yay)"
+  custom: "Custom installation logic"
+
+os_families:
+  arch: "arch, cachyos, manjaro, endeavouros"
+  debian: "ubuntu, debian, linuxmint, pop"
+  fedora: "fedora, rhel, centos, rocky, almalinux"
+  alpine: "alpine"

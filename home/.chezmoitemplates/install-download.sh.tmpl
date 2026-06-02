@@ -1,0 +1,5 @@
+{{- /* install-download.sh.tmpl - Download and run an installer script */ -}}
+{{- /* Usage: {{ template "install-download.sh.tmpl" (dict "url" "https://..." "name" "mise") }} */ -}}
+{{- /* Params: .url (installer URL), .name (tool name for messaging) */ -}}
+require_any_command "curl or wget required to install {{ .name }}" curl wget
+download_and_run "{{ .url }}" "Installing {{ .name }}..."

@@ -1,17 +1,11 @@
-#!/bin/sh
-# Chezmoi hook: Install/update zellij plugins when manifest changes
-#
-# This script runs automatically when plugins.toml changes.
-# The hash ensures it only runs when the manifest is modified.
-#
+{{ template "install-header.sh.tmpl" . }}
+# Install/update zellij plugins when manifest changes
 # plugins.toml hash: {{ include "dot_config/zellij/plugins.toml" | sha256sum }}
-
-set -e
 
 PLUGIN_SCRIPT="{{ .chezmoi.homeDir }}/.config/zellij/scripts/install-plugins.sh"
 
 if [ ! -f "$PLUGIN_SCRIPT" ]; then
-    echo "Warning: Plugin install script not found: $PLUGIN_SCRIPT" >&2
+    log_warn "Plugin install script not found: $PLUGIN_SCRIPT"
     exit 0
 fi
 
@@ -19,7 +13,9 @@ fi
 chmod +x "$PLUGIN_SCRIPT"
 
 # Run install script
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "Zellij plugin manifest changed, updating plugins..."
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-"$PLUGIN_SCRIPT" --force
+log_info "Zellij plugin manifest changed, updating plugins..."
+if is_dry_run; then
+    log_info "[DRY RUN] Would run: $PLUGIN_SCRIPT --force"
+else
+    "$PLUGIN_SCRIPT" --force
+fi

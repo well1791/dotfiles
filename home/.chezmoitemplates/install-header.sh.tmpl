@@ -1,0 +1,5 @@
+{{- /* install-header.sh.tmpl - Standard script header with library sourcing */ -}}
+{{- /* Usage: {{ template "install-header.sh.tmpl" . }} */ -}}
+#!/bin/sh
+set -e
+. "{{ .chezmoi.sourceDir }}/.chezmoitemplates/install-lib.sh"

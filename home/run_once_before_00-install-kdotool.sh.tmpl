@@ -1,0 +1,31 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install kdotool (KDE window automation tool)
+
+# Skip if already installed
+if log_version kdotool; then
+    exit 0
+fi
+
+# Install via AUR helper
+AUR_HELPER=""
+if check_command paru; then
+    AUR_HELPER="paru"
+elif check_command yay; then
+    AUR_HELPER="yay"
+else
+    die "No AUR helper found (paru or yay required)"
+fi
+
+log_info "Installing kdotool via $AUR_HELPER..."
+if ! is_dry_run; then
+    $AUR_HELPER -S kdotool --noconfirm --needed
+else
+    log_info "[DRY RUN] Would run: $AUR_HELPER -S kdotool --noconfirm --needed"
+fi
+
+# Verify
+if check_command kdotool; then
+    log_success "kdotool installed" "$(get_version kdotool)"
+else
+    log_warn "kdotool installation may have failed"
+fi
