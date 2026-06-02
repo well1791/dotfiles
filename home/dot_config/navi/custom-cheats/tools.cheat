@@ -1,0 +1,28 @@
+% herdr, config
+
+# Generate default herdr config
+herdr --default-config > ~/.config/herdr/config.toml
+
+% vicinae, launcher
+
+# Toggle launcher
+vicinae toggle
+
+# Check configuration
+cat ~/.config/vicinae/settings.json
+
+% engram, memory
+
+# Open engram TUI
+engram tui
+
+% atuin, history
+
+# Show usage stats
+atuin stats
+
+# List scripts
+atuin scripts list
+
+# Search history
+atuin search <query>

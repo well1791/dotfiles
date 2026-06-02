@@ -1,0 +1,27 @@
+% espanso, text-expander
+
+# Restart espanso
+espanso restart
+
+# Check status
+espanso status
+
+# View match list
+espanso match list | less
+
+# Install packages via syncstall
+espanso-syncstall <packages>
+
+# Uninstall package
+espanso package uninstall <package>
+
+# View logs
+espanso log
+
+# Edit match config
+chezmoi edit --watch ~/.config/espanso/match/base.yml
+
+# Edit default config
+chezmoi edit --watch ~/.config/espanso/config/default.yml
+
+$ package: espanso package list | awk '{print $1}' | sk

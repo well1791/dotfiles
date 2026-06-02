@@ -1,0 +1,29 @@
+% fish, shell
+
+# Reload fish configuration
+source ~/.config/fish/config.fish
+
+# List all abbreviations
+abbr --show
+
+# Add new abbreviation
+abbr --add <name> <expansion>
+
+# Edit fish config
+chezmoi edit --watch ~/.config/fish/config.fish
+
+# Install from URL via curl pipe
+curl -fsSL <url> | sh
+
+% zellij, terminal-multiplexer
+
+# Attach to session
+zellij attach <session>
+
+# List sessions
+zellij list-sessions
+
+# Kill session
+zellij kill-session <session>
+
+$ session: zellij list-sessions 2>/dev/null | awk '{print $1}' | sk

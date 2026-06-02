@@ -1,0 +1,28 @@
+% chezmoi, dotfiles
+
+# Apply dotfiles changes
+chezmoi apply
+
+# Show diff before applying
+chezmoi diff
+
+# Show current status
+chezmoi status
+
+# Edit a managed file (with watch)
+chezmoi edit --watch <file>
+
+# Add new file to dotfiles
+chezmoi add <file>
+
+# Re-add changed files
+chezmoi re-add <managed_file>
+
+# Forget a managed file (stop tracking)
+chezmoi forget <managed_file>
+
+# Update from remote source
+chezmoi update
+
+$ file: chezmoi managed | sk
+$ managed_file: chezmoi managed | sk --multi | tr '\n' ' '

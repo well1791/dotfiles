@@ -1,0 +1,15 @@
+% clipboard, copy, wayland
+
+# Copy file contents to clipboard
+bat -p <file> | wl-copy
+
+# Copy command output to clipboard
+<command> | wl-copy
+
+# Paste from clipboard
+wl-paste
+
+# Paste clipboard to file
+wl-paste > <output_file>
+
+$ file: fd --type f --hidden --max-depth 3 | sk

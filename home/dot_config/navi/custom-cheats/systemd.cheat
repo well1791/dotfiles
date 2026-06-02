@@ -1,0 +1,30 @@
+% systemd, service
+
+# Start user service
+systemctl --user start <service>
+
+# Stop user service
+systemctl --user stop <service>
+
+# Enable and start user service now
+systemctl --user enable --now <service>
+
+# Disable and stop user service now
+systemctl --user disable --now <service>
+
+# Restart user service
+systemctl --user restart <service>
+
+# Check user service status
+systemctl --user status <service>
+
+# View user service logs (follow)
+journalctl --user -u <service> -f
+
+# List all user services
+systemctl --user list-units --type=service
+
+# Reload systemd daemon (after unit file changes)
+systemctl --user daemon-reload
+
+$ service: systemctl --user list-unit-files --type=service --no-legend | awk '{print $1}' | sk

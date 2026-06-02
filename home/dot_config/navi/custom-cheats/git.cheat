@@ -1,0 +1,30 @@
+% git, version-control
+
+# Interactive rebase last N commits
+git rebase --interactive HEAD~<number>
+
+# Create new branch from origin/dev
+git switch --create <branch> origin/dev
+
+# Show commit history with graph
+git log --oneline --graph --all
+
+# Undo last commit (keep changes)
+git reset --soft HEAD~1
+
+# Show changes in specific commit
+git show <commit>
+
+# Cherry-pick a commit
+git cherry-pick <commit>
+
+# Delete branch forcefully
+git branch --delete --force <branch>
+
+# Detach at specific remote ref
+git switch --detach origin/<ref>
+
+$ commit: git log --oneline -20 | sk --no-multi | awk '{print $1}'
+$ branch: git branch | awk '{print $NF}' | sk
+$ ref: git branch -r | sed 's|origin/||' | awk '{print $NF}' | sk
+$ number: echo -e "2\n3\n5\n10\n20" | sk

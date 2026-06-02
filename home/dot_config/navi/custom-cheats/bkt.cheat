@@ -1,0 +1,21 @@
+% bkt, bitbucket, atlassian
+
+# Login to Bitbucket cloud (web browser)
+bkt auth login https://bitbucket.org --kind cloud --web
+
+# List pull requests
+bkt pr list
+
+# Get PR details
+bkt pr get <pr_number>
+
+# Add reaction to PR comment
+bkt pr reaction add <pr_number> <comment_id> --emoji <emoji>
+
+# List issues
+bkt issue list
+
+# Get issue details
+bkt issue get <issue_number>
+
+$ emoji: echo -e ":thumbsup:\n:thumbsdown:\n:heart:\n:hooray:\n:rocket:" | sk
