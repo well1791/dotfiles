@@ -49,3 +49,7 @@ keybind = ctrl+page_up=unbind
 keybind = ctrl+page_down=unbind
 keybind = ctrl+tab=unbind
 keybind = ctrl+shift+tab=unbind
+
+# Paste with ctrl+v instead of ctrl+shift+v
+keybind = ctrl+shift+v=unbind
+keybind = ctrl+v=paste_from_clipboard

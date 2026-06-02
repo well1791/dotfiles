@@ -66,7 +66,7 @@ keybinds clear-defaults=true {
     }
 
     scroll {
-        bind "Alt s" { SwitchToMode "Normal"; }
+        bind "Alt a" { SwitchToMode "Normal"; }
         bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // |-- NAV
@@ -87,7 +87,7 @@ keybinds clear-defaults=true {
     }
 
     search {
-        bind "Alt s" { SwitchToMode "Normal"; }
+        bind "Alt a" { SwitchToMode "Normal"; }
         bind "Ctrl c" "q" { ScrollToBottom; SwitchToMode "Normal"; }
 
         // |-- NAV
@@ -241,7 +241,7 @@ keybinds clear-defaults=true {
         bind "Alt Ctrl n" { SwitchToMode "Resize"; }
     }
     shared_except "scroll" "locked" {
-        bind "Alt s" { SwitchToMode "Scroll"; }
+        bind "Alt a" { SwitchToMode "Scroll"; }
     }
     shared_except "session" "locked" {
         bind "Alt Ctrl o" { SwitchToMode "Session"; }
