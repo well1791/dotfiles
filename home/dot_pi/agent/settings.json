@@ -1,7 +1,7 @@
 {
   "lastChangelogVersion": "0.78.0",
   "defaultProvider": "github-copilot",
-  "defaultModel": "claude-sonnet-4.5",
+  "defaultModel": "claude-opus-4.6",
   "defaultThinkingLevel": "medium",
   "skills": [
     "/home/well/.local/share/superpowers/skills"
@@ -14,7 +14,8 @@
     "npm:pi-btw",
     "npm:@mrclrchtr/supi-extras",
     "npm:gentle-engram@0.1.7",
-    "npm:@a5c-ai/babysitter-pi"
+    "npm:@a5c-ai/babysitter-pi",
+    "npm:@samfp/pi-essentials"
   ],
   "npmCommand": [
     "bun"
