@@ -1,5 +1,5 @@
 function ged --description 'Open git-changed files in editor'
-    argparse 'h/help' 'u/untracked' 'm/modified' 's/staged' 'c/conflicts' 'd/deleted' 'r/renamed' -- $argv
+    argparse h/help u/untracked m/modified s/staged c/conflicts d/deleted r/renamed -- $argv
     or return 1
 
     if set -q _flag_help
@@ -55,8 +55,7 @@ function ged --description 'Open git-changed files in editor'
     end
 
     if test (count $files) -eq 0
-        echo "No files found."
-        return 0
+        $EDITOR .
     end
 
     # Deduplicate
