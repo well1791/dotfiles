@@ -1,0 +1,28 @@
+% tv, television, fuzzy-finder
+
+# Find files
+tv files
+
+# Search command history
+tv bash-history
+
+# Browse directories
+tv dirs
+
+# Browse environment variables
+tv env
+
+# Browse git repositories
+tv git-repos
+
+# Browse git status
+tv git
+
+# List available channels
+tv list-channels
+
+# Update channel definitions
+tv update-channels
+
+# Find files with custom preview
+tv --preview-command "bat {}"

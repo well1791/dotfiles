@@ -1,0 +1,49 @@
+% podman, container, docker
+
+# Run interactive container (removed on exit)
+podman run -it --rm <image>
+
+# List running containers
+podman ps
+
+# List all containers (including stopped)
+podman ps -a
+
+# List images
+podman image list
+
+# Pull image
+podman pull <image>
+
+# Start stopped container
+podman start <container>
+
+# Exec into running container
+podman exec -it <container> /bin/bash
+
+# Stop container
+podman stop <container>
+
+# Remove container
+podman rm <container>
+
+# Remove all stopped containers
+podman rm -a
+
+# Remove image
+podman rmi <image_name>
+
+# Inspect container
+podman inspect <container>
+
+# View container logs
+podman logs <container>
+
+# View container logs (follow)
+podman logs -f <container>
+
+# System info
+podman info
+
+$ container: podman ps -a --format '{{.Names}}' 2>/dev/null | fzf
+$ image_name: podman image list --format '{{.Repository}}:{{.Tag}}' 2>/dev/null | fzf

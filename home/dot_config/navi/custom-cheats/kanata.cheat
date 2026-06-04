@@ -1,0 +1,24 @@
+% kanata, keyboard, remap
+
+# Run kanata with config
+kanata --cfg <config_file>
+
+# Run kanata with config and live reload
+kanata --cfg <config_file> --watch
+
+# Test config file (validate)
+kanata --cfg <config_file> --check
+
+# Restart kanata service
+systemctl --user restart kanata.service
+
+# Check kanata service status
+systemctl --user status kanata.service
+
+# View kanata service logs
+journalctl --user -u kanata.service -f
+
+# Edit kanata config via chezmoi
+chezmoi edit --watch ~/.config/kanata/config.kbd
+
+$ config_file: fd -e kbd . ~/.config/kanata/ 2>/dev/null | fzf

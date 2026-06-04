@@ -1,0 +1,34 @@
+% atlcli, atlassian, jira, confluence, bitbucket
+
+# Login to Atlassian site
+atlcli auth login --site <site_url>
+
+# List auth sessions
+atlcli auth list
+
+# Get Jira issue
+atlcli jira issue get --key <issue_key>
+
+# Get Jira issue as JSON
+atlcli jira issue get --key <issue_key> --json
+
+# List Confluence spaces
+atlcli wiki space list
+
+# List pages in a space
+atlcli wiki page list --space <space>
+
+# List pages under ancestor
+atlcli wiki page list --ancestor <ancestor_id>
+
+# Init docs folder from Confluence
+atlcli wiki docs init <dir> --space <space>
+
+# Pull docs from Confluence
+atlcli wiki docs pull <dir>
+
+# List synced docs
+atlcli wiki docs list
+
+# Show current config
+atlcli config list

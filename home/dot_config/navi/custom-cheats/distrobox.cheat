@@ -1,0 +1,28 @@
+% distrobox, container, linux
+
+# List containers
+distrobox ls
+
+# Create container
+distrobox create --name <name> --image <image>
+
+# Create init container
+distrobox create --name <name> --init --image <image>
+
+# Enter container
+distrobox enter <container>
+
+# Stop all containers
+distrobox stop
+
+# Remove container
+distrobox rm <container>
+
+# Remove all containers (force)
+distrobox rm -f -a
+
+# List available images
+distrobox images
+
+$ container: distrobox ls 2>/dev/null | tail -n +2 | awk '{print $3}' | fzf
+$ image: echo -e "nixos/nix:latest\nubuntu:latest\nfedora:latest\narchlinux:latest" | fzf

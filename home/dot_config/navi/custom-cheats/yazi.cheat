@@ -1,0 +1,12 @@
+% yazi, file-manager
+
+# Open yazi in current directory
+yazi
+
+# Open yazi in specific directory
+yazi <path>
+
+# Open yazi and cd to last dir on exit (fish)
+yazi --cwd-file=/tmp/yazi-cwd; and cd (cat /tmp/yazi-cwd)
+
+$ path: fd -t d --max-depth 2 | fzf

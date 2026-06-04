@@ -1,0 +1,22 @@
+% zoxide, z, cd, navigation
+
+# Jump to directory
+z <query>
+
+# Interactive directory selection
+zi
+
+# Add directory to database
+zoxide add <path>
+
+# Remove directory from database
+zoxide remove <path>
+
+# List known directories
+zoxide query --list
+
+# Edit database entries
+zoxide edit
+
+# Show match for query
+zoxide query <query>

@@ -1,28 +1,23 @@
-% herdr, config
+% rmpc, mpd, music
 
-# Generate default herdr config
-herdr --default-config > ~/.config/herdr/config.toml
+# Launch rmpc TUI
+rmpc
 
-% vicinae, launcher
+# Add YouTube music URL
+rmpc addyt <url>
 
-# Toggle launcher
-vicinae toggle
+# Show current config
+rmpc config
 
-# Check configuration
-cat ~/.config/vicinae/settings.json
+# Save config to file
+rmpc config > ~/.config/rmpc/config.ron
 
-% engram, memory
+% update-all, maintenance
 
-# Open engram TUI
-engram tui
+# Update all self-updating tools
+update-all
 
-% atuin, history
+% mkp, project, scaffold
 
-# Show usage stats
-atuin stats
-
-# List scripts
-atuin scripts list
-
-# Search history
-atuin search <query>
+# Create new project from template
+mkp

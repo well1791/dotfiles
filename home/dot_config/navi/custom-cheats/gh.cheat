@@ -1,0 +1,46 @@
+% gh, github, github-cli
+
+# Login to GitHub
+gh auth login
+
+# Check auth status
+gh auth status
+
+# Create pull request (interactive)
+gh pr create
+
+# List pull requests
+gh pr list
+
+# View pull request
+gh pr view <pr_number>
+
+# Checkout pull request
+gh pr checkout <pr_number>
+
+# Create issue
+gh issue create
+
+# List issues
+gh issue list
+
+# Clone repository
+gh repo clone <repo>
+
+# View repository in browser
+gh repo view --web
+
+# Create repository
+gh repo create <name>
+
+# List workflows
+gh workflow list
+
+# View workflow runs
+gh run list
+
+# Check CLI version
+gh version
+
+$ pr_number: gh pr list --json number,title --jq '.[] | "\(.number)\t\(.title)"' 2>/dev/null | fzf | awk '{print $1}'
+$ repo: echo "" | fzf --print-query | head -1

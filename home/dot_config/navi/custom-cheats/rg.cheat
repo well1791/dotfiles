@@ -1,0 +1,46 @@
+% rg, ripgrep, search, grep
+
+# Search for pattern in current directory
+rg '<pattern>'
+
+# Search and list only filenames
+rg -l '<pattern>'
+
+# Search specific file type
+rg '<pattern>' -t <type>
+
+# Search with context lines
+rg -C <context_lines> '<pattern>'
+
+# Search case-insensitively
+rg -i '<pattern>'
+
+# Search for fixed string (no regex)
+rg -F '<string>'
+
+# Search and replace (preview with sd)
+rg -l '<pattern>' | xargs sd '<pattern>' '<replace>'
+
+# Search hidden files too
+rg --hidden '<pattern>'
+
+# Search with file glob filter
+rg '<pattern>' -g '<glob>'
+
+# Count matches per file
+rg -c '<pattern>'
+
+# Show only matching part
+rg -o '<pattern>'
+
+# Invert match (lines not matching)
+rg -v '<pattern>'
+
+# Search multiline
+rg -U '<pattern>'
+
+# Output as JSON (pipe to delta for colored diff)
+rg --json -C 2 '<pattern>' | delta
+
+$ type: echo -e "ts\njs\nrust\npy\ngo\nmd\nyaml\ntoml\nhtml\ncss\nfish\nsh" | fzf
+$ context_lines: echo -e "2\n3\n5\n10" | fzf

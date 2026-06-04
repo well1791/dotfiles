@@ -1,0 +1,47 @@
+% pi, ai, coding-agent
+
+# Start pi (interactive)
+pi
+
+# Start pi with a prompt
+pi "<prompt>"
+
+# Start pi with file context
+pi @<file> "<prompt>"
+
+# Non-interactive mode (print and exit)
+pi -p "<prompt>"
+
+# Continue previous session
+pi -c
+
+# Resume a past session (interactive picker)
+pi -r
+
+# Resume specific session by ID
+pi --session <session_id>
+
+# Fork a session into a new one
+pi --fork <session_id>
+
+# Use specific model
+pi --model <model>
+
+# Use specific provider and model
+pi --model <provider_model>
+
+# Update pi
+pi update self
+
+# List installed extensions
+pi list
+
+# Install extension
+pi install <source>
+
+# Open config UI
+pi config
+
+$ file: fd --type f --hidden --max-depth 3 | fzf
+$ model: echo -e "claude-sonnet-4-20250514\ngemini-2.5-pro\ngpt-4.1\no3" | fzf
+$ provider_model: echo -e "anthropic/claude-sonnet-4-20250514\ngoogle/gemini-2.5-pro\nopenai/gpt-4.1\nopenai/o3" | fzf

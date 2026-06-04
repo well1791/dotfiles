@@ -1,0 +1,16 @@
+% qmk, keyboard, firmware
+
+# Compile firmware
+qmk compile -kb <keyboard> -km <keymap>
+
+# Flash firmware
+qmk flash -kb <keyboard> -km <keymap>
+
+# Set up QMK environment
+qmk setup
+
+# Set up forked QMK repo
+qmk setup <github_user>/qmk_firmware
+
+$ keyboard: echo -e "beekeeb/3w6hs" | fzf
+$ keymap: echo -e "well1791-11k\nwell1791-8k\ndefault" | fzf

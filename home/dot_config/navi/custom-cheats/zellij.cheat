@@ -1,0 +1,34 @@
+% zellij, terminal, multiplexer, tmux
+
+# Start new session
+zellij
+
+# Start with session name
+zellij --session <name>
+
+# Attach to existing session
+zellij attach <session>
+
+# List sessions
+zellij list-sessions
+
+# Kill a session
+zellij kill-session <session>
+
+# Kill all sessions
+zellij kill-all-sessions
+
+# Start with specific layout
+zellij --layout <layout>
+
+# Run command in new pane
+zellij run -- <command>
+
+# Edit scrollback in editor
+zellij edit --scrollback
+
+# List available plugins
+zellij plugin -- plugin-manager
+
+$ session: zellij list-sessions 2>/dev/null | awk '{print $1}' | fzf
+$ layout: fd -e kdl . ~/.config/zellij/layouts/ 2>/dev/null | fzf

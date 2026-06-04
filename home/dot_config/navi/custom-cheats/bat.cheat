@@ -1,0 +1,25 @@
+% bat, cat, viewer
+
+# View file with syntax highlighting
+bat <file>
+
+# View file plain (no line numbers/decorations)
+bat -p <file>
+
+# View file and copy to clipboard
+bat -p <file> | wl-copy
+
+# View specific line range
+bat -r <start>:<end> <file>
+
+# View with specific language syntax
+bat -l <language> <file>
+
+# Show config file location
+bat --config-file
+
+# View diff output with syntax highlighting
+<command> | bat -l diff
+
+$ file: fd --type f --hidden --max-depth 3 | fzf
+$ language: echo -e "json\nyaml\ntoml\nmarkdown\nfish\nbash\nrust\ntypescript\nkdl" | fzf

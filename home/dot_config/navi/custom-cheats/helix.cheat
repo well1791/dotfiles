@@ -1,0 +1,29 @@
+% helix, hx, editor
+
+# Open file in helix
+helix <file>
+
+# Open file at specific line
+helix <file>:<line>
+
+# Open multiple files
+helix <files>
+
+# Check health (language servers, etc)
+helix --health
+
+# Check health for specific language
+helix --health <language>
+
+# Show default config
+helix --default-config
+
+# Fetch grammars
+helix --grammar fetch
+
+# Build grammars
+helix --grammar build
+
+$ file: fd --type f --hidden --max-depth 3 | fzf
+$ files: fd --type f --hidden --max-depth 3 | fzf --multi | tr '\n' ' '
+$ language: echo -e "rust\ntypescript\njavascript\ngo\npython\nc-sharp\ntoml\nmarkdown\nfish\nbash\nkdl\nnix" | fzf

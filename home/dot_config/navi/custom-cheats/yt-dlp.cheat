@@ -1,0 +1,33 @@
+% yt-dlp, youtube, download, video
+
+# Download video
+yt-dlp '<url>'
+
+# Download best audio only
+yt-dlp -x --audio-format mp3 '<url>'
+
+# Download with specific format
+yt-dlp -f '<format>' '<url>'
+
+# List available formats
+yt-dlp -F '<url>'
+
+# Download with subtitles
+yt-dlp --write-subs --sub-lang en '<url>'
+
+# Download playlist
+yt-dlp '<playlist_url>'
+
+# Download with impersonate (bypass blocks)
+yt-dlp --extractor-args "generic:impersonate" '<url>'
+
+# Update yt-dlp
+yt-dlp -U
+
+# Download to specific directory
+yt-dlp -o '<output_dir>/%(title)s.%(ext)s' '<url>'
+
+# Download YouTube short
+yt-dlp '<shorts_url>'
+
+$ format: echo -e "bestvideo+bestaudio\nbestvideo[height<=720]+bestaudio\nbestvideo[height<=480]+bestaudio\nbestaudio" | fzf

@@ -1,0 +1,33 @@
+% nordvpn, vpn, privacy
+
+# Connect (auto best server)
+nordvpn connect
+
+# Connect to specific country
+nordvpn connect <country>
+
+# Connect to specific city
+nordvpn connect <city>
+
+# Connect to P2P server
+nordvpn connect P2P
+
+# Disconnect
+nordvpn disconnect
+
+# Check connection status
+nordvpn status
+
+# List available countries
+nordvpn countries
+
+# List cities for a country
+nordvpn cities <country>
+
+# List server groups
+nordvpn groups
+
+# Show current settings
+nordvpn settings
+
+$ country: nordvpn countries 2>/dev/null | tr ',' '\n' | tr -d ' \t' | grep -v '^$' | fzf

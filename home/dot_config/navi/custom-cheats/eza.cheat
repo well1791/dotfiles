@@ -1,0 +1,28 @@
+% eza, ls, listing, directory
+
+# List all files with details
+eza --all --long
+
+# Tree view (2 levels)
+eza --all --long --tree --level=2
+
+# Tree view (custom depth)
+eza --all --long --tree --level=<depth> <path>
+
+# Tree view of specific directory
+eza --all --long --tree --level=2 <path>
+
+# List sorted by modification time
+eza --all --long --sort=modified
+
+# List sorted by size
+eza --all --long --sort=size
+
+# List only directories
+eza --all --long --only-dirs
+
+# List with git status
+eza --all --long --git
+
+$ depth: echo -e "1\n2\n3\n5" | fzf
+$ path: fd -t d --max-depth 2 | fzf

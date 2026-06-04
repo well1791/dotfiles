@@ -1,0 +1,36 @@
+% paru, pacman, aur, packages
+
+# System update (AUR + official)
+paru -Syu
+
+# Install package
+paru -S <package>
+
+# Remove package
+paru -R <package>
+
+# Remove package with dependencies
+paru -Rns <package>
+
+# Search for package
+paru -Ss <query>
+
+# Query installed package info
+paru -Qi <installed_package>
+
+# Check if package is installed
+paru -Q <query>
+
+# List orphaned packages
+paru -Qdt
+
+# Clean unneeded dependencies
+paru -c
+
+# List explicitly installed packages
+paru -Qe
+
+# List foreign (AUR) packages
+paru -Qm
+
+$ installed_package: paru -Qq | fzf

@@ -1,0 +1,41 @@
+% fd, find, files
+
+# Find files by name
+fd '<pattern>'
+
+# Find only directories
+fd -t d '<pattern>'
+
+# Find only files
+fd -t f '<pattern>'
+
+# Find by extension
+fd -e <ext>
+
+# Find hidden files too
+fd --hidden '<pattern>'
+
+# Find and execute command on each
+fd '<pattern>' --exec <command> {}
+
+# Find with max depth
+fd --max-depth <depth> '<pattern>'
+
+# Find files modified in last N minutes
+fd --changed-within <duration>
+
+# Find and delete matching files
+fd '<pattern>' --exec rm {}
+
+# Find and list with details (pipe to eza)
+fd -t f '<pattern>' --exec eza -l {}
+
+# Find specific file across entire system
+fd '<filename>' /
+
+# Exclude directories
+fd '<pattern>' --exclude <dir>
+
+$ ext: echo -e "ts\ntsx\njs\njson\nrs\ntoml\nyaml\nmd\nfish\nsh\nkdl\nkbd" | fzf
+$ depth: echo -e "1\n2\n3\n5\n10" | fzf
+$ duration: echo -e "10min\n1h\n1d\n7d\n30d" | fzf

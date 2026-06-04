@@ -1,0 +1,15 @@
+% glow, markdown, viewer
+
+# View markdown file
+glow <file>
+
+# View markdown with pager
+glow -p <file>
+
+# View markdown from stdin
+<command> | glow -
+
+# Generate fish completions
+glow completion fish
+
+$ file: fd -e md --max-depth 3 | fzf

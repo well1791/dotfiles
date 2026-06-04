@@ -1,0 +1,22 @@
+% sd, text-substitution, replace
+
+# Replace string in file (in-place)
+sd '<find>' '<replace>' <file>
+
+# Preview replacement (dry run)
+sd -p '<find>' '<replace>' <file>
+
+# Replace in multiple files
+fd -e <ext> | xargs sd '<find>' '<replace>'
+
+# Fixed string mode (no regex)
+sd -F '<find>' '<replace>' <file>
+
+# Replace from stdin
+<command> | sd '<find>' '<replace>'
+
+# Replace with captured groups
+sd '(\w+)@(\w+)' '$1 at $2' <file>
+
+$ file: fd --type f --hidden --max-depth 3 | fzf
+$ ext: echo -e "ts\ntsx\njs\njson\nrs\ntoml\nyaml\nmd\nfish\nsh" | fzf
