@@ -247,6 +247,7 @@ export default function (pi: ExtensionAPI) {
         // ANSI color helpers
         const red = (s: string) => `\x1b[31m${s}\x1b[39m`;
         const lightBlue = (s: string) => `\x1b[38;5;153m${s}\x1b[39m`;
+        const lightOrange = (s: string) => `\x1b[38;5;217m${s}\x1b[39m`;
         const teal = (s: string) => `\x1b[38;5;116m${s}\x1b[39m`;
         const white = (s: string) => `\x1b[97m${s}\x1b[39m`;
         const gray = (s: string) => `\x1b[90m${s}\x1b[39m`;
@@ -264,12 +265,13 @@ export default function (pi: ExtensionAPI) {
             prefix = "  ".repeat(item.depth) + (item.isLast ? "└─ " : "├─ ");
           }
 
-          // Markers: ✕ for delete-selected, ◆ for active session
-          const marker = isSelected ? "✕ " : isCurrent ? "◆ " : "  ";
+          // Markers: ✕ for delete-selected, ◆ for active session, ○ for outside cwd
+          const isOutside = item.session.cwd && item.session.cwd !== ctx.cwd;
+          const marker = isSelected ? "✕ " : isCurrent ? "◆ " : isOutside ? "○ " : "  ";
 
           // Name
           const name = item.session.name
-            ?? item.session.firstMessage?.slice(0, 60)
+            ?? item.session.firstMessage?.replace(/\n/g, " ").slice(0, 60)
             ?? "(empty session)";
 
           // Child indicator
@@ -298,9 +300,9 @@ export default function (pi: ExtensionAPI) {
           } else if (isCurrent) {
             coloredBody = gold(body);
           } else if (hasName) {
-            coloredBody = lightBlue(body);
-          } else {
             coloredBody = white(body);
+          } else {
+            coloredBody = lightOrange(body);
           }
 
           // Chevron always gold when cursor is on this item
