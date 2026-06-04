@@ -1,5 +1,4 @@
-abbr -a -- pic 'pi -c'
-abbr -a -- pir 'pi -r'
+abbr -a -- pis 'pi --no-session "/sm"'
 
 # |-- Question to big-pickle
 # | usage:

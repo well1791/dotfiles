@@ -14,13 +14,16 @@
     "npm:pi-btw",
     "npm:@mrclrchtr/supi-extras",
     "npm:gentle-engram@0.1.7",
-    "npm:@a5c-ai/babysitter-pi",
-    "npm:@samfp/pi-essentials"
+    "npm:@a5c-ai/babysitter-pi"
   ],
   "npmCommand": [
     "bun"
   ],
   "hideThinkingBlock": false,
+  "treeFilterMode": "no-tools",
+  "branchSummary": {
+    "skipPrompt": true
+  },
   "enabledModels": [
     "github-copilot/claude-haiku-4.5",
     "github-copilot/claude-opus-4.6",
