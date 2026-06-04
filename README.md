@@ -73,6 +73,7 @@ Installed via system package manager (pacman/apt/dnf):
 - **[bat](https://github.com/sharkdp/bat)** - Cat with syntax highlighting
 - **[duf](https://github.com/muesli/duf)** - Modern disk usage tool
 - **[eza](https://eza.rocks/)** - Modern ls replacement
+- **[sd](https://github.com/chmln/sd)** - Intuitive find & replace (`sed` replacement)
 - **[glow](https://github.com/charmbracelet/glow)** - Terminal markdown reader with TUI
 - **[serpl](https://github.com/yassinebridi/serpl)** - TUI search and replace tool
 - **[just](https://github.com/casey/just)** - Command runner (like make, but better)
@@ -109,7 +110,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow, serpl, just, tealdeer)
+- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow, sd, serpl, just, tealdeer)
 - ✅ mise and mise-managed runtimes (go, node, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)

@@ -143,6 +143,7 @@ Before declaring completion, confirm the change solves the stated problem, relev
 **Required:** Use modern CLI tools over traditional Unix utilities:
 - `fd` → file/directory search (`find` replacement)
 - `rg` → text search (`grep` replacement)
+- `sd` → text substitution (`sed` replacement)
 - `bat` → file viewing (`cat` replacement)
 - `eza` → directory listing (`ls` replacement)
 - `delta` → git diff viewing

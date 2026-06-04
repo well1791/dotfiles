@@ -11,10 +11,94 @@ This document provides comprehensive usage patterns for modern CLI tools preferr
 | View file contents | `bat` | `cat` | Syntax highlighting, line numbers, git integration |
 | List directory contents | `eza` | `ls` | Better formatting, tree view, git status |
 | View git diffs | `delta` | raw diff | Syntax highlighting, side-by-side view |
+| Text substitution | `sd` | `sed` | Intuitive regex syntax, no escaping nightmares |
 | Navigate directories | `zoxide` | `cd` | Smart directory jumping based on frecency |
 | Browse files | `yazi` | - | Terminal file manager with preview |
 | Copy to clipboard | `wl-copy` | `xclip` | Native Wayland clipboard, no X11 dependency |
 | Paste from clipboard | `wl-paste` | `xclip -o` | Native Wayland clipboard, no X11 dependency |
+
+## sd - Text Substitution
+
+**Installation verified:** `/usr/bin/sd`
+
+### Common Usage
+
+```sh
+# Simple string replacement (stdin)
+echo 'hello world' | sd 'world' 'rust'
+
+# Regex replacement
+echo 'foo123bar' | sd '\d+' 'NUM'
+
+# In-place file editing
+sd 'old_pattern' 'new_text' file.txt
+
+# Multiple files
+sd 'before' 'after' file1.txt file2.txt
+
+# Preview changes (dry run via diff)
+sd 'pattern' 'replacement' file.txt | delta
+
+# Capture groups
+echo 'foo bar' | sd '(\w+) (\w+)' '$2 $1'
+
+# Literal string mode (no regex)
+sd -F 'exact.string' 'replacement' file.txt
+
+# Combined with fd for bulk operations
+fd -e rs | xargs sd 'old_fn' 'new_fn'
+
+# Combined with rg to find then replace
+rg -l 'deprecated_call' | xargs sd 'deprecated_call' 'new_call'
+```
+
+### When to Use
+
+- Any text substitution that would use `sed`
+- In-place file modifications
+- Regex-based find and replace across files
+- Piped text transformations
+
+### Advantages Over sed
+
+- Uses standard regex syntax (no need to escape `(`, `)`, `+`, etc.)
+- Intuitive capture group references (`$1` not `\1`)
+- `-F` flag for literal strings without regex interpretation
+- Cleaner multi-file operation syntax
+
+## serpl - TUI Search and Replace
+
+**Installation verified:** `/usr/bin/serpl`
+
+### Common Usage
+
+```sh
+# Launch interactive TUI in current directory
+serpl
+
+# Launch with initial search pattern
+serpl --search 'pattern'
+
+# Launch with search and replacement pre-filled
+serpl --search 'old' --replace 'new'
+
+# Specify directory
+serpl --dir /path/to/project
+```
+
+### When to Use
+
+- Interactive project-wide search and replace
+- When you want to visually review each replacement
+- Complex refactoring that benefits from an editor-like TUI
+- Bulk replacements where confirmation is needed per occurrence
+
+### Notes
+
+- Not a replacement for any specific tool — provides a dedicated TUI experience for search/replace workflows
+- Uses ripgrep under the hood for fast searching
+- Supports regex patterns
+- Shows preview of changes before applying
 
 ## fd - File/Directory Search
 
@@ -445,3 +529,31 @@ fi
 ```
 
 However, on this system all documented tools are installed and should be used.
+
+## Text Substitution Patterns
+
+### sd for Inline/Piped Replacements
+
+```sh
+# Rename variables across a project
+fd -e py | xargs sd 'old_var_name' 'new_var_name'
+
+# Fix import paths
+fd -e ts | xargs sd 'from "@old/path"' 'from "@new/path"'
+
+# Strip trailing whitespace
+sd '\s+$' '' file.txt
+
+# Convert snake_case to camelCase (simple cases)
+echo 'my_var_name' | sd '_([a-z])' '${1}'
+```
+
+### serpl for Interactive Workflows
+
+```sh
+# Visual refactoring session
+serpl --search 'ClassName' --replace 'NewClassName'
+
+# Review and selectively apply replacements
+serpl
+```
