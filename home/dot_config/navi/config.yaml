@@ -1,7 +1,10 @@
 # Navi configuration
 # https://github.com/denisidoro/navi/blob/master/docs/configuration/README.md
 
-# Finder configuration (using fzf - installed as dependency of navi)
+# Finder configuration
+# IMPORTANT: navi requires fzf (or skim) as a unix pipe filter (stdin -> select -> stdout).
+# Television (tv) CANNOT replace fzf here - it's a TUI, not a stdin filter.
+# fzf is installed as a system package dependency - see run_once_before_90-install-navi.sh.tmpl
 finder:
   command: fzf
   # Override options for cheats selection

@@ -79,6 +79,25 @@ Installed via system package manager (pacman/apt/dnf):
 - **[tealdeer](https://tealdeer-rs.github.io/tealdeer/)** - Fast tldr client in Rust (`tldr`)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
+### 12. **[television](https://github.com/alexpasmantier/television)** - Fast, hackable fuzzy finder TUI
+- Replaces skim/fzf for shell integration (Ctrl-T smart autocomplete, Ctrl-R history)
+- Context-aware: detects current command and picks appropriate channel (files, dirs, git branches, etc.)
+- Built-in channels: files, dirs, git-branch, git-log, git-diff, env, procs, docker-images, and many more
+- Installed via system package manager
+- Config: `~/.config/television/config.toml`
+- Update: `sudo pacman -Syu` (or your distro's update command)
+
+### 13. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
+- Browse and execute cheatsheets from the command line
+- **Dependency:** Requires `fzf` (system package) as its interactive finder backend
+  - navi uses fzf as a unix pipe filter (stdin → fuzzy select → stdout)
+  - This CANNOT be replaced by television (tv is a TUI, not a pipe filter)
+- Installed via AUR (paru/yay)
+- Config: `~/.config/navi/config.yaml`
+- Cheats: `~/.local/share/navi/cheats/` and `~/.config/navi/custom-cheats/`
+- Fish widget: Ctrl+G
+- Update: `paru -Syu navi` or `yay -Syu navi`
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages

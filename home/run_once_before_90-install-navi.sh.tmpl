@@ -1,10 +1,20 @@
 {{ template "install-header.sh.tmpl" . }}
 # Install navi (interactive cheatsheet tool)
 # https://github.com/denisidoro/navi
+#
+# Dependency: fzf (used as navi's interactive finder backend via stdin pipe)
+# Note: television (tv) CANNOT replace fzf here — navi needs a unix pipe filter,
+# not a TUI. See AGENTS.md "Tool Dependencies" for details.
 
 # Skip if already installed
 if log_version navi; then
     exit 0
+fi
+
+# Ensure fzf is available (navi's required finder backend)
+if ! check_command fzf; then
+    log_info "Installing fzf (required by navi as finder backend)..."
+    install_packages fzf
 fi
 
 # Require AUR helper

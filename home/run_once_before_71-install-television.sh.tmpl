@@ -1,0 +1,22 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install television (fuzzy finder TUI)
+# https://github.com/alexpasmantier/television
+
+# Skip if already installed
+if log_version tv; then
+    exit 0
+fi
+
+# Install via system package manager (available in pacman community repo)
+log_info "Installing television..."
+install_packages television
+
+# Verify
+if ! check_command tv; then
+    die "television installation failed"
+fi
+
+log_success "television installed" "$(get_version tv)"
+log_info "  Usage: tv (interactive mode)"
+log_info "  Shell integration: Ctrl+T (smart autocomplete), Ctrl+R (history)"
+log_info "  Config: ~/.config/television/config.toml"
