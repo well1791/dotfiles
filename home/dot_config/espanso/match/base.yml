@@ -73,8 +73,8 @@ matches:
           cmd: "curl -s https://api.ipify.org"
 
 # Clipboard content
-  - trigger: ":pst"
-    replace: "{{pst}}"
-    vars:
-      - name: clipboard
-        type: clipboard
+  # - trigger: ":pst"
+  #   replace: "{{pst}}"
+  #   vars:
+  #     - name: clipboard
+  #       type: clipboard
