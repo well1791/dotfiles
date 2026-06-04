@@ -2,9 +2,8 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import type { SessionInfo } from "@earendil-works/pi-coding-agent";
 import { matchesKey, Key, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
-import { readFileSync, existsSync } from "node:fs";
+import { existsSync } from "node:fs";
 import { execSync } from "node:child_process";
-import { basename } from "node:path";
 
 // ── Types ──────────────────────────────────────────────────────────────
 
@@ -82,62 +81,7 @@ function relativeTime(date: Date): string {
   return `${Math.floor(days / 30)}mo ago`;
 }
 
-// ── Engram + delete helpers ────────────────────────────────────────────
-
-function isSubagentSession(path: string): boolean {
-  return /\/[0-9a-f]{8}\/run-\d+\/session\.jsonl$/.test(path);
-}
-
-function extractSessionSummary(session: SessionInfo): string {
-  let models: string[] = [];
-  let totalCost = 0;
-  try {
-    const content = readFileSync(session.path, "utf8");
-    const lines = content.split("\n").filter(Boolean);
-    for (const line of lines) {
-      try {
-        const entry = JSON.parse(line);
-        if (entry.type === "message" && entry.message?.role === "assistant") {
-          if (entry.message.model) models.push(entry.message.model);
-          totalCost += entry.message.usage?.cost?.total ?? 0;
-        }
-      } catch {}
-    }
-  } catch {}
-  models = [...new Set(models)];
-
-  return [
-    `## Session Summary (pre-delete)`,
-    ``,
-    `**Session ID**: ${session.id}`,
-    `**File**: ${basename(session.path)}`,
-    `**Messages**: ${session.messageCount}`,
-    `**Models used**: ${models.join(", ") || "unknown"}`,
-    `**Total cost**: $${totalCost.toFixed(4)}`,
-    `**First message**: ${session.name ?? session.firstMessage?.slice(0, 200) ?? "(empty)"}`,
-    ``,
-    `### Content`,
-    session.allMessagesText?.slice(0, 500) || session.firstMessage?.slice(0, 200) || "(empty session)",
-  ].join("\n");
-}
-
-function saveToEngram(content: string, cwd: string): boolean {
-  try {
-    const project = cwd.split("/").filter(Boolean).pop();
-    const args = [
-      "save",
-      JSON.stringify("Session summary (pre-delete)"),
-      JSON.stringify(content),
-      "--type", "session_summary",
-      "--scope", "project",
-    ];
-    if (project) args.push("--project", JSON.stringify(project));
-    execSync(`engram ${args.join(" ")}`, { stdio: "ignore", timeout: 5000 });
-    return true;
-  } catch {
-    return false;
-  }
-}
+// ── Delete helpers ────────────────────────────────────────────────────────
 
 function trashOrDelete(filePath: string): boolean {
   try {
@@ -246,8 +190,9 @@ export default function (pi: ExtensionAPI) {
 
         // ANSI color helpers
         const red = (s: string) => `\x1b[31m${s}\x1b[39m`;
-        const lightBlue = (s: string) => `\x1b[38;5;153m${s}\x1b[39m`;
+        const lightBlue = (s: string) => `\x1b[38;5;159m${s}\x1b[39m`;
         const lightOrange = (s: string) => `\x1b[38;5;217m${s}\x1b[39m`;
+        const yellow = (s: string) => `\x1b[38;5;220m${s}\x1b[39m`;
         const teal = (s: string) => `\x1b[38;5;116m${s}\x1b[39m`;
         const white = (s: string) => `\x1b[97m${s}\x1b[39m`;
         const gray = (s: string) => `\x1b[90m${s}\x1b[39m`;
@@ -258,6 +203,7 @@ export default function (pi: ExtensionAPI) {
           const isSelected = selectedPaths.has(item.session.path);
           const isCurrent = item.session.path === currentSessionFile;
           const hasName = !!item.session.name;
+          const isSubagentWorker = hasName && item.session.name!.startsWith("subagent-worker-");
 
           // Tree prefix
           let prefix = "";
@@ -298,14 +244,16 @@ export default function (pi: ExtensionAPI) {
           if (isSelected) {
             coloredBody = red(body);
           } else if (isCurrent) {
-            coloredBody = gold(body);
+            coloredBody = lightBlue(body);
+          } else if (isSubagentWorker) {
+            coloredBody = yellow(body);
           } else if (hasName) {
             coloredBody = white(body);
           } else {
             coloredBody = lightOrange(body);
           }
 
-          // Chevron always gold when cursor is on this item
+          // Chevron always gold
           const coloredChevron = isCursor ? gold(chevronStr) : "  ";
 
           // Combine
@@ -426,19 +374,13 @@ export default function (pi: ExtensionAPI) {
                   }
                 }
                 let deleted = 0;
-                let engramCount = 0;
                 for (const path of toDelete) {
-                  const item = allItems.find((i) => i.session.path === path);
-                  if (!item || !existsSync(path)) continue;
-                  if (!isSubagentSession(path)) {
-                    const summary = extractSessionSummary(item.session);
-                    if (saveToEngram(summary, item.session.cwd || ctx.cwd)) engramCount++;
-                  }
+                  if (!existsSync(path)) continue;
                   if (trashOrDelete(path)) deleted++;
                 }
                 selectedPaths.clear();
                 deleteConfirm = false;
-                showStatus(`Deleted ${deleted}${engramCount > 0 ? `, ${engramCount} saved to Engram` : ""}`);
+                showStatus(`Deleted ${deleted}`);
                 loadSessions().then(() => tui.requestRender());
                 return;
               }
