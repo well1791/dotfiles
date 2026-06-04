@@ -184,7 +184,84 @@ useEffect(() => {
 ```
 ```
 
-### 7b. Testing Scenario Comments
+### 7b. Comment Tone Guidelines (REQUIRED)
+
+**All comments must follow this tone:**
+
+- ✅ **Technical** - Focus on implementation details, not opinions
+- ✅ **Straightforward** - Say what needs to be said, no filler
+- ✅ **Fact-oriented** - Reference code, docs, or behavior, not assumptions
+- ✅ **Professional** - Respectful but direct
+- ✅ **Pedagogic when complex** - Explain "why" for non-obvious issues
+
+**Avoid:**
+- ❌ Sugarcoating ("maybe consider", "just a thought")
+- ❌ Fluff ("Great work!", "I love this approach")
+- ❌ Vague language ("seems like", "might be", "could possibly")
+- ❌ Apologies ("Sorry, but...")
+
+**Examples:**
+
+**❌ Bad (sugarcoated, vague):**
+```
+SUGGEST
+
+Maybe we could possibly consider using flatMap here? It might be a bit cleaner.
+```
+
+**✅ Good (direct, technical):**
+```
+SUGGEST
+
+Use flatMap instead of map + flat:
+
+```typescript
+data.flatMap((id) => id)
+```
+
+FlatMap is 2x faster and more readable for this pattern.
+```
+
+**❌ Bad (vague, apologetic):**
+```
+REQUEST
+
+Sorry, but I think this might cause issues. Could you maybe look at the cleanup?
+```
+
+**✅ Good (direct, fact-based):**
+```
+REQUEST
+
+This creates a memory leak. The event listener is never removed.
+
+Fix:
+```typescript
+useEffect(() => {
+  window.addEventListener('resize', handler);
+  return () => window.removeEventListener('resize', handler);
+}, [handler]);
+```
+```
+
+**❌ Bad (unclear, no reasoning):**
+```
+QUESTION
+
+Is this the best way to do this?
+```
+
+**✅ Good (specific, pedagogic):**
+```
+QUESTION
+
+Why use `materials.length === 0` instead of `!materials?.length`?
+
+The current check fails when `materials` is undefined, causing the early return
+to be skipped. This defeats the infinite loop guard.
+```
+
+### 7c. Testing Scenario Comments
 
 When code changes introduce potential bugs that could be caught by manual testing, suggest testing scenarios.
 
