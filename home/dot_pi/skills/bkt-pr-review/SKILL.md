@@ -1,6 +1,6 @@
 ---
 name: bkt-pr-review
-description: "Use when asked to review a PR, ticket, or branch. Executes complete Bitbucket PR review workflow: fetches ticket, analyzes code with reviewer subagent, compares with existing comments, posts technical disagreements only, and approves/declines based on findings."
+description: "Use when asked to review a PR, ticket, or branch. Executes complete Bitbucket PR review workflow: fetches ticket, analyzes code with reviewer subagent, compares with existing comments, posts inline comments on specific lines, and approves based on findings."
 ---
 
 # Pull Request Review Workflow
@@ -282,8 +282,9 @@ Expected: Modal shows, estimate saves successfully
 Actual risk: Invalid zip check might block valid saves
 ```
 
-**For multi-area concerns (general PR comment):**
-- Use `bkt pr comment <PR_NUMBER> --text "..."`
+**For multi-area concerns (general PR comment — only when no single file is the anchor):**
+- Use `bkt pr comment <PR_NUMBER> --text "..."` ONLY if the scenario truly spans unrelated files
+- If one file is the primary concern, use inline comment on that file instead
 - Start with SUGGEST or REQUEST
 - Explain which flows/areas to test
 
@@ -302,6 +303,13 @@ Actual risk: Infinite loop if materials array is empty without early return"
 
 ### 8. Post Comments (if warranted)
 
+**ALWAYS prefer inline comments on specific file+line.** General comments are a last resort.
+
+**Rule:** If a comment relates to ANY specific code — even if it spans multiple lines — post it as an inline comment on the most relevant line. Use general comments ONLY for:
+- Whole-PR concerns (architecture direction, missing test coverage across the PR)
+- Testing scenarios that span multiple unrelated files
+- Meta-feedback about the PR itself (scope, description)
+
 **To reply to an existing comment:**
 ```bash
 bkt pr comment <PR_NUMBER> --file "<same_filepath>" --to-line <same_line_number> --text "<reply>"
@@ -310,41 +318,32 @@ bkt pr comment <PR_NUMBER> --file "<same_filepath>" --to-line <same_line_number>
 - Do NOT use `--parent` flag
 - Do NOT tag users (no "@name")
 
-**To add a new inline comment:**
+**To add a new inline comment (PREFERRED — use this by default):**
 ```bash
 bkt pr comment <PR_NUMBER> --file "<filepath>" --to-line <line_number> --text "<comment>"
 ```
 
-**To add a general comment:**
+**To add a general comment (ONLY when the concern is truly PR-wide):**
 ```bash
 bkt pr comment <PR_NUMBER> --text "<comment>"
 ```
 
-### 9. Approve or Decline
+### 9. Approve or Stay Silent
+
+**NEVER decline a PR.** Use comments (REQUEST) to communicate blocking issues instead.
 
 **Approve when:**
-- ✅ No blockers or critical bugs
-- ✅ Only minor/optional suggestions (don't affect functionality)
+- ✅ No critical bugs that fundamentally break functionality
 - ✅ Fix correctly addresses root cause
-- ✅ No blocking comments posted by you or others
+- ✅ Even if you posted REQUEST comments — approve and let the owner address them
 
 ```bash
 bkt pr approve <PR_NUMBER>
 ```
 
-**Decline when:**
-- ❌ You posted blocking comments requiring code changes
-- ❌ Critical bugs or security issues found
-- ❌ Major architectural concerns
-
-```bash
-bkt pr decline <PR_NUMBER>
-```
-
-**Stay silent (no approve/decline) when:**
+**Stay silent (no approve) when:**
 - Other reviewers have unresolved blocking comments
 - Waiting for PR owner to respond
-- Significant changes requested by someone else
 - Not confident in the domain area
 
 ## Decision Tree
@@ -352,9 +351,8 @@ bkt pr decline <PR_NUMBER>
 ```
 Review complete. What did subagent find?
 ├─ Critical/blocking issues?
-│  ├─ YES → Did I post comments about them?
-│  │  ├─ YES → bkt pr decline <NUMBER>
-│  │  └─ NO → Stay silent
+│  ├─ YES → Post REQUEST comments on specific lines
+│  │  └─ Then → bkt pr approve <NUMBER> (never decline)
 │  └─ NO → Only minor/optional issues?
 │     ├─ YES → bkt pr approve <NUMBER>
 │     └─ NO → Stay silent or approve based on confidence
@@ -401,8 +399,7 @@ Avoid:
 | `bkt pr comments <NUMBER> --details` | Show all existing comments |
 | `bkt pr comment <NUMBER> --file "<path>" --to-line <N> --text "<msg>"` | Add inline comment (or reply) |
 | `bkt pr comment <NUMBER> --text "<msg>"` | Add general comment |
-| `bkt pr approve <NUMBER>` | Approve PR (no major issues) |
-| `bkt pr decline <NUMBER>` | Decline PR (blocking issues) |
+| `bkt pr approve <NUMBER>` | Approve PR (always approve, never decline) |
 | `git checkout <BRANCH>` | Switch to PR branch locally |
 
 ## Team Culture Notes
@@ -419,7 +416,7 @@ After completing the review, present:
 1. **Summary:** PR number, ticket, owner, issue type
 2. **Review findings:** Critical/major/minor issues (or "no issues")
 3. **Comments posted:** List of files/lines where you commented (or "none")
-4. **Decision:** Approved/Declined/No action taken
+4. **Decision:** Approved/No action taken (never decline)
 5. **Reasoning:** Brief explanation of the decision
 
 Example:
