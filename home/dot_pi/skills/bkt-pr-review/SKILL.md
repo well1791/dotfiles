@@ -114,14 +114,19 @@ Review PR #<NUMBER> for ticket <TICKET-KEY>: "<SUMMARY>"
 ### 6. Fetch Existing Comments
 
 ```bash
-bkt pr comments <PR_NUMBER> --details
+bkt pr comments <PR_NUMBER> --details --json
 ```
 
+Use `--json` to get structured data with comment IDs (needed for threaded replies).
+
 Parse output to identify:
+- **Comment IDs** — needed as `--parent` values when replying in threads
 - File paths and line numbers for each comment
 - Comment types (QUESTION, SUGGESTION, REQUEST)
 - Whether comments are resolved
 - Who posted them
+
+When a thread already has replies, identify the **root/first comment** in that thread — that is the ID to use as `--parent`.
 
 ### 7. Decide What to Comment
 
@@ -310,12 +315,13 @@ Actual risk: Infinite loop if materials array is empty without early return"
 - Testing scenarios that span multiple unrelated files
 - Meta-feedback about the PR itself (scope, description)
 
-**To reply to an existing comment:**
+**To reply to an existing comment (threaded):**
 ```bash
-bkt pr comment <PR_NUMBER> --file "<same_filepath>" --to-line <same_line_number> --text "<reply>"
+bkt pr comment <PR_NUMBER> --text "<reply>" --parent <parent-comment-id>
 ```
-- Use the SAME file and line as the original comment
-- Do NOT use `--parent` flag
+- Always use `--parent` with the **root/first comment ID** in the thread — never use a reply's ID as parent
+- This creates a proper threaded reply visible in Bitbucket's UI
+- To find comment IDs: `bkt pr comments <PR_NUMBER> --details --json`
 - Do NOT tag users (no "@name")
 
 **To add a new inline comment (PREFERRED — use this by default):**
@@ -397,7 +403,8 @@ Avoid:
 | `bkt pr list` | List all open PRs |
 | `bkt pr diff <NUMBER>` | Show PR changes (full diff) |
 | `bkt pr comments <NUMBER> --details` | Show all existing comments |
-| `bkt pr comment <NUMBER> --file "<path>" --to-line <N> --text "<msg>"` | Add inline comment (or reply) |
+| `bkt pr comment <NUMBER> --file "<path>" --to-line <N> --text "<msg>"` | Add inline comment |
+| `bkt pr comment <NUMBER> --text "<msg>" --parent <ID>` | Reply to comment in thread (use root comment ID) |
 | `bkt pr comment <NUMBER> --text "<msg>"` | Add general comment |
 | `bkt pr approve <NUMBER>` | Approve PR (always approve, never decline) |
 | `git checkout <BRANCH>` | Switch to PR branch locally |
@@ -405,7 +412,7 @@ Avoid:
 ## Team Culture Notes
 
 - **Silence = agreement** — Don't comment just to agree
-- **Reply in same location** — Use same file/line, not `--parent`
+- **Reply in threads** — Use `--parent <root-comment-id>`, always the first/root comment ID in the thread
 - **No tagging** — Don't use "@name" in replies
 - **Evidence over opinion** — Back disagreements with code/docs
 - **Respect PR owner** — You can't accept/implement, only review

@@ -1,0 +1,148 @@
+#!/bin/sh
+set -e
+
+# bkt-pr-request-changes - Mark a Bitbucket Cloud PR as "changes requested"
+# Wraps the Bitbucket Cloud REST API request-changes endpoint via bkt api.
+
+show_usage() {
+    cat <<EOF
+Usage: bkt-pr-request-changes <PR_NUMBER> [--remove]
+
+Mark a Bitbucket Cloud pull request as "changes requested", or remove
+that status.
+
+Arguments:
+  PR_NUMBER    Required. The pull request ID (positive integer).
+
+Options:
+  --remove     Remove the "changes requested" status instead of setting it.
+  --help, -h   Show this help message.
+
+Exit Codes:
+  0    Success
+  1    Execution error
+  2    Usage error
+
+Examples:
+  # Request changes on PR 42
+  bkt-pr-request-changes 42
+
+  # Remove the request-changes status
+  bkt-pr-request-changes 42 --remove
+
+Requirements:
+  - bkt CLI (Bitbucket command-line tool)
+  - Git repository with a bitbucket.org remote
+
+EOF
+}
+
+# --- argument parsing ---
+
+if [ $# -eq 0 ]; then
+    echo "Error: PR_NUMBER argument required" >&2
+    echo "" >&2
+    show_usage >&2
+    exit 2
+fi
+
+remove=false
+pr_number=""
+
+for arg in "$@"; do
+    case "$arg" in
+        --help|-h)
+            show_usage
+            exit 0
+            ;;
+        --remove)
+            remove=true
+            ;;
+        *)
+            if [ -z "$pr_number" ]; then
+                pr_number="$arg"
+            else
+                echo "Error: unexpected argument: $arg" >&2
+                show_usage >&2
+                exit 2
+            fi
+            ;;
+    esac
+done
+
+# --- validation ---
+
+if [ -z "$pr_number" ]; then
+    echo "Error: PR_NUMBER argument required" >&2
+    exit 2
+fi
+
+case "$pr_number" in
+    ''|*[!0-9]*)
+        echo "Error: PR_NUMBER must be a positive integer, got: $pr_number" >&2
+        exit 2
+        ;;
+esac
+
+if [ "$pr_number" -le 0 ] 2>/dev/null; then
+    echo "Error: PR_NUMBER must be a positive integer, got: $pr_number" >&2
+    exit 2
+fi
+
+if ! git rev-parse --git-dir > /dev/null 2>&1; then
+    echo "Error: not in a git repository" >&2
+    exit 1
+fi
+
+if ! command -v bkt > /dev/null 2>&1; then
+    echo "Error: bkt command not found" >&2
+    exit 1
+fi
+
+# --- extract workspace and repo from git remote ---
+
+remote_url=$(git remote get-url origin 2>/dev/null) || {
+    echo "Error: no 'origin' remote found" >&2
+    exit 1
+}
+
+# Normalise SSH and HTTPS URLs to workspace/repo
+# SSH:   git@bitbucket.org:workspace/repo.git
+# HTTPS: https://bitbucket.org/workspace/repo.git
+case "$remote_url" in
+    git@bitbucket.org:*)
+        path="${remote_url#git@bitbucket.org:}"
+        ;;
+    *bitbucket.org/*)
+        path="${remote_url#*bitbucket.org/}"
+        ;;
+    *)
+        echo "Error: origin remote is not a bitbucket.org URL: $remote_url" >&2
+        exit 1
+        ;;
+esac
+
+# Strip trailing .git
+path="${path%.git}"
+
+workspace="${path%%/*}"
+repo_slug="${path#*/}"
+
+if [ -z "$workspace" ] || [ -z "$repo_slug" ]; then
+    echo "Error: could not extract workspace/repo from remote: $remote_url" >&2
+    exit 1
+fi
+
+# --- call the API ---
+
+api_path="/repositories/${workspace}/${repo_slug}/pullrequests/${pr_number}/request-changes"
+
+if [ "$remove" = true ]; then
+    echo "Removing 'changes requested' on PR #${pr_number} ..." >&2
+    bkt api "$api_path" --method DELETE
+    echo "Done — 'changes requested' removed from PR #${pr_number}" >&2
+else
+    echo "Requesting changes on PR #${pr_number} ..." >&2
+    bkt api "$api_path" --method POST
+    echo "Done — PR #${pr_number} marked as 'changes requested'" >&2
+fi
