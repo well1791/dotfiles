@@ -108,6 +108,7 @@ After adding, removing, or modifying any CLI tool installation, **all** of these
 |---|---|---|
 | navi | fzf (system) | Uses fzf as pipe filter backend. Cannot use television (TUI, not a unix filter). |
 | devenv | nix | Built on Nix |
+| direnv | — | Auto-loads .envrc; integrates with devenv for automatic shell activation |
 | pi | bun | Installed via bun global packages |
 | distrobox | podman | Container manager that uses podman as backend |
 | television | — | Standalone. Replaces fzf for shell integration (Ctrl-T, Ctrl-R) only. |

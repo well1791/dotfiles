@@ -86,7 +86,15 @@ Installed via system package manager (pacman/apt/dnf):
 - **[tealdeer](https://tealdeer-rs.github.io/tealdeer/)** - Fast tldr client in Rust (`tldr`)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
-### 12. **[television](https://github.com/alexpasmantier/television)** - Fast, hackable fuzzy finder TUI
+### 12. **[direnv](https://direnv.net)** - Auto-load environment on cd
+- Automatically loads/unloads environment variables when entering/leaving directories
+- Integrates with devenv for automatic shell activation in Nix-based projects
+- Installed via system package manager
+- Config: `~/.config/direnv/direnvrc`
+- Usage: `direnv allow` in a project with `.envrc`
+- Update: `sudo pacman -Syu` (or your distro's update command)
+
+### 13. **[television](https://github.com/alexpasmantier/television)** - Fast, hackable fuzzy finder TUI
 - Replaces skim/fzf for shell integration (Ctrl-T smart autocomplete, Ctrl-R history)
 - Context-aware: detects current command and picks appropriate channel (files, dirs, git branches, etc.)
 - Built-in channels: files, dirs, git-branch, git-log, git-diff, env, procs, docker-images, and many more
@@ -94,7 +102,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Config: `~/.config/television/config.toml`
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
-### 13. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
+### 14. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
 - Browse and execute cheatsheets from the command line
 - **Dependency:** Requires `fzf` (system package) as its interactive finder backend
   - navi uses fzf as a unix pipe filter (stdin → fuzzy select → stdout)
@@ -116,7 +124,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, distrobox, helix, ripgrep, yazi, bat, duf, eza, glow, sd, serpl, just, tealdeer)
+- ✅ System packages (age, podman, distrobox, direnv, helix, ripgrep, yazi, bat, duf, eza, glow, sd, serpl, just, tealdeer)
 - ✅ mise and mise-managed runtimes (go, node, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)

@@ -1,0 +1,21 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install direnv (auto-load environment on cd)
+# https://direnv.net
+
+# Skip if already installed
+if log_version direnv; then
+    exit 0
+fi
+
+# Install via system package manager
+log_info "Installing direnv..."
+install_packages direnv
+
+# Verify
+if ! check_command direnv; then
+    die "direnv installation failed"
+fi
+
+log_success "direnv installed" "$(get_version direnv)"
+log_info "  Shell integration: auto-loads .envrc on cd"
+log_info "  Usage: direnv allow (in a project with .envrc)"
