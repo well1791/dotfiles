@@ -61,17 +61,54 @@ bkt pr diff <PR_NUMBER>
 
 Review the complete set of changes to understand scope.
 
-### 4. Checkout Branch Locally
-
+**Searching the diff locally:**
+You can pipe the diff to search for specific patterns:
 ```bash
-git checkout <BRANCH-NAME>
+bkt pr diff <PR_NUMBER> | rg '<pattern>'
+```
+This is useful for quickly finding specific changes, variable names, or patterns across the full diff without scrolling through it manually.
+
+### 4. Switch to PR Branch Locally
+
+**Before switching, check for a clean working tree:**
+```bash
+git status --short
 ```
 
-This enables reading full file context, not just diffs.
+If there are untracked, modified, or staged files → **ask the user before proceeding.** Do not switch branches with a dirty working tree.
 
-### 5. Review with Subagent
+**Switch using detached HEAD (no local branch needed):**
+```bash
+git switch --detach origin/<BRANCH-NAME>
+```
 
-Invoke the `reviewer` subagent with forked context:
+This enables reading full file context without creating a local branch. We use detached HEAD because we only need to inspect the code, not commit to it.
+
+### 5. Plan and Delegate the Review
+
+**Subagent/Skill Selection:**
+Always choose the best subagent for each task. Available subagents:
+- **scout** — quick file/pattern discovery
+- **researcher** — deep investigation of specific areas
+- **planner** — break down complex review into actionable steps
+- **worker** — implement or verify changes
+- **reviewer** — code review and analysis
+- **context-builder** — gather broad context across the codebase
+- **oracle** — answer specific technical questions
+- **delegate** — general-purpose task execution
+
+**Workflow:**
+1. First, plan how to handle the review (identify focus areas, files, concerns)
+2. Then delegate the work in parallel using 2+ subagents so independent review tracks run concurrently
+
+For example, you might:
+- Send **context-builder** to gather related file context and patterns
+- Send **reviewer** to analyze the diff against the ticket requirements
+- Send **researcher** to investigate edge cases or related code paths
+
+All parallel tracks should be launched in the same response.
+
+**Primary review subagent — invoke `reviewer` with forked context:**
 
 ```
 subagent → agent: reviewer, context: fork
@@ -387,13 +424,17 @@ Avoid:
 **You execute:**
 1. `bkt pr diff 916` → identify ticket SD-1020
 2. `atlcli jira issue get --key SD-1020` → crash on Material step
-3. `git checkout fix/sd-1020-app-crashing-with-invalid-zip-code`
-4. Read key files: `useSelectedMaterial.ts`, `StoresList.component.tsx`
-5. Invoke `reviewer` subagent with full context
-6. `bkt pr comments 916 --details` → no comments yet
-7. Compare findings: only minor issues (non-blocking)
-8. Decision: No comments to post (silence = agreement)
-9. `bkt pr approve 916` → no blockers, fix is correct
+3. `git status --short` → clean ✓
+4. `git switch --detach origin/fix/sd-1020-app-crashing-with-invalid-zip-code`
+5. Plan review: identify focus areas (infinite loop guard, ZIP validation, material handling)
+6. Delegate in parallel:
+   - **context-builder**: gather related component/hook context
+   - **reviewer**: analyze diff against ticket root cause
+7. Synthesize findings from subagents
+8. `bkt pr comments 916 --details --json` → no comments yet
+9. Compare findings: only minor issues (non-blocking)
+10. Decision: No comments to post (silence = agreement)
+11. `bkt pr approve 916` → no blockers, fix is correct
 
 ## Key Commands Reference
 
@@ -407,7 +448,7 @@ Avoid:
 | `bkt pr comment <NUMBER> --text "<msg>" --parent <ID>` | Reply to comment in thread (use root comment ID) |
 | `bkt pr comment <NUMBER> --text "<msg>"` | Add general comment |
 | `bkt pr approve <NUMBER>` | Approve PR (always approve, never decline) |
-| `git checkout <BRANCH>` | Switch to PR branch locally |
+| `git switch --detach origin/<BRANCH>` | Switch to PR branch (detached HEAD, no local branch) |
 
 ## Team Culture Notes
 
