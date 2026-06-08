@@ -1,6 +1,7 @@
 #!/bin/sh
 # Unified update script for all package managers and tools
-# Updates: system packages, mise, uv, nix, devenv, and mise-managed runtimes
+# Updates: system packages, mise, uv, rust, nix, devenv, bun, engram, pi,
+#          tealdeer cache, flatpak
 
 set -e
 
@@ -38,9 +39,9 @@ if [ -f /etc/os-release ]; then
     case "$ID" in
         arch|cachyos|manjaro|endeavouros)
             if command -v paru >/dev/null 2>&1; then
-                sudo paru -Syu --noconfirm || FAILED=$((FAILED + 1))
+                paru -Syu --noconfirm || FAILED=$((FAILED + 1))
             elif command -v yay >/dev/null 2>&1; then
-                sudo yay -Syu --noconfirm || FAILED=$((FAILED + 1))
+                yay -Syu --noconfirm || FAILED=$((FAILED + 1))
             else
                 sudo pacman -Syu --noconfirm || FAILED=$((FAILED + 1))
             fi
@@ -56,7 +57,13 @@ if [ -f /etc/os-release ]; then
             ;;
         *)
             if echo "$ID_LIKE" | grep -q "arch"; then
-                sudo pacman -Syu --noconfirm || FAILED=$((FAILED + 1))
+                if command -v paru >/dev/null 2>&1; then
+                    paru -Syu --noconfirm || FAILED=$((FAILED + 1))
+                elif command -v yay >/dev/null 2>&1; then
+                    yay -Syu --noconfirm || FAILED=$((FAILED + 1))
+                else
+                    sudo pacman -Syu --noconfirm || FAILED=$((FAILED + 1))
+                fi
             elif echo "$ID_LIKE" | grep -q "debian"; then
                 sudo apt-get update && sudo apt-get upgrade -y || FAILED=$((FAILED + 1))
             elif echo "$ID_LIKE" | grep -q "rhel\|fedora"; then
@@ -144,62 +151,35 @@ if command -v engram >/dev/null 2>&1; then
     # Detect architecture
     ARCH=$(uname -m)
     case "$ARCH" in
-        x86_64)
-            ARCH_NAME="amd64"
-            ;;
-        aarch64|arm64)
-            ARCH_NAME="arm64"
-            ;;
-        *)
-            print_warning "Unsupported architecture for engram: $ARCH"
-            ARCH_NAME=""
-            ;;
+        x86_64)   ARCH_NAME="amd64" ;;
+        aarch64|arm64) ARCH_NAME="arm64" ;;
+        *)        ARCH_NAME="" ;;
     esac
     
-    if [ -n "$ARCH_NAME" ]; then
-        # Fetch latest version
-        if command -v curl >/dev/null 2>&1; then
-            LATEST_VERSION=$(curl -s https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-        elif command -v wget >/dev/null 2>&1; then
-            LATEST_VERSION=$(wget -qO- https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
-        else
-            print_warning "curl or wget required to update engram"
-            LATEST_VERSION=""
-        fi
+    if [ -z "$ARCH_NAME" ]; then
+        print_warning "Unsupported architecture for engram: $ARCH"
+    else
+        LATEST_VERSION=$(curl -sf https://api.github.com/repos/Gentleman-Programming/engram/releases/latest | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
         
-        if [ -n "$LATEST_VERSION" ]; then
+        if [ -z "$LATEST_VERSION" ]; then
+            print_warning "Could not fetch latest engram version"
+        else
             VERSION_NUM=$(echo "$LATEST_VERSION" | sed 's/^v//')
             DOWNLOAD_URL="https://github.com/Gentleman-Programming/engram/releases/download/${LATEST_VERSION}/engram_${VERSION_NUM}_linux_${ARCH_NAME}.tar.gz"
-            
-            # Create temporary directory
             TMP_DIR=$(mktemp -d)
-            trap "rm -rf $TMP_DIR" EXIT INT TERM
             
-            # Download and extract
-            if command -v curl >/dev/null 2>&1; then
-                curl -L -o "$TMP_DIR/engram.tar.gz" "$DOWNLOAD_URL" 2>/dev/null
+            if curl -sfL -o "$TMP_DIR/engram.tar.gz" "$DOWNLOAD_URL" &&
+               tar -xzf "$TMP_DIR/engram.tar.gz" -C "$TMP_DIR" &&
+               [ -f "$TMP_DIR/engram" ]; then
+                mv "$TMP_DIR/engram" "$HOME/.local/bin/engram"
+                chmod +x "$HOME/.local/bin/engram"
+                print_status "engram updated to $LATEST_VERSION"
             else
-                wget -O "$TMP_DIR/engram.tar.gz" "$DOWNLOAD_URL" 2>/dev/null
-            fi
-            
-            if [ -f "$TMP_DIR/engram.tar.gz" ]; then
-                cd "$TMP_DIR"
-                tar -xzf engram.tar.gz 2>/dev/null
-                
-                if [ -f "engram" ]; then
-                    mv engram "$HOME/.local/bin/engram"
-                    chmod +x "$HOME/.local/bin/engram"
-                    print_status "✓ engram updated to $LATEST_VERSION"
-                else
-                    print_warning "Could not extract engram binary"
-                    FAILED=$((FAILED + 1))
-                fi
-            else
-                print_warning "Could not download engram"
+                print_warning "Could not download/extract engram"
                 FAILED=$((FAILED + 1))
             fi
-        else
-            print_warning "Could not fetch latest engram version"
+            
+            rm -rf "$TMP_DIR"
         fi
     fi
 else
@@ -207,29 +187,23 @@ else
 fi
 
 # ============================================================================
-# 9. atuin (shell history)
+# 9. Tealdeer cache
 # ============================================================================
-if command -v atuin >/dev/null 2>&1; then
-    print_status "Updating atuin..."
-    atuin update || {
-        # If atuin update fails, try system package manager
-        if command -v pacman >/dev/null 2>&1; then
-            sudo pacman -S --noconfirm atuin || FAILED=$((FAILED + 1))
-        elif command -v apt-get >/dev/null 2>&1; then
-            sudo apt-get update && sudo apt-get install -y atuin || FAILED=$((FAILED + 1))
-        elif command -v dnf >/dev/null 2>&1; then
-            sudo dnf install -y atuin || FAILED=$((FAILED + 1))
-        else
-            print_warning "Could not update atuin"
-            FAILED=$((FAILED + 1))
-        fi
-    }
-else
-    print_warning "atuin not found, skipping"
+if command -v tldr >/dev/null 2>&1; then
+    print_status "Updating tealdeer cache..."
+    tldr --update || print_warning "Could not update tealdeer cache"
 fi
 
 # ============================================================================
-# 10. pi coding agent (if installed via bun)
+# 10. Flatpak
+# ============================================================================
+if command -v flatpak >/dev/null 2>&1; then
+    print_status "Updating Flatpak packages..."
+    flatpak update -y --noninteractive || print_warning "Flatpak update failed"
+fi
+
+# ============================================================================
+# 11. pi coding agent (if installed via bun)
 # ============================================================================
 if command -v pi >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
     # Check if pi is installed via bun (not a standalone binary)

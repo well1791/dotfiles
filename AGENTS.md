@@ -93,9 +93,14 @@ if not command -v <cmd> >/dev/null 2>&1; exit; end
 
 ### 4. Documentation and Updates
 
+After adding, removing, or modifying any CLI tool installation, **all** of these must be updated in the same change:
+
 - Add to `README.md` under "What Gets Installed"
-- If the tool has self-update, add it to `home/dot_local/bin/executable_update-all`
+- If the tool has self-update capability, add a section to `home/dot_local/bin/executable_update-all`
+- If the tool is updated via system packages only, verify it's covered by the system package step in `update-all`
+- Update the header comment in `executable_update-all` to list all managed tools
 - Document dependencies in the table below
+- Update this `AGENTS.md` file if the change affects conventions, dependencies, or integration patterns
 
 ## Tool Dependencies
 
