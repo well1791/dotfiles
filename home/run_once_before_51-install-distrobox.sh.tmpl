@@ -1,0 +1,22 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install distrobox (container manager on top of podman/docker)
+# https://distrobox.it
+
+# Skip if already installed
+if log_version distrobox; then
+    exit 0
+fi
+
+# Requires podman or docker as backend
+if ! check_any_command podman docker; then
+    die "distrobox requires podman or docker as backend"
+fi
+
+log_info "Installing distrobox..."
+install_packages distrobox
+
+if ! check_command distrobox; then
+    die "distrobox installation failed"
+fi
+
+log_success "distrobox installed" "$(get_version distrobox)"

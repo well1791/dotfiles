@@ -43,6 +43,12 @@ During the initial setup, the following tools are automatically installed:
 - Installed via system package manager (pacman/apt/dnf)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
+### 6b. **[Distrobox](https://distrobox.it)** - Container manager on top of Podman
+- Run any Linux distro in containers integrated with the host
+- Uses Podman as backend (Docker also supported)
+- Installed via system package manager (pacman/apt/dnf)
+- Update: `sudo pacman -Syu` (or your distro's update command)
+
 ### 7. **[Bun](https://bun.sh)** - Fast all-in-one JavaScript runtime
 - Drop-in replacement for Node.js, with built-in bundler, test runner, package manager
 - Installed to `~/.bun/bin/bun`
@@ -110,7 +116,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, helix, ripgrep, yazi, bat, duf, eza, glow, sd, serpl, just, tealdeer)
+- ✅ System packages (age, podman, distrobox, helix, ripgrep, yazi, bat, duf, eza, glow, sd, serpl, just, tealdeer)
 - ✅ mise and mise-managed runtimes (go, node, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)

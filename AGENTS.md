@@ -109,6 +109,7 @@ After adding, removing, or modifying any CLI tool installation, **all** of these
 | navi | fzf (system) | Uses fzf as pipe filter backend. Cannot use television (TUI, not a unix filter). |
 | devenv | nix | Built on Nix |
 | pi | bun | Installed via bun global packages |
+| distrobox | podman | Container manager that uses podman as backend |
 | television | — | Standalone. Replaces fzf for shell integration (Ctrl-T, Ctrl-R) only. |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
