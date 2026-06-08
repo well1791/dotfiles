@@ -201,7 +201,8 @@ fallback_channel = "files"
 # ```
 "alias" = ["alias", "unalias"]
 "env" = ["export", "unset"]
-"dirs" = ["cd", "ls", "rmdir", "z"]
+"dirs" = ["cd", "ls", "rmdir"]
+"zoxide" = ["z"]
 "files" = [
   "cat",
   "less",
@@ -227,6 +228,7 @@ fallback_channel = "files"
 "git-diff" = ["git add", "git restore"]
 "git-branch" = [
   "git checkout",
+  "git switch",
   "git branch",
   "git merge",
   "git rebase",
@@ -235,7 +237,7 @@ fallback_channel = "files"
 ]
 "git-log" = ["git log", "git show"]
 "docker-images" = ["docker run"]
-"git-repos" = ["nvim", "code", "hx", "git clone"]
+"git-repos" = ["nvim", "code", "hx", "e", "git clone"]
 
 [shell_integration.keybindings]
 # controls which key binding should trigger tv
