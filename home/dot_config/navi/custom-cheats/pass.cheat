@@ -1,0 +1,62 @@
+% pass, password, gpg, secret
+
+# List all passwords
+pass
+
+# Show password (copy to clipboard for 45s)
+pass -c <entry>
+
+# Show password (print to stdout)
+pass show <entry>
+
+# Generate new password (copy to clipboard)
+pass generate -c <new_entry> <length>
+
+# Generate password (no symbols)
+pass generate -c -n <new_entry> <length>
+
+# Insert new password (prompted)
+pass insert <new_entry>
+
+# Insert multiline entry
+pass insert -m <new_entry>
+
+# Edit existing entry
+pass edit <entry>
+
+# Remove entry
+pass rm <entry>
+
+# Move/rename entry
+pass mv <entry> <destination>
+
+# Copy entry
+pass cp <entry> <destination>
+
+# Find entries matching pattern
+pass find <search_term>
+
+# Search entry contents with grep
+pass grep <search_term>
+
+# Initialize password store with GPG key
+pass init <gpg_id>
+
+# Initialize git in password store
+pass git init
+
+# Push changes to remote
+pass git push
+
+# Pull changes from remote
+pass git pull
+
+# Show git log of password store
+pass git log --oneline -20
+
+$ entry: find ~/.password-store -name '*.gpg' -printf '%P\n' 2>/dev/null | sed 's/\.gpg$//' | sort --- --fzf-overrides '--no-sort'
+$ new_entry: echo ""
+$ destination: echo ""
+$ length: echo -e "20\n25\n30\n40\n64" | fzf
+$ gpg_id: gpg --list-secret-keys --keyid-format long 2>/dev/null | grep -oP '(?<=/)[\w]+(?= )' | fzf
+$ search_term: echo ""

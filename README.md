@@ -85,6 +85,7 @@ Installed via system package manager (pacman/apt/dnf):
 - **[serpl](https://github.com/yassinebridi/serpl)** - TUI search and replace tool
 - **[just](https://github.com/casey/just)** - Command runner (like make, but better)
 - **[tealdeer](https://tealdeer-rs.github.io/tealdeer/)** - Fast tldr client in Rust (`tldr`)
+- **[pass](https://www.passwordstore.org/)** - Standard Unix password manager (GPG-encrypted, git-tracked)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
 ### 12. **[direnv](https://direnv.net)** - Auto-load environment on cd
@@ -125,7 +126,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer)
+- ✅ System packages (age, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass)
 - ✅ mise and mise-managed runtimes (go, node, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)
