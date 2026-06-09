@@ -1,11 +1,12 @@
 {{ template "install-header.sh.tmpl" . }}
 # Install essential CLI tools (modern replacements)
-# Tools: helix, ripgrep, yazi, bat, duf, eza, glow, sd, serpl, just, tealdeer
+# Tools: helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer
 {{- $tools := dict
     "helix" (list "helix" "hx")
     "ripgrep" (list "rg")
     "yazi" (list "yazi")
     "bat" (list "bat")
+    "dust" (list "dust")
     "duf" (list "duf")
     "eza" (list "eza")
     "glow" (list "glow")

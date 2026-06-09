@@ -6,6 +6,8 @@ This document provides comprehensive usage patterns for modern CLI tools preferr
 
 | Task | Use | Not | Why |
 |------|-----|-----|-----|
+| Directory disk usage | `dust` | `du` | Visual tree, sorted by size, intuitive output |
+| Filesystem disk usage | `duf` | `df` | Color output, grouped by type, modern layout |
 | Find files/directories | `fd` | `find` | Faster, better defaults, simpler syntax |
 | Search text in files | `rg` | `grep` | Faster, recursive by default, respects .gitignore |
 | View file contents | `bat` | `cat` | Syntax highlighting, line numbers, git integration |
@@ -99,6 +101,129 @@ serpl --dir /path/to/project
 - Uses ripgrep under the hood for fast searching
 - Supports regex patterns
 - Shows preview of changes before applying
+
+## dust - Directory Disk Usage
+
+**Installation verified:** `/usr/bin/dust`
+
+### Common Usage
+
+```sh
+# Show disk usage of current directory (visual tree)
+dust
+
+# Show disk usage of specific path
+dust /path/to/dir
+
+# Limit depth
+dust -d 2
+
+# Show only N largest items
+dust -n 10
+
+# Reverse sort (smallest first)
+dust -r
+
+# Show apparent size (not disk blocks)
+dust -s
+
+# Show hidden files
+dust -H
+
+# Ignore directories matching pattern
+dust -X .git -X node_modules
+
+# Show only files (no directories)
+dust -f
+
+# Show only directories
+dust -D
+
+# Show full paths
+dust -p
+
+# No percent bars (compact output)
+dust -b
+```
+
+### When to Use
+
+- Finding what's consuming disk space in a directory
+- Visualizing directory size distribution
+- Identifying large files/directories for cleanup
+- Any task that would use `du -sh * | sort -h`
+
+### Advantages Over du
+
+- Visual bar chart shows relative sizes at a glance
+- Sorted by size by default (largest first)
+- Tree structure shows hierarchy clearly
+- Respects terminal width for clean formatting
+- No need to pipe through `sort` or `head`
+
+### User Configuration
+
+System abbreviation: `du` → `dust`
+
+## duf - Filesystem Disk Usage
+
+**Installation verified:** `/usr/bin/duf`
+
+### Common Usage
+
+```sh
+# Show all mounted filesystems
+duf
+
+# Show specific path
+duf /home
+
+# Show only local filesystems
+duf --only local
+
+# Show only network filesystems
+duf --only network
+
+# Show specific filesystem types
+duf --only ext4,btrfs
+
+# Hide specific filesystem types
+duf --hide special
+
+# Sort by size
+duf --sort size
+
+# Sort by usage percentage
+duf --sort usage
+
+# JSON output (for scripting)
+duf --json
+
+# Show all (including pseudo/special filesystems)
+duf --all
+
+# Show inodes instead of blocks
+duf --inodes
+```
+
+### When to Use
+
+- Checking available disk space across filesystems
+- Monitoring filesystem usage
+- Identifying nearly-full partitions
+- Any task that would use `df -h`
+
+### Advantages Over df
+
+- Color-coded usage bars
+- Groups by device type (local, network, special)
+- Clean table formatting
+- Shows all relevant info without cryptic column headers
+- JSON output for scripting
+
+### User Configuration
+
+System abbreviation: `df` → `duf`
 
 ## fd - File/Directory Search
 

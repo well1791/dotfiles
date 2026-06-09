@@ -147,6 +147,8 @@ Before declaring completion, confirm the change solves the stated problem, relev
 - `bat` → file viewing (`cat` replacement)
 - `eza` → directory listing (`ls` replacement)
 - `delta` → git diff viewing
+- `dust` → directory disk usage (`du` replacement)
+- `duf` → filesystem disk usage (`df` replacement)
 
 These tools are faster, have better defaults, and clearer output.
 For usage patterns and examples, see [CLI-TOOLS.md](./CLI-TOOLS.md).

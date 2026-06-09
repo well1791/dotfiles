@@ -77,7 +77,8 @@ Installed via system package manager (pacman/apt/dnf):
 - **[ripgrep](https://github.com/BurntSushi/ripgrep)** - Fast grep alternative (`rg`)
 - **[Yazi](https://yazi-rs.github.io/)** - Terminal file manager
 - **[bat](https://github.com/sharkdp/bat)** - Cat with syntax highlighting
-- **[duf](https://github.com/muesli/duf)** - Modern disk usage tool
+- **[dust](https://github.com/bootandy/dust)** - Intuitive disk usage (`du` replacement)
+- **[duf](https://github.com/muesli/duf)** - Disk free utility (`df` replacement)
 - **[eza](https://eza.rocks/)** - Modern ls replacement
 - **[sd](https://github.com/chmln/sd)** - Intuitive find & replace (`sed` replacement)
 - **[glow](https://github.com/charmbracelet/glow)** - Terminal markdown reader with TUI
@@ -124,7 +125,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, distrobox, direnv, helix, ripgrep, yazi, bat, duf, eza, glow, sd, serpl, just, tealdeer)
+- ✅ System packages (age, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer)
 - ✅ mise and mise-managed runtimes (go, node, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)
