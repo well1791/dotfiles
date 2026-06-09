@@ -1,0 +1,53 @@
+% devenv, development, environment, nix
+
+# Initialize devenv in current project
+devenv init
+
+# Generate devenv config using AI
+devenv generate
+
+# Enter developer shell
+devenv shell
+
+# Show environment info
+devenv info
+
+# Start processes (foreground)
+devenv up
+
+# Start/stop processes
+devenv processes up
+devenv processes down
+
+# Run tasks
+devenv tasks run <task>
+
+# Run tests
+devenv test
+
+# Search for packages
+devenv search <query>
+
+# Update lock file
+devenv update
+
+# Build container
+devenv container build
+
+# Run container
+devenv container run
+
+# Garbage collect old generations
+devenv gc
+
+# Open nix repl with devenv config
+devenv repl
+
+# Start MCP server for AI assistants
+devenv mcp
+
+# Start nixd language server
+devenv lsp
+
+# Show version
+devenv version

@@ -1,0 +1,33 @@
+% navi, cheatsheet
+
+# Browse all cheats
+navi
+
+# Search with pre-filled query
+navi --query '<query>'
+
+# Print snippet instead of executing
+navi --print
+
+# Find best match and execute
+navi --best-match --query '<query>'
+
+# Search tldr-pages
+navi --tldr <command>
+
+# Search cheat.sh
+navi --cheatsh <command>
+
+# Add community cheat repository
+navi repo add <repo_url>
+
+# Browse specific cheat repository
+navi repo browse
+
+# Show navi info (paths, etc)
+navi info
+
+# Filter by tag
+navi --tag-rules '<tags>'
+
+$ tags: echo -e "git\nshell\ncontainer\nai\neditor" | fzf

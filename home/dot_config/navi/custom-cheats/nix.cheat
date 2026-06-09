@@ -1,0 +1,49 @@
+% nix, nixpkgs, flake
+
+# Search for packages
+nix search nixpkgs <query>
+
+# Run a package without installing
+nix run nixpkgs#<package>
+
+# Open development shell from flake
+nix develop
+
+# Build from flake
+nix build
+
+# Install package to profile
+nix profile install nixpkgs#<package>
+
+# List installed profile packages
+nix profile list
+
+# Remove package from profile
+nix profile remove <index>
+
+# Update flake inputs
+nix flake update
+
+# Show flake info
+nix flake show
+
+# Initialize new flake
+nix flake init
+
+# Garbage collect old store paths
+nix store gc
+
+# Show store disk usage
+nix store info
+
+# Enter Nix REPL
+nix repl
+
+# Check flake for errors
+nix flake check
+
+# Update a single flake input
+nix flake update <input>
+
+# Install nix (daemon mode)
+sh <(curl -L https://nixos.org/nix/install) --daemon

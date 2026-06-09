@@ -1,0 +1,28 @@
+% duf, df, disk, filesystem
+
+# Show disk usage overview (colorized)
+duf
+
+# Show all filesystems (including pseudo)
+duf -all
+
+# Show only local filesystems
+duf -only local
+
+# Show only network filesystems
+duf -only network
+
+# Show inode usage instead of block usage
+duf -inodes
+
+# Output as JSON
+duf -json
+
+# Hide loops and binds
+duf -hide loops,binds
+
+# Hide specific mount points
+duf -hide-mp '/boot*,/snap*'
+
+# Show specific filesystem types only
+duf -only-fs ext4,btrfs

@@ -1,0 +1,38 @@
+% dust, du, disk, usage, size
+
+# Show directory sizes (current dir)
+dust
+
+# Show directory sizes for specific path
+dust <path>
+
+# Limit depth
+dust -d <depth> <path>
+
+# Show N largest entries
+dust -n <count>
+
+# Reverse sort (smallest first)
+dust -r
+
+# Show apparent size (not disk usage)
+dust -s
+
+# Show only directories (no files)
+dust -D
+
+# Show only files (no directories)
+dust -F
+
+# Ignore hidden files
+dust -i
+
+# Show full paths
+dust -p
+
+# Show sizes in bytes
+dust -b
+
+$ path: fd -t d --max-depth 2 | fzf
+$ depth: echo -e "1\n2\n3\n5" | fzf
+$ count: echo -e "10\n20\n30\n50" | fzf
