@@ -117,6 +117,7 @@ A subagent call blocks the main agent, so main agent + 1 subagent is sequential 
 - Prefer the smallest viable change. Do not modify working code without clear justification.
 - Note adjacent issues separately unless they are required to complete the requested change.
 - Add dependencies only when necessary. Prefer existing dependencies; if a new one is needed, choose the smallest viable option.
+- Every variable, function, constant, type, or definition introduced must be used in the same change. Do not generate dead code. If something is intentionally reserved for future use, add a comment explaining the intended purpose.
 
 ## Safety & Infrastructure
 

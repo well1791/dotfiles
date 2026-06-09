@@ -15,6 +15,25 @@ Trigger this skill when the user says any of:
 - "Review branch origin/SD-1010"
 - "Code review for PR 915"
 - "Do a code review"
+- "Review PR 915 --repo other-repo"
+
+## Arguments
+
+| Argument | Required | Description |
+|----------|----------|-------------|
+| `--repo <REPO_NAME>` | No | Override the default repository for all `bkt` commands |
+
+When the user provides a repo name (e.g., "review PR 915 on repo frontend" or "--repo frontend"), **all `bkt` commands** in this workflow must include `--repo <REPO_NAME>` immediately after `bkt`. For example:
+
+```bash
+# Without --repo (default):
+bkt pr diff 915
+
+# With --repo:
+bkt --repo frontend pr diff 915
+```
+
+The `--repo` flag is placed between `bkt` and the subcommand in every invocation.
 
 ## Context
 
@@ -28,13 +47,13 @@ Trigger this skill when the user says any of:
 
 **If given PR number:**
 ```bash
-bkt pr diff <PR_NUMBER>
+bkt [--repo <REPO_NAME>] pr diff <PR_NUMBER>
 ```
 Extract ticket ID from commit messages or branch name in diff header.
 
 **If given ticket ID:**
 ```bash
-bkt pr list
+bkt [--repo <REPO_NAME>] pr list
 ```
 Find PR number by matching ticket ID in PR titles.
 
@@ -56,7 +75,7 @@ Parse JSON to understand:
 ### 3. Get PR Diff
 
 ```bash
-bkt pr diff <PR_NUMBER>
+bkt [--repo <REPO_NAME>] pr diff <PR_NUMBER>
 ```
 
 Review the complete set of changes to understand scope.
@@ -64,7 +83,7 @@ Review the complete set of changes to understand scope.
 **Searching the diff locally:**
 You can pipe the diff to search for specific patterns:
 ```bash
-bkt pr diff <PR_NUMBER> | rg '<pattern>'
+bkt [--repo <REPO_NAME>] pr diff <PR_NUMBER> | rg '<pattern>'
 ```
 This is useful for quickly finding specific changes, variable names, or patterns across the full diff without scrolling through it manually.
 
@@ -151,7 +170,7 @@ Review PR #<NUMBER> for ticket <TICKET-KEY>: "<SUMMARY>"
 ### 6. Fetch Existing Comments
 
 ```bash
-bkt pr comments <PR_NUMBER> --details --json
+bkt [--repo <REPO_NAME>] pr comments <PR_NUMBER> --details --json
 ```
 
 Use `--json` to get structured data with comment IDs (needed for threaded replies).
@@ -354,21 +373,21 @@ Actual risk: Infinite loop if materials array is empty without early return"
 
 **To reply to an existing comment (threaded):**
 ```bash
-bkt pr comment <PR_NUMBER> --text "<reply>" --parent <parent-comment-id>
+bkt [--repo <REPO_NAME>] pr comment <PR_NUMBER> --text "<reply>" --parent <parent-comment-id>
 ```
 - Always use `--parent` with the **root/first comment ID** in the thread — never use a reply's ID as parent
 - This creates a proper threaded reply visible in Bitbucket's UI
-- To find comment IDs: `bkt pr comments <PR_NUMBER> --details --json`
+- To find comment IDs: `bkt [--repo <REPO_NAME>] pr comments <PR_NUMBER> --details --json`
 - Do NOT tag users (no "@name")
 
 **To add a new inline comment (PREFERRED — use this by default):**
 ```bash
-bkt pr comment <PR_NUMBER> --file "<filepath>" --to-line <line_number> --text "<comment>"
+bkt [--repo <REPO_NAME>] pr comment <PR_NUMBER> --file "<filepath>" --to-line <line_number> --text "<comment>"
 ```
 
 **To add a general comment (ONLY when the concern is truly PR-wide):**
 ```bash
-bkt pr comment <PR_NUMBER> --text "<comment>"
+bkt [--repo <REPO_NAME>] pr comment <PR_NUMBER> --text "<comment>"
 ```
 
 ### 9. Approve or Stay Silent
@@ -381,7 +400,7 @@ bkt pr comment <PR_NUMBER> --text "<comment>"
 - ✅ Even if you posted REQUEST comments — approve and let the owner address them
 
 ```bash
-bkt pr approve <PR_NUMBER>
+bkt [--repo <REPO_NAME>] pr approve <PR_NUMBER>
 ```
 
 **Stay silent (no approve) when:**
@@ -436,18 +455,29 @@ Avoid:
 10. Decision: No comments to post (silence = agreement)
 11. `bkt pr approve 916` → no blockers, fix is correct
 
+**User says:** "Review PR 42 --repo mobile-app"
+
+**You execute:**
+1. `bkt --repo mobile-app pr diff 42` → identify ticket SD-2050
+2. `atlcli jira issue get --key SD-2050` → login flow crash
+3. `git status --short` → clean ✓
+4. `git switch --detach origin/fix/sd-2050-login-crash`
+5. Plan and delegate review (same as above)
+6. `bkt --repo mobile-app pr comments 42 --details --json`
+7. `bkt --repo mobile-app pr approve 42`
+
 ## Key Commands Reference
 
 | Command | Purpose |
 |---------|---------|
 | `atlcli jira issue get --key <KEY>` | Fetch Jira ticket details |
-| `bkt pr list` | List all open PRs |
-| `bkt pr diff <NUMBER>` | Show PR changes (full diff) |
-| `bkt pr comments <NUMBER> --details` | Show all existing comments |
-| `bkt pr comment <NUMBER> --file "<path>" --to-line <N> --text "<msg>"` | Add inline comment |
-| `bkt pr comment <NUMBER> --text "<msg>" --parent <ID>` | Reply to comment in thread (use root comment ID) |
-| `bkt pr comment <NUMBER> --text "<msg>"` | Add general comment |
-| `bkt pr approve <NUMBER>` | Approve PR (always approve, never decline) |
+| `bkt [--repo <REPO>] pr list` | List all open PRs |
+| `bkt [--repo <REPO>] pr diff <NUMBER>` | Show PR changes (full diff) |
+| `bkt [--repo <REPO>] pr comments <NUMBER> --details` | Show all existing comments |
+| `bkt [--repo <REPO>] pr comment <NUMBER> --file "<path>" --to-line <N> --text "<msg>"` | Add inline comment |
+| `bkt [--repo <REPO>] pr comment <NUMBER> --text "<msg>" --parent <ID>` | Reply to comment in thread (use root comment ID) |
+| `bkt [--repo <REPO>] pr comment <NUMBER> --text "<msg>"` | Add general comment |
+| `bkt [--repo <REPO>] pr approve <NUMBER>` | Approve PR (always approve, never decline) |
 | `git switch --detach origin/<BRANCH>` | Switch to PR branch (detached HEAD, no local branch) |
 
 ## Team Culture Notes
