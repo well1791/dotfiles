@@ -13,39 +13,42 @@ prefix = "ctrl+;"
 settings = "ctrl+."
 reload_config = "ctrl+shift+."
 help = "ctrl+?"
-# --- Direct shortcuts (no prefix needed) ---
 # Session/workspace
 detach = "alt+x"
 workspace_picker = "alt+w"
-# switch_workspace = "alt+shift+1..9"
+switch_workspace = "alt+shift+1..9"
 navigate_workspace_up = "up"
 navigate_workspace_down = "down"
+rename_workspace = "prefix+shift+r"
+# Navigate-mode pane focus (while picker is open)
+navigate_pane_left = "j"
+navigate_pane_down = "k"
+navigate_pane_up = "i"
+navigate_pane_right = "l"
 switch_tab = "alt+1..9"
 new_tab = "ctrl+shift+t"
 previous_tab = "alt+i"
 next_tab = "alt+k"
-# Pane focus (alt+arrows, same as zellij)
 focus_pane_left = "alt+left"
 focus_pane_down = "alt+down"
 focus_pane_up = "alt+up"
 focus_pane_right = "alt+right"
 # focus_agent = "alt+1..9"
-# Pane splits (alt+r/d, same as zellij)
 split_vertical = "alt+r"
-split_horizontal = "alt+d"
-# Scrollback (alt+a, matches zellij scroll mode entry)
+split_horizontal = "alt+f"
 edit_scrollback = "alt+a"
-# Quick zoom (no zellij equivalent without modal, but useful)
 zoom = "alt+z"
+new_workspace = "alt+n"
+toggle_sidebar = "ctrl+b"
+#
+# --- PREFIXED ---
 # close_pane = "prefix+x"
 # close_tab = "prefix+shift+x"
 rename_tab = "prefix+r"
 # rename_pane = "prefix+shift+p"
 # rename_workspace = "prefix+shift+w"
 close_workspace = "prefix+d"
-resize_mode = "prefix+shift+r"
-new_workspace = "alt+n"
-toggle_sidebar = "ctrl+b"
+resize_mode = "prefix+shift+z"
 
 # Custom commands
 [[keys.command]]
@@ -54,7 +57,7 @@ type = "pane"
 command = "gitui"
 
 # [[keys.command]]
-# key = "prefix+shift+b"
+# key = ""
 # type = "pane"
 # command = "btop"
 
@@ -64,7 +67,7 @@ prompt_new_tab_name = true
 show_agent_labels_on_pane_borders = false
 # Show all agents across workspaces in the sidebar
 agent_panel_scope = "all"
-accent = "cyan"
+accent = "#FFD787"
 
 [ui.toast]
 # In-app toast notifications for background agent state changes
