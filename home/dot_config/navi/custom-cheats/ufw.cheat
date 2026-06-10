@@ -1,0 +1,52 @@
+% ufw, firewall, network, security
+
+# Check firewall status
+sudo ufw status verbose
+
+# Show rules with numbers (for deletion)
+sudo ufw status numbered
+
+# Allow a specific port (tcp+udp)
+sudo ufw allow <port>
+
+# Allow a specific TCP port
+sudo ufw allow <port>/tcp
+
+# Allow a specific UDP port
+sudo ufw allow <port>/udp
+
+# Allow SSH (port 22)
+sudo ufw allow ssh
+
+# Allow port range (TCP)
+sudo ufw allow <start_port>:<end_port>/tcp
+
+# Allow from local network to a port (dev servers for phone/tablet)
+sudo ufw allow from 192.168.0.0/16 to any port <port> proto tcp
+
+# Allow from specific IP
+sudo ufw allow from <ip_address>
+
+# Delete a rule by number
+sudo ufw status numbered && sudo ufw delete <rule_number>
+
+# Deny a specific port
+sudo ufw deny <port>
+
+# Enable firewall
+sudo ufw enable
+
+# Disable firewall (temporary)
+sudo ufw disable
+
+# Reset all rules
+sudo ufw reset
+
+# Reload firewall rules
+sudo ufw reload
+
+# Show app profiles
+sudo ufw app list
+
+$ port: echo -e "22\n80\n443\n3000\n5000\n8000\n8080\n9000" | fzf
+$ rule_number: sudo ufw status numbered 2>/dev/null | grep -oP '^\[\s*\K\d+' | fzf

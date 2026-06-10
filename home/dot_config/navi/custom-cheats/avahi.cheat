@@ -1,0 +1,37 @@
+% avahi, mdns, network, discovery, zeroconf
+
+# Browse all mDNS services on local network
+avahi-browse -at
+
+# Browse services (resolve addresses)
+avahi-browse -atr
+
+# Browse specific service type
+avahi-browse -t <service_type>
+
+# Resolve a .local hostname to IP
+avahi-resolve -n <hostname>.local
+
+# Resolve an IP to .local hostname
+avahi-resolve -a <ip_address>
+
+# Check avahi daemon status
+systemctl status avahi-daemon
+
+# Restart avahi daemon (after config changes)
+sudo systemctl restart avahi-daemon
+
+# Show current mDNS hostname
+avahi-daemon --check && hostname
+
+# Publish a custom service (temporary, until Ctrl+C)
+avahi-publish-service "<name>" <service_type> <port>
+
+# Publish an HTTP service on a port
+avahi-publish-service "<name>" _http._tcp <port>
+
+# Test .local resolution from another device
+ping <hostname>.local
+
+$ service_type: echo -e "_http._tcp\n_ssh._tcp\n_ftp._tcp\n_smb._tcp\n_ipp._tcp\n_workstation._tcp" | fzf
+$ hostname: hostname

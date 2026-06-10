@@ -112,6 +112,7 @@ After adding, removing, or modifying any CLI tool installation, **all** of these
 | pi | bun | Installed via bun global packages |
 | distrobox | podman | Container manager that uses podman as backend |
 | television | — | Standalone. Replaces fzf for shell integration (Ctrl-T, Ctrl-R) only. |
+| avahi | nss-mdns | mDNS responder for .local hostname resolution on local network |
 | herdr | mise | Terminal-native agent runtime, installed via mise |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.

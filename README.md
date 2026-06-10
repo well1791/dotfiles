@@ -122,6 +122,13 @@ Installed via system package manager (pacman/apt/dnf):
 - Fish widget: Ctrl+G
 - Update: `paru -Syu navi` or `yay -Syu navi`
 
+### 15. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
+- Enables `.local` hostname resolution (e.g., `lenovo.local` from other devices)
+- Packages: `avahi`, `nss-mdns`
+- Config: `/etc/avahi/avahi-daemon.conf`
+- Browse local services: `avahi-browse -at`
+- Update: `sudo pacman -Syu` (system package)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -133,7 +140,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass)
+- ✅ System packages (age, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)
@@ -206,6 +213,11 @@ Additional system-level configurations aligned with [CachyOS post-install recomm
 #### Firewall (UFW)
 
 Enabled with default deny incoming, allow outgoing policy.
+
+**Allowed Services:**
+- ✅ mDNS (port 5353/UDP) — local network discovery (`.local` hostnames)
+- ✅ SSH (port 22/TCP) — remote shell access and SCP file transfer
+- ✅ KDE Connect (ports 1714-1764 TCP+UDP)
 
 **What's Protected:**
 - ✅ localhost/127.0.0.1 is unaffected (local dev servers work normally)

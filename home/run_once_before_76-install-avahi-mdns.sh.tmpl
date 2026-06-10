@@ -1,0 +1,22 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install avahi + nss-mdns (mDNS/DNS-SD for local network discovery)
+# https://avahi.org/
+# Allows this machine to be discovered as <hostname>.local by other devices
+
+# Skip if already installed and running
+if check_command avahi-daemon && check_command avahi-browse; then
+    log_success "avahi already installed"
+    exit 0
+fi
+
+log_info "Installing avahi and nss-mdns..."
+install_packages avahi nss-mdns
+
+if ! check_command avahi-daemon; then
+    die "avahi installation failed"
+fi
+
+log_success "avahi installed" "$(get_version avahi-daemon)"
+log_info "  mDNS hostname: $(avahi-daemon --check 2>&1 || hostname).local"
+log_info "  Config: /etc/avahi/avahi-daemon.conf"
+log_info "  Browse services: avahi-browse -at"
