@@ -12,6 +12,11 @@ abbr --add <name> <expansion>
 # Edit fish config
 chezmoi edit --watch ~/.config/fish/config.fish
 
+# Erase cached fish function (force PATH lookup)
+functions -e <function_name>
+
+$ function_name: functions --names | sort
+
 # Install from URL via curl pipe
 curl -fsSL <url> | sh
 
