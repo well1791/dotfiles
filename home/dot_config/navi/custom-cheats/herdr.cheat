@@ -1,0 +1,63 @@
+% herdr, terminal, agent, multiplexer, session
+
+# Start herdr (default session)
+herdr
+
+# Start named session
+herdr session create <session_name>
+
+# Attach to named session
+herdr session attach <session_name>
+
+# List sessions
+herdr session list
+
+# Stop a named session
+herdr session stop <session_name>
+
+# Stop default server
+herdr server stop
+
+# Detach from current session
+herdr detach
+
+# Create a new workspace
+herdr workspace create --cwd <path> --label <label>
+
+# Create a new tab
+herdr tab create --label <label>
+
+# Split pane horizontally
+herdr pane split <pane_id> --direction down
+
+# Split pane vertically
+herdr pane split <pane_id> --direction right
+
+# Run command in a pane
+herdr pane run <pane_id> "<command>"
+
+# Read recent output from pane
+herdr pane read <pane_id> --source recent-unwrapped
+
+# Wait for agent to reach status
+herdr wait agent-status <pane_id> --status <status>
+
+# Update herdr (direct installs only)
+herdr update
+
+# Set update channel to preview
+herdr channel set preview
+
+# Set update channel to stable
+herdr channel set stable
+
+# Remote attach to SSH host
+herdr --remote <host>
+
+$ session_name: herdr session list 2>/dev/null | awk '{print $1}' --- --fzf-overrides '--no-sort'
+$ path: fd -t d --max-depth 2 | fzf
+$ label: echo ""
+$ pane_id: echo "1-1"
+$ command: echo ""
+$ status: echo -e "done\nworking\nblocked\nidle" | fzf
+$ host: grep '^Host ' ~/.ssh/config 2>/dev/null | awk '{print $2}' | fzf

@@ -1,5 +1,6 @@
 # github.com/well1791/dotfiles
 
+
 Well's dotfiles, managed with [`chezmoi`](https://github.com/twpayne/chezmoi).
 
 ## What Gets Installed
@@ -65,6 +66,12 @@ During the initial setup, the following tools are automatically installed:
 - Fish shell integration: `atuin init fish | source`
 - Update: `atuin update` or `sudo pacman -Syu`
 
+### 9b. **[Herdr](https://herdr.dev)** - Terminal-native agent runtime
+- tmux-style persistence with agent-aware panes, state rollups, and runtime API
+- Installed via mise: `mise use -g herdr@latest`
+- Supports local, SSH, and remote-attach workflows
+- Update: `mise upgrade herdr` or `herdr update`
+
 ### 10. **[pi](https://pi.dev)** - Terminal coding agent
 - Minimal terminal coding harness with AI-powered assistance
 - Installed via bun: `~/.bun/bin/pi`
@@ -127,7 +134,7 @@ update-all
 
 This single command updates:
 - ✅ System packages (age, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass)
-- ✅ mise and mise-managed runtimes (go, node, etc.)
+- ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)
 - ✅ Nix channels and packages
