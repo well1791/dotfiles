@@ -14,11 +14,13 @@ info() { printf "${GREEN}==>${NC} %s\n" "$1"; }
 warn() { printf "${YELLOW}Warning:${NC} %s\n" "$1"; }
 
 SETTINGS="$HOME/.pi/agent/settings.json"
-DOTFILES_DIR="$(chezmoi source-path)"
-RELATIVE_SETTINGS="home/dot_pi/agent/settings.json"
+CHEZMOI_SOURCE="$(chezmoi source-path)"
+GIT_ROOT=$(git -C "$CHEZMOI_SOURCE" rev-parse --show-toplevel)
+SOURCE_SETTINGS="$(chezmoi source-path "$SETTINGS")"
+RELATIVE_SETTINGS="${SOURCE_SETTINGS#$GIT_ROOT/}"
 
 # --- Guard: no staged files in dotfiles repo ---
-staged=$(git -C "$DOTFILES_DIR" diff --cached --name-only)
+staged=$(git -C "$GIT_ROOT" diff --cached --name-only)
 if [ -n "$staged" ]; then
     die "Dotfiles repo has staged files. Unstage or commit them first:\n$staged"
 fi
@@ -41,21 +43,57 @@ else
     die "Settings file not found after update: $SETTINGS"
 fi
 
-# --- Check if anything changed ---
+# --- Sync settings to chezmoi source ---
 chezmoi add "$SETTINGS"
 
-if git -C "$DOTFILES_DIR" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
+# --- Check if settings.json has staged changes ---
+if git -C "$GIT_ROOT" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
+    # Nothing staged — but maybe the file is modified (unstaged) from a prior interrupted run
+    if git -C "$GIT_ROOT" diff --quiet -- "$RELATIVE_SETTINGS"; then
+        info "No changes to settings.json — already up to date (v${new_version})."
+        exit 0
+    fi
+
+    # File is modified but not staged — check if it's only a version change
+    diff_lines=$(git -C "$GIT_ROOT" diff -- "$RELATIVE_SETTINGS" | grep '^[+-]' | grep -v '^[+-][+-][+-]' | grep -v '"lastChangelogVersion"' || true)
+    if [ -n "$diff_lines" ]; then
+        warn "settings.json has non-version modifications. Review manually."
+        git -C "$GIT_ROOT" diff -- "$RELATIVE_SETTINGS"
+        exit 1
+    fi
+
+    # Only version-related change — verify chezmoi agrees the source is current
+    chezmoi_status=$(chezmoi status "$SETTINGS" 2>/dev/null || true)
+    if [ -n "$chezmoi_status" ]; then
+        # chezmoi sees a drift — re-add to pick up the most recent version
+        info "Chezmoi detected drift in settings.json, re-syncing..."
+        chezmoi add "$SETTINGS"
+    fi
+
+    # Read the version from the now-correct source file
+    source_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SOURCE_SETTINGS" | head -1 | sed 's/.*: *"//;s/"//')
+
+    # Stage the file
+    git -C "$GIT_ROOT" add -- "$RELATIVE_SETTINGS"
+fi
+
+# --- Final check: is there actually something staged to commit? ---
+if git -C "$GIT_ROOT" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
     info "No changes to settings.json — already up to date (v${new_version})."
     exit 0
 fi
 
+# --- Determine commit version info ---
+# Use the git-committed version as "old" for the message
+committed_version=$(git -C "$GIT_ROOT" show HEAD:"$RELATIVE_SETTINGS" 2>/dev/null | grep -o '"lastChangelogVersion": *"[^"]*"' | head -1 | sed 's/.*: *"//;s/"//' || echo "")
+current_version=${source_version:-$new_version}
+
 # --- Commit ---
-if [ "$old_version" = "$new_version" ]; then
-    # Version field didn't change but file did (e.g. config change during update)
+if [ -z "$committed_version" ] || [ "$committed_version" = "$current_version" ]; then
     commit_msg="chore(pi): update pi settings"
 else
-    commit_msg="chore(pi): update pi ${old_version} -> ${new_version}"
+    commit_msg="chore(pi): update pi ${committed_version} -> ${current_version}"
 fi
 
-git -C "$DOTFILES_DIR" commit -m "$commit_msg" -- "$RELATIVE_SETTINGS"
+git -C "$GIT_ROOT" commit -m "$commit_msg" -- "$RELATIVE_SETTINGS"
 info "Committed: $commit_msg"
