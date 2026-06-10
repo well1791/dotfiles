@@ -28,3 +28,6 @@ $ commit: git log --oneline -20 | sk --no-multi | awk '{print $1}'
 $ branch: git branch | awk '{print $NF}' | sk
 $ ref: git branch -r | sed 's|origin/||' | awk '{print $NF}' | sk
 $ number: echo -e "2\n3\n5\n10\n20" | sk
+
+# Gitignore alt
+$EDITOR .git/info/exclude
