@@ -1,7 +1,0 @@
-complete -c ged -s u -l untracked -d 'Untracked files'
-complete -c ged -s m -l modified -d 'Modified files (not staged)'
-complete -c ged -s s -l staged -d 'Staged files'
-complete -c ged -s c -l conflicts -d 'Files with merge conflicts'
-complete -c ged -s d -l deleted -d 'Deleted files'
-complete -c ged -s r -l renamed -d 'Renamed files'
-complete -c ged -s h -l help -d 'Show help'
