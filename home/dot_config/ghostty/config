@@ -53,3 +53,26 @@ keybind = ctrl+shift+tab=unbind
 # Paste with ctrl+v instead of ctrl+shift+v
 keybind = ctrl+shift+v=unbind
 keybind = ctrl+v=paste_from_clipboard
+
+# Half-page scroll (vim-style Ctrl+D/U)
+keybind = ctrl+shift+page_up=scroll_page_fractional:-0.5
+keybind = ctrl+shift+page_down=scroll_page_fractional:0.5
+
+# Line-by-line scroll
+keybind = ctrl+shift+up=scroll_page_lines:-3
+keybind = ctrl+shift+down=scroll_page_lines:3
+
+# Search current selection
+keybind = ctrl+shift+h=search_selection
+
+# Scroll to selection
+keybind = ctrl+shift+s=scroll_to_selection
+
+# Export scrollback to editor
+# keybind = ctrl+shift+o=write_scrollback_file:open
+
+# Selection expansion
+keybind = shift+home=adjust_selection:beginning_of_line
+keybind = shift+end=adjust_selection:end_of_line
+keybind = shift+page_up=adjust_selection:page_up
+keybind = shift+page_down=adjust_selection:page_down
