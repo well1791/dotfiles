@@ -349,34 +349,54 @@ export default function (pi: ExtensionAPI) {
               if (displayCount === 0) {
                 lines.push(theme.fg("muted", "  No sessions"));
               } else {
-                // Viewport
-                const termH = process.stdout.rows ?? 40;
-                const maxVisible = Math.max(5, termH - 10);
+                // Viewport — fixed max height of 16 lines
+                const maxLines = 16;
 
-                // Scroll to keep cursor visible
+                // Scroll to keep cursor visible (by item index)
                 if (cursorIndex < scrollOffset) scrollOffset = cursorIndex;
-                if (cursorIndex >= scrollOffset + maxVisible)
-                  scrollOffset = cursorIndex - maxVisible + 1;
-
-                const visStart = scrollOffset;
-                const visEnd = Math.min(displayCount, visStart + maxVisible);
-
-                for (let i = visStart; i < visEnd; i++) {
-                  if (hasCreate && i === filteredItems.length) {
-                    lines.push(renderCreateLine(i, width));
+                // Forward scroll: render from scrollOffset and check if cursor is visible
+                let needsAdjust = true;
+                while (needsAdjust) {
+                  let linesUsed = 0;
+                  let lastVisibleIdx = scrollOffset;
+                  for (let i = scrollOffset; i < displayCount; i++) {
+                    const itemLines = (i === filteredItems.length)
+                      ? 1
+                      : renderItemLine(filteredItems[i], i, width).length;
+                    if (linesUsed + itemLines > maxLines && i > scrollOffset) break;
+                    linesUsed += itemLines;
+                    lastVisibleIdx = i;
+                  }
+                  if (cursorIndex > lastVisibleIdx) {
+                    scrollOffset++;
                   } else {
-                    lines.push(
-                      ...renderItemLine(filteredItems[i], i, width),
-                    );
+                    needsAdjust = false;
                   }
                 }
 
+                // Render items within the line budget
+                let linesRendered = 0;
+                let itemsShown = 0;
+                for (let i = scrollOffset; i < displayCount; i++) {
+                  if (hasCreate && i === filteredItems.length) {
+                    if (linesRendered + 1 > maxLines && i > scrollOffset) break;
+                    lines.push(renderCreateLine(i, width));
+                    linesRendered++;
+                  } else {
+                    const itemRendered = renderItemLine(filteredItems[i], i, width);
+                    if (linesRendered + itemRendered.length > maxLines && i > scrollOffset) break;
+                    lines.push(...itemRendered);
+                    linesRendered += itemRendered.length;
+                  }
+                  itemsShown++;
+                }
+
                 // Scroll info
-                if (displayCount > maxVisible) {
+                if (scrollOffset > 0 || scrollOffset + itemsShown < displayCount) {
                   lines.push(
                     theme.fg(
                       "dim",
-                      `  ${visStart + 1}-${visEnd} of ${displayCount}`,
+                      `  ${scrollOffset + 1}-${scrollOffset + itemsShown} of ${displayCount}`,
                     ),
                   );
                 }
@@ -526,8 +546,7 @@ export default function (pi: ExtensionAPI) {
 
             // PgUp — scroll up a page
             if (matchesKey(data, "pageup")) {
-              const termH = process.stdout.rows ?? 40;
-              const page = Math.max(5, termH - 10);
+              const page = 8;
               cursorIndex = Math.max(0, cursorIndex - page);
               tui.requestRender();
               return;
@@ -535,8 +554,7 @@ export default function (pi: ExtensionAPI) {
 
             // PgDn — scroll down a page
             if (matchesKey(data, "pagedown")) {
-              const termH = process.stdout.rows ?? 40;
-              const page = Math.max(5, termH - 10);
+              const page = 8;
               cursorIndex = Math.min(getDisplayCount() - 1, cursorIndex + page);
               tui.requestRender();
               return;
