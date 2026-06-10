@@ -1,0 +1,61 @@
+#!/bin/sh
+# Update pi and commit the settings.json change to dotfiles.
+# Idempotent: safe to re-run. Stops if dotfiles repo has staged files.
+
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+die() { printf "${RED}Error:${NC} %s\n" "$1" >&2; exit 1; }
+info() { printf "${GREEN}==>${NC} %s\n" "$1"; }
+warn() { printf "${YELLOW}Warning:${NC} %s\n" "$1"; }
+
+SETTINGS="$HOME/.pi/agent/settings.json"
+DOTFILES_DIR="$(chezmoi source-path)"
+RELATIVE_SETTINGS="home/dot_pi/agent/settings.json"
+
+# --- Guard: no staged files in dotfiles repo ---
+staged=$(git -C "$DOTFILES_DIR" diff --cached --name-only)
+if [ -n "$staged" ]; then
+    die "Dotfiles repo has staged files. Unstage or commit them first:\n$staged"
+fi
+
+# --- Get old version before update ---
+if [ -f "$SETTINGS" ]; then
+    old_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SETTINGS" | head -1 | sed 's/.*: *"//;s/"//')
+else
+    old_version="unknown"
+fi
+
+# --- Run pi update ---
+info "Updating pi..."
+pi update
+
+# --- Get new version after update ---
+if [ -f "$SETTINGS" ]; then
+    new_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SETTINGS" | head -1 | sed 's/.*: *"//;s/"//')
+else
+    die "Settings file not found after update: $SETTINGS"
+fi
+
+# --- Check if anything changed ---
+chezmoi add "$SETTINGS"
+
+if git -C "$DOTFILES_DIR" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
+    info "No changes to settings.json — already up to date (v${new_version})."
+    exit 0
+fi
+
+# --- Commit ---
+if [ "$old_version" = "$new_version" ]; then
+    # Version field didn't change but file did (e.g. config change during update)
+    commit_msg="chore(pi): update pi settings"
+else
+    commit_msg="chore(pi): update pi ${old_version} -> ${new_version}"
+fi
+
+git -C "$DOTFILES_DIR" commit -m "$commit_msg" -- "$RELATIVE_SETTINGS"
+info "Committed: $commit_msg"
