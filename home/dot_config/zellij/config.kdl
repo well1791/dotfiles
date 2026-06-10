@@ -202,7 +202,7 @@ keybinds clear-defaults=true {
 
         // |-- NEW
         bind "Alt r" { NewPane "Right"; SwitchToMode "Normal"; }
-        bind "Alt d" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "Alt f" { NewPane "Down"; SwitchToMode "Normal"; }
         bind "Ctrl Shift t" {
             MessagePlugin "file:~/.config/zellij/plugins/zellij-new-tab-next-to-current.wasm" {
                 name "new-tab-right"
@@ -221,7 +221,7 @@ keybinds clear-defaults=true {
         bind "Alt x" { Detach; }
 
         // |-- TOGGLES
-        bind "Alt e" { ToggleFloatingPanes; }
+        bind "Alt g" { ToggleFloatingPanes; }
         
         // |-- LAYOUT
         bind "Alt [" { PreviousSwapLayout; }
