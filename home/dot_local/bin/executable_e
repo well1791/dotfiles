@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# e - Edit files, optionally git-changed
+# Usage: e [OPTIONS] [FILES...]
+#
+# Without arguments, opens git-changed files in $EDITOR.
+# With file arguments and no flags, opens only those files.
+# Git flags collect files from git and union with any explicit file arguments.
+
+show_help() {
+    cat <<'EOF'
+Usage: e [OPTIONS] [FILES...]
+
+Open files in $EDITOR. Without arguments, opens git-changed files.
+With file arguments and no flags, opens only those files.
+
+Git options (combinable, union with any file arguments):
+  -g, --git         All git-changed files (modified + untracked, excl. deleted/renamed)
+  -u, --untracked   Untracked files
+  -m, --modified    Modified files (unstaged)
+  -s, --staged      Staged files
+  -c, --conflicts   Files with merge conflicts
+  -d, --deleted     Deleted files
+  -r, --renamed     Renamed files
+  -h, --help        Show this help
+
+Examples:
+  e foo.rs          Open foo.rs
+  e -g foo.rs       Git-changed files + foo.rs
+  e -ms             Modified + staged files
+  e                 Same as: e -g
+EOF
+}
+
+# Parse flags
+flag_git=0
+flag_untracked=0
+flag_modified=0
+flag_staged=0
+flag_conflicts=0
+flag_deleted=0
+flag_renamed=0
+files=()
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        --git) flag_git=1 ;;
+        --untracked) flag_untracked=1 ;;
+        --modified) flag_modified=1 ;;
+        --staged) flag_staged=1 ;;
+        --conflicts) flag_conflicts=1 ;;
+        --deleted) flag_deleted=1 ;;
+        --renamed) flag_renamed=1 ;;
+        --)
+            shift
+            files+=("$@")
+            break
+            ;;
+        -[gumscdhr]*)
+            # Handle combined short flags: -gms → -g -m -s
+            flags="${1#-}"
+            for (( i=0; i<${#flags}; i++ )); do
+                case "${flags:$i:1}" in
+                    g) flag_git=1 ;;
+                    u) flag_untracked=1 ;;
+                    m) flag_modified=1 ;;
+                    s) flag_staged=1 ;;
+                    c) flag_conflicts=1 ;;
+                    d) flag_deleted=1 ;;
+                    r) flag_renamed=1 ;;
+                    h) show_help; exit 0 ;;
+                    *) echo "e: unknown flag: -${flags:$i:1}" >&2; exit 1 ;;
+                esac
+            done
+            ;;
+        --*)
+            echo "e: unknown option: $1" >&2
+            exit 1
+            ;;
+        *)
+            files+=("$1")
+            ;;
+    esac
+    shift
+done
+
+has_git_flag=0
+if (( flag_git || flag_untracked || flag_modified || flag_staged || flag_conflicts || flag_deleted || flag_renamed )); then
+    has_git_flag=1
+fi
+
+# Case: explicit files, no git flags → open only those files
+if (( ${#files[@]} > 0 && !has_git_flag )); then
+    exec "${EDITOR:-vim}" "${files[@]}"
+fi
+
+# Case: no args, no flags → default to -g behavior
+if (( ${#files[@]} == 0 && !has_git_flag )); then
+    flag_git=1
+    has_git_flag=1
+fi
+
+# Git flags are active — check we're in a git repo
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    if (( ${#files[@]} > 0 )); then
+        exec "${EDITOR:-vim}" "${files[@]}"
+    else
+        exec "${EDITOR:-vim}"
+    fi
+fi
+
+# Collect git files
+git_files=()
+
+if (( flag_git )); then
+    # Default set: modified (staged + unstaged) + untracked, excluding deleted/renamed
+    while IFS= read -r f; do
+        [[ -n "$f" ]] && git_files+=("$f")
+    done < <(
+        git diff --name-only --diff-filter=dr HEAD 2>/dev/null
+        git diff --cached --name-only --diff-filter=dr 2>/dev/null
+        git ls-files --others --exclude-standard 2>/dev/null
+    )
+else
+    if (( flag_untracked )); then
+        while IFS= read -r f; do
+            [[ -n "$f" ]] && git_files+=("$f")
+        done < <(git ls-files --others --exclude-standard 2>/dev/null)
+    fi
+    if (( flag_modified )); then
+        while IFS= read -r f; do
+            [[ -n "$f" ]] && git_files+=("$f")
+        done < <(git diff --name-only --diff-filter=d 2>/dev/null)
+    fi
+    if (( flag_staged )); then
+        while IFS= read -r f; do
+            [[ -n "$f" ]] && git_files+=("$f")
+        done < <(git diff --cached --name-only --diff-filter=d 2>/dev/null)
+    fi
+    if (( flag_conflicts )); then
+        while IFS= read -r f; do
+            [[ -n "$f" ]] && git_files+=("$f")
+        done < <(git diff --name-only --diff-filter=U 2>/dev/null)
+    fi
+    if (( flag_deleted )); then
+        while IFS= read -r f; do
+            [[ -n "$f" ]] && git_files+=("$f")
+        done < <(git diff --name-only --diff-filter=D HEAD 2>/dev/null)
+    fi
+    if (( flag_renamed )); then
+        while IFS= read -r f; do
+            [[ -n "$f" ]] && git_files+=("$f")
+        done < <(git diff --name-only --diff-filter=R HEAD 2>/dev/null)
+    fi
+fi
+
+# Union git files with explicit file args, deduplicate
+all_files=("${git_files[@]}" "${files[@]}")
+
+if (( ${#all_files[@]} == 0 )); then
+    exec "${EDITOR:-vim}" .
+fi
+
+# Deduplicate preserving order
+mapfile -t all_files < <(printf '%s\n' "${all_files[@]}" | sort -u)
+exec "${EDITOR:-vim}" "${all_files[@]}"
