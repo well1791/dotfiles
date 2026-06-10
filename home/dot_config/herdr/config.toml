@@ -1,0 +1,84 @@
+onboarding = false
+
+[theme]
+# Use terminal colors directly — inherits from Ghostty's "Default Style Dark"
+name = "nord"
+
+[terminal]
+# Use default $SHELL (fish)
+new_cwd = "follow"
+
+[keys]
+prefix = "ctrl+;"
+settings = "ctrl+."
+reload_config = "ctrl+shift+."
+help = "ctrl+?"
+# --- Direct shortcuts (no prefix needed) ---
+# Session/workspace
+detach = "alt+x"
+workspace_picker = "alt+w"
+# switch_workspace = "alt+shift+1..9"
+navigate_workspace_up = "up"
+navigate_workspace_down = "down"
+switch_tab = "alt+1..9"
+new_tab = "ctrl+shift+t"
+previous_tab = "alt+i"
+next_tab = "alt+k"
+# Pane focus (alt+arrows, same as zellij)
+focus_pane_left = "alt+left"
+focus_pane_down = "alt+down"
+focus_pane_up = "alt+up"
+focus_pane_right = "alt+right"
+# focus_agent = "alt+1..9"
+# Pane splits (alt+r/d, same as zellij)
+split_vertical = "alt+r"
+split_horizontal = "alt+d"
+# Scrollback (alt+a, matches zellij scroll mode entry)
+edit_scrollback = "alt+a"
+# Quick zoom (no zellij equivalent without modal, but useful)
+zoom = "alt+z"
+# close_pane = "prefix+x"
+# close_tab = "prefix+shift+x"
+rename_tab = "prefix+r"
+# rename_pane = "prefix+shift+p"
+# rename_workspace = "prefix+shift+w"
+close_workspace = "prefix+d"
+resize_mode = "prefix+shift+r"
+new_workspace = "alt+n"
+toggle_sidebar = "ctrl+b"
+
+# Custom commands
+[[keys.command]]
+key = "alt+shift+g"
+type = "pane"
+command = "gitui"
+
+# [[keys.command]]
+# key = "prefix+shift+b"
+# type = "pane"
+# command = "btop"
+
+[ui]
+mouse_capture = true
+prompt_new_tab_name = true
+show_agent_labels_on_pane_borders = false
+# Show all agents across workspaces in the sidebar
+agent_panel_scope = "all"
+accent = "cyan"
+
+[ui.toast]
+# In-app toast notifications for background agent state changes
+delivery = "herdr"
+
+[ui.sound]
+# Disable sounds (quiet workflow)
+enabled = false
+
+[experimental]
+# Kitty graphics for inline images (Ghostty supports kitty protocol)
+kitty_graphics = true
+
+[advanced]
+# 10MB scrollback per pane (default, explicit for clarity)
+scrollback_limit_bytes = 10000000
+
