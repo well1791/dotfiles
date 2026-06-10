@@ -79,6 +79,11 @@ keybinds clear-defaults=true {
         bind "Shift u" "Home"      { ScrollToTop; }
         bind "Shift o" "End"       { ScrollToBottom; }
 
+        bind "Alt Left"  { MoveFocus "Left"; SwitchToMode "Normal"; }
+        bind "Alt Right" { MoveFocus "Right"; SwitchToMode "Normal"; }
+        bind "Alt Up"    { MoveFocus "Up"; SwitchToMode "Normal"; }
+        bind "Alt Down"  { MoveFocus "Down"; SwitchToMode "Normal"; }
+
         // |-- OTHERS
         bind "/" "f" { SwitchToMode "EnterSearch"; SearchInput 0; }
         bind "r" { EditScrollback; SwitchToMode "Normal"; }
