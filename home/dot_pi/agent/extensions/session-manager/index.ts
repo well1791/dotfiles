@@ -1,7 +1,12 @@
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import type { SessionInfo } from "@earendil-works/pi-coding-agent";
-import { matchesKey, Key, truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
+import {
+  matchesKey,
+  Key,
+  truncateToWidth,
+  visibleWidth,
+} from "@earendil-works/pi-tui";
 import { existsSync } from "node:fs";
 import { execSync } from "node:child_process";
 
@@ -98,7 +103,10 @@ function trashOrDelete(filePath: string): boolean {
   }
 }
 
-function collectDescendantPaths(sessionPath: string, allItems: FlatItem[]): string[] {
+function collectDescendantPaths(
+  sessionPath: string,
+  allItems: FlatItem[],
+): string[] {
   const paths: string[] = [];
   const targetPaths = new Set<string>([sessionPath]);
   for (const item of allItems) {
@@ -114,7 +122,6 @@ function collectDescendantPaths(sessionPath: string, allItems: FlatItem[]): stri
 // ── Extension ──────────────────────────────────────────────────────────
 
 export default function (pi: ExtensionAPI) {
-
   pi.registerCommand("sm", {
     description: "Session manager -- browse, search, delete, create sessions",
     handler: async (_args, ctx) => {
@@ -144,7 +151,9 @@ export default function (pi: ExtensionAPI) {
             const text = [
               item.session.name ?? "",
               item.session.firstMessage ?? "",
-            ].join(" ").toLowerCase();
+            ]
+              .join(" ")
+              .toLowerCase();
             return tokens.every((token) => text.includes(token));
           });
         }
@@ -161,15 +170,18 @@ export default function (pi: ExtensionAPI) {
       function showStatus(msg: string) {
         statusMsg = msg;
         if (statusTimer) clearTimeout(statusTimer);
-        statusTimer = setTimeout(() => { statusMsg = ""; }, 3000);
+        statusTimer = setTimeout(() => {
+          statusMsg = "";
+        }, 3000);
       }
 
       async function loadSessions() {
         loading = true;
         try {
-          const sessions = scope === "project"
-            ? await SessionManager.list(ctx.cwd)
-            : await SessionManager.listAll();
+          const sessions =
+            scope === "project"
+              ? await SessionManager.list(ctx.cwd)
+              : await SessionManager.listAll();
           allItems = buildTree(sessions);
         } catch {
           allItems = [];
@@ -181,11 +193,10 @@ export default function (pi: ExtensionAPI) {
       await loadSessions();
 
       const result = await ctx.ui.custom<
-        { action: "resume"; path: string } |
-        { action: "create"; name: string } |
-        null
+        | { action: "resume"; path: string }
+        | { action: "create"; name: string }
+        | null
       >((tui, theme, _kb, done) => {
-
         // ── Render helpers ──
 
         // ANSI color helpers
@@ -198,12 +209,19 @@ export default function (pi: ExtensionAPI) {
         const gray = (s: string) => `\x1b[90m${s}\x1b[39m`;
         const gold = (s: string) => `\x1b[38;5;222m${s}\x1b[39m`;
 
-        function renderItemLine(item: FlatItem, index: number, width: number): string {
+        const dimGray = (s: string) => `\x1b[38;5;242m${s}\x1b[39m`;
+
+        function renderItemLine(
+          item: FlatItem,
+          index: number,
+          width: number,
+        ): string[] {
           const isCursor = index === cursorIndex;
           const isSelected = selectedPaths.has(item.session.path);
           const isCurrent = item.session.path === currentSessionFile;
           const hasName = !!item.session.name;
-          const isSubagentWorker = hasName && item.session.name!.startsWith("subagent-worker-");
+          const isSubagentWorker =
+            hasName && item.session.name!.startsWith("subagent-worker-");
 
           // Tree prefix
           let prefix = "";
@@ -213,17 +231,23 @@ export default function (pi: ExtensionAPI) {
 
           // Markers: ✕ for delete-selected, ◆ for active session, ○ for outside cwd
           const isOutside = item.session.cwd && item.session.cwd !== ctx.cwd;
-          const marker = isSelected ? "✕ " : isCurrent ? "◆ " : isOutside ? "○ " : "  ";
+          const marker = isSelected
+            ? "✕ "
+            : isCurrent
+              ? "◆ "
+              : isOutside && item.depth === 0
+                ? "○ "
+                : "  ";
 
           // Name
-          const name = item.session.name
-            ?? item.session.firstMessage?.replace(/\n/g, " ").slice(0, 60)
-            ?? "(empty session)";
+          const name =
+            item.session.name ??
+            item.session.firstMessage?.replace(/\n/g, " ").slice(0, 60) ??
+            "(empty session)";
 
           // Child indicator
-          const childTag = isSelected && item.childCount > 0
-            ? ` [+${item.childCount}]`
-            : "";
+          const childTag =
+            isSelected && item.childCount > 0 ? ` [+${item.childCount}]` : "";
 
           // Time
           const time = relativeTime(item.session.modified);
@@ -234,9 +258,15 @@ export default function (pi: ExtensionAPI) {
           // Chevron is 2 chars wide
           const chevronStr = isCursor ? "❯ " : "  ";
           const availForContent = width - 2 - visibleWidth(rightRaw); // 2 for chevron
-          const contentTrunc = truncateToWidth(contentRaw, Math.max(availForContent, 10));
+          const contentTrunc = truncateToWidth(
+            contentRaw,
+            Math.max(availForContent, 10),
+          );
           const contentW = visibleWidth(contentTrunc);
-          const gap = Math.max(1, width - 2 - contentW - visibleWidth(rightRaw));
+          const gap = Math.max(
+            1,
+            width - 2 - contentW - visibleWidth(rightRaw),
+          );
           const body = contentTrunc + " ".repeat(gap) + rightRaw;
 
           // Apply text color to body based on state
@@ -260,10 +290,24 @@ export default function (pi: ExtensionAPI) {
           const fullLine = coloredChevron + coloredBody;
 
           // Apply hover background (preserves text colors)
-          if (isCursor) {
-            return theme.bg("selectedBg", fullLine);
+          const mainLine = isCursor
+            ? theme.bg("selectedBg", fullLine)
+            : fullLine;
+
+          // Show path for sessions outside cwd (skip children)
+          if (isOutside && item.session.cwd && item.depth === 0) {
+            const pathPrefix = "  ".repeat(item.depth > 0 ? item.depth + 1 : 0) + (item.depth > 0 ? "   " : "  ");
+            const pathStr = truncateToWidth(
+              `${pathPrefix}  ${item.session.cwd}`,
+              width,
+            );
+            const pathLine = isCursor
+              ? theme.bg("selectedBg", "  " + dimGray(pathStr))
+              : "  " + dimGray(pathStr);
+            return [mainLine, pathLine];
           }
-          return fullLine;
+
+          return [mainLine];
         }
 
         function renderCreateLine(index: number, width: number): string {
@@ -311,7 +355,8 @@ export default function (pi: ExtensionAPI) {
 
                 // Scroll to keep cursor visible
                 if (cursorIndex < scrollOffset) scrollOffset = cursorIndex;
-                if (cursorIndex >= scrollOffset + maxVisible) scrollOffset = cursorIndex - maxVisible + 1;
+                if (cursorIndex >= scrollOffset + maxVisible)
+                  scrollOffset = cursorIndex - maxVisible + 1;
 
                 const visStart = scrollOffset;
                 const visEnd = Math.min(displayCount, visStart + maxVisible);
@@ -320,13 +365,20 @@ export default function (pi: ExtensionAPI) {
                   if (hasCreate && i === filteredItems.length) {
                     lines.push(renderCreateLine(i, width));
                   } else {
-                    lines.push(renderItemLine(filteredItems[i], i, width));
+                    lines.push(
+                      ...renderItemLine(filteredItems[i], i, width),
+                    );
                   }
                 }
 
                 // Scroll info
                 if (displayCount > maxVisible) {
-                  lines.push(theme.fg("dim", `  ${visStart + 1}-${visEnd} of ${displayCount}`));
+                  lines.push(
+                    theme.fg(
+                      "dim",
+                      `  ${visStart + 1}-${visEnd} of ${displayCount}`,
+                    ),
+                  );
                 }
               }
             }
@@ -346,14 +398,21 @@ export default function (pi: ExtensionAPI) {
                   if (!selectedPaths.has(d)) childrenIncluded++;
                 }
               }
-              const childNote = childrenIncluded > 0 ? ` (+${childrenIncluded} children)` : "";
-              lines.push(red(`  Delete ${selectedPaths.size}${childNote}? ^X confirm, esc cancel`));
+              const childNote =
+                childrenIncluded > 0 ? ` (+${childrenIncluded} children)` : "";
+              lines.push(
+                red(
+                  `  Delete ${selectedPaths.size}${childNote}? ^X confirm, esc cancel`,
+                ),
+              );
             } else if (statusMsg) {
               lines.push(theme.fg("success", `  ${statusMsg}`));
             }
 
             // Help + bottom bar
-            lines.push(gray("  ↑↓ nav  tab sel  enter go  ^X del  ^M scope  esc quit"));
+            lines.push(
+              gray("  ↑↓ nav  tab sel  enter go  ^X del  ^M scope  esc quit"),
+            );
             lines.push(teal("─".repeat(width)));
 
             return lines;
@@ -420,7 +479,10 @@ export default function (pi: ExtensionAPI) {
             // Ctrl+X — delete
             if (matchesKey(data, Key.ctrl("x"))) {
               // If nothing selected, auto-select item under cursor
-              if (selectedPaths.size === 0 && cursorIndex < filteredItems.length) {
+              if (
+                selectedPaths.size === 0 &&
+                cursorIndex < filteredItems.length
+              ) {
                 selectedPaths.add(filteredItems[cursorIndex].session.path);
               }
               if (selectedPaths.size > 0) {
@@ -436,7 +498,10 @@ export default function (pi: ExtensionAPI) {
               if (hasCreate && cursorIndex === filteredItems.length) {
                 done({ action: "create", name: query.trim() });
               } else if (cursorIndex < filteredItems.length) {
-                done({ action: "resume", path: filteredItems[cursorIndex].session.path });
+                done({
+                  action: "resume",
+                  path: filteredItems[cursorIndex].session.path,
+                });
               }
               return;
             }
