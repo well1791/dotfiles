@@ -1,0 +1,28 @@
+% ssh, remote, zellij
+
+# Connect to this machine from another device (local network)
+ssh well@lenovo.local -p 2022
+
+# Test SSH connection locally
+ssh well@localhost -p 2022
+
+# Check sshd status
+systemctl status sshd
+
+# Check what port sshd is listening on
+ss -tlnp | rg ssh
+
+# List active SSH sessions
+who
+
+# View SSH auth log (recent)
+journalctl -u sshd --since "1 hour ago"
+
+# Add SSH public key (for key-based auth later)
+cat <key_file> >> ~/.ssh/authorized_keys
+
+# Generate SSH key pair (ed25519)
+ssh-keygen -t ed25519 -C "<comment>"
+
+$ key_file: fd -t f . ~/.ssh 2>/dev/null | fzf
+$ comment: echo "well@remote"

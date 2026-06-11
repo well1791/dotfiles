@@ -280,6 +280,39 @@ sudo pacman -Rs ufw
 | Delete rule | `sudo ufw delete <rule-number>` |
 | Reset all rules | `sudo ufw reset` |
 
+### Remote Access (SSH from iPad/Tablet)
+
+SSH configured for local network access to zellij sessions from mobile devices.
+
+**Setup:**
+- Port: 2022 (non-standard)
+- Auth: password (temporary), key-based (planned)
+- Auto-attach: SSH login → `zellij attach --create remote`
+- Idle timeout: 30 minutes
+- Access: local network only (192.168.0.0/16 via UFW)
+
+**Connect from iPad (WebSSH app):**
+- Host: `lenovo.local`
+- Port: `2022`
+- Username: `well`
+
+**What happens on connect:**
+1. SSH authenticates on port 2022
+2. Fish shell detects SSH session
+3. Auto-attaches to zellij `remote` session (creates if missing)
+4. On disconnect, session persists — reconnect picks up where you left off
+
+**Switching to key-based auth (future):**
+```bash
+# On iPad: generate key in WebSSH app, copy public key
+# On laptop: add the public key
+echo "<public-key>" >> ~/.ssh/authorized_keys
+
+# Then disable password auth
+sudo sed -i 's/^PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config.d/local.conf
+sudo systemctl restart sshd
+```
+
 ### Desktop Integration
 - **Global Menu Support**: Installed for GTK applications
   - Packages: `appmenu-gtk-module`, `libdbusmenu-glib`
