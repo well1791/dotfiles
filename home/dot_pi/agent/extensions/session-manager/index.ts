@@ -159,7 +159,6 @@ export default function (pi: ExtensionAPI) {
         }
         // Clamp cursor
         cursorIndex = Math.min(cursorIndex, Math.max(0, getDisplayCount() - 1));
-        scrollOffset = 0;
       }
 
       function getDisplayCount(): number {
@@ -349,49 +348,32 @@ export default function (pi: ExtensionAPI) {
               if (displayCount === 0) {
                 lines.push(theme.fg("muted", "  No sessions"));
               } else {
-                // Viewport — fixed max height of 16 lines
-                const maxLines = 16;
+                // Viewport — fixed max 11 lines, center-lock scrolling
+                const maxLines = 11;
+                const mid = Math.floor(maxLines / 2); // 5
+                const maxScroll = Math.max(0, displayCount - maxLines);
 
-                // Scroll to keep cursor visible (by item index)
-                if (cursorIndex < scrollOffset) scrollOffset = cursorIndex;
-                // Forward scroll: render from scrollOffset and check if cursor is visible
-                let needsAdjust = true;
-                while (needsAdjust) {
-                  let linesUsed = 0;
-                  let lastVisibleIdx = scrollOffset;
-                  for (let i = scrollOffset; i < displayCount; i++) {
-                    const itemLines = (i === filteredItems.length)
-                      ? 1
-                      : renderItemLine(filteredItems[i], i, width).length;
-                    if (linesUsed + itemLines > maxLines && i > scrollOffset) break;
-                    linesUsed += itemLines;
-                    lastVisibleIdx = i;
-                  }
-                  if (cursorIndex > lastVisibleIdx) {
-                    scrollOffset++;
-                  } else {
-                    needsAdjust = false;
-                  }
-                }
+                // Center-lock: cursor stays at visual row `mid`,
+                // except near top (cursor moves 0→mid) and bottom (cursor moves mid→end)
+                scrollOffset = Math.max(0, Math.min(cursorIndex - mid, maxScroll));
 
                 // Render items within the line budget
                 let linesRendered = 0;
                 let itemsShown = 0;
                 for (let i = scrollOffset; i < displayCount; i++) {
+                  let itemLines: string[];
                   if (hasCreate && i === filteredItems.length) {
-                    if (linesRendered + 1 > maxLines && i > scrollOffset) break;
-                    lines.push(renderCreateLine(i, width));
-                    linesRendered++;
+                    itemLines = [renderCreateLine(i, width)];
                   } else {
-                    const itemRendered = renderItemLine(filteredItems[i], i, width);
-                    if (linesRendered + itemRendered.length > maxLines && i > scrollOffset) break;
-                    lines.push(...itemRendered);
-                    linesRendered += itemRendered.length;
+                    itemLines = renderItemLine(filteredItems[i], i, width);
                   }
+                  if (linesRendered + itemLines.length > maxLines && itemsShown > 0) break;
+                  lines.push(...itemLines);
+                  linesRendered += itemLines.length;
                   itemsShown++;
                 }
 
-                // Scroll info
+                // Scroll indicator
                 if (scrollOffset > 0 || scrollOffset + itemsShown < displayCount) {
                   lines.push(
                     theme.fg(
@@ -665,6 +647,18 @@ export default function (pi: ExtensionAPI) {
                 while (i > 0 && query[i - 1] !== " ") i--;
                 query = query.slice(0, i) + query.slice(qCursor);
                 qCursor = i;
+                applyFilter();
+                tui.requestRender();
+              }
+              return;
+            }
+
+            // Bracketed paste — strip \x1b[200~ and \x1b[201~ markers
+            if (data.startsWith("\x1b[200~")) {
+              const text = data.replace(/\x1b\[200~/g, "").replace(/\x1b\[201~/g, "");
+              if (text.length > 0) {
+                query = query.slice(0, qCursor) + text + query.slice(qCursor);
+                qCursor += text.length;
                 applyFilter();
                 tui.requestRender();
               }
