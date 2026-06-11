@@ -85,8 +85,8 @@ keybinds clear-defaults=true {
         bind "Alt Down"  { MoveFocus "Down"; SwitchToMode "Normal"; }
 
         // |-- OTHERS
-        bind "/" "f" { SwitchToMode "EnterSearch"; SearchInput 0; }
-        bind "r" { EditScrollback; SwitchToMode "Normal"; }
+        bind "/" { SwitchToMode "EnterSearch"; SearchInput 0; }
+        bind "f" { EditScrollback; SwitchToMode "Normal"; }
         // uncomment this and adjust key if using copy_on_select=false
         // bind "Alt c" { Copy; }
     }
@@ -206,8 +206,8 @@ keybinds clear-defaults=true {
         bind "Alt -" { Resize "Decrease"; }
 
         // |-- NEW
-        bind "Alt r" { NewPane "Right"; SwitchToMode "Normal"; }
-        bind "Alt f" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "Alt e" { NewPane "Right"; SwitchToMode "Normal"; }
+        bind "Alt d" { NewPane "Down"; SwitchToMode "Normal"; }
         bind "Ctrl Shift t" {
             MessagePlugin "file:~/.config/zellij/plugins/zellij-new-tab-next-to-current.wasm" {
                 name "new-tab-right"

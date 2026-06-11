@@ -51,7 +51,18 @@ layout {
     }
 
     swap_floating_layout name="staggered" {
-        floating_panes
+        floating_panes max_panes=10 {
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane { x "30%"; y "10%"; width "40%"; height "80%"; }
+            pane focus=true { x "30%"; y "10%"; width "40%"; height "80%"; }
+        }
     }
 
     swap_floating_layout name="enlarged" {
