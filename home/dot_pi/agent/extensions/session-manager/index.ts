@@ -140,8 +140,12 @@ export default function (pi: ExtensionAPI) {
       let loading = true;
       let statusMsg = "";
       let statusTimer: ReturnType<typeof setTimeout> | null = null;
+      let renameMode = false;
+      let savedQuery = "";
+      let savedQCursor = 0;
 
       function applyFilter() {
+        if (renameMode) return; // don't filter while renaming
         if (!query.trim()) {
           filteredItems = [...allItems];
         } else {
@@ -251,12 +255,20 @@ export default function (pi: ExtensionAPI) {
           // Time
           const time = relativeTime(item.session.modified);
 
+          // Short path for sessions outside cwd (last 2 segments)
+          const shortPath =
+            isOutside && item.session.cwd && item.depth === 0
+              ? item.session.cwd.split("/").slice(-2).join("/")
+              : "";
+
           // Build content (without chevron) to apply text color
           const contentRaw = `${marker}${prefix}${name}${childTag}`;
+          const pathRaw = shortPath ? ` ${shortPath} ` : "";
           const rightRaw = ` ${time} `;
           // Chevron is 2 chars wide
           const chevronStr = isCursor ? "❯ " : "  ";
-          const availForContent = width - 2 - visibleWidth(rightRaw); // 2 for chevron
+          const availForContent =
+            width - 2 - visibleWidth(pathRaw) - visibleWidth(rightRaw); // 2 for chevron
           const contentTrunc = truncateToWidth(
             contentRaw,
             Math.max(availForContent, 10),
@@ -264,23 +276,26 @@ export default function (pi: ExtensionAPI) {
           const contentW = visibleWidth(contentTrunc);
           const gap = Math.max(
             1,
-            width - 2 - contentW - visibleWidth(rightRaw),
+            width - 2 - contentW - visibleWidth(pathRaw) - visibleWidth(rightRaw),
           );
-          const body = contentTrunc + " ".repeat(gap) + rightRaw;
 
-          // Apply text color to body based on state
-          let coloredBody: string;
-          if (isSelected) {
-            coloredBody = red(body);
-          } else if (isCurrent) {
-            coloredBody = lightBlue(body);
-          } else if (isSubagentWorker) {
-            coloredBody = yellow(body);
-          } else if (hasName) {
-            coloredBody = white(body);
-          } else {
-            coloredBody = lightOrange(body);
-          }
+          // Color function based on state
+          const colorFn = isSelected
+            ? red
+            : isCurrent
+              ? lightBlue
+              : isSubagentWorker
+                ? yellow
+                : hasName
+                  ? white
+                  : lightOrange;
+
+          // Build colored body: content + gap in session color, path in dimGray, time in session color
+          const coloredBody = shortPath
+            ? colorFn(contentTrunc + " ".repeat(gap)) +
+              dimGray(pathRaw) +
+              colorFn(rightRaw)
+            : colorFn(contentTrunc + " ".repeat(gap) + rightRaw);
 
           // Chevron always gold
           const coloredChevron = isCursor ? gold(chevronStr) : "  ";
@@ -292,19 +307,6 @@ export default function (pi: ExtensionAPI) {
           const mainLine = isCursor
             ? theme.bg("selectedBg", fullLine)
             : fullLine;
-
-          // Show path for sessions outside cwd (skip children)
-          if (isOutside && item.session.cwd && item.depth === 0) {
-            const pathPrefix = "  ".repeat(item.depth > 0 ? item.depth + 1 : 0) + (item.depth > 0 ? "   " : "  ");
-            const pathStr = truncateToWidth(
-              `${pathPrefix}  ${item.session.cwd}`,
-              width,
-            );
-            const pathLine = isCursor
-              ? theme.bg("selectedBg", "  " + dimGray(pathStr))
-              : "  " + dimGray(pathStr);
-            return [mainLine, pathLine];
-          }
 
           return [mainLine];
         }
@@ -329,7 +331,8 @@ export default function (pi: ExtensionAPI) {
             // Top bar + title
             const scopeLabel = scope === "project" ? "Current Folder" : "All";
             lines.push(teal("─".repeat(width)));
-            lines.push(teal(` Session Manager `) + gray(`[${scopeLabel}]`));
+            const modeLabel = renameMode ? ` Rename Session ` : ` Session Manager `;
+            lines.push(teal(modeLabel) + gray(`[${scopeLabel}]`));
 
             // Search input line
             const before = query.slice(0, qCursor);
@@ -348,14 +351,15 @@ export default function (pi: ExtensionAPI) {
               if (displayCount === 0) {
                 lines.push(theme.fg("muted", "  No sessions"));
               } else {
-                // Viewport — fixed max 11 lines, center-lock scrolling
+                // Viewport — fixed max 11 lines, simple follow scrolling
                 const maxLines = 11;
-                const mid = Math.floor(maxLines / 2); // 5
-                const maxScroll = Math.max(0, displayCount - maxLines);
 
-                // Center-lock: cursor stays at visual row `mid`,
-                // except near top (cursor moves 0→mid) and bottom (cursor moves mid→end)
-                scrollOffset = Math.max(0, Math.min(cursorIndex - mid, maxScroll));
+                // Only scroll when cursor goes out of visible window
+                if (cursorIndex < scrollOffset) {
+                  scrollOffset = cursorIndex;
+                } else if (cursorIndex >= scrollOffset + maxLines) {
+                  scrollOffset = cursorIndex - maxLines + 1;
+                }
 
                 // Render items within the line budget
                 let linesRendered = 0;
@@ -413,7 +417,11 @@ export default function (pi: ExtensionAPI) {
 
             // Help + bottom bar
             lines.push(
-              gray("  ↑↓ nav  tab sel  enter go  ^X del  ^M scope  esc quit"),
+              gray(
+              renameMode
+                ? "  type new name  enter save  esc cancel"
+                : "  ↑↓ nav  tab sel  enter go  ^R rename  ^X del  ^M scope  esc quit",
+            ),
             );
             lines.push(teal("─".repeat(width)));
 
@@ -451,15 +459,15 @@ export default function (pi: ExtensionAPI) {
               return;
             }
 
-            // Navigation
+            // Navigation (disabled in rename mode)
             if (matchesKey(data, Key.up)) {
-              if (cursorIndex > 0) cursorIndex--;
+              if (!renameMode && cursorIndex > 0) cursorIndex--;
               tui.requestRender();
               return;
             }
             if (matchesKey(data, Key.down)) {
               const max = getDisplayCount() - 1;
-              if (cursorIndex < max) cursorIndex++;
+              if (!renameMode && cursorIndex < max) cursorIndex++;
               tui.requestRender();
               return;
             }
@@ -494,8 +502,26 @@ export default function (pi: ExtensionAPI) {
               return;
             }
 
-            // Enter — resume or create
+            // Enter — rename (in rename mode), resume, or create
             if (matchesKey(data, Key.enter)) {
+              if (renameMode) {
+                const newName = query.trim();
+                if (newName && cursorIndex < filteredItems.length) {
+                  const targetPath = filteredItems[cursorIndex].session.path;
+                  try {
+                    const sm = SessionManager.open(targetPath);
+                    sm.appendSessionInfo(newName);
+                    showStatus(`Renamed → ${newName}`);
+                  } catch {
+                    showStatus("Rename failed");
+                  }
+                }
+                renameMode = false;
+                query = savedQuery;
+                qCursor = savedQCursor;
+                loadSessions().then(() => tui.requestRender());
+                return;
+              }
               const hasCreate = query.trim() && filteredItems.length === 0;
               if (hasCreate && cursorIndex === filteredItems.length) {
                 done({ action: "create", name: query.trim() });
@@ -505,6 +531,20 @@ export default function (pi: ExtensionAPI) {
                   path: filteredItems[cursorIndex].session.path,
                 });
               }
+              return;
+            }
+
+            // Ctrl+R — rename focused session
+            if (matchesKey(data, Key.ctrl("r"))) {
+              if (renameMode) return; // already in rename mode
+              if (cursorIndex >= filteredItems.length) return;
+              const item = filteredItems[cursorIndex];
+              renameMode = true;
+              savedQuery = query;
+              savedQCursor = qCursor;
+              query = item.session.name ?? "";
+              qCursor = query.length;
+              tui.requestRender();
               return;
             }
 
@@ -518,8 +558,15 @@ export default function (pi: ExtensionAPI) {
               return;
             }
 
-            // Escape — cancel
+            // Escape — cancel rename or exit
             if (matchesKey(data, Key.escape)) {
+              if (renameMode) {
+                renameMode = false;
+                query = savedQuery;
+                qCursor = savedQCursor;
+                tui.requestRender();
+                return;
+              }
               done(null);
               return;
             }
