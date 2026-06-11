@@ -102,6 +102,10 @@ A subagent call blocks the main agent, so main agent + 1 subagent is sequential 
 - Do not hand off data already in main-agent context to a subagent for formatting, transformation, or generation.
 - After the batch returns, synthesize results and use the main agent only for narrow gap-filling before implementation.
 
+## Plan Execution
+
+When executing implementation plans, always use the subagent-driven approach (superpowers:subagent-driven-development). Do not ask which execution method to use — dispatch a fresh subagent per task with review between tasks.
+
 ## Testing
 
 - Preserve existing tests. Update tests when behavior changes. Do not silently change tested behavior.
