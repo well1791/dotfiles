@@ -1,5 +1,5 @@
 #!/bin/sh
-# Update pi and commit the settings.json change to dotfiles.
+# Update pi and commit the version bump in settings.json.tmpl to dotfiles.
 # Idempotent: safe to re-run. Stops if dotfiles repo has staged files.
 
 set -e
@@ -16,8 +16,11 @@ warn() { printf "${YELLOW}Warning:${NC} %s\n" "$1"; }
 SETTINGS="$HOME/.pi/agent/settings.json"
 CHEZMOI_SOURCE="$(chezmoi source-path)"
 GIT_ROOT=$(git -C "$CHEZMOI_SOURCE" rev-parse --show-toplevel)
-SOURCE_SETTINGS="$(chezmoi source-path "$SETTINGS")"
+# The source is a template file, not a plain copy
+SOURCE_SETTINGS="$CHEZMOI_SOURCE/dot_pi/agent/settings.json.tmpl"
 RELATIVE_SETTINGS="${SOURCE_SETTINGS#$GIT_ROOT/}"
+
+[ -f "$SOURCE_SETTINGS" ] || die "Template source not found: $SOURCE_SETTINGS"
 
 # --- Guard: no staged files in dotfiles repo ---
 staged=$(git -C "$GIT_ROOT" diff --cached --name-only)
@@ -25,75 +28,43 @@ if [ -n "$staged" ]; then
     die "Dotfiles repo has staged files. Unstage or commit them first:\n$staged"
 fi
 
-# --- Get old version before update ---
-if [ -f "$SETTINGS" ]; then
-    old_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SETTINGS" | head -1 | sed 's/.*: *"//;s/"//')
-else
-    old_version="unknown"
-fi
+# --- Get old version from template source ---
+old_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SOURCE_SETTINGS" | head -1 | sd '.*: *"([^"]*)"' '$1')
 
 # --- Run pi update ---
 info "Updating pi..."
 pi update
 
-# --- Get new version after update ---
-if [ -f "$SETTINGS" ]; then
-    new_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SETTINGS" | head -1 | sed 's/.*: *"//;s/"//')
-else
+# --- Get new version from rendered settings ---
+if [ ! -f "$SETTINGS" ]; then
     die "Settings file not found after update: $SETTINGS"
 fi
+new_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SETTINGS" | head -1 | sd '.*: *"([^"]*)"' '$1')
 
-# --- Sync settings to chezmoi source ---
-chezmoi add "$SETTINGS"
-
-# --- Check if settings.json has staged changes ---
-if git -C "$GIT_ROOT" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
-    # Nothing staged — but maybe the file is modified (unstaged) from a prior interrupted run
-    if git -C "$GIT_ROOT" diff --quiet -- "$RELATIVE_SETTINGS"; then
-        info "No changes to settings.json — already up to date (v${new_version})."
-        exit 0
-    fi
-
-    # File is modified but not staged — check if it's only a version change
-    diff_lines=$(git -C "$GIT_ROOT" diff -- "$RELATIVE_SETTINGS" | grep '^[+-]' | grep -v '^[+-][+-][+-]' | grep -v '"lastChangelogVersion"' || true)
-    if [ -n "$diff_lines" ]; then
-        warn "settings.json has non-version modifications. Review manually."
-        git -C "$GIT_ROOT" diff -- "$RELATIVE_SETTINGS"
-        exit 1
-    fi
-
-    # Only version-related change — verify chezmoi agrees the source is current
-    chezmoi_status=$(chezmoi status "$SETTINGS" 2>/dev/null || true)
-    if [ -n "$chezmoi_status" ]; then
-        # chezmoi sees a drift — re-add to pick up the most recent version
-        info "Chezmoi detected drift in settings.json, re-syncing..."
-        chezmoi add "$SETTINGS"
-    fi
-
-    # Read the version from the now-correct source file
-    source_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SOURCE_SETTINGS" | head -1 | sed 's/.*: *"//;s/"//')
-
-    # Stage the file
-    git -C "$GIT_ROOT" add -- "$RELATIVE_SETTINGS"
-fi
-
-# --- Final check: is there actually something staged to commit? ---
-if git -C "$GIT_ROOT" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
-    info "No changes to settings.json — already up to date (v${new_version})."
+if [ "$old_version" = "$new_version" ]; then
+    info "No version change — already up to date (v${new_version})."
     exit 0
 fi
 
-# --- Determine commit version info ---
-# Use the git-committed version as "old" for the message
-committed_version=$(git -C "$GIT_ROOT" show HEAD:"$RELATIVE_SETTINGS" 2>/dev/null | grep -o '"lastChangelogVersion": *"[^"]*"' | head -1 | sed 's/.*: *"//;s/"//' || echo "")
-current_version=${source_version:-$new_version}
+# --- Update version in template source (preserves template variables) ---
+info "Updating version in template: ${old_version} -> ${new_version}"
+sd -F "\"lastChangelogVersion\": \"${old_version}\"" "\"lastChangelogVersion\": \"${new_version}\"" "$SOURCE_SETTINGS"
 
-# --- Commit ---
-if [ -z "$committed_version" ] || [ "$committed_version" = "$current_version" ]; then
-    commit_msg="chore(pi): update pi settings"
-else
-    commit_msg="chore(pi): update pi ${committed_version} -> ${current_version}"
+# --- Verify chezmoi still renders correctly ---
+chezmoi_status=$(chezmoi status "$SETTINGS" 2>/dev/null || true)
+if [ -n "$chezmoi_status" ]; then
+    warn "Chezmoi still reports drift after version update. Other fields may have changed."
+    warn "Review with: chezmoi diff $SETTINGS"
 fi
 
+# --- Stage and commit ---
+git -C "$GIT_ROOT" add -- "$RELATIVE_SETTINGS"
+
+if git -C "$GIT_ROOT" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
+    info "No changes to commit — already up to date (v${new_version})."
+    exit 0
+fi
+
+commit_msg="chore(pi): update pi ${old_version} -> ${new_version}"
 git -C "$GIT_ROOT" commit -m "$commit_msg" -- "$RELATIVE_SETTINGS"
 info "Committed: $commit_msg"
