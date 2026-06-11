@@ -1,0 +1,35 @@
+[metadata]
+name = "git-recent"
+description = "All recently changed files: modified, staged, untracked, and unmerged"
+requirements = ["git"]
+
+[source]
+command = "{ git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; git diff --name-only --diff-filter=U; } | sort -u"
+
+[preview]
+command = "git diff HEAD --color=always -- '{}' 2>/dev/null || git diff --color=always -- '{}' 2>/dev/null || bat -n --color=always '{}' 2>/dev/null || echo 'new file: {}'"
+env = { BAT_THEME = "ansi" }
+
+[ui]
+layout = "portrait"
+
+[keybindings]
+ctrl-s = "actions:stage"
+ctrl-r = "actions:restore"
+ctrl-e = "actions:edit"
+
+[actions.stage]
+description = "Stage the selected file"
+command = "git add '{}'"
+mode = "fork"
+
+[actions.restore]
+description = "Discard changes in the selected file"
+command = "git restore '{}'"
+mode = "fork"
+
+[actions.edit]
+description = "Open the selected file in editor"
+command = "${EDITOR:-vim} '{}'"
+shell = "bash"
+mode = "execute"

@@ -226,7 +226,8 @@ fallback_channel = "files"
   "gunzip",
   "xz",
 ]
-"git-diff" = ["git add", "git restore"]
+"git-recent" = ["git add"]
+"git-diff" = ["git restore"]
 "git-branch" = [
   "git checkout",
   "git switch",
