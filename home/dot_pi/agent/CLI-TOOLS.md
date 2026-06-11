@@ -56,10 +56,11 @@ rg -l 'deprecated_call' | xargs sd 'deprecated_call' 'new_call'
 
 ### When to Use
 
-- Any text substitution that would use `sed`
+- **Any** text substitution — `sd` fully replaces `sed` on this system
 - In-place file modifications
 - Regex-based find and replace across files
 - Piped text transformations
+- Translating `sed` commands from online guides or Stack Overflow answers
 
 ### Advantages Over sed
 
@@ -67,6 +68,74 @@ rg -l 'deprecated_call' | xargs sd 'deprecated_call' 'new_call'
 - Intuitive capture group references (`$1` not `\1`)
 - `-F` flag for literal strings without regex interpretation
 - Cleaner multi-file operation syntax
+
+### sed → sd Translation Guide
+
+Common `sed` patterns and their `sd` equivalents:
+
+```sh
+# sed: in-place replacement
+sed -i 's/old/new/g' file.txt
+# sd:
+sd 'old' 'new' file.txt
+
+# sed: capture groups
+sed -i 's/\(foo\)_\(bar\)/\2_\1/g' file.txt
+# sd: standard regex, $N references
+sd '(foo)_(bar)' '$2_$1' file.txt
+
+# sed: extended regex with -E
+sed -Ei 's/v([0-9]+)\.([0-9]+)/v\1.\2.0/g' file.txt
+# sd: extended regex is the default
+sd 'v([0-9]+)\.([0-9]+)' 'v$1.$2.0' file.txt
+
+# sed: delete lines matching pattern
+sed -i '/pattern/d' file.txt
+# sd: replace entire line (including newline) with nothing
+sd '.*pattern.*\n' '' file.txt
+
+# sed: insert text after a line
+sed -i '/marker/a new_line' file.txt
+# sd: match and append
+sd '(.*marker.*)' '$1\nnew_line' file.txt
+
+# sed: replace only first occurrence
+sed -i '0,/old/{s/old/new/}' file.txt
+# sd: no built-in "first only" — pipe through head/tail or use an anchored pattern
+# For simple cases, make the pattern more specific to match only once
+
+# sed: multiple expressions
+sed -i -e 's/a/b/g' -e 's/c/d/g' file.txt
+# sd: run twice (sd does one pattern per invocation)
+sd 'a' 'b' file.txt && sd 'c' 'd' file.txt
+
+# sed: pipe from stdin
+echo 'hello world' | sed 's/world/earth/'
+# sd:
+echo 'hello world' | sd 'world' 'earth'
+
+# sed: literal string with special chars
+sed -i 's/\[ERROR\]/[WARN]/g' file.txt
+# sd: use -F for literal mode (no escaping needed)
+sd -F '[ERROR]' '[WARN]' file.txt
+
+# sed: backreference to whole match
+echo 'foo' | sed 's/.*/"&"/'
+# sd: use $0 for whole match
+echo 'foo' | sd '.*' '"$0"'
+```
+
+### Key Differences to Remember
+
+| Concept | `sed` | `sd` |
+|---------|-------|------|
+| In-place flag | `-i` (required) | Default behavior on files |
+| Regex groups | `\(` and `\)` (BRE) or `(` `)` with `-E` | `(` and `)` always |
+| Capture refs | `\1`, `\2` | `$1`, `$2` |
+| Whole match ref | `&` | `$0` |
+| Literal strings | Escape everything | `-F` flag |
+| Delimiter | `s/pat/rep/` (or `s|pat|rep|`) | Two separate arguments |
+| Global replace | Needs `/g` flag | Global by default |
 
 ## serpl - TUI Search and Replace
 
@@ -671,6 +740,27 @@ sd '\s+$' '' file.txt
 
 # Convert snake_case to camelCase (simple cases)
 echo 'my_var_name' | sd '_([a-z])' '${1}'
+
+# Bump version numbers
+sd 'version = "([0-9]+)\.([0-9]+)\.([0-9]+)"' 'version = "$1.$2.99"' Cargo.toml
+
+# Comment out a config line
+sd '^(dangerous_setting.*)' '# $1' config.toml
+
+# Uncomment a config line
+sd '^# (wanted_setting.*)' '$1' config.toml
+
+# Replace literal JSON key (no regex escaping needed)
+sd -F '"debug": true' '"debug": false' settings.json
+
+# Chain with rg: find files containing pattern, then replace
+rg -l 'deprecated_api' src/ | xargs sd 'deprecated_api' 'new_api'
+
+# Normalize line endings (CRLF to LF)
+sd '\r\n' '\n' file.txt
+
+# Add prefix to matching lines via capture
+sd '^(TODO.*)' '[URGENT] $1' notes.md
 ```
 
 ### serpl for Interactive Workflows

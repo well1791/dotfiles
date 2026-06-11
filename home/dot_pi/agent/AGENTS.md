@@ -158,6 +158,18 @@ Before declaring completion, confirm the change solves the stated problem, relev
 These tools are faster, have better defaults, and clearer output.
 For usage patterns and examples, see [CLI-TOOLS.md](./CLI-TOOLS.md).
 
+### Strict: `sd` over `sed` — no exceptions
+
+NEVER use `sed` in commands you run or suggest the user run. Always use `sd` instead.
+
+- When performing text substitution in your own tool calls, use `sd`.
+- When suggesting commands for the user to run, write them with `sd`.
+- When explaining how to do text replacement, show `sd` syntax.
+- If a third-party guide or Stack Overflow answer uses `sed`, translate it to `sd` before presenting.
+- The only exception is when `sed` appears in existing project code or scripts that you are not modifying — do not rewrite working code unprompted.
+
+`sd` uses standard regex syntax (no backslash-escaping of `(`, `)`, `+`, `?`), uses `$1` for capture groups (not `\1`), and supports `-F` for literal string matching. See [CLI-TOOLS.md](./CLI-TOOLS.md) for a full `sed` → `sd` translation guide.
+
 ## Response Format
 
 **Default tone: concise and direct.** No filler, intros, or restated requirements.
