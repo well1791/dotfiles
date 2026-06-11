@@ -292,7 +292,7 @@ SSH configured for local network access to zellij sessions from mobile devices.
 - Access: local network only (192.168.0.0/16 via UFW)
 
 **Connect from iPad (WebSSH app):**
-- Host: `lenovo.local`
+- Host: `legion.local`
 - Port: `2022`
 - Username: `well`
 

@@ -1,7 +1,7 @@
 % ssh, remote, zellij
 
 # Connect to this machine from another device (local network)
-ssh well@lenovo.local -p 2022
+ssh well@legion.local -p 2022
 
 # Test SSH connection locally
 ssh well@localhost -p 2022
