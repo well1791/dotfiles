@@ -300,9 +300,14 @@ r = [":config-reload", ":redraw"]
 S-f = ":noop"
 e = "file_explorer_in_current_buffer_directory"
 S-e = ":noop"
+";" = ":sh hxe filetree '%{buffer_name}'"
 c = ":noop"
 S-c = ":noop"
 A-c = ":noop"
+
+[keys.normal.space.x]
+"/" = ":sh hxe find-replace '%{buffer_name}'"
+t = ":sh hxe terminal"
 
 [keys.select.space]
 r = [":config-reload", ":redraw"]

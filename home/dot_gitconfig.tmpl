@@ -1,8 +1,8 @@
 ;reference: https://github.com/voku/dotfiles/blob/master/.gitconfig
 
 [user]
-  name = Wellington Mendoza
-  email = wellsaint91@gmail.com
+  name = {{ .name }}
+  email = {{ .email }}
 
 [includeIf "gitdir:~/Code/work/"]
   path = ~/Code/work/.gitconfig

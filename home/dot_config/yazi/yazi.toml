@@ -1,0 +1,34 @@
+[mgr]
+sort_dir_first = true
+sort_by = "natural"
+show_hidden = true
+ratio = [2, 2, 5]
+
+[opener]
+helix_open = [
+  { run = '''
+    if [ "$HXE_CONTEXT" = "floating" ]; then
+      zellij action toggle-floating-panes
+      zellij action write 27
+      zellij action write-chars ":open %s"
+      zellij action write 13
+      zellij action toggle-floating-panes
+      zellij action close-pane
+    else
+      zellij action new-tab -- helix %s
+    fi
+  ''', block = true, desc = "Open in helix", for = "unix" },
+]
+fallback = [
+  { run = 'xdg-open %s', desc = "Open with system default", for = "unix" },
+]
+
+[open]
+rules = [
+  { mime = "text/*", use = "helix_open" },
+  { mime = "application/json", use = "helix_open" },
+  { mime = "application/toml", use = "helix_open" },
+  { mime = "application/yaml", use = "helix_open" },
+  { mime = "inode/x-empty", use = "helix_open" },
+  { mime = "*", use = "fallback" },
+]

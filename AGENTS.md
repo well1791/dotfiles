@@ -116,3 +116,56 @@ After adding, removing, or modifying any CLI tool installation, **all** of these
 | herdr | mise | Terminal-native agent runtime, installed via mise |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
+
+## Critical Rule: No PII in Source Files
+
+**This repository is PUBLIC.** Never commit personally identifiable information (PII) directly into source files. This includes:
+
+- Email addresses (personal, work, or third-party)
+- Full names
+- Employer names or work domains
+- Hardcoded home directory paths (e.g., `/home/well`)
+- API keys, tokens, or secrets (use `age` encryption via chezmoi)
+
+### How to Handle PII
+
+All personal data is stored in `~/.config/chezmoi/chezmoi.toml` under `[data]` and referenced via Go template variables in `.tmpl` files:
+
+| Variable | Purpose |
+|---|---|
+| `{{ .name }}` | Full name |
+| `{{ .email }}` | Personal email |
+| `{{ .work_email }}` | Work email |
+| `{{ .partner_email }}` | Partner's email |
+| `{{ .chezmoi.homeDir }}` | Home directory path (built-in) |
+
+New data fields are added via `promptStringOnce` in `.chezmoi.toml.tmpl`.
+
+### When Adding Config That Contains PII
+
+1. Name the file with `.tmpl` suffix (e.g., `dot_gitconfig.tmpl`)
+2. Replace literal PII with the appropriate template variable
+3. If the config uses `{{` for its own syntax (e.g., espanso), escape with `{{ "{{" }}`
+4. Verify with `chezmoi cat <target-path>` that output is correct
+5. Verify with `chezmoi diff` that no unintended changes occur
+
+### Secrets and API Keys
+
+Secrets MUST use chezmoi's age encryption:
+
+```sh
+chezmoi add --encrypt ~/.config/fish/api-keys.fish
+```
+
+This produces an `.age` file (e.g., `encrypted_api-keys.fish.age`) that is safe to commit. The encryption key and recipient are configured in `~/.config/chezmoi/chezmoi.toml`.
+
+### Before Committing — PII Checklist
+
+Run this scan before any commit:
+
+```sh
+rg -n '(wellsaint91|lilyzam1993|wmendoza@inscyth|Wellington Mendoza)' --glob '!.git' --glob '!.chezmoi*'
+rg -n '/home/well[^a-z]' --glob '!.git' --glob '!*.md'
+```
+
+Both commands must return empty. If not, convert the file to a `.tmpl` and replace literals with template variables.

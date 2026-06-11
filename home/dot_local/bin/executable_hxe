@@ -1,0 +1,36 @@
+#!/bin/bash
+# hxe - helix extensions launcher
+# Launches tools in floating zellij panes with context from helix
+set -e
+
+FLOAT_ARGS=(-f --x 10% --y 10% --width 80% --height 80%)
+
+case "$1" in
+  filetree)
+    buf="${2/\~/$HOME}"
+    if [ -n "$buf" ] && [ -e "$buf" ]; then
+      dir=$(dirname "$buf")
+    else
+      dir="."
+    fi
+    zellij run -c "${FLOAT_ARGS[@]}" -- env HXE_CONTEXT=floating yazi "$dir"
+    zellij action rename-pane "Files"
+    ;;
+  find-replace)
+    buf="${2/\~/$HOME}"
+    if [ -n "$buf" ] && git -C "$(dirname "$buf")" rev-parse --is-inside-work-tree &>/dev/null; then
+      root=$(git -C "$(dirname "$buf")" rev-parse --show-toplevel)
+      zellij run -c "${FLOAT_ARGS[@]}" -n "Find & Replace" -- serpl -p "$root"
+    else
+      zellij run -c "${FLOAT_ARGS[@]}" -n "Find & Replace" -- serpl
+    fi
+    ;;
+  terminal)
+    zellij action new-pane -f -x 10% -y 10% --width 80% --height 80%
+    zellij action rename-pane "Terminal"
+    ;;
+  *)
+    echo "Usage: hxe {filetree|find-replace|terminal} [buffer_path]"
+    exit 1
+    ;;
+esac

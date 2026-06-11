@@ -1,0 +1,19 @@
+[[mgr.prepend_keymap]]
+on = ["<Enter>"]
+run = "open"
+desc = "Open in helix (existing instance or new tab)"
+
+[[mgr.prepend_keymap]]
+on = ["<C-t>"]
+run = "shell 'zellij action new-tab -- helix %s' --confirm"
+desc = "Open in new helix tab"
+
+[[mgr.prepend_keymap]]
+on = ["<C-h>"]
+run = "shell 'zellij action toggle-floating-panes && zellij action write 27 && zellij action write-chars \":hsplit %s\" && zellij action write 13 && zellij action toggle-floating-panes && zellij action close-pane' --confirm"
+desc = "Open in horizontal split"
+
+[[mgr.prepend_keymap]]
+on = ["<C-v>"]
+run = "shell 'zellij action toggle-floating-panes && zellij action write 27 && zellij action write-chars \":vsplit %s\" && zellij action write 13 && zellij action toggle-floating-panes && zellij action close-pane' --confirm"
+desc = "Open in vertical split"

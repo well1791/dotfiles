@@ -1,8 +1,14 @@
 
-{{- $email := promptStringOnce . "email" "Email address" -}}
+{{- $name := promptStringOnce . "name" "Full name" -}}
+{{- $email := promptStringOnce . "email" "Personal email address" -}}
+{{- $workEmail := promptStringOnce . "work_email" "Work email address" -}}
+{{- $partnerEmail := promptStringOnce . "partner_email" "Partner email address" -}}
 
 [data]
+    name = {{ $name | quote }}
     email = {{ $email | quote }}
+    work_email = {{ $workEmail | quote }}
+    partner_email = {{ $partnerEmail | quote }}
 
 [diff]
     command = "difft"
