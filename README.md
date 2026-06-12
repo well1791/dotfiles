@@ -287,7 +287,7 @@ SSH configured for local network access to zellij sessions from mobile devices.
 **Setup:**
 - Port: 2022 (non-standard)
 - Auth: password (temporary), key-based (planned)
-- Auto-attach: SSH login → `zellij attach --create remote`
+- Auto-attach: SSH login → attaches to last used zellij session (falls back to creating "remote" if none exist)
 - Idle timeout: 30 minutes
 - Access: local network only (192.168.0.0/16 via UFW)
 
@@ -298,8 +298,8 @@ SSH configured for local network access to zellij sessions from mobile devices.
 
 **What happens on connect:**
 1. SSH authenticates on port 2022
-2. Fish shell detects SSH session
-3. Auto-attaches to zellij `remote` session (creates if missing)
+2. Fish shell detects SSH session (`$SSH_CONNECTION` is set)
+3. Auto-attaches to the most recently used zellij session (or creates "remote" if no sessions exist)
 4. On disconnect, session persists — reconnect picks up where you left off
 
 **Switching to key-based auth (future):**
