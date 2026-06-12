@@ -1,4 +1,4 @@
-abbr -a -- pis 'pi --no-session "/sm"'
+abbr -a -- pis 'pi "/sm"'
 
 # |-- Question to big-pickle
 # | usage:
