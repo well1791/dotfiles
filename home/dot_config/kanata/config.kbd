@@ -438,11 +438,11 @@
 
   ;;                  | |*| |*|     --     |*| |*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_tab ch_bspc) pgup
+  (ch_tab ch_bspc) home
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*| |*|     --     |*| |*| |
-  (ch_lt ch_rt) pgdn
+  (ch_lt ch_rt) end
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
@@ -502,7 +502,7 @@
   ;; RIGHT
           u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p @sw_al
   h XX    j @ch_na_lt     k @ch_na_dn    l @ch_na_rt      ; enter
-          m home          , end           . XX             / XX
+          m pgup          , pgdn         . XX             / XX
 )
 
 ;; Layer: The reverse of RIGHT
@@ -510,7 +510,7 @@
   ;; LEFT
           q @sw_al    w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
           a enter     s @ch_na_lt      d @ch_na_dn    f @ch_na_rt    g XX
-          z XX        x XX             c end          v home
+          z XX        x XX             c pgdn         v pgup
 
   ;; RIGHT
           u @na_pgup    i tab    o lalt    p @sw_nav_r
