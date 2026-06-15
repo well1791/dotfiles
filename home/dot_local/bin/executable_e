@@ -94,9 +94,10 @@ if (( flag_git || flag_untracked || flag_modified || flag_staged || flag_conflic
     has_git_flag=1
 fi
 
+editor="${EDITOR:-vim}"
 # Case: explicit files, no git flags → open only those files
 if (( ${#files[@]} > 0 && !has_git_flag )); then
-    exec "${EDITOR:-vim}" "${files[@]}"
+    exec $editor "${files[@]}"
 fi
 
 # Case: no args, no flags → default to -g behavior
@@ -108,22 +109,26 @@ fi
 # Git flags are active — check we're in a git repo
 if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
     if (( ${#files[@]} > 0 )); then
-        exec "${EDITOR:-vim}" "${files[@]}"
+        exec $editor "${files[@]}"
     else
-        exec "${EDITOR:-vim}"
+        exec $editor
     fi
 fi
+
+# Work from repo root so all git paths are consistent and resolvable
+toplevel="$(git rev-parse --show-toplevel)"
+cd "$toplevel"
 
 # Collect git files
 git_files=()
 
 if (( flag_git )); then
     # Default set: modified (staged + unstaged) + untracked, excluding deleted/renamed
+    # git diff HEAD covers both staged and unstaged changes vs HEAD
     while IFS= read -r f; do
         [[ -n "$f" ]] && git_files+=("$f")
     done < <(
         git diff --name-only --diff-filter=dr HEAD 2>/dev/null
-        git diff --cached --name-only --diff-filter=dr 2>/dev/null
         git ls-files --others --exclude-standard 2>/dev/null
     )
 else
@@ -163,9 +168,9 @@ fi
 all_files=("${git_files[@]}" "${files[@]}")
 
 if (( ${#all_files[@]} == 0 )); then
-    exec "${EDITOR:-vim}" .
+    exec $editor .
 fi
 
-# Deduplicate preserving order
+# Deduplicate (order not guaranteed)
 mapfile -t all_files < <(printf '%s\n' "${all_files[@]}" | sort -u)
-exec "${EDITOR:-vim}" "${all_files[@]}"
+exec $editor "${all_files[@]}"
