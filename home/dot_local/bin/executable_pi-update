@@ -1,5 +1,7 @@
 #!/bin/sh
-# Update pi and commit the version bump in settings.json.tmpl to dotfiles.
+# Update pi and sync all settings changes back to the chezmoi template.
+# Handles any field pi modifies (version, theme, models, etc.) while
+# preserving Go template expressions in the source.
 # Idempotent: safe to re-run. Stops if dotfiles repo has staged files.
 
 set -e
@@ -16,7 +18,6 @@ warn() { printf "${YELLOW}Warning:${NC} %s\n" "$1"; }
 SETTINGS="$HOME/.pi/agent/settings.json"
 CHEZMOI_SOURCE="$(chezmoi source-path)"
 GIT_ROOT=$(git -C "$CHEZMOI_SOURCE" rev-parse --show-toplevel)
-# The source is a template file, not a plain copy
 SOURCE_SETTINGS="$CHEZMOI_SOURCE/dot_pi/agent/settings.json.tmpl"
 RELATIVE_SETTINGS="${SOURCE_SETTINGS#$GIT_ROOT/}"
 
@@ -25,7 +26,8 @@ RELATIVE_SETTINGS="${SOURCE_SETTINGS#$GIT_ROOT/}"
 # --- Guard: no staged files in dotfiles repo ---
 staged=$(git -C "$GIT_ROOT" diff --cached --name-only)
 if [ -n "$staged" ]; then
-    die "Dotfiles repo has staged files. Unstage or commit them first:\n$staged"
+    printf "${RED}Error:${NC} %s\n%s\n" "Dotfiles repo has staged files. Unstage or commit them first:" "$staged" >&2
+    exit 1
 fi
 
 # --- Get old version from template source ---
@@ -41,20 +43,30 @@ if [ ! -f "$SETTINGS" ]; then
 fi
 new_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SETTINGS" | head -1 | sd '.*: *"([^"]*)"' '$1')
 
-if [ "$old_version" = "$new_version" ]; then
-    info "No version change — already up to date (v${new_version})."
-    exit 0
+# --- Sync all changes from live file back to template ---
+# Re-templatize: replace expanded $HOME with the Go template expression,
+# then write to the template source. This preserves template semantics
+# while picking up every change pi made.
+info "Syncing settings to template..."
+# NOTE: sd reads from stdin (not file arg) to avoid in-place modification.
+# This assumes $HOME only appears in path values (e.g. skills array).
+sd -F "$HOME" '{{ .chezmoi.homeDir }}' < "$SETTINGS" > "$SOURCE_SETTINGS"
+
+# Ensure trailing newline
+if [ -n "$(tail -c 1 "$SOURCE_SETTINGS")" ]; then
+    printf '\n' >> "$SOURCE_SETTINGS"
 fi
 
-# --- Update version in template source (preserves template variables) ---
-info "Updating version in template: ${old_version} -> ${new_version}"
-sd -F "\"lastChangelogVersion\": \"${old_version}\"" "\"lastChangelogVersion\": \"${new_version}\"" "$SOURCE_SETTINGS"
-
-# --- Verify chezmoi still renders correctly ---
+# --- Verify sync: chezmoi should report no drift ---
 chezmoi_status=$(chezmoi status "$SETTINGS" 2>/dev/null || true)
 if [ -n "$chezmoi_status" ]; then
-    warn "Chezmoi still reports drift after version update. Other fields may have changed."
-    warn "Review with: chezmoi diff $SETTINGS"
+    warn "Chezmoi still reports drift after sync. Forcing apply..."
+    chezmoi apply --force "$SETTINGS"
+    # Check again
+    chezmoi_status=$(chezmoi status "$SETTINGS" 2>/dev/null || true)
+    if [ -n "$chezmoi_status" ]; then
+        die "Cannot resolve drift. Review manually: chezmoi diff $SETTINGS"
+    fi
 fi
 
 # --- Stage and commit ---
@@ -65,6 +77,11 @@ if git -C "$GIT_ROOT" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
     exit 0
 fi
 
-commit_msg="chore(pi): update pi ${old_version} -> ${new_version}"
+if [ "$old_version" = "$new_version" ]; then
+    commit_msg="chore(pi): sync settings changes"
+else
+    commit_msg="chore(pi): update pi ${old_version} -> ${new_version}"
+fi
+
 git -C "$GIT_ROOT" commit -m "$commit_msg" -- "$RELATIVE_SETTINGS"
 info "Committed: $commit_msg"
