@@ -102,6 +102,32 @@ After adding, removing, or modifying any CLI tool installation, **all** of these
 - Document dependencies in the table below
 - Update this `AGENTS.md` file if the change affects conventions, dependencies, or integration patterns
 
+### 5. Navi Cheatsheet
+
+Every CLI tool added MUST have a corresponding navi cheatsheet at `home/dot_config/navi/custom-cheats/<tool>.cheat`.
+
+**Format:**
+```cheat
+% <tool>, <tag1>, <tag2>
+
+# <Description of command>
+<command-with-placeholders>
+
+# <Description of another command>
+<another-command>
+
+$ variable: <command that produces selectable options> | fzf
+```
+
+**Rules:**
+- First line is `%` followed by tool name and comma-separated tags for discovery
+- Each snippet starts with a `# comment` description, followed by the command on the next line
+- Use `<placeholder>` for user-provided values
+- Use `$ variable:` lines at the bottom to define interactive selectors (piped through fzf)
+- Include the 3-5 most common operations — not an exhaustive reference
+- Check the tool's `--help` or `tldr` output for the most useful commands
+- Look at existing cheats in `home/dot_config/navi/custom-cheats/` for style reference
+
 ## Tool Dependencies
 
 | Tool | Depends On | Reason |
