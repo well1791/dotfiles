@@ -93,6 +93,7 @@ Installed via system package manager (pacman/apt/dnf):
 - **[just](https://github.com/casey/just)** - Command runner (like make, but better)
 - **[tealdeer](https://tealdeer-rs.github.io/tealdeer/)** - Fast tldr client in Rust (`tldr`)
 - **[pass](https://www.passwordstore.org/)** - Standard Unix password manager (GPG-encrypted, git-tracked)
+- **[gitu](https://github.com/altsem/gitu)** - TUI Git client inspired by Magit
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
 ### 12. **[direnv](https://direnv.net)** - Auto-load environment on cd

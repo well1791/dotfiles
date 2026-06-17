@@ -1,0 +1,12 @@
+% gitu, git, tui
+
+# Open gitu in current repository
+gitu
+
+# Open gitu help menu (inside gitu: press h)
+gitu
+
+# Open gitu with a specific git directory
+gitu --git-dir <path>
+
+$ path: fd -t d .git --hidden --max-depth 2 | sd '/.git$' '' | fzf
