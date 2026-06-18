@@ -1,7 +1,6 @@
 #!/bin/sh
-# Update pi and sync all settings changes back to the chezmoi template.
-# Handles any field pi modifies (version, theme, models, etc.) while
-# preserving Go template expressions in the source.
+# Update pi and sync all settings changes back to chezmoi source.
+# Handles any field pi modifies (version, theme, models, etc.).
 # Idempotent: safe to re-run. Stops if dotfiles repo has staged files.
 
 set -e
@@ -18,10 +17,10 @@ warn() { printf "${YELLOW}Warning:${NC} %s\n" "$1"; }
 SETTINGS="$HOME/.pi/agent/settings.json"
 CHEZMOI_SOURCE="$(chezmoi source-path)"
 GIT_ROOT=$(git -C "$CHEZMOI_SOURCE" rev-parse --show-toplevel)
-SOURCE_SETTINGS="$CHEZMOI_SOURCE/dot_pi/agent/settings.json.tmpl"
+SOURCE_SETTINGS="$CHEZMOI_SOURCE/dot_pi/agent/settings.json"
 RELATIVE_SETTINGS="${SOURCE_SETTINGS#$GIT_ROOT/}"
 
-[ -f "$SOURCE_SETTINGS" ] || die "Template source not found: $SOURCE_SETTINGS"
+[ -f "$SOURCE_SETTINGS" ] || die "Chezmoi source not found: $SOURCE_SETTINGS"
 
 # --- Guard: no staged files in dotfiles repo ---
 staged=$(git -C "$GIT_ROOT" diff --cached --name-only)
@@ -43,14 +42,9 @@ if [ ! -f "$SETTINGS" ]; then
 fi
 new_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SETTINGS" | head -1 | sd '.*: *"([^"]*)"' '$1')
 
-# --- Sync all changes from live file back to template ---
-# Re-templatize: replace expanded $HOME with the Go template expression,
-# then write to the template source. This preserves template semantics
-# while picking up every change pi made.
-info "Syncing settings to template..."
-# NOTE: sd reads from stdin (not file arg) to avoid in-place modification.
-# This assumes $HOME only appears in path values (e.g. skills array).
-sd -F "$HOME" '{{ .chezmoi.homeDir }}' < "$SETTINGS" > "$SOURCE_SETTINGS"
+# --- Sync all changes from live file back to chezmoi source ---
+info "Syncing settings to chezmoi source..."
+cp "$SETTINGS" "$SOURCE_SETTINGS"
 
 # Ensure trailing newline
 if [ -n "$(tail -c 1 "$SOURCE_SETTINGS")" ]; then
