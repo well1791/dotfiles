@@ -558,12 +558,17 @@ export default function (pi: ExtensionAPI) {
               return;
             }
 
-            // Escape — cancel rename or exit
+            // Escape — cancel rename, clear selection, or exit
             if (matchesKey(data, Key.escape)) {
               if (renameMode) {
                 renameMode = false;
                 query = savedQuery;
                 qCursor = savedQCursor;
+                tui.requestRender();
+                return;
+              }
+              if (selectedPaths.size > 0) {
+                selectedPaths.clear();
                 tui.requestRender();
                 return;
               }
