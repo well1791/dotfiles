@@ -1,7 +1,7 @@
 #!/bin/sh
 # Unified update script for all package managers and tools
 # Updates: system packages, mise, uv, rust, nix, devenv, bun, engram, pi,
-#          vortix, tealdeer cache, flatpak
+#          vortix, slumber, tealdeer cache, flatpak
 
 set -e
 

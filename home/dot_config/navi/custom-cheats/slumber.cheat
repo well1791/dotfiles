@@ -1,0 +1,25 @@
+% slumber, http, api, rest
+
+# Open TUI with default collection
+slumber
+
+# Open TUI with specific collection file
+slumber -f <collection>
+
+# Send a request via CLI (no TUI)
+slumber request -f <collection> <recipe>
+
+# Import from Insomnia export
+slumber import insomnia <file>
+
+# Show collection file path
+slumber collections path
+
+# Open config in editor
+slumber config --edit
+
+# Show config file path
+slumber config --path
+
+$ collection: fd -e yml -e yaml --max-depth 3 | fzf
+$ file: fd -e json -e yaml --max-depth 3 | fzf

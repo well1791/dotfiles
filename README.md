@@ -148,7 +148,16 @@ Installed via system package manager (pacman/apt/dnf):
 - Config: `~/.config/lazyjira/config.yml`
 - Update: `sudo pacman -Syu` (system package)
 
-### 18. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
+### 18. **[slumber](https://github.com/LucasPickering/slumber)** - Terminal-based HTTP/REST client
+- TUI and CLI HTTP client — define, execute, and share configurable requests
+- Source-first: YAML collection files designed for version control
+- In-app editing via `$EDITOR` (configured for Helix)
+- Features: profiles/environments, dynamic templates, JSONPath response filtering, request chaining
+- Installed via system package manager
+- Config: `~/.config/slumber/config.yml`
+- Update: `sudo pacman -Syu` (or your distro's update command)
+
+### 19. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
 - Browse and execute cheatsheets from the command line
 - **Dependency:** Requires `fzf` (system package) as its interactive finder backend
   - navi uses fzf as a unix pipe filter (stdin → fuzzy select → stdout)
@@ -159,7 +168,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Fish widget: Ctrl+G
 - Update: `paru -Syu navi` or `yay -Syu navi`
 
-### 19. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
+### 20. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
 - Enables `.local` hostname resolution (e.g., `lenovo.local` from other devices)
 - Packages: `avahi`, `nss-mdns`
 - Config: `/etc/avahi/avahi-daemon.conf`
@@ -177,7 +186,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, vortix, openvpn, lazyjira-bin)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, slumber, vortix, openvpn, lazyjira-bin)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager) and uv tools (sqlit, etc.)
 - ✅ Rust (rustup update)

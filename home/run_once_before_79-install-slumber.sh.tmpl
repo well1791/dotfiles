@@ -1,0 +1,11 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install slumber (terminal-based HTTP/REST client)
+# https://github.com/LucasPickering/slumber
+
+if log_version slumber; then exit 0; fi
+
+log_info "Installing slumber..."
+install_packages slumber
+
+if ! check_command slumber; then die "slumber installation failed"; fi
+log_success "slumber installed" "$(get_version slumber)"

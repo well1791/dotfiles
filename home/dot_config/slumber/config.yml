@@ -1,0 +1,12 @@
+# Slumber configuration
+# https://slumber.lucaspickering.me/api/configuration/
+
+# Use helix as the in-app editor (for editing recipes)
+editor: "hx"
+
+# Use fish shell for command execution
+commands:
+  shell: ["fish", "--no-config", "-c"]
+
+# Use bat as the pager for viewing response bodies
+pager: "bat"
