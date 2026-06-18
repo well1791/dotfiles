@@ -1,10 +1,10 @@
 {
-  "lastChangelogVersion": "0.79.5",
+  "lastChangelogVersion": "0.79.6",
   "defaultProvider": "github-copilot",
   "defaultModel": "claude-opus-4.6",
   "defaultThinkingLevel": "medium",
   "skills": [
-    "{{ .chezmoi.homeDir }}/.local/share/superpowers/skills"
+    "~/.local/share/superpowers/skills"
   ],
   "packages": [
     "npm:pi-subagents",
@@ -19,7 +19,7 @@
   "npmCommand": [
     "bun"
   ],
-  "hideThinkingBlock": false,
+  "hideThinkingBlock": true,
   "treeFilterMode": "no-tools",
   "branchSummary": {
     "skipPrompt": true
