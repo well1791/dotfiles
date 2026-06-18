@@ -1,0 +1,11 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install aim (command line download/upload tool with resume)
+# https://github.com/mihaigalos/aim
+
+if log_version aim; then exit 0; fi
+
+log_info "Installing aim..."
+install_packages aim-bin
+
+if ! check_command aim; then die "aim installation failed"; fi
+log_success "aim installed" "$(get_version aim)"

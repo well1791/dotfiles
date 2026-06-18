@@ -1,0 +1,25 @@
+% aim, download, upload, transfer
+
+# Download a file to current directory
+aim <url> .
+
+# Download and decompress automatically
+aim <url> +
+
+# Upload a file to remote
+aim <local_file> <remote_url>
+
+# List contents of remote directory
+aim <url>
+
+# Share current folder over HTTP (port 8080)
+aim .
+
+# Download with SHA256 verification
+aim <url> . <sha256>
+
+# Interactive mode (fuzzy navigate remote links)
+aim -i <url>
+
+# Self-update aim
+aim --update
