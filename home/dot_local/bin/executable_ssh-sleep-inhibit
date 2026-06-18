@@ -1,0 +1,19 @@
+#!/bin/sh
+set -e
+# Inhibit system sleep while active SSH sessions exist.
+# Checks every 30 seconds for established SSH connections (inbound).
+
+INTERVAL=30
+
+while true; do
+    if ss -t state established 'sport = :2022' 2>/dev/null | grep -q ':2022'; then
+        # Active inbound SSH session detected — hold sleep inhibitor
+        systemd-inhibit --what=sleep:idle \
+            --who="ssh-sleep-inhibit" \
+            --why="Active inbound SSH session" \
+            --mode=block \
+            sleep "$INTERVAL"
+    else
+        sleep "$INTERVAL"
+    fi
+done

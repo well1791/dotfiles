@@ -348,6 +348,14 @@ SSH configured for local network access to zellij sessions from mobile devices.
 3. Auto-attaches to the most recently used zellij session (or creates "remote" if no sessions exist)
 4. On disconnect, session persists — reconnect picks up where you left off
 
+**Sleep inhibition:**
+
+A systemd user service (`ssh-sleep-inhibit`) prevents the laptop from suspending while inbound SSH sessions are active. It polls every 30s via `ss` and holds a `systemd-inhibit` lock on `sleep:idle` when connections are detected. User lingering is enabled so the service persists even when the local graphical session is inactive.
+
+- Service: `~/.config/systemd/user/ssh-sleep-inhibit.service`
+- Script: `~/.local/bin/ssh-sleep-inhibit`
+- Verify: `systemd-inhibit --list | grep ssh`
+
 **Switching to key-based auth (future):**
 ```bash
 # On iPad: generate key in WebSSH app, copy public key

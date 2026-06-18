@@ -1,0 +1,13 @@
+[Unit]
+Description=Inhibit sleep while SSH sessions are active
+Documentation=man:systemd-inhibit(1)
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/ssh-sleep-inhibit
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
