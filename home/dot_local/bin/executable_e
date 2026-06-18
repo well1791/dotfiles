@@ -124,11 +124,12 @@ git_files=()
 
 if (( flag_git )); then
     # Default set: modified (staged + unstaged) + untracked, excluding deleted/renamed
-    # git diff HEAD covers both staged and unstaged changes vs HEAD
+    # git diff HEAD covers working directory changes, git diff --cached covers staged changes
     while IFS= read -r f; do
         [[ -n "$f" ]] && git_files+=("$f")
     done < <(
         git diff --name-only --diff-filter=dr HEAD 2>/dev/null
+        git diff --cached --name-only --diff-filter=dr 2>/dev/null
         git ls-files --others --exclude-standard 2>/dev/null
     )
 else
