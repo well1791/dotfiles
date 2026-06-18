@@ -1,0 +1,11 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install lazyjira (Terminal UI for Jira)
+# https://github.com/textfuel/lazyjira
+
+if log_version lazyjira; then exit 0; fi
+
+log_info "Installing lazyjira..."
+install_packages lazyjira-bin
+
+if ! check_command lazyjira; then die "lazyjira installation failed"; fi
+log_success "lazyjira installed" "$(get_version lazyjira)"

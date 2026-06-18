@@ -1,0 +1,101 @@
+# lazyjira configuration
+# Docs: https://github.com/textfuel/lazyjira/blob/main/docs/Config.md
+
+gui:
+  theme: catppuccin-mocha
+  sidePanelWidth: 45
+  showIcons: true
+  mouse: true
+  borders: rounded
+  dateFormat: "2006-01-02"
+  selectCreatedIssue: true
+  issueListFields:
+    - key
+    - status
+    - priority
+    - summary
+    - assignee
+  priorityIcons:
+    Highest: "⇈"
+    High: "↑"
+    Medium: "→"
+    Low: "↓"
+    Lowest: "⇊"
+
+# Keybindings — vim-style defaults, fully remappable
+keybinding:
+  universal:
+    quit: q
+    help: "?"
+    search: /
+    switchPanel: tab
+    refresh: r
+    refreshAll: R
+    prevTab: "["
+    nextTab: "]"
+    jqlSearch: s
+  navigation:
+    down: j
+    up: k
+    top: g
+    bottom: G
+    halfPageDown: ctrl+d
+    halfPageUp: ctrl+u
+  issues:
+    select: " "
+    open: enter
+    focusRight: l
+    transition: t
+    browser: o
+    urlPicker: u
+    copyURL: "y"
+    closeJQLTab: x
+    createBranch: b
+  detail:
+    focusLeft: h
+    infoTab: i
+    scrollDown: J
+    scrollUp: K
+    halfPageDown: ctrl+f
+    halfPageUp: ctrl+b
+
+# JQL tabs — customize project keys and filters as needed
+issueTabs:
+  - name: All
+    jql: "project = {{.ProjectKey}} AND statusCategory != Done ORDER BY updated DESC"
+  - name: Assigned
+    jql: "project = {{.ProjectKey}} AND assignee=currentUser() AND statusCategory != Done ORDER BY priority DESC, updated DESC"
+  - name: Recent
+    jql: "project = {{.ProjectKey}} AND updated >= -7d ORDER BY updated DESC"
+    maxResults: 100
+
+# ADF/Markdown conversion for $EDITOR editing
+converter: adf-converter
+renderer: glamour
+rendererStyle: dark
+
+# Cache and auto-refresh
+cache:
+  enabled: true
+  ttl: 5m
+refresh:
+  autoRefresh: true
+  interval: 30s
+
+# Page size
+maxResults: 50
+
+# Git integration — create branches from issues
+git:
+  closeOnCheckout: false
+  asciiOnly: false
+  branchFormat:
+    - when:
+        type: "Bug"
+      template: "bugfix/{{.Key}}-{{.Summary | slugify}}"
+    - when:
+        type: "Sub-task"
+      template: "{{.ParentKey}}/{{.Key}}_{{.Summary | slugify}}"
+    - when:
+        type: "*"
+      template: "{{.Key}}-{{.Summary | slugify}}"

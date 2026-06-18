@@ -136,7 +136,19 @@ Installed via system package manager (pacman/apt/dnf):
 - Installed via `uv tool install sqlit-tui --with mssql-python`
 - Update: `uv tool upgrade sqlit-tui`
 
-### 17. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
+### 17. **[lazyjira](https://github.com/textfuel/lazyjira)** - Terminal UI for Jira
+- Fast keyboard-driven TUI — browse issues, transition statuses, comment, and more
+- Vim-style navigation with fully remappable keybindings
+- JQL search with autocomplete, syntax highlighting, and persistent history
+- 4-panel layout: issues, projects, detail, status
+- Inline editing via `$EDITOR` (descriptions, comments)
+- Git integration: create branches from issues
+- Themes: Catppuccin (4 flavors) + ANSI default
+- Installed via AUR (`lazyjira-bin`)
+- Config: `~/.config/lazyjira/config.yml`
+- Update: `sudo pacman -Syu` (system package)
+
+### 18. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
 - Browse and execute cheatsheets from the command line
 - **Dependency:** Requires `fzf` (system package) as its interactive finder backend
   - navi uses fzf as a unix pipe filter (stdin → fuzzy select → stdout)
@@ -147,7 +159,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Fish widget: Ctrl+G
 - Update: `paru -Syu navi` or `yay -Syu navi`
 
-### 18. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
+### 19. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
 - Enables `.local` hostname resolution (e.g., `lenovo.local` from other devices)
 - Packages: `avahi`, `nss-mdns`
 - Config: `/etc/avahi/avahi-daemon.conf`
@@ -165,7 +177,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, vortix, openvpn)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, vortix, openvpn, lazyjira-bin)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager) and uv tools (sqlit, etc.)
 - ✅ Rust (rustup update)

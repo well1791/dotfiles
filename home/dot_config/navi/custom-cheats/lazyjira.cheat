@@ -1,0 +1,19 @@
+% lazyjira, jira, tui, project-management
+
+# Launch lazyjira TUI
+lazyjira
+
+# Launch in read-only mode (no writes to Jira)
+lazyjira --dry-run
+
+# Re-authenticate (change credentials)
+lazyjira auth
+
+# Clear saved credentials
+lazyjira logout
+
+# Launch with API logging
+lazyjira --log /tmp/lazyjira.log
+
+# Show version
+lazyjira --version
