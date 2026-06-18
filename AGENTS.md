@@ -77,7 +77,9 @@ if ! check_command <cmd>; then die "<tool> installation failed"; fi
 log_success "<tool> installed" "$(get_version <cmd>)"
 ```
 
-**Available helpers** (`install-lib.sh`): `check_command`, `require_command`, `check_any_command`, `install_packages` (auto-detects pacman/apt/dnf), `log_success`, `log_info`, `log_warn`, `log_error`, `die`, `log_version`, `is_dry_run`, `get_version`.
+**Available helpers** (`install-lib.sh`): `check_command`, `require_command`, `check_any_command`, `install_packages` (auto-detects paru/pacman/apt/dnf), `log_success`, `log_info`, `log_warn`, `log_error`, `die`, `log_version`, `is_dry_run`, `get_version`.
+
+**Package manager preference (Arch):** Always use `paru` over `pacman`. Paru handles both official repos and AUR seamlessly. Use `pacman` only when `paru` is unavailable (e.g., bootstrap scripts before paru is installed) or when root-only operations explicitly require it.
 
 ### 2. Configuration
 
@@ -140,6 +142,7 @@ $ variable: <command that produces selectable options> | fzf
 | television | — | Standalone. Replaces fzf for shell integration (Ctrl-T, Ctrl-R) only. |
 | avahi | nss-mdns | mDNS responder for .local hostname resolution on local network |
 | herdr | mise | Terminal-native agent runtime, installed via mise |
+| vortix | openvpn | VPN TUI that manages tunnels via system openvpn binary |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 

@@ -211,7 +211,11 @@ detect_os() {
     case "$_OS_ID" in
         arch|cachyos|manjaro|endeavouros)
             _OS_FAMILY="arch"
-            _PKG_MANAGER="pacman"
+            if check_command paru; then
+                _PKG_MANAGER="paru"
+            else
+                _PKG_MANAGER="pacman"
+            fi
             ;;
         ubuntu|debian|linuxmint|pop)
             _OS_FAMILY="debian"
@@ -230,7 +234,11 @@ detect_os() {
             case "$_OS_ID_LIKE" in
                 *arch*)
                     _OS_FAMILY="arch"
-                    _PKG_MANAGER="pacman"
+                    if check_command paru; then
+                        _PKG_MANAGER="paru"
+                    else
+                        _PKG_MANAGER="pacman"
+                    fi
                     ;;
                 *debian*|*ubuntu*)
                     _OS_FAMILY="debian"
@@ -272,7 +280,7 @@ get_os_family() {
 
 # Detect the system package manager
 # Usage: pm=$(detect_pkg_manager)
-# Returns: Prints package manager name (pacman, apt, dnf, apk)
+# Returns: Prints package manager name (paru, pacman, apt, dnf, apk)
 detect_pkg_manager() {
     if [ -z "$_PKG_MANAGER" ]; then
         detect_os || true
@@ -303,6 +311,9 @@ install_packages() {
     fi
 
     case "$_pm" in
+        paru)
+            paru -S --noconfirm --needed "$@"
+            ;;
         pacman)
             run_privileged pacman -S --noconfirm --needed "$@"
             ;;
@@ -335,6 +346,9 @@ update_package_cache() {
     fi
 
     case "$_pm" in
+        paru)
+            paru -Sy
+            ;;
         pacman)
             run_privileged pacman -Sy
             ;;

@@ -1,0 +1,25 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install vortix (Terminal UI for WireGuard and OpenVPN)
+# https://github.com/Harry-kp/vortix
+
+# Skip if already installed
+if log_version vortix; then
+    exit 0
+fi
+
+# Install runtime dependencies first
+log_info "Installing vortix runtime dependencies..."
+install_packages openvpn
+
+# Install vortix (available in Arch extra repo)
+log_info "Installing vortix..."
+install_packages vortix
+
+if ! check_command vortix; then
+    die "vortix installation failed"
+fi
+
+log_success "vortix installed" "$(get_version vortix)"
+log_info "  Usage: sudo vortix (TUI dashboard)"
+log_info "  Import profile: sudo vortix import <file.ovpn>"
+log_info "  Config: ~/.config/vortix/"

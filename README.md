@@ -112,7 +112,16 @@ Installed via system package manager (pacman/apt/dnf):
 - Config: `~/.config/television/config.toml`
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
-### 14. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
+### 14. **[vortix](https://github.com/Harry-kp/vortix)** - Terminal UI for WireGuard and OpenVPN
+- Unified TUI for managing VPN connections with real-time telemetry and leak detection
+- Supports both WireGuard (`.conf`) and OpenVPN (`.ovpn`) profiles
+- Features: kill switch, IPv6/DNS leak detection, multi-tunnel, geo-location
+- Runtime deps: `openvpn` (installed automatically; add `wireguard-tools` if using WireGuard profiles)
+- Installed via system package manager
+- Config: `~/.config/vortix/`
+- Update: `sudo pacman -Syu` or `vortix update` (self-update from crates.io)
+
+### 15. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
 - Browse and execute cheatsheets from the command line
 - **Dependency:** Requires `fzf` (system package) as its interactive finder backend
   - navi uses fzf as a unix pipe filter (stdin → fuzzy select → stdout)
@@ -123,7 +132,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Fish widget: Ctrl+G
 - Update: `paru -Syu navi` or `yay -Syu navi`
 
-### 15. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
+### 16. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
 - Enables `.local` hostname resolution (e.g., `lenovo.local` from other devices)
 - Packages: `avahi`, `nss-mdns`
 - Config: `/etc/avahi/avahi-daemon.conf`
@@ -141,11 +150,11 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass)
+- ✅ System packages (age, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, vortix, openvpn)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager)
 - ✅ Rust (rustup update)
-- ✅ Nix channels and packages
+- ✅ Nix channels, packages, and flake installs
 - ✅ devenv
 - ✅ Bun (if installed)
 - ✅ engram (if installed)

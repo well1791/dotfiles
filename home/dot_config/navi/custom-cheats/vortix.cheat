@@ -1,0 +1,35 @@
+% vortix, vpn, wireguard, openvpn
+
+# Launch TUI dashboard
+sudo vortix
+
+# Connect to a profile
+sudo vortix up <profile>
+
+# Disconnect all tunnels
+sudo vortix down
+
+# Disconnect specific profile
+sudo vortix down <profile>
+
+# Show connection status
+vortix status
+
+# Show brief one-line status
+vortix status --brief
+
+# Import a VPN profile (.conf or .ovpn)
+sudo vortix import <file>
+
+# List all imported profiles
+vortix list
+
+# Toggle kill switch mode
+sudo vortix killswitch <mode>
+
+# Show profile configuration
+vortix show <profile>
+
+$ profile: vortix list --names-only 2>/dev/null | fzf
+$ mode: echo -e "off\nblock-on-drop\nvpn-only" | fzf
+$ file: fd -e conf -e ovpn . ~/Downloads ~/Documents 2>/dev/null | fzf

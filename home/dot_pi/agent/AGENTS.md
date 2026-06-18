@@ -258,6 +258,52 @@ NEVER use `sed` in commands you run or suggest the user run. Always use `sd` ins
 
 `sd` uses standard regex syntax (no backslash-escaping of `(`, `)`, `+`, `?`), uses `$1` for capture groups (not `\1`), and supports `-F` for literal string matching. See [CLI-TOOLS.md](./CLI-TOOLS.md) for a full `sed` → `sd` translation guide.
 
+### Jira Comments: Use ADF via REST API
+
+The `atlcli jira issue comment` command does NOT support wiki markup or Markdown formatting — it posts the body as a single plain-text paragraph. To post formatted Jira comments (headings, code blocks, tables, lists, bold/italic, inline code), use the Jira REST API v3 directly with Atlassian Document Format (ADF).
+
+**Workflow:**
+1. Write the comment body as an ADF JSON file (see structure below).
+2. POST it via `curl` to `https://<instance>.atlassian.net/rest/api/3/issue/<KEY>/comment`.
+3. To edit: `PUT` to `.../comment/<commentId>`. To delete: `DELETE` to `.../comment/<commentId>`.
+
+**Auth:** Use the credentials from `~/.config/atlcli/config.json` (`email` + `token` as basic auth).
+
+**ADF structure reference:**
+```json
+{
+  "body": {
+    "type": "doc",
+    "version": 1,
+    "content": [
+      { "type": "heading", "attrs": { "level": 3 }, "content": [{ "type": "text", "text": "Title" }] },
+      { "type": "paragraph", "content": [
+        { "type": "text", "text": "Inline code: " },
+        { "type": "text", "text": "myVar", "marks": [{ "type": "code" }] },
+        { "type": "text", "text": " and ", "marks": [{ "type": "strong" }] }
+      ]},
+      { "type": "codeBlock", "attrs": { "language": "typescript" }, "content": [{ "type": "text", "text": "const x = 1;" }] },
+      { "type": "bulletList", "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Item" }] }] }
+      ]},
+      { "type": "orderedList", "attrs": { "order": 1 }, "content": [
+        { "type": "listItem", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Step" }] }] }
+      ]},
+      { "type": "table", "attrs": { "isNumberColumnEnabled": false, "layout": "default" }, "content": [
+        { "type": "tableRow", "content": [
+          { "type": "tableHeader", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Col" }] }] }
+        ]},
+        { "type": "tableRow", "content": [
+          { "type": "tableCell", "content": [{ "type": "paragraph", "content": [{ "type": "text", "text": "Val" }] }] }
+        ]}
+      ]}
+    ]
+  }
+}
+```
+
+**Available marks:** `code`, `strong`, `em`, `underline`, `strike`, `link` (with `attrs.href`).
+
 ## Response Format
 
 **Default tone: concise and direct.** No filler, intros, or restated requirements.
