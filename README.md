@@ -128,7 +128,15 @@ Installed via system package manager (pacman/apt/dnf):
 - Installed via AUR (`aim-bin`)
 - Update: `paru -Syu aim-bin` or `aim --update` (self-update)
 
-### 16. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
+### 16. **[sqlit](https://github.com/Maxteabag/sqlit)** - Terminal UI for SQL databases
+- The lazygit of SQL databases — connect and query from your terminal
+- Supports: PostgreSQL, MySQL, SQLite, SQL Server, DuckDB, and 20+ more
+- Features: connection manager, vim-style editing, query history, Docker discovery, SSH tunnels
+- Config: `~/.config/sqlit/`
+- Installed via `uv tool install sqlit-tui --with mssql-python`
+- Update: `uv tool upgrade sqlit-tui`
+
+### 17. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
 - Browse and execute cheatsheets from the command line
 - **Dependency:** Requires `fzf` (system package) as its interactive finder backend
   - navi uses fzf as a unix pipe filter (stdin → fuzzy select → stdout)
@@ -139,7 +147,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Fish widget: Ctrl+G
 - Update: `paru -Syu navi` or `yay -Syu navi`
 
-### 17. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
+### 18. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
 - Enables `.local` hostname resolution (e.g., `lenovo.local` from other devices)
 - Packages: `avahi`, `nss-mdns`
 - Config: `/etc/avahi/avahi-daemon.conf`
@@ -159,7 +167,7 @@ update-all
 This single command updates:
 - ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, vortix, openvpn)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
-- ✅ uv (Python package manager)
+- ✅ uv (Python package manager) and uv tools (sqlit, etc.)
 - ✅ Rust (rustup update)
 - ✅ Nix channels, packages, and flake installs
 - ✅ devenv

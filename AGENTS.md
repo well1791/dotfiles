@@ -143,6 +143,7 @@ $ variable: <command that produces selectable options> | fzf
 | avahi | nss-mdns | mDNS responder for .local hostname resolution on local network |
 | herdr | mise | Terminal-native agent runtime, installed via mise |
 | vortix | openvpn | VPN TUI that manages tunnels via system openvpn binary |
+| sqlit | uv | Installed via uv tool with mssql-python driver |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 

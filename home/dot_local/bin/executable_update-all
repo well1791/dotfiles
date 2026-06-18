@@ -94,6 +94,8 @@ fi
 if command -v uv >/dev/null 2>&1; then
     print_status "Updating uv..."
     uv self update || FAILED=$((FAILED + 1))
+    print_status "Updating uv tools (sqlit, etc.)..."
+    uv tool upgrade --all || FAILED=$((FAILED + 1))
 else
     print_warning "uv not found, skipping"
 fi

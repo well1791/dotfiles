@@ -1,0 +1,37 @@
+% sqlit, database, sql, tui
+
+# Launch sqlit TUI (pick connection interactively)
+sqlit
+
+# Connect to a saved connection
+sqlit -c "<connection_name>"
+
+# Run a query and print results
+sqlit query -c "<connection_name>" -q "<sql_query>"
+
+# Export query results as CSV
+sqlit query -c "<connection_name>" -q "<sql_query>" --format csv
+
+# Export query results as JSON
+sqlit query -c "<connection_name>" -q "<sql_query>" --format json
+
+# Run SQL from a file
+sqlit query -c "<connection_name>" -f "<sql_file>" --format csv
+
+# Add a SQLite connection
+sqlit connections add sqlite --name "<connection_name>" --file-path "<path_to_db>"
+
+# Add a PostgreSQL connection
+sqlit connections add postgresql --name "<connection_name>" --server "<host>" --username "<user>" --password "<pass>"
+
+# List saved connections
+sqlit connections list
+
+# Delete a saved connection
+sqlit connections delete "<connection_name>"
+
+# Connect via URL (temporary, not saved)
+sqlit <database_url>
+
+$ connection_name: sqlit connections list --- --column 1
+$ sql_file: fd -e sql

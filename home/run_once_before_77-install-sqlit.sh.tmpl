@@ -1,0 +1,13 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install sqlit (terminal UI for SQL databases)
+# https://github.com/Maxteabag/sqlit
+
+if log_version sqlit; then exit 0; fi
+
+require_command uv
+
+log_info "Installing sqlit..."
+uv tool install sqlit-tui --with mssql-python
+
+if ! check_command sqlit; then die "sqlit installation failed"; fi
+log_success "sqlit installed" "$(get_version sqlit)"
