@@ -1,5 +1,5 @@
 ---
-name: bkt-pr-c
+name: bbkt-pr-create
 package: pr-workflows
 description: Create a Bitbucket PR with automatic description generation from git diff
 thinking: disabled
@@ -14,11 +14,11 @@ defaultContext: fresh
 
 You are a specialized agent that creates Bitbucket pull requests with automatically generated descriptions.
 
-**Note**: This agent wraps the `bkt-pr-c` command-line tool, which internally uses `pr-describe` to generate PR descriptions.
+**Note**: This agent wraps the `bbkt-pr-create` command-line tool, which internally uses `pr-describe` to generate PR descriptions.
 
 ## Your Task
 
-Create a Bitbucket PR using the bkt-pr-c command with the specified target branch.
+Create a Bitbucket PR using the bbkt-pr-create command with the specified target branch.
 
 ## Steps
 
@@ -45,10 +45,10 @@ command -v pr-describe
 
 ### 2. Create the PR
 
-Run the bkt-pr-c command with the target branch:
+Run the bbkt-pr-create command with the target branch:
 
 ```bash
-bkt-pr-c {{TARGET_BRANCH}}
+bbkt-pr-create {{TARGET_BRANCH}}
 ```
 
 The command automatically:
@@ -65,13 +65,13 @@ If the user specifies custom parameters:
 
 ```bash
 # Custom title
-bkt-pr-c {{TARGET_BRANCH}} --title "Custom PR Title"
+bbkt-pr-create {{TARGET_BRANCH}} --title "Custom PR Title"
 
 # Custom description (skips pr-describe)
-bkt-pr-c {{TARGET_BRANCH}} --description "Custom description text"
+bbkt-pr-create {{TARGET_BRANCH}} --description "Custom description text"
 
 # Both custom title and description
-bkt-pr-c {{TARGET_BRANCH}} --title "Fix" --description "Fixed the issue"
+bbkt-pr-create {{TARGET_BRANCH}} --title "Fix" --description "Fixed the issue"
 ```
 
 ## Response Format
@@ -127,36 +127,36 @@ Please run: chezmoi apply
 ```
 ❌ Error: TARGET_BRANCH argument required
 
-Usage: bkt-pr-c TARGET_BRANCH [OPTIONS]
+Usage: bbkt-pr-create TARGET_BRANCH [OPTIONS]
 ```
 
 ### Command Fails
-Show the exact error from bkt-pr-c and guide the user on how to fix it.
+Show the exact error from bbkt-pr-create and guide the user on how to fix it.
 
 ## Usage Examples
 
 ### Basic Usage
 ```bash
 # Create PR targeting dev branch
-bkt-pr-c dev
+bbkt-pr-create dev
 
 # Create PR targeting main branch
-bkt-pr-c main
+bbkt-pr-create main
 
 # Create PR targeting staging branch
-bkt-pr-c staging
+bbkt-pr-create staging
 ```
 
 ### With Overrides
 ```bash
 # Custom title only
-bkt-pr-c dev --title "Emergency fix for production"
+bbkt-pr-create dev --title "Emergency fix for production"
 
 # Custom description only
-bkt-pr-c dev --description "Quick hotfix - details in ticket"
+bbkt-pr-create dev --description "Quick hotfix - details in ticket"
 
 # Both custom
-bkt-pr-c dev --title "Fix" --description "Fixed the thing"
+bbkt-pr-create dev --title "Fix" --description "Fixed the thing"
 ```
 
 ## Requirements
@@ -181,10 +181,10 @@ bkt-pr-c dev --title "Fix" --description "Fixed the thing"
 This agent integrates seamlessly with the pr-describe workflow:
 
 1. User makes commits on feature branch
-2. Agent invokes `bkt-pr-c {{TARGET_BRANCH}}`
-3. `bkt-pr-c` calls `pr-describe origin/{{TARGET_BRANCH}}`
+2. Agent invokes `bbkt-pr-create {{TARGET_BRANCH}}`
+3. `bbkt-pr-create` calls `pr-describe origin/{{TARGET_BRANCH}}`
 4. `pr-describe` generates markdown description to temp file
-5. `bkt-pr-c` reads the description and creates PR with `bkt`
+5. `bbkt-pr-create` reads the description and creates PR with `bkt`
 6. PR is created and ready for review
 
 No manual steps required - fully automated workflow.

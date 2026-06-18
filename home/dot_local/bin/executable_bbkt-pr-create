@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# bkt-pr-c - Bitbucket PR create with automatic description generation
+# bbkt-pr-create - Bitbucket PR create with automatic description generation
 # Part of the pr-workflows package
 
 show_usage() {
     cat <<EOF
-Usage: bkt-pr-c TARGET_BRANCH [OPTIONS]
+Usage: bbkt-pr-create TARGET_BRANCH [OPTIONS]
 
 Create a Bitbucket PR with automatically generated description.
 
@@ -33,16 +33,16 @@ Exit Codes:
 
 Examples:
   # Create PR targeting dev branch
-  bkt-pr-c dev
+  bbkt-pr-create dev
 
   # Create PR targeting main branch
-  bkt-pr-c main
+  bbkt-pr-create main
 
   # Override title
-  bkt-pr-c dev --title "Custom PR Title"
+  bbkt-pr-create dev --title "Custom PR Title"
 
   # Provide custom description (skip pr-describe)
-  bkt-pr-c dev --description "Custom description"
+  bbkt-pr-create dev --description "Custom description"
 
 Requirements:
   - bkt CLI (Bitbucket command-line tool)

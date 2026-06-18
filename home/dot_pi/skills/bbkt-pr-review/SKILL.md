@@ -1,5 +1,5 @@
 ---
-name: bkt-pr-review
+name: bbkt-pr-review
 description: "Use when asked to review a PR, ticket, or branch. Executes complete Bitbucket PR review workflow: fetches ticket, analyzes code with reviewer subagent, compares with existing comments, posts inline comments on specific lines, and approves based on findings."
 ---
 

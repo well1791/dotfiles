@@ -1,12 +1,12 @@
 #!/bin/sh
 set -e
 
-# bkt-pr-request-changes - Mark a Bitbucket Cloud PR as "changes requested"
+# bbkt-pr-request - Mark a Bitbucket Cloud PR as "changes requested"
 # Wraps the Bitbucket Cloud REST API request-changes endpoint via bkt api.
 
 show_usage() {
     cat <<EOF
-Usage: bkt-pr-request-changes <PR_NUMBER> [--remove]
+Usage: bbkt-pr-request <PR_NUMBER> [--remove]
 
 Mark a Bitbucket Cloud pull request as "changes requested", or remove
 that status.
@@ -25,10 +25,10 @@ Exit Codes:
 
 Examples:
   # Request changes on PR 42
-  bkt-pr-request-changes 42
+  bbkt-pr-request 42
 
   # Remove the request-changes status
-  bkt-pr-request-changes 42 --remove
+  bbkt-pr-request 42 --remove
 
 Requirements:
   - bkt CLI (Bitbucket command-line tool)
