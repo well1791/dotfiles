@@ -1,0 +1,5 @@
+shortcuts:
+  quit:
+    shortcut: q
+  dependency_graph:
+    shortcut: Ctrl-G
