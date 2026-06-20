@@ -1,0 +1,13 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install hunk (review-first terminal diff viewer)
+# https://www.hunk.dev / https://github.com/modem-dev/hunk
+
+if log_version hunk; then exit 0; fi
+
+require_command bun "bun is required to install hunk (npm package: hunkdiff)"
+
+log_info "Installing hunk..."
+bun install -g hunkdiff
+
+if ! check_command hunk; then die "hunk installation failed"; fi
+log_success "hunk installed" "$(get_version hunk)"

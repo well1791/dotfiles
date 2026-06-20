@@ -23,46 +23,15 @@
   wsErrorHighlight = all
   identHeuristic = on
   colorMoved = default
-  tool = difftastic
-  external = difft
-
-[difftool]
-  prompt = false
-
-[difftool "difftastic"]
-  # See `man git-difftool` for a description of MERGED, LOCAL and REMOTE.
-  cmd = difft "$MERGED" "$LOCAL" "abcdef1" "100644" "$REMOTE" "abcdef2" "100644"
-  # cmd = difft "$LOCAL" "$REMOTE"  
-
-[pager]
-  difftool = true
 
 [core]
-  pager = delta
+  pager = hunk pager
   trustctime = false
   precomposeunicode = false
   untrackedCache = true
   excludesfile = ~/.gitignore_global
   attributesfile = ~/.gitattributes
   fscache = true
-
-[interactive]
-  # `--word-diff-regex='[^[:space:]]'` @see https://github.com/dandavison/delta/discussions/1575 
-  diffFilter = delta --color-only --features=interactive --word-diff-regex='[^[:space:]]'
-
-[delta]
-  dark = true
-  navigate = true
-  features = decorations
-  whitespace-error-style = 22 reverse
-
-[delta "interactive"]
-  keep-plus-minus-markers = false
-
-# [delta "decorations"]
-#   commit-decoration-style = bold yellow box ul
-#   file-style = bold crimson
-#   file-decoration-style = bold crimson box
 
 [init]
   defaultBranch = main

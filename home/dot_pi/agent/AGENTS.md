@@ -239,7 +239,7 @@ Before declaring completion, confirm the change solves the stated problem, relev
 - `sd` → text substitution (`sed` replacement)
 - `bat` → file viewing (`cat` replacement)
 - `eza` → directory listing (`ls` replacement)
-- `delta` → git diff viewing
+- `hunk` → git diff viewing (`hunk diff`, `hunk show`, git pager)
 - `dust` → directory disk usage (`du` replacement)
 - `duf` → filesystem disk usage (`df` replacement)
 

@@ -1,0 +1,30 @@
+% hunk, diff, review, git
+
+# Review working tree changes (interactive)
+hunk diff
+
+# Review working tree with auto-reload
+hunk diff --watch
+
+# Review the latest commit
+hunk show
+
+# Review a specific commit
+hunk show <revision>
+
+# Compare two files directly
+hunk diff <file_a> <file_b>
+
+# Review a patch from stdin
+<command> | hunk patch -
+
+# Use as git pager (one-off)
+git -c core.pager="hunk pager" diff
+
+# Show version
+hunk --version
+
+$ revision: git log --oneline -20 | fzf | awk '{print $1}'
+$ file_a: fd --type f --max-depth 3 | fzf
+$ file_b: fd --type f --max-depth 3 | fzf
+$ command: echo -e "git diff\ngit show\ngit diff --staged" | fzf

@@ -1,7 +1,7 @@
 #!/bin/sh
 # Unified update script for all package managers and tools
 # Updates: system packages, mise, uv, rust, nix, devenv, bun, engram, pi,
-#          vortix, slumber, tealdeer cache, flatpak
+#          hunk, vortix, slumber, tealdeer cache, flatpak
 
 set -e
 
@@ -225,6 +225,14 @@ if command -v pi >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
         print_status "Updating pi coding agent..."
         bun install -g @earendil-works/pi-coding-agent || FAILED=$((FAILED + 1))
     fi
+fi
+
+# ============================================================================
+# 13. hunk (review-first terminal diff viewer, installed via bun)
+# ============================================================================
+if command -v hunk >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
+    print_status "Updating hunk..."
+    bun install -g hunkdiff || FAILED=$((FAILED + 1))
 fi
 
 # ============================================================================

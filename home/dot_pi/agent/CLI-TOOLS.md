@@ -13,7 +13,7 @@ Preferred tools on this system. Use these instead of traditional alternatives.
 | List dirs | `eza` | `ls` |
 | Dir disk usage | `dust` | `du` |
 | FS disk usage | `duf` | `df` |
-| Git diffs | `delta` | raw diff |
+| Git diffs | `hunk` | raw diff |
 | Navigate dirs | `zoxide` | `cd` |
 | Browse files | `yazi` | - |
 | Clipboard copy | `wl-copy` | `xclip` |
@@ -28,7 +28,7 @@ du   → dust
 df   → duf
 l    → eza --all --long
 ll   → eza --all --long --tree --level=2
-rgd  → rg --json -C 2 % | delta
+rgd  → rg --json -C 2 % | hunk patch -
 y    → yazi (with cd-on-exit)
 ```
 
@@ -140,7 +140,7 @@ rg -C 2 pattern                            # 2 lines context
 rg -F "exact string"                       # literal (no regex)
 rg --type rust pattern                     # filter by filetype
 rg pattern --glob '!*.min.js'              # exclude glob
-rg --json pattern | delta                  # pipe to delta
+rg --json pattern | hunk patch -           # pipe to hunk for review
 ```
 
 ## bat
@@ -190,13 +190,15 @@ duf --json                                 # JSON output
 duf --all                                  # include pseudo/special
 ```
 
-## delta
+## hunk
 
 ```sh
-git diff | delta                           # view git diff
-git log -p | delta                         # log with diffs
-diff f1 f2 | delta                         # compare files
-git show HASH | delta                      # show commit
+hunk diff                                  # review working tree changes
+hunk diff --watch                          # auto-reload on changes
+hunk show                                  # review latest commit
+hunk show HEAD~1                           # review earlier commit
+hunk diff file1 file2                      # compare two files
+git diff | hunk patch -                    # review patch from stdin
 ```
 
 ## zoxide
@@ -234,7 +236,7 @@ wl-copy --clear                            # clear clipboard
 fd -e py | xargs sd 'old' 'new'            # bulk rename across filetype
 rg -l 'pattern' | xargs sd 'old' 'new'    # find-then-replace
 fd '\.md$' | xargs bat                     # preview matched files
-rg --json -C 2 pattern | delta             # search with diff view
+rg --json -C 2 pattern | hunk patch -    # search with diff view
 fd pattern | wl-copy                       # copy paths to clipboard
 git diff | wl-copy                         # copy diff to clipboard
 ```

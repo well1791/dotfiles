@@ -20,4 +20,4 @@ abbr -a -- cmd command
 # |-- Search word in file
 # | usage:
 # |        rgd text-to-search path/to/file
-abbr -a rgd --set-cursor 'rg --json -C 2 % | delta'
+abbr -a rgd --set-cursor 'rg --json -C 2 % | hunk patch -'

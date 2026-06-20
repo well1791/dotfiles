@@ -39,8 +39,8 @@ rg -v '<pattern>'
 # Search multiline
 rg -U '<pattern>'
 
-# Output as JSON (pipe to delta for colored diff)
-rg --json -C 2 '<pattern>' | delta
+# Output as JSON (pipe to hunk for interactive review)
+rg --json -C 2 '<pattern>' | hunk patch -
 
 $ type: echo -e "ts\njs\nrust\npy\ngo\nmd\nyaml\ntoml\nhtml\ncss\nfish\nsh" | fzf
 $ context_lines: echo -e "2\n3\n5\n10" | fzf

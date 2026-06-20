@@ -145,6 +145,7 @@ $ variable: <command that produces selectable options> | fzf
 | vortix | openvpn | VPN TUI that manages tunnels via system openvpn binary |
 | sqlit | uv | Installed via uv tool with mssql-python driver |
 | lazyjira | — | Standalone Go binary; uses Jira REST API directly |
+| hunk | bun | Review-first terminal diff viewer, installed via bun global (npm: hunkdiff) |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 

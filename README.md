@@ -157,7 +157,16 @@ Installed via system package manager (pacman/apt/dnf):
 - Config: `~/.config/slumber/config.yml`
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
-### 19. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
+### 19. **[hunk](https://github.com/modem-dev/hunk)** - Review-first terminal diff viewer
+- Multi-file review stream with sidebar navigation
+- Inline AI/agent annotations beside the code
+- Split, stack, and responsive auto layouts
+- Watch mode for auto-reloading as the working tree changes
+- Installed via bun global: `bun install -g hunkdiff`
+- Config: `~/.config/hunk/config.toml`
+- Update: `bun install -g hunkdiff` (or `update-all`)
+
+### 20. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
 - Browse and execute cheatsheets from the command line
 - **Dependency:** Requires `fzf` (system package) as its interactive finder backend
   - navi uses fzf as a unix pipe filter (stdin → fuzzy select → stdout)
@@ -168,7 +177,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Fish widget: Ctrl+G
 - Update: `paru -Syu navi` or `yay -Syu navi`
 
-### 20. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
+### 21. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
 - Enables `.local` hostname resolution (e.g., `lenovo.local` from other devices)
 - Packages: `avahi`, `nss-mdns`
 - Config: `/etc/avahi/avahi-daemon.conf`
@@ -187,6 +196,7 @@ update-all
 
 This single command updates:
 - ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, slumber, vortix, openvpn, lazyjira-bin)
+- ✅ hunk (review-first diff viewer, via bun)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager) and uv tools (sqlit, etc.)
 - ✅ Rust (rustup update)
