@@ -1,0 +1,56 @@
+% jj, jujutsu, version-control
+
+# Show repository status
+jj status
+
+# Show diff of working copy
+jj diff
+
+# Create a new empty change
+jj new
+
+# Describe (set commit message) for current change
+jj describe -m "<message>"
+
+# Show operation log (undo history)
+jj op log
+
+# Undo last operation
+jj op undo
+
+# Show commit log (default graph)
+jj log
+
+# Create a bookmark (branch) at current change
+jj bookmark create <name>
+
+# Move bookmark to current change
+jj bookmark set <name>
+
+# Push bookmarks to remote
+jj git push
+
+# Fetch from remote
+jj git fetch
+
+# Squash current change into parent
+jj squash
+
+# Split current change interactively
+jj split
+
+# Edit an earlier change (move working copy to it)
+jj edit <revision>
+
+# Rebase current change onto another
+jj rebase -d <destination>
+
+# Show changes in a specific revision
+jj show <revision>
+
+# Abandon (discard) a change
+jj abandon <revision>
+
+$ name: jj bookmark list 2>/dev/null | awk '{print $1}' | fzf
+$ revision: jj log --no-graph -T 'change_id.shortest() ++ " " ++ description.first_line() ++ "\n"' -r 'all()' 2>/dev/null | fzf | awk '{print $1}'
+$ destination: jj log --no-graph -T 'change_id.shortest() ++ " " ++ description.first_line() ++ "\n"' -r 'all()' 2>/dev/null | fzf | awk '{print $1}'

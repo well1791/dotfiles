@@ -94,6 +94,7 @@ Installed via system package manager (pacman/apt/dnf):
 - **[tealdeer](https://tealdeer-rs.github.io/tealdeer/)** - Fast tldr client in Rust (`tldr`)
 - **[pass](https://www.passwordstore.org/)** - Standard Unix password manager (GPG-encrypted, git-tracked)
 - **[gitu](https://github.com/altsem/gitu)** - TUI Git client inspired by Magit
+- **[jujutsu](https://jj-vcs.dev)** - Git-compatible VCS that is both simple and powerful (`jj`)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
 ### 12. **[direnv](https://direnv.net)** - Auto-load environment on cd
@@ -195,7 +196,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, slumber, vortix, openvpn, lazyjira-bin)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager) and uv tools (sqlit, etc.)
