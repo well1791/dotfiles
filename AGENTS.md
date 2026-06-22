@@ -146,6 +146,10 @@ $ variable: <command that produces selectable options> | fzf
 | sqlit | uv | Installed via uv tool with mssql-python driver |
 | lazyjira | — | Standalone Go binary; uses Jira REST API directly |
 | hunk | bun | Review-first terminal diff viewer, installed via bun global (npm: hunkdiff) |
+| lean-ctx | — | Context intelligence layer for AI agents; self-updates via `lean-ctx update` |
+| pi-lean-ctx | lean-ctx, bun | Pi extension that routes built-in tools through lean-ctx CLI |
+| python-lsp-server | uv | Python LSP; installed via `uv tool install python-lsp-server` |
+| gopls | mise, go | Go LSP; installed via `mise use -g go:golang.org/x/tools/gopls@latest` |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 
@@ -201,3 +205,16 @@ rg -n '/home/well[^a-z]' --glob '!.git' --glob '!*.md'
 ```
 
 Both commands must return empty. If not, convert the file to a `.tmpl` and replace literals with template variables.
+
+## lean-ctx Integration
+
+| Tool | Depends On | Reason |
+|---|---|---|
+| lean-ctx | — | Standalone Rust binary; self-updates via `lean-ctx update` |
+| pi-lean-ctx | lean-ctx, bun | Pi extension installed via `pi install npm:pi-lean-ctx` |
+
+<!-- lean-ctx -->
+Prefer lean-ctx MCP tools over native equivalents for token savings:
+`ctx_read` > Read/cat, `ctx_search` > Grep/rg, `ctx_shell` > bash, `ctx_tree` > ls/find.
+Native Edit/Write/Glob stay as-is; use `ctx_edit` only when Edit needs an unavailable Read.
+<!-- /lean-ctx -->

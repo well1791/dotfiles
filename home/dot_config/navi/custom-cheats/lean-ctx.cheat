@@ -1,0 +1,31 @@
+% lean-ctx, context, tokens, ai, mcp
+
+# Check installation health
+lean-ctx doctor
+
+# Show token savings dashboard
+lean-ctx gain
+
+# Connect all AI tools (zero questions)
+lean-ctx onboard
+
+# Configure a specific AI agent
+lean-ctx init --agent <agent> --mode <mode>
+
+# Self-update to latest version
+lean-ctx update
+
+# Show compression stats for current session
+lean-ctx stats
+
+# Verify session cache is working
+lean-ctx verify-cache
+
+# Temporarily disable compression
+lean-ctx-off
+
+# Re-enable compression
+lean-ctx-on
+
+$ agent: echo "pi cursor claude copilot codex gemini zed windsurf vscode aider" | tr ' ' '\n'
+$ mode: echo "mcp hybrid" | tr ' ' '\n'

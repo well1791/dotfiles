@@ -11,5 +11,4 @@
     partner_email = {{ $partnerEmail | quote }}
 
 [diff]
-    command = "difft"
-    args = ["{{ .Destination }}", "{{ .Target }}"]
+    pager = "hunk pager --pager"

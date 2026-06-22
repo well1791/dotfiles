@@ -55,12 +55,7 @@ During the initial setup, the following tools are automatically installed:
 - Installed to `~/.bun/bin/bun`
 - Update: `bun upgrade`
 
-### 8. **[engram](https://github.com/Gentleman-Programming/engram)** - AI task and workflow manager
-- CLI tool for managing AI-powered tasks and workflows
-- Installed to `~/.local/bin/engram` (via GitHub binary)
-- Update: Run installation script again or use `update-all`
-
-### 9. **[atuin](https://atuin.sh/)** - Magical shell history
+### 8. **[atuin](https://atuin.sh/)** - Magical shell history
 - Replaces default shell history with searchable, syncable database
 - Installed via system package manager (pacman/apt/dnf) or shell script
 - Fish shell integration: `atuin init fish | source`
@@ -167,7 +162,30 @@ Installed via system package manager (pacman/apt/dnf):
 - Config: `~/.config/hunk/config.toml`
 - Update: `bun install -g hunkdiff` (or `update-all`)
 
-### 20. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
+### 20. **[lean-ctx](https://github.com/yvgude/lean-ctx)** - Context intelligence layer for AI agents
+- Reduces LLM token consumption by 60-90% via shell hook compression and MCP server
+- 77 MCP tools, 95+ shell compression patterns, persistent session cache
+- Pi integration via `pi-lean-ctx` package (embedded MCP bridge)
+- Installed via AUR (`lean-ctx-bin`) or `curl -fsSL https://leanctx.com/install.sh | sh`
+- Config: `~/.config/lean-ctx/config.toml`
+- Fish hook: `lean-ctx init fish | source`
+- Update: `lean-ctx update` (or `update-all`)
+
+### 21. **[python-lsp-server](https://github.com/python-lsp/python-lsp-server)** - Python Language Server
+- LSP implementation for Python editors (pylsp)
+- Supports completions, diagnostics, formatting, refactoring
+- Installed globally via `uv tool install python-lsp-server`
+- Binary: `pylsp`
+- Update: `uv tool upgrade python-lsp-server` (or `update-all`)
+
+### 22. **[gopls](https://pkg.go.dev/golang.org/x/tools/gopls)** - Go Language Server
+- Official LSP implementation for Go
+- Supports completions, diagnostics, formatting, refactoring, code navigation
+- Installed globally via mise: `mise use -g go:golang.org/x/tools/gopls@latest`
+- Binary: `gopls`
+- Update: `mise upgrade go:golang.org/x/tools/gopls` (or `update-all`)
+
+### 23. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
 - Browse and execute cheatsheets from the command line
 - **Dependency:** Requires `fzf` (system package) as its interactive finder backend
   - navi uses fzf as a unix pipe filter (stdin → fuzzy select → stdout)
@@ -178,7 +196,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Fish widget: Ctrl+G
 - Update: `paru -Syu navi` or `yay -Syu navi`
 
-### 21. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
+### 24. **[Avahi](https://avahi.org/)** - mDNS/DNS-SD for local network discovery
 - Enables `.local` hostname resolution (e.g., `lenovo.local` from other devices)
 - Packages: `avahi`, `nss-mdns`
 - Config: `/etc/avahi/avahi-daemon.conf`
@@ -198,13 +216,13 @@ update-all
 This single command updates:
 - ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin)
 - ✅ hunk (review-first diff viewer, via bun)
+- ✅ lean-ctx (context intelligence, self-update)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager) and uv tools (sqlit, etc.)
 - ✅ Rust (rustup update)
 - ✅ Nix channels, packages, and flake installs
 - ✅ devenv
 - ✅ Bun (if installed)
-- ✅ engram (if installed)
 - ✅ atuin (shell history)
 - ✅ pi coding agent (if installed via bun)
 

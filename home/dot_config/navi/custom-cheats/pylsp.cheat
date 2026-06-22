@@ -1,0 +1,19 @@
+% pylsp, python, lsp, language-server
+
+# Start python-lsp-server
+pylsp
+
+# Start with verbose logging
+pylsp -v
+
+# Start with specific TCP port
+pylsp --tcp --port <port>
+
+# Check installed pylsp plugins
+pylsp --help
+
+# Install pylsp plugin (e.g., ruff, mypy)
+uv tool install python-lsp-server[<plugin>]
+
+$ port: echo -e "2087\n8080\n9090" | fzf
+$ plugin: echo -e "ruff\nmypy\nblack\npylsp-rope" | fzf

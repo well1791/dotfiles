@@ -1,0 +1,18 @@
+% gopls, go, lsp, language-server
+
+# Start gopls language server
+gopls serve
+
+# Check gopls version
+gopls version
+
+# List known packages
+gopls symbols <file>
+
+# Check workspace for issues
+gopls check <file>
+
+# Start with verbose logging
+gopls -v serve
+
+$ file: fd -e go | fzf

@@ -1,0 +1,19 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install python-lsp-server (Python Language Server Protocol implementation)
+# https://github.com/python-lsp/python-lsp-server
+
+# Skip if already installed
+if log_version pylsp; then exit 0; fi
+
+log_info "Installing python-lsp-server..."
+
+require_command uv "uv is required to install python-lsp-server"
+
+if is_dry_run; then
+    log_info "[DRY RUN] Would run: uv tool install python-lsp-server"
+else
+    uv tool install python-lsp-server
+fi
+
+if ! check_command pylsp; then die "python-lsp-server installation failed"; fi
+log_success "python-lsp-server installed" "$(get_version pylsp)"

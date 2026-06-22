@@ -55,6 +55,15 @@
     "dark": "Rosé Pine Moon"
   },
 
+  // CONTEXT SERVERS
+  "context_servers": {
+    "lean-ctx": {
+      "command": "/home/well/.local/bin/lean-ctx",
+      "args": [],
+      "env": {}
+    }
+  },
+
   // MUST
   "autosave": "on_focus_change",
   "soft_wrap": "none",

@@ -1,0 +1,34 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install gopls (Go Language Server Protocol implementation)
+# https://pkg.go.dev/golang.org/x/tools/gopls
+
+# Skip if already installed
+if log_version gopls; then exit 0; fi
+
+log_info "Installing gopls..."
+
+# Prefer mise (already installed in this setup)
+if check_command mise; then
+    if is_dry_run; then
+        log_info "[DRY RUN] Would run: mise use -g go:golang.org/x/tools/gopls@latest"
+    else
+        mise use -g go:golang.org/x/tools/gopls@latest
+    fi
+else
+    # Fallback: go install (requires go in PATH)
+    require_command go "go is required to install gopls"
+    if is_dry_run; then
+        log_info "[DRY RUN] Would run: go install golang.org/x/tools/gopls@latest"
+    else
+        go install golang.org/x/tools/gopls@latest
+    fi
+fi
+
+# mise shims may not be in PATH during chezmoi run; check shim directly
+if check_command gopls; then
+    log_success "gopls installed" "$(get_version gopls)"
+elif [ -x "$HOME/.local/share/mise/shims/gopls" ]; then
+    log_success "gopls installed (via mise shim)" "$($HOME/.local/share/mise/shims/gopls version 2>&1 | head -1)"
+else
+    die "gopls installation failed"
+fi

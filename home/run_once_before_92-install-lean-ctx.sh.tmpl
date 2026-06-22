@@ -1,0 +1,28 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install lean-ctx (context intelligence layer for AI agents)
+# https://github.com/yvgude/lean-ctx
+
+# Skip if already installed
+if log_version lean-ctx; then
+    exit 0
+fi
+
+log_info "Installing lean-ctx..."
+
+# Prefer AUR package on Arch, fall back to curl installer
+if check_command paru; then
+    paru -S --noconfirm lean-ctx-bin
+elif check_command yay; then
+    yay -S --noconfirm lean-ctx-bin
+else
+    # Universal installer — installs to ~/.local/bin
+    curl -fsSL https://leanctx.com/install.sh | sh
+fi
+
+if ! check_command lean-ctx; then
+    die "lean-ctx installation failed"
+fi
+
+log_success "lean-ctx installed" "$(get_version lean-ctx)"
+log_info "  Run 'lean-ctx onboard' to connect AI tools"
+log_info "  Run 'lean-ctx init --agent pi --mode hybrid' for Pi integration"
