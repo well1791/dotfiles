@@ -15,7 +15,8 @@
     "npm:pi-smart-fetch",
     "npm:pi-smart-web-search",
     "npm:pi-mcp-extension",
-    "npm:pi-lean-ctx"
+    "npm:pi-lean-ctx",
+    "git:github.com/obra/superpowers"
   ],
   "npmCommand": [
     "bun"
