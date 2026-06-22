@@ -33,8 +33,8 @@ fi
 old_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SOURCE_SETTINGS" | head -1 | sd '.*: *"([^"]*)"' '$1')
 
 # --- Run pi update ---
-info "Updating pi..."
-pi update
+info "Updating pi and all packages/extensions..."
+pi update --all
 
 # --- Get new version from rendered settings ---
 if [ ! -f "$SETTINGS" ]; then
@@ -72,9 +72,9 @@ if git -C "$GIT_ROOT" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
 fi
 
 if [ "$old_version" = "$new_version" ]; then
-    commit_msg="chore(pi): sync settings changes"
+    commit_msg="chore(pi): sync settings and package changes"
 else
-    commit_msg="chore(pi): update pi ${old_version} -> ${new_version}"
+    commit_msg="chore(pi): update pi ${old_version} -> ${new_version} (with packages)"
 fi
 
 git -C "$GIT_ROOT" commit -m "$commit_msg" -- "$RELATIVE_SETTINGS"
