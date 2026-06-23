@@ -1,0 +1,20 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install rmux (https://rmux.io)
+# A high-performance session manager and multiplexer written in Rust.
+
+if log_version rmux; then exit 0; fi
+
+log_info "Installing rmux..."
+require_command cargo "cargo (rust toolchain) is required to install rmux"
+
+if ! cargo install rmux; then
+    die "rmux installation failed"
+fi
+
+if ! cargo install rmux-sdk; then
+    die "rmux-sdk installation failed"
+fi
+
+if ! check_command rmux; then die "rmux installation failed"; fi
+log_success "rmux" "$(get_version rmux)"
+log_success "rmux-sdk" "$(cargo --list | grep rmux-sdk || echo 'installed')"

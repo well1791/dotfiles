@@ -203,6 +203,12 @@ Installed via system package manager (pacman/apt/dnf):
 - Browse local services: `avahi-browse -at`
 - Update: `sudo pacman -Syu` (system package)
 
+### 25. **[rmux](https://rmux.io)** - High-performance session manager
+- Session manager and multiplexer written in Rust
+- Includes Rust SDK (`rmux-sdk`) for programmatic session control
+- Installed via cargo: `cargo install rmux rmux-sdk`
+- Update: `cargo install rmux rmux-sdk`
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -219,7 +225,7 @@ This single command updates:
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
 - ✅ uv (Python package manager) and uv tools (sqlit, etc.)
-- ✅ Rust (rustup update)
+- ✅ Rust (rustup update) and cargo tools (rmux, rmux-sdk)
 - ✅ Nix channels, packages, and flake installs
 - ✅ devenv
 - ✅ Bun (if installed)

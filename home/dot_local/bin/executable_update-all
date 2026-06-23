@@ -2,7 +2,7 @@
 # Unified update script for all package managers and tools
 # Updates: system packages, mise, uv, rust, nix, devenv, bun, pi,
 #          hunk, vortix, slumber, lean-ctx, tealdeer cache, flatpak,
-#          python-lsp-server, gopls
+#          python-lsp-server, gopls, rmux
 
 set -e
 
@@ -109,6 +109,14 @@ if command -v rustup >/dev/null 2>&1; then
     rustup update || FAILED=$((FAILED + 1))
 else
     print_warning "rustup not found, skipping"
+fi
+
+# ============================================================================
+# 4b. Cargo tools (rmux)
+# ============================================================================
+if command -v cargo >/dev/null 2>&1 && command -v rmux >/dev/null 2>&1; then
+    print_status "Updating rmux and rmux-sdk..."
+    cargo install rmux rmux-sdk || FAILED=$((FAILED + 1))
 fi
 
 # ============================================================================

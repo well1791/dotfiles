@@ -1,0 +1,18 @@
+% rmux, session, multiplexer, terminal
+
+# Start a new named session
+rmux new <session_name>
+
+# List all sessions
+rmux ls
+
+# Attach to an existing session
+rmux attach <session>
+
+# Detach from current session
+rmux detach
+
+# Kill a session
+rmux kill <session>
+
+$ session: rmux ls 2>/dev/null | awk '{print $1}'

@@ -148,6 +148,7 @@ $ variable: <command that produces selectable options> | fzf
 | hunk | bun | Review-first terminal diff viewer, installed via bun global (npm: hunkdiff) |
 | lean-ctx | — | Context intelligence layer for AI agents; self-updates via `lean-ctx update` |
 | pi-lean-ctx | lean-ctx, bun | Pi extension that routes built-in tools through lean-ctx CLI |
+| rmux | rust (cargo) | Installed via cargo install |
 | python-lsp-server | uv | Python LSP; installed via `uv tool install python-lsp-server` |
 | gopls | mise, go | Go LSP; installed via `mise use -g go:golang.org/x/tools/gopls@latest` |
 
