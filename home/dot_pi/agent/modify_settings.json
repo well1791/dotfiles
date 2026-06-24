@@ -22,7 +22,8 @@ SOURCE_JSON='{
     "npm:pi-smart-web-search",
     "npm:pi-mcp-extension",
     "npm:pi-lean-ctx",
-    "git:github.com/obra/superpowers"
+    "git:github.com/obra/superpowers",
+    "npm:@pi-stef/atlassian"
   ],
   "npmCommand": [
     "bun"
