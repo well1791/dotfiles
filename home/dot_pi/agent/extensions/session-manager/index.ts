@@ -17,6 +17,7 @@ interface FlatItem {
   depth: number;
   isLast: boolean;
   childCount: number;
+  ancestors: boolean[]; // ancestors[i] = true if ancestor at depth i isLast (no continuation line needed)
 }
 
 type Scope = "project" | "all";
@@ -41,9 +42,22 @@ function buildTree(sessions: SessionInfo[]): FlatItem[] {
     }
   }
 
+  // Get the most recent modification time among a session and all its descendants
+  function newestInGroup(path: string): number {
+    const s = byPath.get(path);
+    let newest = s ? s.modified.getTime() : 0;
+    const kids = childrenOf.get(path) ?? [];
+    for (const kid of kids) {
+      newest = Math.max(newest, newestInGroup(kid.path));
+    }
+    return newest;
+  }
+
+  // Sort roots by the most recent activity in their entire group
+  roots.sort((a, b) => newestInGroup(b.path) - newestInGroup(a.path));
+
   const sortByRecent = (a: SessionInfo, b: SessionInfo) =>
     b.modified.getTime() - a.modified.getTime();
-  roots.sort(sortByRecent);
 
   const result: FlatItem[] = [];
 
@@ -52,21 +66,23 @@ function buildTree(sessions: SessionInfo[]): FlatItem[] {
     return kids.reduce((sum, c) => sum + 1 + countDescendants(c.path), 0);
   }
 
-  function walk(s: SessionInfo, depth: number, isLast: boolean) {
+  function walk(s: SessionInfo, depth: number, isLast: boolean, ancestors: boolean[]) {
     result.push({
       session: s,
       depth,
       isLast,
       childCount: countDescendants(s.path),
+      ancestors,
     });
     const kids = (childrenOf.get(s.path) ?? []).sort(sortByRecent);
+    const nextAncestors = [...ancestors, isLast];
     for (let i = 0; i < kids.length; i++) {
-      walk(kids[i], depth + 1, i === kids.length - 1);
+      walk(kids[i], depth + 1, i === kids.length - 1, nextAncestors);
     }
   }
 
   for (let i = 0; i < roots.length; i++) {
-    walk(roots[i], 0, i === roots.length - 1);
+    walk(roots[i], 0, i === roots.length - 1, []);
   }
   return result;
 }
@@ -195,6 +211,14 @@ export default function (pi: ExtensionAPI) {
 
       await loadSessions();
 
+      // Focus on the active session by default
+      if (currentSessionFile) {
+        const activeIdx = filteredItems.findIndex(
+          (item) => item.session.path === currentSessionFile,
+        );
+        if (activeIdx >= 0) cursorIndex = activeIdx;
+      }
+
       const result = await ctx.ui.custom<
         | { action: "resume"; path: string }
         | { action: "create"; name: string }
@@ -226,10 +250,13 @@ export default function (pi: ExtensionAPI) {
           const isSubagentWorker =
             hasName && item.session.name!.startsWith("subagent-worker-");
 
-          // Tree prefix
+          // Tree prefix with recursive continuation lines (indented 2 spaces from parent)
           let prefix = "";
           if (item.depth > 0) {
-            prefix = "  ".repeat(item.depth) + (item.isLast ? "└─ " : "├─ ");
+            for (let d = 0; d < item.depth - 1; d++) {
+              prefix += item.ancestors[d + 1] ? "     " : "  │  ";
+            }
+            prefix += item.isLast ? "  └─ " : "  ├─ ";
           }
 
           // Markers: ✕ for delete-selected, ◆ for active session, ○ for outside cwd
@@ -238,7 +265,7 @@ export default function (pi: ExtensionAPI) {
             ? "✕ "
             : isCurrent
               ? "◆ "
-              : isOutside && item.depth === 0
+              : isOutside
                 ? "○ "
                 : "  ";
 
@@ -257,7 +284,7 @@ export default function (pi: ExtensionAPI) {
 
           // Short path for sessions outside cwd (last 2 segments)
           const shortPath =
-            isOutside && item.session.cwd && item.depth === 0
+            isOutside && item.session.cwd
               ? item.session.cwd.split("/").slice(-2).join("/")
               : "";
 
