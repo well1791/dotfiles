@@ -250,24 +250,35 @@ export default function (pi: ExtensionAPI) {
           const isSubagentWorker =
             hasName && item.session.name!.startsWith("subagent-worker-");
 
-          // Tree prefix with recursive continuation lines (indented 2 spaces from parent)
+          // Tree prefix — depth 1 indented 2 spaces from root, deeper levels standard 3-char
           let prefix = "";
           if (item.depth > 0) {
-            for (let d = 0; d < item.depth - 1; d++) {
-              prefix += item.ancestors[d + 1] ? "     " : "  │  ";
+            // First ancestor (depth 0→1) uses 5-char wide slot (2-space indent + 3-char connector)
+            prefix += item.ancestors[1] ? "     " : "  │  ";
+            // Remaining ancestors use standard 3-char slots
+            for (let d = 1; d < item.depth - 1; d++) {
+              prefix += item.ancestors[d + 1] ? "   " : "│  ";
             }
-            prefix += item.isLast ? "  └─ " : "  ├─ ";
+            // Final connector
+            if (item.depth === 1) {
+              prefix = item.isLast ? "  └─ " : "  ├─ ";
+            } else {
+              prefix += item.isLast ? "└─ " : "├─ ";
+            }
           }
 
-          // Markers: ✕ for delete-selected, ◆ for active session, ○ for outside cwd
+          // Markers: ✕ for delete-selected, ◆ for active session, ● for in-cwd, ○ for outside cwd
           const isOutside = item.session.cwd && item.session.cwd !== ctx.cwd;
+          const isInCwd = item.session.cwd && item.session.cwd === ctx.cwd;
           const marker = isSelected
             ? "✕ "
             : isCurrent
               ? "◆ "
-              : isOutside
+              : scope === "all" && isOutside
                 ? "○ "
-                : "  ";
+                : scope === "all" && isInCwd
+                  ? "● "
+                  : "  ";
 
           // Name
           const name =
@@ -282,9 +293,9 @@ export default function (pi: ExtensionAPI) {
           // Time
           const time = relativeTime(item.session.modified);
 
-          // Short path for sessions outside cwd (last 2 segments)
+          // Short path (last 2 segments) — shown for all sessions in "all" scope
           const shortPath =
-            isOutside && item.session.cwd
+            scope === "all" && item.session.cwd
               ? item.session.cwd.split("/").slice(-2).join("/")
               : "";
 
