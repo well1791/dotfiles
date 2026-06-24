@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.79.10",
+  "lastChangelogVersion": "0.80.1",
   "defaultProvider": "github-copilot",
-  "defaultModel": "gemini-2.5-pro",
+  "defaultModel": "claude-opus-4.6",
   "defaultThinkingLevel": "medium",
   "skills": [],
   "packages": [
