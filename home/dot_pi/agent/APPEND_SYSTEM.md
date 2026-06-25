@@ -121,6 +121,20 @@ Adapt response depth to task complexity without being asked:
 
 Never pad short answers to seem more thorough. A correct one-liner beats a padded paragraph.
 
+## Serena MCP (Semantic Code Tools)
+
+Serena is available via MCP and provides LSP-powered semantic operations. On first use in a session, call `activate_project` with the current working directory before using other Serena tools. After activation, prefer Serena's semantic tools over text-based approaches for:
+
+- **Renaming** symbols across files → `rename_symbol` (not search-and-replace)
+- **Finding references** to a symbol → `find_referencing_symbols` (not grep)
+- **Editing function/class bodies** → `replace_symbol_body` (not oldText matching)
+- **Inserting code relative to symbols** → `insert_before_symbol` / `insert_after_symbol`
+- **Deleting symbols cleanly** → `safe_delete_symbol` (handles cascading unused refs)
+- **Getting file structure** → `get_symbols_overview` (complements `ctx_read mode=map`)
+- **Type errors/diagnostics** → `get_diagnostics_for_file`
+
+Do NOT use Serena for: file reading, pattern search, text replacement, shell commands, or memory — lean-ctx and pi handle those.
+
 ### Communication Standards
 
 - **Technical jargon first:** Use industry-standard terminology without automatic simplification. Assume the user operates at a professional level.

@@ -209,6 +209,15 @@ Installed via system package manager (pacman/apt/dnf):
 - Installed via cargo: `cargo install rmux rmux-sdk`
 - Update: `cargo install rmux rmux-sdk`
 
+### 26. **[serena](https://github.com/oraios/serena)** - Semantic code retrieval and editing via LSP
+- MCP server providing IDE-grade symbol operations: find, rename, refactor, diagnostics
+- Supports 40+ languages via language server protocol
+- Installed via `uv tool install -p 3.13 serena-agent`
+- Update: `uv tool upgrade serena-agent`
+- Config: `~/.serena/serena_config.yml`
+- Pi context: `~/.serena/contexts/pi.yml` (semantic tools only, overlapping tools disabled)
+- Connected to pi via MCP (`~/.pi/agent/mcp.json`)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -224,7 +233,7 @@ This single command updates:
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
-- ✅ uv (Python package manager) and uv tools (sqlit, etc.)
+- ✅ uv (Python package manager) and uv tools (sqlit, serena, etc.)
 - ✅ Rust (rustup update) and cargo tools (rmux, rmux-sdk)
 - ✅ Nix channels, packages, and flake installs
 - ✅ devenv

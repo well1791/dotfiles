@@ -2,7 +2,7 @@
 # Unified update script for all package managers and tools
 # Updates: system packages, mise, uv, rust, nix, devenv, bun, pi,
 #          hunk, vortix, slumber, lean-ctx, tealdeer cache, flatpak,
-#          python-lsp-server, gopls, rmux
+#          python-lsp-server, gopls, rmux, serena
 
 set -e
 
@@ -95,7 +95,7 @@ fi
 if command -v uv >/dev/null 2>&1; then
     print_status "Updating uv..."
     uv self update || FAILED=$((FAILED + 1))
-    print_status "Updating uv tools (sqlit, etc.)..."
+    print_status "Updating uv tools (sqlit, serena, etc.)..."
     uv tool upgrade --all || FAILED=$((FAILED + 1))
 else
     print_warning "uv not found, skipping"

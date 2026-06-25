@@ -1,0 +1,13 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install serena (semantic code retrieval and editing via LSP — MCP server)
+# https://github.com/oraios/serena
+
+if log_version serena; then exit 0; fi
+
+require_command uv
+
+log_info "Installing serena..."
+uv tool install -p 3.13 serena-agent
+
+if ! check_command serena; then die "serena installation failed"; fi
+log_success "serena installed" "$(get_version serena)"

@@ -1,0 +1,31 @@
+% serena, mcp, lsp, code
+
+# Initialize serena (creates config, verifies setup)
+serena init
+
+# Start MCP server with a specific context and project
+serena start-mcp-server --context=<context> --project <project_path>
+
+# Start MCP server using current directory as project
+serena start-mcp-server --context=<context> --project-from-cwd
+
+# List available contexts
+serena context list
+
+# Create a custom context from an internal one
+serena context create --name <name> --from-internal <base_context>
+
+# Edit a custom context
+serena context edit <context_name>
+
+# List available modes
+serena mode list
+
+# Edit global configuration
+serena config edit
+
+# Show serena version
+serena --version
+
+$ context: echo "pi ide claude-code codex agent desktop-app" | tr ' ' '\n'
+$ base_context: echo "ide claude-code codex agent desktop-app" | tr ' ' '\n'

@@ -1,0 +1,36 @@
+description: Pi coding agent context — semantic tools only, file/search/shell/memory handled by pi + lean-ctx
+prompt: |
+  You are running inside Pi, a terminal coding agent with lean-ctx for token-efficient code reading,
+  searching, and editing. Pi handles all file I/O, shell commands, regex search, and memory.
+
+  Use Serena's tools exclusively for LSP-powered semantic operations:
+  symbol overview, find symbol, find references, rename, replace symbol body,
+  insert before/after symbol, safe delete, and diagnostics.
+
+  Do NOT use Serena for pattern search or text replacement — Pi's built-in tools handle those better.
+
+excluded_tools:
+  # Basic file ops — pi has read/write/edit/bash + lean-ctx
+  - create_text_file
+  - read_file
+  - execute_shell_command
+  - find_file
+  - list_dir
+  # Pattern search/replace — lean-ctx ctx_search/ctx_grep/ctx_edit cover these
+  - search_for_pattern
+  - replace_content
+  # Memory — pi-hermes-memory + ctx_knowledge handle persistence
+  - check_onboarding_performed
+  - onboarding
+  - list_memories
+  - read_memory
+  - write_memory
+  - delete_memory
+  - rename_memory
+  - edit_memory
+  # Dashboard — not needed in terminal agent
+  - open_dashboard
+
+tool_description_overrides: {}
+
+single_project: true

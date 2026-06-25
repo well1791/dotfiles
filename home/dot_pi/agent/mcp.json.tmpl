@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "serena": {
+      "command": "{{ .chezmoi.homeDir }}/.local/bin/serena",
+      "args": [
+        "start-mcp-server",
+        "--context=pi",
+        "--project-from-cwd"
+      ]
+    }
+  }
+}
