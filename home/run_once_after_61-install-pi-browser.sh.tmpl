@@ -1,0 +1,49 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install pi-browser extension (Playwright-backed browser automation for pi)
+# https://github.com/larsderidder/pi-browser
+
+PI_BROWSER_DIR="{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-browser"
+
+# Skip if already installed
+if [ -d "$PI_BROWSER_DIR/.git" ]; then
+    log_success "pi-browser already installed" "$PI_BROWSER_DIR"
+    exit 0
+fi
+
+# Requires pi and npm
+if ! check_command pi; then
+    log_warn "pi not found, skipping pi-browser installation"
+    exit 0
+fi
+
+if ! check_command npm; then
+    log_warn "npm not found, skipping pi-browser installation"
+    exit 0
+fi
+
+log_info "Installing pi-browser extension..."
+
+if is_dry_run; then
+    log_info "[DRY RUN] Would clone pi-browser and install deps"
+    exit 0
+fi
+
+# Clone the extension
+mkdir -p "$(dirname "$PI_BROWSER_DIR")"
+if ! git clone https://github.com/larsderidder/pi-browser.git "$PI_BROWSER_DIR"; then
+    die "Failed to clone pi-browser"
+fi
+
+# Install npm dependencies
+cd "$PI_BROWSER_DIR"
+if ! npm install; then
+    die "Failed to install pi-browser dependencies"
+fi
+
+# Install Playwright Chromium
+if ! npx playwright install chromium; then
+    log_warn "Playwright chromium download may need manual install"
+    log_info "  Run: cd $PI_BROWSER_DIR && npx playwright install chromium"
+fi
+
+log_success "pi-browser installed" "$PI_BROWSER_DIR"

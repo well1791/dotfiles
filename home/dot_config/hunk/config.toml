@@ -19,33 +19,33 @@ transparent_background = true
 
 [keybindings.global]
 # Navigation (i/k instead of j/k)
-"scroll.lineDown" = ["k", "<down>"]      # default: j, <down>
-"scroll.lineUp" = ["i", "<up>"]          # default: k, <up>
-"scroll.pageDown" = ["<space>", "f", "<pgdown>"]
-"scroll.pageUp" = ["b", "<pgup>", "<s-space>"]
-"scroll.halfPageDown" = "d"
-"scroll.halfPageUp" = "u"
-"scroll.toTop" = "<home>"
-"scroll.toBottom" = "<end>"
+"scroll.lineDown" = ["k", "e", "<down>"]
+"scroll.lineUp" = ["i", "d", "<up>"]
+"scroll.pageDown" = ["<pgdown>"]
+"scroll.pageUp" = ["<pgup>"]
+"scroll.halfPageDown" = "s"
+"scroll.halfPageUp" = "w"
+"scroll.toTop" = ["<home>", "I"]
+"scroll.toBottom" = ["<end>", "K"]
 "scroll.codeLeft" = "<left>"
 "scroll.codeRight" = "<right>"
 "scroll.codeLeftFast" = "<s-left>"
 "scroll.codeRightFast" = "<s-right>"
 # Hunk navigation
-"hunk.prev" = "["
-"hunk.next" = "]"
-"annotatedHunk.prev" = "{"
-"annotatedHunk.next" = "}"
+"hunk.prev" = "u"
+"hunk.next" = "o"
+"annotatedHunk.prev" = "O"
+"annotatedHunk.next" = "U"
 # Layout
 "layout.split" = "1"
 "layout.stack" = "2"
 "layout.auto" = "0"
 # Toggles
-"sidebar.toggle" = "s"
+"sidebar.toggle" = "b"
 "theme.cycle" = "t"
 "agentNotes.toggle" = "a"
 "lineNumbers.toggle" = "l"
-"wrap.toggle" = "w"
+"wrap.toggle" = "p"
 "hunkHeaders.toggle" = "m"
 # General
 quit = ["q", "<esc>"]
@@ -56,22 +56,21 @@ reload = "r"
 "menu.open" = "<f10>"
 
 [keybindings.pager]
-# Navigation (i/k instead of j/k)
 quit = ["q", "<esc>"]
-"scroll.lineDown" = ["k", "<down>"]      # default: j, <down>
-"scroll.lineUp" = ["i", "<up>"]          # default: k, <up>
-"scroll.pageDown" = ["<space>", "f", "<pgdown>"]
-"scroll.pageUp" = ["b", "<pgup>", "<s-space>"]
-"scroll.halfPageDown" = "d"
-"scroll.halfPageUp" = "u"
+"scroll.lineDown" = ["k", "e", "<down>"]
+"scroll.lineUp" = ["i", "s", "<up>"]
+"scroll.pageDown" = ["<pgdown>"]
+"scroll.pageUp" = ["<pgup>"]
+"scroll.halfPageDown" = "w"
+"scroll.halfPageUp" = "s"
 "scroll.toTop" = "<home>"
 "scroll.toBottom" = "<end>"
 "scroll.codeLeft" = "<left>"
 "scroll.codeRight" = "<right>"
 "scroll.codeLeftFast" = "<s-left>"
 "scroll.codeRightFast" = "<s-right>"
-"wrap.toggle" = "w"
-"sidebar.toggle" = "s"
+"wrap.toggle" = "p"
+"sidebar.toggle" = "b"
 
 [keybindings.menu]
 "menu.close" = "<esc>"
