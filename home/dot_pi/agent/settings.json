@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.1",
+  "lastChangelogVersion": "0.80.2",
   "defaultProvider": "github-copilot",
   "defaultModel": "claude-opus-4.6",
   "defaultThinkingLevel": "medium",
@@ -17,7 +17,9 @@
     "npm:pi-mcp-extension",
     "npm:pi-lean-ctx",
     "git:github.com/obra/superpowers",
-    "npm:@pi-stef/atlassian"
+    "npm:@pi-stef/atlassian",
+    "npm:@juicesharp/rpiv-voice",
+    "npm:@juicesharp/rpiv-i18n"
   ],
   "npmCommand": [
     "bun"
