@@ -1,0 +1,81 @@
+#!/bin/sh
+# Update pi and sync all settings changes back to chezmoi source.
+# Handles any field pi modifies (version, theme, models, etc.).
+# Idempotent: safe to re-run. Stops if dotfiles repo has staged files.
+
+set -e
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+die() { printf "${RED}Error:${NC} %s\n" "$1" >&2; exit 1; }
+info() { printf "${GREEN}==>${NC} %s\n" "$1"; }
+warn() { printf "${YELLOW}Warning:${NC} %s\n" "$1"; }
+
+SETTINGS="$HOME/.pi/agent/settings.json"
+CHEZMOI_SOURCE="$(chezmoi source-path)"
+GIT_ROOT=$(git -C "$CHEZMOI_SOURCE" rev-parse --show-toplevel)
+SOURCE_SETTINGS="$CHEZMOI_SOURCE/dot_pi/agent/settings.json"
+RELATIVE_SETTINGS="${SOURCE_SETTINGS#$GIT_ROOT/}"
+
+[ -f "$SOURCE_SETTINGS" ] || die "Chezmoi source not found: $SOURCE_SETTINGS"
+
+# --- Guard: no staged files in dotfiles repo ---
+staged=$(git -C "$GIT_ROOT" diff --cached --name-only)
+if [ -n "$staged" ]; then
+    printf "${RED}Error:${NC} %s\n%s\n" "Dotfiles repo has staged files. Unstage or commit them first:" "$staged" >&2
+    exit 1
+fi
+
+# --- Get old version from template source ---
+old_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SOURCE_SETTINGS" | head -1 | sd '.*: *"([^"]*)"' '$1')
+
+# --- Run pi update ---
+info "Updating pi and all packages/extensions..."
+pi update --all
+
+# --- Get new version from rendered settings ---
+if [ ! -f "$SETTINGS" ]; then
+    die "Settings file not found after update: $SETTINGS"
+fi
+new_version=$(grep -o '"lastChangelogVersion": *"[^"]*"' "$SETTINGS" | head -1 | sd '.*: *"([^"]*)"' '$1')
+
+# --- Sync all changes from live file back to chezmoi source ---
+info "Syncing settings to chezmoi source..."
+cp "$SETTINGS" "$SOURCE_SETTINGS"
+
+# Ensure trailing newline
+if [ -n "$(tail -c 1 "$SOURCE_SETTINGS")" ]; then
+    printf '\n' >> "$SOURCE_SETTINGS"
+fi
+
+# --- Verify sync: chezmoi should report no drift ---
+chezmoi_status=$(chezmoi status "$SETTINGS" 2>/dev/null || true)
+if [ -n "$chezmoi_status" ]; then
+    warn "Chezmoi still reports drift after sync. Forcing apply..."
+    chezmoi apply --force "$SETTINGS"
+    # Check again
+    chezmoi_status=$(chezmoi status "$SETTINGS" 2>/dev/null || true)
+    if [ -n "$chezmoi_status" ]; then
+        die "Cannot resolve drift. Review manually: chezmoi diff $SETTINGS"
+    fi
+fi
+
+# --- Stage and commit ---
+git -C "$GIT_ROOT" add -- "$RELATIVE_SETTINGS"
+
+if git -C "$GIT_ROOT" diff --cached --quiet -- "$RELATIVE_SETTINGS"; then
+    info "No changes to commit — already up to date (v${new_version})."
+    exit 0
+fi
+
+if [ "$old_version" = "$new_version" ]; then
+    commit_msg="chore(pi): sync settings and package changes"
+else
+    commit_msg="chore(pi): update pi ${old_version} -> ${new_version} (with packages)"
+fi
+
+git -C "$GIT_ROOT" commit -m "$commit_msg" -- "$RELATIVE_SETTINGS"
+info "Committed: $commit_msg"

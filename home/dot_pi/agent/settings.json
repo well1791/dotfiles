@@ -1,11 +1,5 @@
-#!/bin/sh
-# Modify pi settings.json: preserve lastChangelogVersion from the target,
-# apply all other settings from the source definition below.
-
-set -e
-
-# Desired settings (everything except lastChangelogVersion)
-SOURCE_JSON='{
+{
+  "lastChangelogVersion": "0.80.1",
   "defaultProvider": "github-copilot",
   "defaultModel": "claude-opus-4.6",
   "defaultThinkingLevel": "medium",
@@ -45,16 +39,4 @@ SOURCE_JSON='{
   "quietStartup": true,
   "doubleEscapeAction": "tree",
   "enableSkillCommands": true
-}'
-
-# Read current target from stdin
-TARGET_JSON="$(cat)"
-
-if [ -z "$TARGET_JSON" ] || [ "$TARGET_JSON" = "{}" ]; then
-    # No existing target — use a default version
-    echo "$SOURCE_JSON" | jq --arg v "0.0.0" '{lastChangelogVersion: $v} + .'
-else
-    # Preserve lastChangelogVersion from the existing target
-    CURRENT_VERSION="$(echo "$TARGET_JSON" | jq -r '.lastChangelogVersion // "0.0.0"')"
-    printf '%s' "$(echo "$SOURCE_JSON" | jq --arg v "$CURRENT_VERSION" '{lastChangelogVersion: $v} + .')"
-fi
+}
