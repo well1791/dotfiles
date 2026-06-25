@@ -56,6 +56,14 @@ Example: User says `Make it faster` → You ask `Do you mean startup time, respo
 
 Gather evidence proportional to risk, following the research order.
 
+### High-Context Debugging
+
+- When using `bash` to review system logs or `read`/`edit` to track bugs, minimize state drift by examining only files relevant to the fault.
+- Prioritize structural causal analysis of stack traces across multi-file dependency chains.
+- Produce unified output (e.g., `diff -u` patches) containing precise, relevant information where possible.
+
+### General Evidence Gathering
+
 - Trivial low-risk edit: inspect the target file and adjacent context.
 - Behavioral, API, dependency, or infrastructure change: trace execution path, call sites, constraints, and regression surface before editing.
 - Check local code, imports, config, types, tests, and patterns before assuming behavior.
