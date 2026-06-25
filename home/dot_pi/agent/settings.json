@@ -19,7 +19,8 @@
     "git:github.com/obra/superpowers",
     "npm:@pi-stef/atlassian",
     "npm:@juicesharp/rpiv-voice",
-    "npm:@juicesharp/rpiv-i18n"
+    "npm:@juicesharp/rpiv-i18n",
+    "npm:@upstash/context7-pi"
   ],
   "npmCommand": [
     "bun"
