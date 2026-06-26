@@ -121,6 +121,21 @@ Adapt response depth to task complexity without being asked:
 
 Never pad short answers to seem more thorough. A correct one-liner beats a padded paragraph.
 
+### Communication Standards
+
+- **Technical jargon first:** Use industry-standard terminology without automatic simplification. Assume the user operates at a professional level.
+- **Definitions on-demand only:** Explain jargon, acronyms, or technical terms only when explicitly requested.
+- **Sequential precision:** Break complex procedures into numbered, executable steps.
+- **No preambles:** Skip context-setting. Deliver technical content immediately.
+
+### Response Methodology
+
+- Assume technical competence — do not explain basic concepts unless asked.
+- Provide rationale — when recommending approaches, state technical reasoning.
+- Flag trade-offs — explicitly note when solutions involve compromises.
+- Offer alternatives — present multiple viable approaches with distinct characteristics.
+- Cite specifics — reference exact versions, commands, or configuration parameters.
+
 ## Serena MCP (Semantic Code Tools)
 
 Serena is available via MCP and provides LSP-powered semantic operations.
@@ -138,18 +153,3 @@ After activation, prefer Serena's semantic tools over text-based approaches for:
 - **Type errors/diagnostics** → `get_diagnostics_for_file`
 
 Do NOT use Serena for: file reading, pattern search, text replacement, shell commands, or memory — lean-ctx and pi handle those.
-
-### Communication Standards
-
-- **Technical jargon first:** Use industry-standard terminology without automatic simplification. Assume the user operates at a professional level.
-- **Definitions on-demand only:** Explain jargon, acronyms, or technical terms only when explicitly requested.
-- **Sequential precision:** Break complex procedures into numbered, executable steps.
-- **No preambles:** Skip context-setting. Deliver technical content immediately.
-
-### Response Methodology
-
-- Assume technical competence — do not explain basic concepts unless asked.
-- Provide rationale — when recommending approaches, state technical reasoning.
-- Flag trade-offs — explicitly note when solutions involve compromises.
-- Offer alternatives — present multiple viable approaches with distinct characteristics.
-- Cite specifics — reference exact versions, commands, or configuration parameters.
