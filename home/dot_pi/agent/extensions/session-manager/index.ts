@@ -273,6 +273,8 @@ export default function (pi: ExtensionAPI) {
         for (const entry of branch) {
           const parsed = extractMessageText(entry);
           if (parsed) {
+            // Skip empty assistant messages
+            if (parsed.role === "assistant" && !parsed.text) continue;
             allMessages.push({
               entryId: entry.id,
               role: parsed.role,
@@ -289,7 +291,9 @@ export default function (pi: ExtensionAPI) {
 
         // Tree picker state
         let tpFiltered = [...allMessages];
+        // Focus newest assistant message
         let tpCursor = tpFiltered.length - 1;
+        while (tpCursor > 0 && tpFiltered[tpCursor].role === "user") tpCursor--;
         let tpScroll = 0;
         let tpQuery = "";
         let tpQCursor = 0;
@@ -303,6 +307,14 @@ export default function (pi: ExtensionAPI) {
             tpFiltered = allMessages.filter((m) => fuzzyMatch(m.text, tpQuery));
           }
           tpCursor = Math.min(tpCursor, Math.max(0, tpFiltered.length - 1));
+          // Ensure cursor lands on an assistant message
+          while (tpCursor > 0 && tpFiltered[tpCursor]?.role === "user") tpCursor--;
+          if (tpFiltered[tpCursor]?.role === "user") {
+            // Try forward
+            let fwd = tpCursor + 1;
+            while (fwd < tpFiltered.length && tpFiltered[fwd].role === "user") fwd++;
+            if (fwd < tpFiltered.length) tpCursor = fwd;
+          }
         }
 
         return ctx.ui.custom<string | null>((tui, theme, _kb, done) => {
@@ -341,12 +353,15 @@ export default function (pi: ExtensionAPI) {
                 for (let i = tpScroll; i < tpFiltered.length && rendered < maxLines; i++) {
                   const m = tpFiltered[i];
                   const isCursorItem = i === tpCursor;
-                  const chevron = isCursorItem ? tpGold("❯ ") : "  ";
-                  const roleTag = m.role === "user" ? tpLightTeal("U ") : tpWhite("A ");
+                  const isUser = m.role === "user";
+                  // User messages are visual guides (disabled), assistant messages are selectable
+                  const tpDimWhite = (s: string) => `\x1b[38;5;250m${s}\x1b[39m`;
+                  const chevron = isUser ? "  " : (isCursorItem ? tpGold("❯ ") : "  ");
+                  const roleTag = isUser ? tpDimWhite("U ") : tpWhite("A ");
                   const textTrunc = truncateToWidth(m.text || "(empty)", maxTextWidth);
-                  const coloredText = m.role === "user" ? tpLightTeal(textTrunc) : tpWhite(textTrunc);
+                  const coloredText = isUser ? tpDimWhite(textTrunc) : tpWhite(textTrunc);
                   const line = chevron + roleTag + coloredText;
-                  lines.push(isCursorItem ? theme.bg("selectedBg", line) : line);
+                  lines.push(isCursorItem && !isUser ? theme.bg("selectedBg", line) : line);
                   rendered++;
                 }
 
@@ -372,32 +387,40 @@ export default function (pi: ExtensionAPI) {
                 return;
               }
 
-              // Enter — select fork point
+              // Enter — select fork point (only assistant messages)
               if (matchesKey(data, Key.enter)) {
-                if (tpCursor >= 0 && tpCursor < tpFiltered.length) {
+                if (tpCursor >= 0 && tpCursor < tpFiltered.length && tpFiltered[tpCursor].role === "assistant") {
                   done(tpFiltered[tpCursor].entryId);
                 }
                 return;
               }
 
-              // Navigation
+              // Navigation — skip user messages (they are visual guides only)
               if (matchesKey(data, Key.up)) {
-                if (tpCursor > 0) tpCursor--;
+                let next = tpCursor - 1;
+                while (next >= 0 && tpFiltered[next].role === "user") next--;
+                if (next >= 0) tpCursor = next;
                 tui.requestRender();
                 return;
               }
               if (matchesKey(data, Key.down)) {
-                if (tpCursor < tpFiltered.length - 1) tpCursor++;
+                let next = tpCursor + 1;
+                while (next < tpFiltered.length && tpFiltered[next].role === "user") next++;
+                if (next < tpFiltered.length) tpCursor = next;
                 tui.requestRender();
                 return;
               }
               if (matchesKey(data, "pageup")) {
-                tpCursor = Math.max(0, tpCursor - 8);
+                let target = Math.max(0, tpCursor - 8);
+                while (target > 0 && tpFiltered[target].role === "user") target--;
+                if (tpFiltered[target].role !== "user") tpCursor = target;
                 tui.requestRender();
                 return;
               }
               if (matchesKey(data, "pagedown")) {
-                tpCursor = Math.min(tpFiltered.length - 1, tpCursor + 8);
+                let target = Math.min(tpFiltered.length - 1, tpCursor + 8);
+                while (target < tpFiltered.length - 1 && tpFiltered[target].role === "user") target++;
+                if (tpFiltered[target].role !== "user") tpCursor = target;
                 tui.requestRender();
                 return;
               }
@@ -539,8 +562,9 @@ export default function (pi: ExtensionAPI) {
             renameMode = true;
             savedQuery = query;
             savedQCursor = qCursor;
-            query = "";
-            qCursor = 0;
+            // Pre-fill with the fork name for easy editing
+            query = filteredItems[newIdx].session.name ?? "";
+            qCursor = query.length;
           }
           forceRenameSessionPath = null;
         }
@@ -1122,6 +1146,11 @@ export default function (pi: ExtensionAPI) {
               const sm = SessionManager.open(result.path);
               const newSessionFile = sm.createBranchedSession(selectedEntryId);
               if (newSessionFile) {
+                // Set default fork name
+                const sourceName = sm.getSessionName();
+                const forkName = sourceName ? `${sourceName} (fork)` : "(fork)";
+                const newSm = SessionManager.open(newSessionFile);
+                newSm.appendSessionInfo(forkName);
                 forceRenameSessionPath = newSessionFile;
                 shouldContinue = true;
               } else {
