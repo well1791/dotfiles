@@ -1,0 +1,24 @@
+{{ template "install-header.sh.tmpl" . }}
+# Generate ~/Code/work/.gitconfig with work identity
+# Keeps PII out of the public repo by templating at apply time
+
+WORK_GITCONFIG="{{ .chezmoi.homeDir }}/Code/work/.gitconfig"
+
+if [ -f "$WORK_GITCONFIG" ]; then
+  log_info "Work gitconfig already exists, skipping"
+  exit 0
+fi
+
+if [ ! -d "$(dirname "$WORK_GITCONFIG")" ]; then
+  log_info "Creating ~/Code/work directory..."
+  mkdir -p "$(dirname "$WORK_GITCONFIG")"
+fi
+
+log_info "Generating work gitconfig..."
+cat > "$WORK_GITCONFIG" << 'EOF'
+[user]
+  name = {{ .name }}
+  email = {{ .work_email }}
+EOF
+
+log_success "Work gitconfig created" "$WORK_GITCONFIG"
