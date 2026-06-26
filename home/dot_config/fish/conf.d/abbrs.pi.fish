@@ -1,4 +1,4 @@
-abbr -a -- pis 'pi "/sm"'
+abbr -a -- pim 'pi "/sm"'
 
 # |-- Question to big-pickle
 # | usage:
