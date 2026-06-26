@@ -650,18 +650,21 @@ export default function (pi: ExtensionAPI) {
               }
             }
 
-            // Markers: ✕ for delete-selected, ◆ for active session, ● for in-cwd, ○ for outside cwd
+            // Markers: ✕ for delete-selected, ◆ for active session, ◇ for recent, ● for in-cwd, ○ for outside cwd
             const isOutside = item.session.cwd && item.session.cwd !== ctx.cwd;
             const isInCwd = item.session.cwd && item.session.cwd === ctx.cwd;
+            const isRecent = (Date.now() - item.session.modified.getTime()) < 3600000;
             const marker = isSelected
               ? "✕ "
               : isCurrent
                 ? "◆ "
-                : scope === "all" && isOutside
-                  ? "○ "
-                  : scope === "all" && isInCwd
-                    ? "● "
-                    : "  ";
+                : isRecent
+                  ? "◇ "
+                  : scope === "all" && isOutside
+                    ? "○ "
+                    : scope === "all" && isInCwd
+                      ? "● "
+                      : "  ";
 
             // Name
             const name =
@@ -705,11 +708,13 @@ export default function (pi: ExtensionAPI) {
               ? red
               : isCurrent
                 ? lightBlue
-                : isSubagentWorker
-                  ? yellow
-                  : hasName
-                    ? white
-                    : lightOrange;
+                : isRecent
+                  ? gold
+                  : isSubagentWorker
+                    ? yellow
+                    : hasName
+                      ? white
+                      : lightOrange;
 
             // Build colored body: content + gap in session color, path in dimGray, time in session color
             const coloredBody = shortPath
