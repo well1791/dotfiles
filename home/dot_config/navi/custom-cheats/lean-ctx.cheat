@@ -27,5 +27,5 @@ lean-ctx-off
 # Re-enable compression
 lean-ctx-on
 
-$ agent: echo "pi cursor claude copilot codex gemini zed windsurf vscode aider" | tr ' ' '\n'
+$ agent: echo "pi cursor claude copilot codex gemini windsurf aider" | tr ' ' '\n'
 $ mode: echo "mcp hybrid" | tr ' ' '\n'
