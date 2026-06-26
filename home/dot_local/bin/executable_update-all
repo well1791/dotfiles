@@ -115,19 +115,16 @@ fi
 # 4b. Cargo tools (rmux)
 # ============================================================================
 if command -v cargo >/dev/null 2>&1 && command -v rmux >/dev/null 2>&1; then
-    print_status "Updating rmux and rmux-sdk..."
-    cargo install rmux rmux-sdk || FAILED=$((FAILED + 1))
+    print_status "Updating rmux..."
+    cargo install rmux || FAILED=$((FAILED + 1))
 fi
 
 # ============================================================================
 # 5. Nix packages
 # ============================================================================
 if command -v nix >/dev/null 2>&1; then
-    print_status "Updating Nix channels..."
-    nix-channel --update || print_warning "Could not update Nix channels (might need sudo)"
-    
-    print_status "Upgrading Nix packages..."
-    nix-env -u || print_warning "Could not upgrade Nix packages"
+    print_status "Upgrading Nix profile packages..."
+    nix profile upgrade '.*' || print_warning "Could not upgrade Nix profile packages"
 
 else
     print_warning "nix not found, skipping"

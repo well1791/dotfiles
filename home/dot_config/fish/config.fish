@@ -7,8 +7,8 @@ fish_add_path -m ~/.local/bin
 
 # |-- API KEYS
 # Load API keys from separate file (not tracked in git)
-if test -f ~/.config/fish/api-keys.fish
-    source ~/.config/fish/api-keys.fish
+if test -f $XDG_CONFIG_HOME/fish/api-keys.fish
+    source $XDG_CONFIG_HOME/fish/api-keys.fish
 end
 
 # |-- BUN
@@ -34,4 +34,4 @@ if status is-interactive
 end
 
 # |-- atlcli
-fish_add_path {{ .chezmoi.homeDir }}/.atlcli/bin
+fish_add_path $HOME/.atlcli/bin
