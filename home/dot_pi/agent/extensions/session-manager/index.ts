@@ -386,12 +386,12 @@ export default function (pi: ExtensionAPI) {
                   }
 
                   const chevron = isUser ? "  " : (isCursorItem ? tpGold("❯ ") : "  ");
-                  const roleTag = isUser ? tpDimWhite("U ") : tpWhite("A ");
+                  const roleTag = isUser ? tpDimWhite("U ") : tpLightTeal("A ");
                   const prefixWidth = visibleWidth(treePrefix);
                   const availText = Math.max(10, maxTextWidth - prefixWidth);
                   const textTrunc = truncateToWidth(m.text || "(empty)", availText);
                   const coloredPrefix = isUser ? tpDimWhite(treePrefix) : tpGray(treePrefix);
-                  const coloredText = isUser ? tpDimWhite(textTrunc) : tpWhite(textTrunc);
+                  const coloredText = isUser ? tpDimWhite(textTrunc) : tpLightTeal(textTrunc);
                   const line = chevron + roleTag + coloredPrefix + coloredText;
                   lines.push(isCursorItem && !isUser ? theme.bg("selectedBg", line) : line);
                   rendered++;

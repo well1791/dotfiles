@@ -1,0 +1,65 @@
+# Security
+.env
+.env.local
+.env.*.local
+
+# Age encryption keys (never commit!)
+key.txt
+*.key
+*.pem
+*.pfx
+config/secrets.*
+# Chezmoi age key
+.config/chezmoi/key.txt
+
+# System metadata
+._*
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.suo
+.sandbox/
+scratch.*
+
+# Lang specific
+node_modules/
+.pnpm-store/
+.venv/
+env/
+virtualenv/
+vendor/
+
+# Build
+dist/
+build/
+out/
+*.pyc
+pycache/
+*.exe
+*.dll
+*.so
+*.dylib
+.next/
+.nuxt/
+.docusaurus/
+.sass-cache/
+.eslintcache/
+
+# Logs
+.log
+npm-debug.log
+yarn-error.log*
+
+# Agents
+.pi/
+
+# Serena (semantic code tools) local data
+.serena/
+
+# Zellij
+.zellij-*
