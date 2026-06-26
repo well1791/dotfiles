@@ -171,6 +171,9 @@ interface MessageItem {
   role: "user" | "assistant";
   text: string;
   timestamp: string;
+  depth: number;
+  isLast: boolean;
+  ancestors: boolean[]; // ancestors[i] = true if ancestor at depth i isLast
 }
 
 export default function (pi: ExtensionAPI) {
@@ -261,28 +264,44 @@ export default function (pi: ExtensionAPI) {
           return null;
         }
 
-        let branch: SessionEntry[];
+        let tree: { entry: SessionEntry; children: any[] }[];
         try {
-          branch = sm.getBranch(leafId) as SessionEntry[];
+          tree = sm.getTree() as { entry: SessionEntry; children: any[] }[];
         } catch {
-          ctx.ui.notify("Fork failed: could not read session branch", "error");
+          ctx.ui.notify("Fork failed: could not read session tree", "error");
           return null;
         }
 
+        // Flatten tree into MessageItems with depth/branch info
         const allMessages: MessageItem[] = [];
-        for (const entry of branch) {
-          const parsed = extractMessageText(entry);
-          if (parsed) {
-            // Skip empty assistant messages
-            if (parsed.role === "assistant" && !parsed.text) continue;
-            allMessages.push({
-              entryId: entry.id,
-              role: parsed.role,
-              text: parsed.text,
-              timestamp: entry.timestamp,
-            });
+        function walkTree(
+          nodes: { entry: SessionEntry; children: any[] }[],
+          depth: number,
+          ancestors: boolean[],
+        ) {
+          for (let i = 0; i < nodes.length; i++) {
+            const node = nodes[i];
+            const isLast = i === nodes.length - 1;
+            const parsed = extractMessageText(node.entry);
+            if (parsed && !(parsed.role === "assistant" && !parsed.text)) {
+              allMessages.push({
+                entryId: node.entry.id,
+                role: parsed.role,
+                text: parsed.text,
+                timestamp: node.entry.timestamp,
+                depth: nodes.length > 1 ? depth : 0,
+                isLast,
+                ancestors,
+              });
+            }
+            if (node.children.length > 0) {
+              // Only increase depth when branching (multiple siblings)
+              const nextDepth = node.children.length > 1 ? depth + 1 : (nodes.length > 1 ? depth : 0);
+              walkTree(node.children, nextDepth, [...ancestors, isLast]);
+            }
           }
         }
+        walkTree(tree, 0, []);
 
         if (allMessages.length === 0) {
           ctx.ui.notify("Fork failed: session has no user/assistant messages", "error");
@@ -356,11 +375,24 @@ export default function (pi: ExtensionAPI) {
                   const isUser = m.role === "user";
                   // User messages are visual guides (disabled), assistant messages are selectable
                   const tpDimWhite = (s: string) => `\x1b[38;5;250m${s}\x1b[39m`;
+
+                  // Tree prefix for branched messages
+                  let treePrefix = "";
+                  if (m.depth > 0) {
+                    for (let d = 0; d < m.depth - 1; d++) {
+                      treePrefix += m.ancestors[d + 1] ? "   " : "│  ";
+                    }
+                    treePrefix += m.isLast ? "└─ " : "├─ ";
+                  }
+
                   const chevron = isUser ? "  " : (isCursorItem ? tpGold("❯ ") : "  ");
                   const roleTag = isUser ? tpDimWhite("U ") : tpWhite("A ");
-                  const textTrunc = truncateToWidth(m.text || "(empty)", maxTextWidth);
+                  const prefixWidth = visibleWidth(treePrefix);
+                  const availText = Math.max(10, maxTextWidth - prefixWidth);
+                  const textTrunc = truncateToWidth(m.text || "(empty)", availText);
+                  const coloredPrefix = isUser ? tpDimWhite(treePrefix) : tpGray(treePrefix);
                   const coloredText = isUser ? tpDimWhite(textTrunc) : tpWhite(textTrunc);
-                  const line = chevron + roleTag + coloredText;
+                  const line = chevron + roleTag + coloredPrefix + coloredText;
                   lines.push(isCursorItem && !isUser ? theme.bg("selectedBg", line) : line);
                   rendered++;
                 }
