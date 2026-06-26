@@ -123,7 +123,11 @@ Never pad short answers to seem more thorough. A correct one-liner beats a padde
 
 ## Serena MCP (Semantic Code Tools)
 
-Serena is available via MCP and provides LSP-powered semantic operations. On first use in a session, call `activate_project` with the current working directory before using other Serena tools. After activation, prefer Serena's semantic tools over text-based approaches for:
+Serena is available via MCP and provides LSP-powered semantic operations.
+
+**Mandatory activation:** Before the FIRST Serena tool call in any session, you MUST call `activate_project` with the current working directory path. This is non-negotiable — all other Serena tools will fail without it. Serena auto-detects languages and starts language servers automatically; no manual project setup is needed.
+
+After activation, prefer Serena's semantic tools over text-based approaches for:
 
 - **Renaming** symbols across files → `rename_symbol` (not search-and-replace)
 - **Finding references** to a symbol → `find_referencing_symbols` (not grep)

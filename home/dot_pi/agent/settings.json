@@ -20,7 +20,9 @@
     "npm:@pi-stef/atlassian",
     "npm:@juicesharp/rpiv-voice",
     "npm:@juicesharp/rpiv-i18n",
-    "npm:@upstash/context7-pi"
+    "npm:@upstash/context7-pi",
+    "npm:@bacnh85/pi-serena",
+    "npm:pi-smart-compact"
   ],
   "npmCommand": [
     "bun"
