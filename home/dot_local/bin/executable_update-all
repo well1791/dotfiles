@@ -180,13 +180,9 @@ fi
 # ============================================================================
 # 12. pi coding agent (if installed via bun)
 # ============================================================================
-if command -v pi >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
-    # Check if pi is installed via bun (not a standalone binary)
-    PI_PATH=$(command -v pi)
-    if file "$PI_PATH" | grep -q "symbolic link\|text\|script"; then
-        print_status "Updating pi coding agent..."
-        bun install -g @earendil-works/pi-coding-agent || FAILED=$((FAILED + 1))
-    fi
+if command -v pi >/dev/null 2>&1; then
+    print_status "Updating pi coding agent and extensions..."
+    pi update --all || FAILED=$((FAILED + 1))
 fi
 
 # ============================================================================
