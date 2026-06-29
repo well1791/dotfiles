@@ -17,6 +17,7 @@ import {
   renderCreateLine,
   renderStatusLine,
   renderHelpLine,
+  renderPaginationLine,
 } from "./render.ts";
 import {
   showModelMismatchDialog,
@@ -34,7 +35,7 @@ async function trashOrDelete(filePath: string, pi: ExtensionAPI): Promise<boolea
     // Check for trash command once
     if (hasTrashCmd === null) {
       try {
-        await pi.exec("which trash");
+        await pi.exec("which", ["trash"]);
         hasTrashCmd = true;
       } catch {
         hasTrashCmd = false;
@@ -42,10 +43,10 @@ async function trashOrDelete(filePath: string, pi: ExtensionAPI): Promise<boolea
     }
 
     if (hasTrashCmd) {
-      await pi.exec(`trash ${JSON.stringify(filePath)}`);
+      await pi.exec("trash", [filePath]);
       return true;
     } else {
-      await pi.exec(`rm ${JSON.stringify(filePath)}`);
+      await pi.exec("rm", ["-rf", filePath]);
       return true;
     }
   } catch {
@@ -227,6 +228,7 @@ export default function (pi: ExtensionAPI) {
                 lines.push(theme.fg("muted", "  Loading..."));
               } else {
                 const displayCount = getDisplayCount();
+                const hiddenCount = allItems.filter((item) => item.session.name?.startsWith(".")).length;
                 const hasCreate = query.trim() && filteredItems.length === 0;
 
                 if (displayCount === 0) {
@@ -267,12 +269,9 @@ export default function (pi: ExtensionAPI) {
                     itemsShown++;
                   }
 
-                  if (scrollOffset > 0 || scrollOffset + itemsShown < displayCount) {
+                  if (scrollOffset > 0 || scrollOffset + itemsShown < displayCount || hiddenCount > 0) {
                     lines.push(
-                      theme.fg(
-                        "dim",
-                        `  ${scrollOffset + 1}-${scrollOffset + itemsShown} of ${displayCount}`,
-                      ),
+                      renderPaginationLine(scrollOffset, itemsShown, displayCount, hiddenCount, cfg),
                     );
                   }
                 }
@@ -288,7 +287,6 @@ export default function (pi: ExtensionAPI) {
               // Status line (metadata for focused item)
               const focusedItem = cursorIndex < filteredItems.length ? filteredItems[cursorIndex] : undefined;
               const meta = focusedItem ? metaCache.get(focusedItem.session.path) : undefined;
-              const hiddenCount = allItems.filter((item) => item.session.name?.startsWith(".")).length;
               const contextUsage = currentSessionFile && focusedItem?.session.path === currentSessionFile
                 ? { percent: ctx.sessionManager.getTokenUsage()?.percentUsed ?? null }
                 : undefined;
@@ -297,7 +295,6 @@ export default function (pi: ExtensionAPI) {
                   width,
                   focusedItem,
                   meta,
-                  hiddenCount,
                   currentSessionFile,
                   contextUsage,
                   config: cfg,
@@ -424,6 +421,7 @@ export default function (pi: ExtensionAPI) {
                     try {
                       const sm = SessionManager.open(item.session.path);
                       sm.appendSessionInfo(`.${currentName}`);
+                      selectedPaths.clear();
                       showStatus(`Hidden: .${currentName}`);
                       loadSessions().then(() => tui.requestRender());
                     } catch {
@@ -435,6 +433,7 @@ export default function (pi: ExtensionAPI) {
                     try {
                       const sm = SessionManager.open(item.session.path);
                       sm.appendSessionInfo(currentName.slice(1));
+                      selectedPaths.clear();
                       showStatus(`Unhidden: ${currentName.slice(1)}`);
                       loadSessions().then(() => tui.requestRender());
                     } catch {

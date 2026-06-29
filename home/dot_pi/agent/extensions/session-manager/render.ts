@@ -132,14 +132,13 @@ interface RenderStatusOptions {
   width: number;
   focusedItem: FlatItem | undefined;
   meta: SessionMeta | undefined;
-  hiddenCount: number;
   currentSessionFile: string | undefined;
   contextUsage: { percent: number | null } | undefined;
   config: SMConfig;
 }
 
 export function renderStatusLine(opts: RenderStatusOptions): string {
-  const { width, focusedItem, meta, hiddenCount, currentSessionFile, contextUsage, config } = opts;
+  const { width, focusedItem, meta, currentSessionFile, contextUsage, config } = opts;
 
   let left = "";
   if (focusedItem) {
@@ -165,13 +164,22 @@ export function renderStatusLine(opts: RenderStatusOptions): string {
     left = `  ${msgCount} · ${ctxPct} · ${modelName}`;
   }
 
-  const right = hiddenCount > 0 ? `${hiddenCount} hidden  ` : "";
-
   const leftW = visibleWidth(left);
-  const rightW = visibleWidth(right);
-  const padding = Math.max(1, width - leftW - rightW);
+  const padding = Math.max(1, width - leftW);
 
-  return applyColor(left, "muted", config) + " ".repeat(padding) + applyColor(right, "hidden", config);
+  return applyColor(left, "muted", config) + " ".repeat(padding);
+}
+
+export function renderPaginationLine(
+  scrollOffset: number,
+  itemsShown: number,
+  displayCount: number,
+  hiddenCount: number,
+  config: SMConfig,
+): string {
+  let label = `  ${scrollOffset + 1}-${scrollOffset + itemsShown} of ${displayCount}`;
+  if (hiddenCount > 0) label += ` \u00b7 ${hiddenCount} hidden`;
+  return applyColor(label, "muted", config);
 }
 
 interface RenderHelpOptions {
