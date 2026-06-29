@@ -13,7 +13,7 @@ Smart routing layer that eliminates trial-and-error when working with Atlassian 
 |-------|-------|----------|
 | **@pi-stef/atlassian** (extension) | `jira_issue`, `story_context`, `jira_search_issues`, `confluence_page`, etc. | Agent-native reads — compact Markdown output, bounded traversal, token-efficient |
 | **atlcli** (CLI) | `atlcli jira ...`, `atlcli wiki ...` | Precise writes, formatted comments (ADF via REST), bulk ops, exports, analytics |
-| **bkt** (CLI) | `bkt pr ...`, `bkt branch ...`, `bkt pipeline ...` | All Bitbucket operations — PRs, branches, pipelines, issues |
+| **bkt** (CLI) | `bkt pr ...`, `bkt branch ...`, `bkt pipeline ...` | All Bitbucket Cloud operations — PRs, branches, pipelines, reviews |
 
 ---
 
@@ -98,7 +98,7 @@ Need Confluence?
 ### Bitbucket PRs
 
 ```
-Need PR operations? → always use bkt
+Need PR operations? → always use bkt (Cloud)
 
 ├─ List PRs
 │  bkt pr list                          # open PRs in current repo
@@ -117,20 +117,6 @@ Need PR operations? → always use bkt
 │  bkt pr create --target dev --close-source --with-default-reviewers
 │  bkt pr create --title "Fix login" --target main --draft
 │
-├─ Comment on PR
-│  # General comment
-│  bkt pr comment 42 --text "LGTM"
-│
-│  # Inline comment on specific file + line (PREFERRED)
-│  bkt pr comment 42 --file "src/main.ts" --to-line 55 --text "Check null here"
-│
-│  # Reply to existing comment thread
-│  bkt pr comment 42 --text "Fixed" --parent 1001
-│
-├─ List existing comments
-│  bkt pr comments 42 --details         # with file/line info
-│  bkt pr comments 42 --details --json  # structured (get comment IDs)
-│
 ├─ Approve / Merge / Decline
 │  bkt pr approve 42
 │  bkt pr merge 42
@@ -144,6 +130,74 @@ Need PR operations? → always use bkt
    bkt --repo other-repo pr diff 42     # --repo goes between bkt and subcommand
 ```
 
+### Bitbucket PR Comments & Reviews
+
+**⚠ REQUIRED: Inline comments MUST only target lines that are part of the PR diff.**
+Before commenting on a file+line, verify the line appears in `bkt pr diff <id>`.
+Never comment on lines outside the diff — the Bitbucket API will reject it or attach
+the comment to the wrong context.
+
+**⚠ REQUIRED: When replying to an existing comment, ALWAYS use `--parent <comment-id>`.**
+Never post a new top-level comment as a reply — always thread it under the original.
+
+#### Workflow: Reviewing a PR
+
+```bash
+# 1. Get the diff to know which files/lines are commentable
+bkt pr diff 42
+bkt pr diff 42 --stat                   # quick overview of changed files
+
+# 2. List existing comments (get IDs for replies)
+bkt pr comments 42 --details --json     # returns comment IDs, file, line, resolution state
+
+# 3. Filter by resolution state
+bkt pr comments 42 --state unresolved   # only unresolved threads
+bkt pr comments 42 --state resolved     # resolved threads
+```
+
+#### Adding Comments
+
+```bash
+# General comment (activity-level, not attached to a file)
+bkt pr comment 42 --text "LGTM, one minor nit below."
+
+# Inline comment on a specific line in the NEW file (added/modified side)
+# The file and line MUST appear in the PR diff
+bkt pr comment 42 --file "src/main.ts" --to-line 55 --text "Null check needed here"
+
+# Inline comment on a specific line in the OLD file (removed/source side)
+bkt pr comment 42 --file "src/main.ts" --from-line 30 --text "Why was this removed?"
+
+# Pending/draft comment (not visible until review is submitted)
+bkt pr comment 42 --file "src/api.ts" --to-line 12 --text "Consider error handling" --pending
+```
+
+#### Replying to Comments
+
+```bash
+# ALWAYS reply with --parent <comment-id> to thread correctly
+# First get the comment ID from the comments list:
+bkt pr comments 42 --details --json | jq '.[].id'
+
+# Then reply:
+bkt pr comment 42 --text "Fixed in latest push" --parent 1001
+bkt pr comment 42 --text "Good catch, updated" --parent 2045
+
+# NOTE: --parent cannot be combined with --file/--to-line/--from-line
+# Replies inherit the inline context (file+line) from the parent comment
+```
+
+#### Comment Rules Summary
+
+| Flag | Purpose | Constraint |
+|---|---|---|
+| `--text` | Comment body (required) | Always required |
+| `--file` | Target file path in the diff | Must be a file changed in the PR |
+| `--to-line` | Line in NEW file (added side) | Must be within diff hunks for that file |
+| `--from-line` | Line in OLD file (removed side) | Must be within diff hunks for that file |
+| `--parent` | Reply to existing comment by ID | Cannot combine with `--file`/`--to-line`/`--from-line` |
+| `--pending` | Draft comment (not yet visible) | Can combine with inline flags |
+
 ### Bitbucket Other
 
 ```
@@ -152,7 +206,9 @@ Need PR operations? → always use bkt
 │
 ├─ Pipelines
 │  bkt pipeline list                    # recent pipelines
-│  bkt pipeline trigger --branch main   # trigger pipeline
+│  bkt pipeline run --branch main       # trigger pipeline
+│  bkt pipeline view <id>               # pipeline details
+│  bkt pipeline logs <id>               # fetch logs
 │
 └─ Raw API
    bkt api GET /repositories/{workspace}/{repo}/...
@@ -205,7 +261,7 @@ Need agile info?
    - Exports (`atlcli jira export ...`)
    - Sprint analytics (`atlcli jira analyze ...`)
 
-3. **Bitbucket → always `bkt`.** No exceptions. No @pi-stef Bitbucket tools exist.
+3. **Bitbucket → always `bkt`.** No exceptions. No @pi-stef Bitbucket tools exist. Cloud only (inscyth-inc.atlassian.net).
 
 4. **`--repo` placement for bkt:** Always between `bkt` and the subcommand:
    ```
@@ -213,13 +269,17 @@ Need agile info?
    bkt pr diff 42 --repo frontend     ✗ wrong
    ```
 
-5. **Token budget awareness:**
+5. **PR inline comments → diff lines only.** Before posting an inline comment (`--file` + `--to-line`/`--from-line`), ALWAYS run `bkt pr diff <id>` first and verify the target file+line is within a diff hunk. The Bitbucket API rejects comments on lines outside the diff.
+
+6. **PR replies → always use `--parent <comment-id>`.** Never post a top-level comment as a reply. Get the comment ID from `bkt pr comments <id> --details --json`, then reply with `--parent`.
+
+7. **Token budget awareness:**
    - `jira_issue` → ~500-2000 tokens (safe, use by default)
    - `story_context` → ~2000-5000 tokens (bounded, safe for planning)
    - `jira_get_issue` → unbounded (use only when specific raw fields are needed)
    - `atlcli jira issue get` → unbounded raw JSON (avoid for reads)
 
-6. **Transitions via CLI vs extension:**
+8. **Transitions via CLI vs extension:**
    - CLI is simpler: `atlcli jira issue transition --key SD-123 --to "Code Review"` (accepts status name)
    - Extension requires transition ID: first call `jira_get_transitions`, then `jira_transition_issue` with the ID
 
@@ -339,8 +399,11 @@ atlcli jira export --jql "sprint in openSprints()" -o sprint.csv --format csv
 
 ### "Review PR with ticket context"
 1. `jira_issue key="SD-123"` — ticket context
-2. `bkt pr diff 42` — PR changes
-3. `bkt pr comment 42 ...` / `bkt pr approve 42` — actions
+2. `bkt pr diff 42` — PR changes (establishes which files/lines are commentable)
+3. `bkt pr comments 42 --details --json` — get existing comment IDs
+4. Reply: `bkt pr comment 42 --text "..." --parent <id>` — thread under existing
+5. New inline: `bkt pr comment 42 --file "src/x.ts" --to-line 55 --text "..."` — only on diff lines
+6. `bkt pr approve 42` — when satisfied
 
 ### "Transition after PR merge"
 `atlcli jira issue transition --key SD-123 --to "Done"`
