@@ -1,18 +1,24 @@
 % rmux, session, multiplexer, terminal
 
 # Start a new named session
-rmux new <session_name>
+rmux new -s <session_name>
 
 # List all sessions
 rmux ls
 
 # Attach to an existing session
-rmux attach <session>
-
-# Detach from current session
-rmux detach
+rmux attach -t <session>
 
 # Kill a session
-rmux kill <session>
+rmux kill-session -t <session>
 
-$ session: rmux ls 2>/dev/null | awk '{print $1}'
+# Reload config (inside rmux)
+rmux source-file ~/.config/rmux/rmux.conf
+
+# Show all custom root keybindings
+rmux list-keys -T root | grep -v Mouse
+
+# Show copy-mode-vi keybindings
+rmux list-keys -T copy-mode-vi
+
+$ session: rmux ls -F '#S' 2>/dev/null
