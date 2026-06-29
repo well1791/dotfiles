@@ -686,7 +686,6 @@ export default function (pi: ExtensionAPI) {
               if (model) await pi.setModel(model);
             }
           }
-          }
 
           await ctx.switchSession(result.path);
         } else if (result.action === "create") {
