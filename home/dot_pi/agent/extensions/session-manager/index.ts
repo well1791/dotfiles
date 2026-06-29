@@ -2,6 +2,7 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { SessionManager } from "@earendil-works/pi-coding-agent";
 import { matchesKey, Key } from "@earendil-works/pi-tui";
 import { existsSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 
 import { VIEWPORT_SIZE } from "./constants.ts";
 import type { FlatItem, Scope, SessionMeta } from "./types.ts";
@@ -30,25 +31,22 @@ import {
  */
 let hasTrashCmd: boolean | null = null;
 
-async function trashOrDelete(filePath: string, pi: ExtensionAPI): Promise<boolean> {
+function trashOrDelete(filePath: string): boolean {
+  if (hasTrashCmd === null) {
+    try {
+      execFileSync("which", ["trash"], { stdio: "ignore" });
+      hasTrashCmd = true;
+    } catch {
+      hasTrashCmd = false;
+    }
+  }
   try {
-    // Check for trash command once
-    if (hasTrashCmd === null) {
-      try {
-        await pi.exec("which", ["trash"]);
-        hasTrashCmd = true;
-      } catch {
-        hasTrashCmd = false;
-      }
-    }
-
     if (hasTrashCmd) {
-      await pi.exec("trash", [filePath]);
-      return true;
+      execFileSync("trash", [filePath], { stdio: "ignore" });
     } else {
-      await pi.exec("rm", ["-rf", filePath]);
-      return true;
+      execFileSync("rm", ["-rf", filePath], { stdio: "ignore" });
     }
+    return true;
   } catch {
     return false;
   }
@@ -345,17 +343,14 @@ export default function (pi: ExtensionAPI) {
                     }
                   }
                   let deleted = 0;
-                  (async () => {
-                    for (const path of toDelete) {
-                      if (!existsSync(path)) continue;
-                      if (await trashOrDelete(path, pi)) deleted++;
-                    }
-                    selectedPaths.clear();
-                    deleteConfirm = false;
-                    showStatus(`Deleted ${deleted}`);
-                    await loadSessions();
-                    tui.requestRender();
-                  })();
+                  for (const path of toDelete) {
+                    if (!existsSync(path)) continue;
+                    if (trashOrDelete(path)) deleted++;
+                  }
+                  selectedPaths.clear();
+                  deleteConfirm = false;
+                  showStatus(`Deleted ${deleted}`);
+                  loadSessions().then(() => tui.requestRender());
                   return;
                 }
                 deleteConfirm = false;
