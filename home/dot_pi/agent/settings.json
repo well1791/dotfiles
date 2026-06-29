@@ -7,11 +7,9 @@
   "packages": [
     "npm:pi-subagents",
     "npm:pi-intercom",
-    "npm:pi-btw",
     "npm:@mrclrchtr/supi-extras",
     "npm:@a5c-ai/babysitter-pi",
     "npm:pi-hermes-memory",
-    "npm:glimpseui",
     "npm:pi-smart-fetch",
     "npm:pi-smart-web-search",
     "npm:pi-mcp-extension",
