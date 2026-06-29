@@ -192,14 +192,13 @@ export function renderHelpLine(opts: RenderHelpOptions): string {
   }
 
   return "  " +
-    colorize("↑↓", keyColor) + " " + colorize("nav", mutedColor) + "  " +
     colorize("tab", keyColor) + " " + colorize("sel", mutedColor) + "  " +
     colorize("enter", keyColor) + " " + colorize("go", mutedColor) + "  " +
     colorize("^R", keyColor) + " " + colorize("rename", mutedColor) + "  " +
-    colorize("^D", keyColor) + " " + colorize("fork", mutedColor) + "  " +
+    colorize("^F", keyColor) + " " + colorize("fork", mutedColor) + "  " +
+    colorize("^D", keyColor) + " " + colorize("hide", mutedColor) + "  " +
     colorize("^X", keyColor) + " " + colorize("del", mutedColor) + "  " +
-    colorize("^H", keyColor) + " " + colorize("hidden", mutedColor) + "  " +
-    colorize("esc", keyColor) + " " + colorize("quit", mutedColor);
+    colorize("^H", keyColor) + " " + colorize("hidden", mutedColor);
 }
 
 interface RenderTopBarOptions {

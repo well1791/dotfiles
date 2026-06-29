@@ -19,6 +19,7 @@ export type ColorKey =
 
 export type ShortcutKey =
   | "delete"
+  | "softDelete"
   | "rename"
   | "fork"
   | "scope"

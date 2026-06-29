@@ -385,7 +385,7 @@ export default function (pi: ExtensionAPI) {
                 return;
               }
 
-              // Delete
+              // Hard Delete
               if (matchesKey(data, cfg.shortcuts.delete)) {
                 if (selectedPaths.size === 0 && cursorIndex < filteredItems.length) {
                   selectedPaths.add(filteredItems[cursorIndex].session.path);
@@ -393,6 +393,37 @@ export default function (pi: ExtensionAPI) {
                 if (selectedPaths.size > 0) {
                   deleteConfirm = true;
                   tui.requestRender();
+                }
+                return;
+              }
+
+              // Soft Delete (hide via dot-prefix)
+              if (matchesKey(data, cfg.shortcuts.softDelete)) {
+                if (cursorIndex < filteredItems.length) {
+                  const item = filteredItems[cursorIndex];
+                  const currentName = item.session.name ?? item.session.firstMessage?.replace(/\n/g, " ").slice(0, 40) ?? "session";
+                  if (!currentName.startsWith(".")) {
+                    try {
+                      const sm = SessionManager.open(item.session.path);
+                      sm.appendSessionInfo(`.${currentName}`);
+                      showStatus(`Hidden: .${currentName}`);
+                      loadSessions().then(() => tui.requestRender());
+                    } catch {
+                      showStatus("Hide failed");
+                      tui.requestRender();
+                    }
+                  } else {
+                    // Already hidden — unhide by removing dot
+                    try {
+                      const sm = SessionManager.open(item.session.path);
+                      sm.appendSessionInfo(currentName.slice(1));
+                      showStatus(`Unhidden: ${currentName.slice(1)}`);
+                      loadSessions().then(() => tui.requestRender());
+                    } catch {
+                      showStatus("Unhide failed");
+                      tui.requestRender();
+                    }
+                  }
                 }
                 return;
               }
