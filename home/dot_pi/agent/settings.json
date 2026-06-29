@@ -20,7 +20,8 @@
     "npm:@juicesharp/rpiv-i18n",
     "npm:@upstash/context7-pi",
     "npm:@bacnh85/pi-serena",
-    "npm:pi-smart-compact"
+    "npm:pi-smart-compact",
+    "npm:pi-sidequest"
   ],
   "npmCommand": [
     "bun"
