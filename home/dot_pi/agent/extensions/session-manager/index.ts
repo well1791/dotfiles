@@ -380,13 +380,25 @@ export default function (pi: ExtensionAPI) {
                 return;
               }
 
-              // Soft Delete (toggle dot-prefix)
+              // Soft Delete (toggle dot-prefix, includes descendants)
               if (matchesKey(data, cfg.shortcuts.softDelete)) {
-                const targets = selectedPaths.size > 0
-                  ? [...selectedPaths].map((p) => filteredItems.find((i) => i.session.path === p)).filter(Boolean) as FlatItem[]
+                const rootPaths = selectedPaths.size > 0
+                  ? [...selectedPaths]
                   : cursorIndex < filteredItems.length
-                    ? [filteredItems[cursorIndex]]
+                    ? [filteredItems[cursorIndex].session.path]
                     : [];
+                if (rootPaths.length === 0) return;
+                // Expand to include descendants
+                const allPaths = new Set<string>();
+                for (const p of rootPaths) {
+                  allPaths.add(p);
+                  for (const d of collectDescendantPaths(p, allItems)) {
+                    allPaths.add(d);
+                  }
+                }
+                const targets = [...allPaths]
+                  .map((p) => allItems.find((i) => i.session.path === p))
+                  .filter(Boolean) as FlatItem[];
                 if (targets.length === 0) return;
                 const allHidden = targets.every((item) => {
                   const name = item.session.name ?? item.session.firstMessage?.replace(/\n/g, " ").slice(0, 40) ?? "session";
