@@ -66,7 +66,6 @@ export default function (pi: ExtensionAPI) {
       let selectedPaths = new Set<string>();
       let cursorIndex = 0;
       let scrollOffset = 0;
-      let deleteConfirm = false;
       let query = "";
       let qCursor = 0;
       let loading = true;
@@ -301,22 +300,8 @@ export default function (pi: ExtensionAPI) {
 
               lines.push("");
 
-              // Confirm / status
-              if (deleteConfirm) {
-                let childrenIncluded = 0;
-                for (const p of selectedPaths) {
-                  for (const d of collectDescendantPaths(p, allItems)) {
-                    if (!selectedPaths.has(d)) childrenIncluded++;
-                  }
-                }
-                const childNote = childrenIncluded > 0 ? ` (+${childrenIncluded} children)` : "";
-                lines.push(
-                  theme.fg(
-                    "error",
-                    `  Delete ${selectedPaths.size}${childNote}? ^X confirm, esc cancel`,
-                  ),
-                );
-              } else if (statusMsg) {
+              // Status message
+              if (statusMsg) {
                 lines.push(theme.fg("success", `  ${statusMsg}`));
               }
 
@@ -332,32 +317,6 @@ export default function (pi: ExtensionAPI) {
             invalidate() {},
 
             handleInput(data: string) {
-              // Delete confirm mode
-              if (deleteConfirm) {
-                if (matchesKey(data, Key.ctrl("x"))) {
-                  const toDelete = new Set<string>();
-                  for (const p of selectedPaths) {
-                    toDelete.add(p);
-                    for (const d of collectDescendantPaths(p, allItems)) {
-                      toDelete.add(d);
-                    }
-                  }
-                  let deleted = 0;
-                  for (const path of toDelete) {
-                    if (!existsSync(path)) continue;
-                    if (trashOrDelete(path)) deleted++;
-                  }
-                  selectedPaths.clear();
-                  deleteConfirm = false;
-                  showStatus(`Deleted ${deleted}`);
-                  loadSessions().then(() => tui.requestRender());
-                  return;
-                }
-                deleteConfirm = false;
-                tui.requestRender();
-                return;
-              }
-
               // Navigation
               if (matchesKey(data, Key.up)) {
                 if (!renameMode && cursorIndex > 0) cursorIndex--;
@@ -395,48 +354,60 @@ export default function (pi: ExtensionAPI) {
                 return;
               }
 
-              // Hard Delete
+              // Hard Delete (immediate)
               if (matchesKey(data, cfg.shortcuts.delete)) {
-                if (selectedPaths.size === 0 && cursorIndex < filteredItems.length) {
-                  selectedPaths.add(filteredItems[cursorIndex].session.path);
+                const targets = selectedPaths.size > 0
+                  ? [...selectedPaths]
+                  : cursorIndex < filteredItems.length
+                    ? [filteredItems[cursorIndex].session.path]
+                    : [];
+                if (targets.length === 0) return;
+                const toDelete = new Set<string>();
+                for (const p of targets) {
+                  toDelete.add(p);
+                  for (const d of collectDescendantPaths(p, allItems)) {
+                    toDelete.add(d);
+                  }
                 }
-                if (selectedPaths.size > 0) {
-                  deleteConfirm = true;
-                  tui.requestRender();
+                let deleted = 0;
+                for (const path of toDelete) {
+                  if (!existsSync(path)) continue;
+                  if (trashOrDelete(path)) deleted++;
                 }
+                selectedPaths.clear();
+                showStatus(`Deleted ${deleted}`);
+                loadSessions().then(() => tui.requestRender());
                 return;
               }
 
-              // Soft Delete (hide via dot-prefix)
+              // Soft Delete (toggle dot-prefix)
               if (matchesKey(data, cfg.shortcuts.softDelete)) {
-                if (cursorIndex < filteredItems.length) {
-                  const item = filteredItems[cursorIndex];
+                const targets = selectedPaths.size > 0
+                  ? [...selectedPaths].map((p) => filteredItems.find((i) => i.session.path === p)).filter(Boolean) as FlatItem[]
+                  : cursorIndex < filteredItems.length
+                    ? [filteredItems[cursorIndex]]
+                    : [];
+                if (targets.length === 0) return;
+                const allHidden = targets.every((item) => {
+                  const name = item.session.name ?? item.session.firstMessage?.replace(/\n/g, " ").slice(0, 40) ?? "session";
+                  return name.startsWith(".");
+                });
+                let count = 0;
+                for (const item of targets) {
                   const currentName = item.session.name ?? item.session.firstMessage?.replace(/\n/g, " ").slice(0, 40) ?? "session";
-                  if (!currentName.startsWith(".")) {
-                    try {
-                      const sm = SessionManager.open(item.session.path);
-                      sm.appendSessionInfo(`.${currentName}`);
-                      selectedPaths.clear();
-                      showStatus(`Hidden: .${currentName}`);
-                      loadSessions().then(() => tui.requestRender());
-                    } catch {
-                      showStatus("Hide failed");
-                      tui.requestRender();
-                    }
-                  } else {
-                    // Already hidden — unhide by removing dot
-                    try {
-                      const sm = SessionManager.open(item.session.path);
+                  try {
+                    const sm = SessionManager.open(item.session.path);
+                    if (allHidden) {
                       sm.appendSessionInfo(currentName.slice(1));
-                      selectedPaths.clear();
-                      showStatus(`Unhidden: ${currentName.slice(1)}`);
-                      loadSessions().then(() => tui.requestRender());
-                    } catch {
-                      showStatus("Unhide failed");
-                      tui.requestRender();
+                    } else if (!currentName.startsWith(".")) {
+                      sm.appendSessionInfo(`.${currentName}`);
                     }
-                  }
+                    count++;
+                  } catch { /* skip failures */ }
                 }
+                selectedPaths.clear();
+                showStatus(allHidden ? `Unhidden ${count}` : `Hidden ${count}`);
+                loadSessions().then(() => tui.requestRender());
                 return;
               }
 
