@@ -285,7 +285,7 @@ export default function (pi: ExtensionAPI) {
               const focusedItem = cursorIndex < filteredItems.length ? filteredItems[cursorIndex] : undefined;
               const meta = focusedItem ? metaCache.get(focusedItem.session.path) : undefined;
               const contextUsage = currentSessionFile && focusedItem?.session.path === currentSessionFile
-                ? { percent: ctx.sessionManager.getTokenUsage()?.percentUsed ?? null }
+                ? ctx.getContextUsage()
                 : undefined;
               lines.push(
                 renderStatusLine({
@@ -666,22 +666,26 @@ export default function (pi: ExtensionAPI) {
         if (result.action === "resume") {
           // Model mismatch check
           const targetMeta = metaCache.get(result.path) ?? loadSessionMeta(result.path);
-          const activeProvider = ctx.sessionManager.getProvider();
-          const activeModelId = ctx.sessionManager.getModelId();
-          const activeModel = `${activeProvider}/${activeModelId}`;
+          const activeModel = ctx.model
+            ? `${ctx.model.provider}/${ctx.model.id}`
+            : null;
 
-          if (targetMeta.model && targetMeta.model !== activeModel) {
+          if (targetMeta.model && activeModel && targetMeta.model !== activeModel) {
+            const sessionModelDisplay = targetMeta.model.split("/").pop() ?? targetMeta.model;
+            const activeModelDisplay = ctx.model?.name ?? ctx.model?.id ?? activeModel;
             const choice = await showModelMismatchDialog(
               ctx,
-              targetMeta.model,
-              activeModel,
+              sessionModelDisplay,
+              activeModelDisplay,
               cfg,
             );
             if (choice === "cancel") continue;
             if (choice === "switch") {
               const [provider, modelId] = targetMeta.model.split("/");
-              ctx.sessionManager.setModel(provider, modelId);
+              const model = ctx.modelRegistry.find(provider, modelId);
+              if (model) await pi.setModel(model);
             }
+          }
           }
 
           await ctx.switchSession(result.path);
