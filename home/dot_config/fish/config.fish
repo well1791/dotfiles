@@ -35,3 +35,7 @@ end
 
 # |-- atlcli
 fish_add_path $HOME/.atlcli/bin
+
+# lean-ctx shell hook — begin
+# Managed via conf.d/lean-ctx.fish; this marker prevents lean-ctx setup from injecting here.
+# lean-ctx shell hook — end
