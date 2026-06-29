@@ -134,18 +134,36 @@ export default function (pi: ExtensionAPI) {
       }
 
       /**
-       * Load metadata for sessions visible in the current viewport.
-       * Called before render to ensure stats are fresh.
+       * Schedule metadata load for visible viewport items.
+       * Deferred via setTimeout to avoid blocking initial render.
        */
-      function ensureMetaLoaded() {
+      let metaLoadPending = false;
+      function scheduleMetaLoad(tui: any) {
+        if (metaLoadPending) return;
         const start = scrollOffset;
         const end = Math.min(start + VIEWPORT_SIZE, filteredItems.length);
+        // Check if any items need loading
+        let needsLoad = false;
         for (let i = start; i < end; i++) {
-          const path = filteredItems[i].session.path;
-          if (!metaCache.has(path)) {
-            metaCache.set(path, loadSessionMeta(path));
+          if (!metaCache.has(filteredItems[i].session.path)) {
+            needsLoad = true;
+            break;
           }
         }
+        if (!needsLoad) return;
+        metaLoadPending = true;
+        setTimeout(() => {
+          const s = scrollOffset;
+          const e = Math.min(s + VIEWPORT_SIZE, filteredItems.length);
+          for (let i = s; i < e; i++) {
+            const path = filteredItems[i].session.path;
+            if (!metaCache.has(path)) {
+              metaCache.set(path, loadSessionMeta(path));
+            }
+          }
+          metaLoadPending = false;
+          tui.requestRender();
+        }, 0);
       }
 
       await loadSessions();
@@ -214,7 +232,7 @@ export default function (pi: ExtensionAPI) {
                 if (displayCount === 0) {
                   lines.push(theme.fg("muted", "  No sessions"));
                 } else {
-                  ensureMetaLoaded();
+                  scheduleMetaLoad(tui);
 
                   // Viewport scrolling
                   if (cursorIndex < scrollOffset) {
