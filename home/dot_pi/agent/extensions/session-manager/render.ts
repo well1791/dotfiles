@@ -197,11 +197,11 @@ export function renderHelpLine(opts: RenderHelpOptions): string {
 
   return "  " +
     colorize("tab", keyColor) + " " + colorize("sel", mutedColor) + "  " +
-    colorize("enter", keyColor) + " " + colorize("go", mutedColor) + "  " +
     colorize("^R", keyColor) + " " + colorize("rename", mutedColor) + "  " +
     colorize("^F", keyColor) + " " + colorize("fork", mutedColor) + "  " +
-    colorize("^D", keyColor) + " " + colorize("hide", mutedColor) + "  " +
-    colorize("^X", keyColor) + " " + colorize("del", mutedColor) + "  " +
+    colorize("^M", keyColor) + " " + colorize("scope", mutedColor) + "  " +
+    colorize("^D", keyColor) + " " + colorize("s-del", mutedColor) + "  " +
+    colorize("^X", keyColor) + " " + colorize("h-del", mutedColor) + "  " +
     colorize("^H", keyColor) + " " + colorize("hidden", mutedColor);
 }
 
