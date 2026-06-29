@@ -150,8 +150,12 @@ export function renderStatusLine(opts: RenderStatusOptions): string {
     if (isActive && contextUsage?.percent != null) {
       ctxPct = `${contextUsage.percent.toFixed(1)}%`;
     } else if (meta && meta.estimatedTokens > 0) {
-      const estimated = (meta.estimatedTokens / 200000) * 100;
-      ctxPct = `~${estimated.toFixed(1)}%`;
+      const tokens = meta.estimatedTokens;
+      const estimated = (tokens / 200000) * 100;
+      const tokenLabel = tokens >= 1000000
+        ? `${(tokens / 1000000).toFixed(1)}M`
+        : `${Math.round(tokens / 1000)}k`;
+      ctxPct = `~${estimated.toFixed(1)}%/${tokenLabel}`;
     }
 
     const modelName = meta?.model
