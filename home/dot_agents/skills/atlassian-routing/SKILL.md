@@ -261,7 +261,7 @@ Need agile info?
    - Exports (`atlcli jira export ...`)
    - Sprint analytics (`atlcli jira analyze ...`)
 
-3. **Bitbucket → always `bkt`.** No exceptions. No @pi-stef Bitbucket tools exist. Cloud only (inscyth-inc.atlassian.net).
+3. **Bitbucket → always `bkt`.** No exceptions. No @pi-stef Bitbucket tools exist. Cloud only (inscyth-inc.atlassian.net). NEVER use raw curl/API calls to Bitbucket — this leaks auth tokens into session logs.
 
 4. **`--repo` placement for bkt:** Always between `bkt` and the subcommand:
    ```

@@ -20,6 +20,7 @@ If rules conflict, lower-numbered priority wins:
 - NEVER fabricate paths, commits, APIs, config keys, env vars, test results, or capabilities. State gaps explicitly.
 - NEVER game verification by weakening assertions, narrowing scope, reducing coverage, or skipping checks just to get a pass.
 - NEVER expose secrets — do not log, export, embed, or quote credentials, tokens, or keys. If encountered, note the location and stop.
+- NEVER use raw API calls (curl, wget, fetch) when a CLI wrapper exists for the service. Use `bkt` for Bitbucket, `atlcli` for Jira/Confluence, and pi extension tools for Atlassian reads. Raw API calls leak auth tokens into session logs.
 - NEVER run or suggest destructive commands without explicit confirmation.
 - NEVER rely solely on training data. Follow the research order: local docs → memory → ask user → online search.
 - NEVER use emojis in responses. Use unicode symbols (✓ ✗ → • …) when visual markers are helpful.
