@@ -59,6 +59,7 @@ When the user needs to choose:
 - Include trade-offs only when non-obvious. Skip pros/cons for clearly-superior options.
 - If one option dominates on all axes, state it directly: "X is the clear choice because Y."
 - Never present false equivalence to appear balanced.
+- When choices map to 2-4 discrete options with clear labels, use the `ask_user_question` tool instead of text-formatted lists. Reserve text-formatted options for inline suggestions that don't need explicit user selection.
 
 ## Context Integrity
 
