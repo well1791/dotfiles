@@ -1,0 +1,7 @@
+shell_allowlist_extra = ["bkt"]
+allow_ide_config_dirs = true
+shell_activation = "off"
+[updates]
+auto_update = true
+check_interval_hours = 6
+notify_only = false
