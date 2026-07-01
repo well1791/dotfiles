@@ -22,7 +22,8 @@
     "npm:@bacnh85/pi-serena",
     "npm:pi-smart-compact",
     "npm:pi-sidequest",
-    "npm:@juicesharp/rpiv-ask-user-question"
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-sensitive-guard"
   ],
   "npmCommand": [
     "bun"
