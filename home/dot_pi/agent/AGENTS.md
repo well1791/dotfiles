@@ -267,6 +267,26 @@ lean-ctx tools are the primary interface for file reading, searching, and listin
 | List dirs | `ctx_ls`, `ctx_tree` | `eza`, `ls` |
 | Shell commands | `ctx_shell` | `bash` |
 
+### Code Editing
+
+Prefer Serena's symbol-aware tools for modifying code files:
+
+| Edit type | Primary (Serena) | Fallback (pi native) |
+|-----------|-------------------|----------------------|
+| Replace function/class/method body | `replace_symbol_body` | `edit` with oldText matching |
+| Insert code near a symbol | `insert_before_symbol` / `insert_after_symbol` | `edit` |
+| Rename across files | `rename_symbol` | find-and-replace manually |
+| Delete unused symbol | `safe_delete_symbol` | `edit` |
+| Non-symbol content (config, prose, YAML) | — | `edit` / `write` |
+| New file creation | — | `write` |
+| Regex-based replacement in code | `replace_content` | `edit` / `sd` |
+
+Fall back to `edit`/`write` when:
+- The target is not a recognizable symbol (config files, markdown, YAML, JSON)
+- Serena's language server doesn't support the file type
+- The edit crosses symbol boundaries or is purely textual
+- Serena returns an error (stale index, symbol not found)
+
 ### CLI Tools (for operations lean-ctx does not cover)
 
 For text substitution and git diffs, use modern CLI tools. See [CLI-TOOLS.md](./CLI-TOOLS.md) for examples.
