@@ -88,11 +88,8 @@ Need Confluence?
 │  → atlcli wiki docs pull --space TEAM --ancestor-id 12345 --output-dir ./temp
 │  → atlcli wiki docs push --space TEAM --parent-id 12345 --input-dir ./docs
 │
-├─ Create page
-│  → confluence_create_page spaceId="..." title="..." body="<p>content</p>"
-│
-└─ Export to DOCX
-   → atlcli wiki export 12345 --template corporate --output ./report.docx
+└─ Create page
+   → confluence_create_page spaceId="..." title="..." body="<p>content</p>"
 ```
 
 ### Bitbucket PRs
@@ -117,17 +114,16 @@ Need PR operations? → always use bkt (Cloud)
 │  bkt pr create --target dev --close-source --with-default-reviewers
 │  bkt pr create --title "Fix login" --target main --draft
 │
-├─ Approve / Merge / Decline
+├─ Approve / Merge
 │  bkt pr approve 42
-│  bkt pr merge 42
+│  bkt pr merge 42 --strategy squash
 │  bkt pr merge 42 --strategy squash --message "Release v1.2"
-│  bkt pr decline 42
 │
 ├─ Checkout PR branch locally
 │  bkt pr checkout 42
 │
 └─ Override repo for all commands
-   bkt --repo other-repo pr diff 42     # --repo goes between bkt and subcommand
+   bkt --workspace workspace --repo other-repo pr diff 42     # --workspace and --repo goes between bkt and subcommand
 ```
 
 ### Bitbucket PR Comments & Reviews
@@ -148,28 +144,28 @@ bkt pr diff 42
 bkt pr diff 42 --stat                   # quick overview of changed files
 
 # 2. List existing comments (get IDs for replies)
-bkt pr comments 42 --details --json     # returns comment IDs, file, line, resolution state
+bkt pr comments 42 --workspace workspace --repo other-repo --details --json     # returns comment IDs, file, line, resolution state
 
 # 3. Filter by resolution state
-bkt pr comments 42 --state unresolved   # only unresolved threads
-bkt pr comments 42 --state resolved     # resolved threads
+bkt pr comments 42 --workspace workspace --repo other-repo --state unresolved   # only unresolved threads
+bkt pr comments 42 --workspace workspace --repo other-repo --state resolved     # resolved threads
 ```
 
 #### Adding Comments
 
 ```bash
 # General comment (activity-level, not attached to a file)
-bkt pr comment 42 --text "LGTM, one minor nit below."
+bkt pr comment 42 --workspace workspace --repo other-repo --text "LGTM, one minor nit below."
 
 # Inline comment on a specific line in the NEW file (added/modified side)
 # The file and line MUST appear in the PR diff
-bkt pr comment 42 --file "src/main.ts" --to-line 55 --text "Null check needed here"
+bkt pr comment 42 --workspace workspace --repo other-repo --file "src/main.ts" --to-line 55 --text "Null check needed here"
 
 # Inline comment on a specific line in the OLD file (removed/source side)
-bkt pr comment 42 --file "src/main.ts" --from-line 30 --text "Why was this removed?"
+bkt pr comment 42 --workspace workspace --repo other-repo --file "src/main.ts" --from-line 30 --text "Why was this removed?"
 
 # Pending/draft comment (not visible until review is submitted)
-bkt pr comment 42 --file "src/api.ts" --to-line 12 --text "Consider error handling" --pending
+bkt pr comment 42 --workspace workspace --repo other-repo --file "src/api.ts" --to-line 12 --text "Consider error handling" --pending
 ```
 
 #### Replying to Comments
@@ -177,11 +173,11 @@ bkt pr comment 42 --file "src/api.ts" --to-line 12 --text "Consider error handli
 ```bash
 # ALWAYS reply with --parent <comment-id> to thread correctly
 # First get the comment ID from the comments list:
-bkt pr comments 42 --details --json | jq '.[].id'
+bkt pr comments 42 --workspace workspace --repo other-repo --details --json | jq '.[].id'
 
 # Then reply:
-bkt pr comment 42 --text "Fixed in latest push" --parent 1001
-bkt pr comment 42 --text "Good catch, updated" --parent 2045
+bkt pr comment 42 --workspace workspace --repo other-repo --text "Fixed in latest push" --parent 1001
+bkt pr comment 42 --workspace workspace --repo other-repo --text "Good catch, updated" --parent 2045
 
 # NOTE: --parent cannot be combined with --file/--to-line/--from-line
 # Replies inherit the inline context (file+line) from the parent comment
@@ -229,24 +225,10 @@ Need agile info?
 ├─ Sprints
 │  → jira_get_sprints_from_board boardId=123
 │  → jira_get_sprint_issues sprintId=456
-│  → jira_move_issues_to_sprint sprintId=456 issues=["PROJ-1","PROJ-2"]
 │
-├─ Epics
-│  → jira_get_epic_issues epicIdOrKey="PROJ-100"
-│  → jira_link_to_epic epicIdOrKey="PROJ-100" issueKeys=["PROJ-5","PROJ-6"]
-│
-├─ Sprint analytics (CLI only)
-│  → atlcli jira analyze velocity --board 123 --sprints 5
-│  → atlcli jira analyze burndown --sprint 456
-│  → atlcli jira analyze scope-change --sprint 456
-│  → atlcli jira analyze predictability --board 123
-│
-└─ Sprint management
-   → atlcli jira sprint list --board 123
-   → atlcli jira sprint create --board 123 --name "Sprint 47"
-   → atlcli jira sprint start --id 789
-   → atlcli jira sprint close --id 789
-   → atlcli jira sprint add PROJ-1 PROJ-2 --sprint 789
+└─ Epics
+   → jira_get_epic_issues epicIdOrKey="PROJ-100"
+   → jira_link_to_epic epicIdOrKey="PROJ-100" issueKeys=["PROJ-5","PROJ-6"]
 ```
 
 ---
@@ -372,10 +354,10 @@ atlcli jira export --jql "sprint in openSprints()" -o sprint.csv --format csv
 ## @pi-stef/atlassian Tool Inventory
 
 ### Jira Platform
-`jira_issue` · `jira_get_issue` · `story_context` · `jira_search_issues` · `jira_list_projects` · `jira_create_issue` · `jira_update_issue` · `jira_delete_issue` · `jira_get_transitions` · `jira_transition_issue` · `jira_add_comment` · `jira_add_worklog` · `jira_get_worklog` · `jira_create_issue_link` · `jira_remove_issue_link` · `jira_get_issue_link_types` · `jira_get_project_versions` · `jira_create_version` · `jira_get_project_issues` · `jira_search_fields` · `jira_batch_get_changelogs` · `jira_get_user_profile` · `jira_download_attachments` · `jira_batch_create_issues` · `jira_batch_create_versions`
+`jira_issue` · `jira_get_issue` · `story_context` · `jira_search_issues` · `jira_list_projects` · `jira_create_issue` · `jira_update_issue` · `jira_get_transitions` · `jira_transition_issue` · `jira_add_comment` · `jira_add_worklog` · `jira_get_worklog` · `jira_create_issue_link` · `jira_remove_issue_link` · `jira_get_issue_link_types` · `jira_get_project_versions` · `jira_get_project_issues` · `jira_search_fields` · `jira_batch_get_changelogs` · `jira_get_user_profile` · `jira_download_attachments` · `jira_batch_create_issues` · `jira_batch_create_versions`
 
 ### Jira Software (Agile)
-`jira_get_agile_boards` · `jira_create_board` · `jira_delete_board` · `jira_get_board_issues` · `jira_get_sprints_from_board` · `jira_get_sprint_issues` · `jira_create_sprint` · `jira_update_sprint` · `jira_delete_sprint` · `jira_move_issues_to_sprint` · `jira_get_backlog_issues` · `jira_rank_backlog_issues` · `jira_get_epic_issues` · `jira_link_to_epic`
+`jira_get_agile_boards` · `jira_get_board_issues` · `jira_get_sprints_from_board` · `jira_get_sprint_issues` · `jira_get_backlog_issues` · `jira_rank_backlog_issues` · `jira_get_epic_issues` · `jira_link_to_epic`
 
 ### Confluence
 `confluence_page` · `confluence_get_page` · `confluence_list_spaces` · `confluence_list_pages` · `confluence_search` · `confluence_create_page` · `confluence_update_page` · `confluence_delete_page` · `confluence_get_page_children` · `confluence_get_comments` · `confluence_add_comment` · `confluence_get_labels` · `confluence_add_label` · `confluence_search_user`
@@ -399,14 +381,14 @@ atlcli jira export --jql "sprint in openSprints()" -o sprint.csv --format csv
 
 ### "Review PR with ticket context"
 1. `jira_issue key="SD-123"` — ticket context
-2. `bkt pr diff 42` — PR changes (establishes which files/lines are commentable)
-3. `bkt pr comments 42 --details --json` — get existing comment IDs
-4. Reply: `bkt pr comment 42 --text "..." --parent <id>` — thread under existing
-5. New inline: `bkt pr comment 42 --file "src/x.ts" --to-line 55 --text "..."` — only on diff lines
-6. `bkt pr approve 42` — when satisfied
+2. `bkt pr diff 42 --repo "<repo>" ` — PR changes (establishes which files/lines are commentable)
+3. `bkt pr comments 42 --repo "<repo>" --details --json` — get existing comment IDs
+4. Reply: `bkt pr comment 42 --repo "<repo>" --text "..." --parent <id>` — thread under existing
+5. New inline: `bkt pr comment 42 --repo "<repo>" --file "src/x.ts" --to-line 55 --text "..."` — only on diff lines
+6. `bkt pr approve 42 --repo "<repo>" ` — when satisfied
 
 ### "Transition after PR merge"
-`atlcli jira issue transition --key SD-123 --to "Done"`
+`atlcli jira issue transition --key SD-123 --to "Ready for QA"`
 
 ### "Create PR from current branch"
-`bkt pr create --target dev --close-source --with-default-reviewers`
+`bkt pr create --repo "<repo>" --target dev --close-source --with-default-reviewers`
