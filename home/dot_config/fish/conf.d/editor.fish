@@ -6,9 +6,6 @@ for path in $helix_paths
         set -gx EDITOR $path
         set -gx VISUAL $path
 
-        if not type -q hx
-            alias hx='helix'
-        end
         break
     end
 end

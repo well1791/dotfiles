@@ -1,0 +1,23 @@
+{{ template "install-header.sh.tmpl" . }}
+# Symlink hx -> helix if not already available
+# Helix installs as 'helix' on Arch but many tools/configs expect 'hx'
+
+if check_command hx; then
+    log_info "hx already available: $(command -v hx)"
+    exit 0
+fi
+
+helix_bin="$(command -v helix 2>/dev/null || true)"
+if [ -z "$helix_bin" ]; then
+    log_warn "helix not found, skipping hx symlink"
+    exit 0
+fi
+
+log_info "Creating hx symlink -> $helix_bin"
+ln -sf "$helix_bin" "{{ .chezmoi.homeDir }}/.local/bin/hx"
+
+if ! check_command hx; then
+    die "hx symlink creation failed"
+fi
+
+log_success "hx symlink created" "$(get_version hx)"
