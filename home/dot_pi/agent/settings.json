@@ -23,7 +23,8 @@
     "npm:pi-smart-compact",
     "npm:pi-sidequest",
     "npm:@juicesharp/rpiv-ask-user-question",
-    "npm:pi-sensitive-guard"
+    "npm:pi-sensitive-guard",
+    "npm:pi-prompt-template-model"
   ],
   "npmCommand": [
     "bun"
