@@ -69,21 +69,6 @@ tools:
     post_install:
       - 'echo "⚠ You may need to restart your shell or run: source /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"'
 
-  - name: mise
-    description: Polyglot runtime manager
-    type: run_once_before
-    priority: 20
-    check:
-      commands: [mise]
-      version_flag: "--version"
-    install:
-      method: download
-      url: "https://mise.jdx.dev/install.sh"
-    os_support: all
-    skip_if_exists: true
-    post_install:
-      - 'echo "⚠ Restart your shell or run: export PATH=\"$HOME/.local/bin:$PATH\""'
-
   - name: devenv
     description: Declarative developer environments (requires Nix)
     type: run_once_before
