@@ -1,6 +1,6 @@
 #!/bin/sh
 # Unified update script for all package managers and tools
-# Updates: system packages, mise, uv, rust, nix, devenv, bun, pi,
+# Updates: system packages, home-manager, uv, rust, nix, devenv, bun, pi,
 #          hunk, vortix, slumber, lean-ctx, tealdeer cache, flatpak,
 #          python-lsp-server, gopls, rmux, serena
 
@@ -77,16 +77,15 @@ if [ -f /etc/os-release ]; then
 fi
 
 # ============================================================================
-# 2. mise (runtime manager)
+# 2. home-manager (Nix user packages: node, go, gopls)
 # ============================================================================
-if command -v mise >/dev/null 2>&1; then
-    print_status "Updating mise..."
-    mise self-update || FAILED=$((FAILED + 1))
-    
-    print_status "Updating mise-managed runtimes..."
-    mise upgrade || print_warning "No mise runtime upgrades available"
+if command -v home-manager >/dev/null 2>&1; then
+    print_status "Updating home-manager flake inputs..."
+    nix flake update --flake "$HOME/.config/home-manager" || FAILED=$((FAILED + 1))
+    print_status "Applying home-manager generation..."
+    home-manager switch --flake "$HOME/.config/home-manager" || FAILED=$((FAILED + 1))
 else
-    print_warning "mise not found, skipping"
+    print_warning "home-manager not found, skipping"
 fi
 
 # ============================================================================
@@ -207,14 +206,6 @@ fi
 if command -v uv >/dev/null 2>&1 && uv tool list 2>/dev/null | grep -q python-lsp-server; then
     print_status "Updating python-lsp-server..."
     uv tool upgrade python-lsp-server || FAILED=$((FAILED + 1))
-fi
-
-# ============================================================================
-# 16. gopls (via mise)
-# ============================================================================
-if command -v mise >/dev/null 2>&1 && mise ls go 2>/dev/null | grep -q gopls; then
-    print_status "Updating gopls..."
-    mise upgrade go:golang.org/x/tools/gopls || print_warning "gopls already at latest"
 fi
 
 # ============================================================================
