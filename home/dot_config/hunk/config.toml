@@ -2,11 +2,12 @@
 # https://github.com/modem-dev/hunk
 
 theme = "auto"
-mode = "split"
+mode = "stack"
 vcs = "git"
 watch = false
 exclude_untracked = false
 line_numbers = false
 wrap_lines = false
+menu_bar = false
 agent_notes = true
 transparent_background = true
