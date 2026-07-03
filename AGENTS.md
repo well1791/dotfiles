@@ -141,7 +141,7 @@ $ variable: <command that produces selectable options> | fzf
 | distrobox | podman | Container manager that uses podman as backend |
 | television | — | Standalone. Replaces fzf for shell integration (Ctrl-T, Ctrl-R) only. |
 | avahi | nss-mdns | mDNS responder for .local hostname resolution on local network |
-| herdr | mise | Terminal-native agent runtime, installed via mise |
+| herdr | — | Terminal-native agent runtime, installed via curl |
 | vortix | openvpn | VPN TUI that manages tunnels via system openvpn binary |
 | sqlit | uv | Installed via uv tool with mssql-python driver |
 | lazyjira | — | Standalone Go binary; uses Jira REST API directly |
@@ -151,7 +151,7 @@ $ variable: <command that produces selectable options> | fzf
 | rmux | rust (cargo) | Installed via cargo install |
 | serena | uv, python 3.13 | Semantic code tools via LSP; MCP server connected to pi |
 | python-lsp-server | uv | Python LSP; installed via `uv tool install python-lsp-server` |
-| gopls | mise, go | Go LSP; installed via `mise use -g go:golang.org/x/tools/gopls@latest` |
+| gopls | nix, home-manager | Go LSP; declared in `~/.config/home-manager/home.nix` |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 
