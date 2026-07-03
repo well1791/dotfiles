@@ -1,0 +1,19 @@
+% home-manager, nix, packages, declarative
+
+# Apply home-manager configuration
+home-manager switch --flake ~/.config/home-manager
+
+# List installed packages
+home-manager packages
+
+# Update flake inputs (nixpkgs, etc.)
+nix flake update --flake ~/.config/home-manager
+
+# Show generations (rollback history)
+home-manager generations
+
+# Rollback to previous generation
+home-manager switch --rollback
+
+# Search available packages
+nix search nixpkgs <query>

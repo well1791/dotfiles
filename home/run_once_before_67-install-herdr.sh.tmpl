@@ -2,26 +2,15 @@
 # Install herdr (terminal-native agent runtime)
 # https://herdr.dev
 
-# Skip if already installed
 if log_version herdr; then exit 0; fi
 
 log_info "Installing herdr..."
+require_command curl "curl is required to install herdr"
 
-# Prefer mise (already installed in this setup)
-if check_command mise; then
-    if is_dry_run; then
-        log_info "[DRY RUN] Would run: mise use -g herdr@latest"
-    else
-        mise use -g herdr@latest
-    fi
+if is_dry_run; then
+    log_info "[DRY RUN] Would run: curl -fsSL https://herdr.dev/install.sh | sh"
 else
-    # Fallback: official installer
-    require_command curl "curl is required to install herdr"
-    if is_dry_run; then
-        log_info "[DRY RUN] Would run: curl -fsSL https://herdr.dev/install.sh | sh"
-    else
-        curl -fsSL https://herdr.dev/install.sh | sh
-    fi
+    curl -fsSL https://herdr.dev/install.sh | sh
 fi
 
 if ! check_command herdr; then die "herdr installation failed"; fi

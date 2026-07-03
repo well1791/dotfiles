@@ -18,10 +18,10 @@ During the initial setup, the following tools are automatically installed:
 - Required for devenv
 - Update: `sudo nix-channel --update && nix-env -u`
 
-### 2. **[mise](https://mise.jdx.dev)** - Polyglot runtime manager
-- Manages multiple language runtimes (Python, Node, Go, Rust, etc.)
-- Installed to `~/.local/bin/mise`
-- Update: `mise self-update`
+### 2. **[home-manager](https://github.com/nix-community/home-manager)** - Declarative user package management
+- Manages global CLI tools via Nix (Node.js, Go, gopls)
+- Config: `~/.config/home-manager/home.nix`
+- Update: `nix flake update --flake ~/.config/home-manager && home-manager switch --flake ~/.config/home-manager`
 
 ### 3. **[devenv](https://devenv.sh)** - Declarative developer environments
 - Built on Nix for reproducible project setups
@@ -63,9 +63,9 @@ During the initial setup, the following tools are automatically installed:
 
 ### 9b. **[Herdr](https://herdr.dev)** - Terminal-native agent runtime
 - tmux-style persistence with agent-aware panes, state rollups, and runtime API
-- Installed via mise: `mise use -g herdr@latest`
+- Installed via curl: `curl -fsSL https://herdr.dev/install.sh | sh`
 - Supports local, SSH, and remote-attach workflows
-- Update: `mise upgrade herdr` or `herdr update`
+- Update: `herdr update`
 
 ### 10. **[pi](https://pi.dev)** - Terminal coding agent
 - Minimal terminal coding harness with AI-powered assistance
@@ -181,9 +181,9 @@ Installed via system package manager (pacman/apt/dnf):
 ### 22. **[gopls](https://pkg.go.dev/golang.org/x/tools/gopls)** - Go Language Server
 - Official LSP implementation for Go
 - Supports completions, diagnostics, formatting, refactoring, code navigation
-- Installed globally via mise: `mise use -g go:golang.org/x/tools/gopls@latest`
+- Installed via home-manager (`home.nix`)
 - Binary: `gopls`
-- Update: `mise upgrade go:golang.org/x/tools/gopls` (or `update-all`)
+- Update: `nix flake update --flake ~/.config/home-manager && home-manager switch --flake ~/.config/home-manager` (or `update-all`)
 
 ### 23. **[navi](https://github.com/denisidoro/navi)** - Interactive cheatsheet tool
 - Browse and execute cheatsheets from the command line
@@ -232,7 +232,7 @@ This single command updates:
 - ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
-- ✅ mise and mise-managed runtimes (go, node, herdr, etc.)
+- ✅ home-manager packages (node, go, gopls)
 - ✅ uv (Python package manager) and uv tools (sqlit, serena, etc.)
 - ✅ Rust (rustup update) and cargo tools (rmux, rmux-sdk)
 - ✅ Nix channels, packages, and flake installs

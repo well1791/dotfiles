@@ -1,0 +1,25 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install home-manager (declarative user package management)
+# https://github.com/nix-community/home-manager
+
+if command -v home-manager >/dev/null 2>&1; then
+    log_success "home-manager already available" "$(home-manager --version 2>&1 | head -1)"
+    exit 0
+fi
+
+require_command nix "Nix is required to install home-manager"
+
+log_info "Bootstrapping home-manager..."
+
+if is_dry_run; then
+    log_info "[DRY RUN] Would run: nix run home-manager/master -- switch --flake $HOME/.config/home-manager"
+    exit 0
+fi
+
+nix run home-manager/master -- switch --flake "$HOME/.config/home-manager"
+
+if command -v home-manager >/dev/null 2>&1; then
+    log_success "home-manager installed" "$(home-manager --version 2>&1 | head -1)"
+else
+    log_warn "home-manager bootstrapped but not in PATH yet. Restart your shell."
+fi

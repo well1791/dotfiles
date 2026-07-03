@@ -63,7 +63,7 @@ log_warn "not in PATH yet"                       # ⚠ not in PATH yet
 log_error "installation failed"                  # ✗ installation failed (stderr)
 
 # Combined check + version display:
-if log_version mise; then
+if log_version uv; then
     exit 0  # Already installed, nothing to do
 fi
 ```
@@ -116,7 +116,7 @@ fail_if "-z \"$HOME\"" "HOME is not set"
 **Examples:**
 
 ```sh
-version=$(get_version mise)          # Uses --version by default
+version=$(get_version uv)            # Uses --version by default
 version=$(get_version nix "-V")      # Custom flag
 ```
 
@@ -198,7 +198,7 @@ fetch_url "https://example.com/binary" /tmp/binary
 config=$(fetch_url "https://example.com/config")
 
 # Download and execute installer:
-download_and_run "https://mise.jdx.dev/install.sh" "Installing mise..."
+download_and_run "https://astral.sh/uv/install.sh" "Installing uv..."
 ```
 
 ### Utility Module
