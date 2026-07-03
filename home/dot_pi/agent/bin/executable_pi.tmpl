@@ -1,4 +1,4 @@
 #!/bin/sh
-# Pi wrapper: Forces latest Node to avoid compatibility issues with directory-specific Node versions
+# Pi wrapper: Uses Nix-managed Node (home-manager) to avoid version conflicts
 # Requires Node 20+ for regex v flag support
-exec {{ .chezmoi.homeDir }}/.local/share/mise/installs/node/latest/bin/node {{ .chezmoi.homeDir }}/.bun/bin/pi "$@"
+exec node {{ .chezmoi.homeDir }}/.bun/bin/pi "$@"
