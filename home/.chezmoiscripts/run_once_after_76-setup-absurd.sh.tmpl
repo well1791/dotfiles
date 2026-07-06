@@ -62,4 +62,8 @@ fi
 # Pi agent skill is managed by chezmoi (home/dot_pi/agent/skills/absurd/SKILL.md)
 # No need to run absurdctl install-skill
 
-log_success "Absurd setup complete" "schema + default queue"
+# Enable cleanup timer
+systemctl --user daemon-reload
+systemctl --user enable --now absurd-cleanup.timer 2>/dev/null || true
+
+log_success "Absurd setup complete" "schema + default queue + cleanup timer"

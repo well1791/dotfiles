@@ -1,0 +1,18 @@
+#!/bin/sh
+# Absurd cleanup — remove completed/cancelled/failed tasks older than 30 days
+# Runs daily via systemd timer (absurd-cleanup.timer)
+set -e
+
+export ABSURD_DATABASE_URL="${ABSURD_DATABASE_URL:-postgresql://localhost:5433/absurd}"
+
+if ! command -v absurdctl >/dev/null 2>&1; then
+    echo "absurdctl not found, skipping cleanup"
+    exit 0
+fi
+
+if ! pg_isready -h localhost -p 5433 >/dev/null 2>&1; then
+    echo "PostgreSQL not available on port 5433, skipping cleanup"
+    exit 0
+fi
+
+absurdctl cleanup default 30

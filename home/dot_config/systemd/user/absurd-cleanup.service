@@ -1,0 +1,7 @@
+[Unit]
+Description=Clean up old Absurd checkpoint tasks (30-day retention)
+
+[Service]
+Type=oneshot
+Environment=ABSURD_DATABASE_URL=postgresql://localhost:5433/absurd
+ExecStart=%h/.local/bin/absurd-cleanup
