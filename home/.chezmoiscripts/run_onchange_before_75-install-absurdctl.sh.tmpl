@@ -1,0 +1,19 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install absurdctl (Absurd durable workflow CLI)
+# https://github.com/earendil-works/absurd
+
+if log_version absurdctl; then exit 0; fi
+
+require_command uv "uv is required to install absurdctl"
+
+log_info "Installing absurdctl..."
+
+if is_dry_run; then
+    log_info "[DRY RUN] Would run: uv tool install absurdctl"
+    exit 0
+fi
+
+uv tool install absurdctl
+
+if ! check_command absurdctl; then die "absurdctl installation failed"; fi
+log_success "absurdctl installed" "$(get_version absurdctl)"

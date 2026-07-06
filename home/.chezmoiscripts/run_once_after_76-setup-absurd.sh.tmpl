@@ -1,0 +1,59 @@
+{{ template "install-header.sh.tmpl" . }}
+# Setup Absurd schema, default queue, and pi agent skill
+# Runs once after PostgreSQL service and absurdctl are available
+# https://github.com/earendil-works/absurd
+
+{{ if .headless -}}
+log_info "Headless machine — skipping Absurd setup"
+exit 0
+{{ end -}}
+
+require_command absurdctl "absurdctl must be installed first"
+require_command pg_isready "postgresql must be installed (provides pg_isready)"
+
+# Ensure data dir exists (in case service hasn't started yet)
+mkdir -p "${HOME}/.local/share/absurd/pgdata"
+
+# Start the service if not running
+if ! systemctl --user is-active absurd-postgres.service >/dev/null 2>&1; then
+    log_info "Starting absurd-postgres service..."
+    systemctl --user daemon-reload
+    systemctl --user enable --now absurd-postgres.service
+fi
+
+# Wait for postgres to be ready
+log_info "Waiting for PostgreSQL on port 5433..."
+_attempts=0
+while [ $_attempts -lt 30 ]; do
+    if pg_isready -h localhost -p 5433 >/dev/null 2>&1; then
+        break
+    fi
+    _attempts=$((_attempts + 1))
+    sleep 1
+done
+
+if ! pg_isready -h localhost -p 5433 >/dev/null 2>&1; then
+    die "PostgreSQL did not become ready within 30 seconds"
+fi
+
+# Create the absurd database (idempotent)
+if ! psql -h localhost -p 5433 -d postgres -c "SELECT 1 FROM pg_database WHERE datname = 'absurd'" 2>/dev/null | grep -q 1; then
+    log_info "Creating 'absurd' database..."
+    createdb -h localhost -p 5433 absurd
+fi
+
+# Initialize Absurd schema
+export ABSURD_DATABASE_URL="postgresql://localhost:5433/absurd"
+log_info "Initializing Absurd schema..."
+absurdctl init
+
+# Create default queue
+log_info "Creating default queue..."
+absurdctl create-queue default
+
+# Install pi agent skill
+log_info "Installing Absurd pi skill..."
+mkdir -p "${HOME}/.pi/agent/skills"
+absurdctl install-skill "${HOME}/.pi/agent/skills"
+
+log_success "Absurd setup complete" "schema + default queue + pi skill"

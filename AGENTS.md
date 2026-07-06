@@ -197,6 +197,8 @@ $ variable: <command that produces selectable options> | fzf
 | serena | uv, python 3.13 | Semantic code tools via LSP; MCP server connected to pi |
 | python-lsp-server | uv | Python LSP; installed via `uv tool install python-lsp-server` |
 | gopls | nix, home-manager | Go LSP; declared in `~/.config/home-manager/home.nix` |
+| postgresql | nix, home-manager | User-level instance for Absurd; declared in home.nix, systemd user service on port 5433 |
+| absurdctl | uv, postgresql | Durable workflow CLI; installed via `uv tool install`, connects to user-level postgres on port 5433 |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 
