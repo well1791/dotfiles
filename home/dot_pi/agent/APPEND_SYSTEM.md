@@ -154,3 +154,48 @@ After activation, prefer Serena's semantic tools over text-based approaches for:
 - **Type errors/diagnostics** → `get_diagnostics_for_file`
 
 Do NOT use Serena for: file reading, pattern search, text replacement, shell commands, or memory — lean-ctx and pi handle those.
+
+## Absurd Durable Workflows
+
+Absurd is a Postgres-native durable execution system running on `localhost:5433`. Connection: `ABSURD_DATABASE_URL=postgresql://localhost:5433/absurd`. CLI: `absurdctl`. SDK: `absurd-sdk` (TypeScript), `absurd_sdk` (Python).
+
+### When to Use Absurd (automatic — no user prompt needed)
+
+Use Absurd proactively when the work matches ANY of:
+
+- **External waits**: task depends on something outside this session — CI result, PR review, deploy confirmation, webhook, human approval, scheduled time
+- **Recurring work**: anything that should happen periodically — cleanup, reports, syncs, health checks
+- **Long multi-step with side effects**: operations >5 min with side effects that must not repeat on failure — API calls, deployments, data mutations, publishes
+- **Cross-session continuity**: work that must survive session end/crash and be resumable by another session or worker
+- **Explicit request**: user says "make this durable", "use absurd", "this should survive crashes", or "schedule this"
+
+### When NOT to use Absurd
+
+- Pure computation, analysis, or code reading
+- Quick edits that complete in one turn
+- Work that is already idempotent and cheap to replay
+- In-session tool calls that finish immediately
+
+### Workflow
+
+1. **Check state**: `absurdctl list-queues` → `absurdctl list-tasks --queue=default`
+2. **Write worker** (if needed): create a TypeScript/Python script using `absurd-sdk` with `registerTask`, checkpointed `ctx.step()` calls, and `ctx.awaitEvent()` for external signals
+3. **Spawn tasks**: `absurdctl spawn-task <name> -P key=value` or programmatically via SDK
+4. **Monitor**: `absurdctl dump-task --task-id=<id>` for step-by-step state
+5. **Wake**: `absurdctl emit-event <name> -P key=value` to resume sleeping tasks
+6. **Debug failures**: `absurdctl list-tasks --status=failed` → `absurdctl dump-task` → fix → `absurdctl retry-task`
+
+### Key Design Patterns
+
+- **Steps are checkpoints**: completed steps never re-execute. Put side effects inside steps.
+- **Events are signals**: `ctx.awaitEvent(name)` suspends until `absurdctl emit-event` fires. First emit wins (cached).
+- **Idempotency keys**: prevent duplicate spawns during retries or concurrent triggers.
+- **Workers are long-running**: start them in a terminal or as a systemd service. They poll the queue.
+- **Tasks outlive sessions**: a spawned task runs independently. Pi can inspect/wake it later from any session.
+
+### Integration with Pi Tools
+
+- **babysitter-pi**: use Absurd for the durable steps within a babysitter process (babysitter orchestrates the agent, Absurd persists the work)
+- **pi-intercom**: emit events from one pi session to wake tasks spawned by another
+- **pi-subagents**: spawn Absurd tasks from subagents for work that outlives the subagent session
+- **Scheduled work**: use the cron pattern (idempotency key = task+slot) for recurring pi-driven maintenance
