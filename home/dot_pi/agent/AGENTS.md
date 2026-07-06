@@ -160,8 +160,6 @@ absurdctl list-tasks --queue=default --limit=20
 absurdctl dump-task --task-id=<id>
 ```
 
-Load the `absurd` skill for full workflow patterns, worker templates, and debugging playbooks.
-
 ## Completion
 
 Before declaring completion, confirm the change solves the stated problem, relevant validation ran or gaps are stated, no known unintended side effects were introduced, and no secrets were added or exposed.
