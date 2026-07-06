@@ -42,18 +42,24 @@ if ! psql -h localhost -p 5433 -d postgres -c "SELECT 1 FROM pg_database WHERE d
     createdb -h localhost -p 5433 absurd
 fi
 
-# Initialize Absurd schema
+# Initialize Absurd schema (skip if already initialized)
 export ABSURD_DATABASE_URL="postgresql://localhost:5433/absurd"
-log_info "Initializing Absurd schema..."
-absurdctl init
+if absurdctl schema-version >/dev/null 2>&1; then
+    log_info "Absurd schema already initialized ($(absurdctl schema-version))"
+else
+    log_info "Initializing Absurd schema..."
+    absurdctl init
+fi
 
-# Create default queue
-log_info "Creating default queue..."
-absurdctl create-queue default
+# Create default queue (skip if exists)
+if absurdctl list-queues 2>/dev/null | grep -q default; then
+    log_info "Default queue already exists"
+else
+    log_info "Creating default queue..."
+    absurdctl create-queue default
+fi
 
-# Install pi agent skill
-log_info "Installing Absurd pi skill..."
-mkdir -p "${HOME}/.pi/agent/skills"
-absurdctl install-skill "${HOME}/.pi/agent/skills"
+# Pi agent skill is managed by chezmoi (home/dot_pi/agent/skills/absurd/SKILL.md)
+# No need to run absurdctl install-skill
 
-log_success "Absurd setup complete" "schema + default queue + pi skill"
+log_success "Absurd setup complete" "schema + default queue"
