@@ -49,6 +49,7 @@
   os_media      (one-shot-press $one_shot_timeout (layer-while-held L_MEDIA))
   os_nums       (one-shot-press $one_shot_timeout (layer-while-held L_NUMS))
   os_ff         (one-shot-press $one_shot_timeout (layer-while-held L_FF))
+  os_ch         (one-shot-press $one_shot_timeout (layer-while-held L_CHARS))
   os_cw         (caps-word 1500)
   ;;----------------------------------------------------------------------
   os_sft        (one-shot-press $one_shot_timeout lsft)
@@ -235,7 +236,7 @@
   ;;                   | | | | |    --     | | | | |
   ;;                   | |*| | |    --     | | |*| |
   ;;                       |*| |    --     | |*|
-  ;;(ch_bml ch_hrl) ???                    (ch_bmr ch_hrr) ???
+  (ch_bml ch_hrl) @os_ch                   (ch_bmr ch_hrr) @os_ch
 
   ;;                   | | | | |    --     | | | | |
   ;;                   | |*|*| |    --     | |*|*| |
@@ -564,5 +565,21 @@
           u @ctl_sft_t    i @ctl_pgup    o @alt_grv    p @alt_9
   h XX    j @ctl_w        k @ctl_pgdn    l @ctl_tab    ; @alt_1
           m XX            , XX           . XX          / XX
+)
+
+(deflayermap (L_CHARS) ;; Characters via compose key (ralt)
+  ;; Compose + ' + vowel = accented vowel
+  ;; Compose + ~ + n = ñ
+  ;; Compose + " + u = ü
+  ;; Shift variants produce uppercase automatically (compose handles it)
+
+  a (macro ralt 20 ' 20 a)
+  e (macro ralt 20 ' 20 e)
+  i (macro ralt 20 ' 20 i)
+  o (macro ralt 20 ' 20 o)
+  u (macro ralt 20 ' 20 u)
+  n (macro ralt 20 S-grv 20 n)         ;; ~ then n = ñ
+  ;; ü via Shift+' (which is ") then u
+  d (macro ralt 20 S-' 20 u)           ;; d for diaeresis: ü
 )
 
