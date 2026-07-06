@@ -5,6 +5,5 @@
 
 # Auto-exported packages:
 lorem
-vim-digraphs
 
 # Add custom packages below:

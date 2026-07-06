@@ -2,9 +2,9 @@
 # https://espanso.org/docs/configuration/
 
 # Backend configuration
-# 'inject' is recommended for Wayland, 'clipboard' for compatibility
-# Using clipboard for vim-digraphs Unicode character support
-backend: clipboard
+# 'inject' is recommended for Wayland (types keystrokes directly)
+# 'clipboard' only needed for Unicode chars not on the keyboard layout
+backend: inject
 
 # Keyboard layout (required for Wayland with non-US layouts)
 # For US layout, this can be omitted or explicitly set
@@ -42,10 +42,9 @@ show_notifications: false
 undo_backspace: true
 
 # Word separators: characters that mark word boundaries
-# Note: Comma removed to support vim-digraphs package (triggers like ,SP)
 word_separators:
   - " "
-  # - ","  # Disabled for vim-digraphs compatibility
+  - ","
   - "."
   - "!"
   - "?"

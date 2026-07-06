@@ -1,4 +1,0 @@
-# vim-digraphs specific configuration
-# Use clipboard backend to avoid vkey mapping errors with special characters
-
-backend: clipboard
