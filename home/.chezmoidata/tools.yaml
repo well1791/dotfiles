@@ -453,24 +453,6 @@ tools:
     os_support: all
     skip_if_exists: true
 
-  - name: kde-shortcuts
-    description: KDE global shortcuts configuration guide
-    type: run_once_after
-    priority: 70
-    check:
-      custom_check: "true"  # Always run (outputs instructions)
-    install:
-      method: custom
-      script: |
-        require_command kdotool "kdotool is required"
-        require "-f $HOME/.local/bin/run-or-cycle.sh" "run-or-cycle.sh not found at ~/.local/bin/"
-        require "-f $HOME/.local/bin/librewolf-profile-launch.sh" "librewolf-profile-launch.sh not found at ~/.local/bin/"
-        log_success "Prerequisites verified"
-    dependencies: [kdotool]
-    os_support: [arch]
-    skip_if_exists: false
-    notes: "Outputs manual configuration instructions for KDE System Settings"
-
   - name: ghostty-window-fix
     description: Fix ghostty window properties for taskbar/Alt+Tab
     type: run_once_after
