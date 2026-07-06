@@ -148,93 +148,19 @@ When executing implementation plans with multiple independent tasks, prefer disp
 - Do not force-push to main/master.
 - Do not use `--no-verify` or `--no-gpg-sign`.
 
-## Progress Files
+## Progress Tracking
 
-### Location and Naming
+Absurd is the durable progress tracking system. Do NOT create `/tmp/progress_*.md` files or any local progress files.
 
-All progress files MUST be created in `/tmp/` with the naming pattern:
+Use the `absurd_checkpoint` tool to persist milestones (it writes to the Absurd PostgreSQL instance). For work that needs cross-session visibility or must survive crashes, spawn an Absurd task and use `ctx.awaitEvent()` for signals.
 
-```
-/tmp/progress_<session-id>.md
-```
-
-Where `<session-id>` is the current session identifier. NEVER create `progress.md` files in the working directory or any project path.
-
-### On Each Prompt: Check Existing Progress Files
-
-Before responding to every user prompt, check `/tmp/` for existing progress files:
-
+To check existing progress from other sessions:
 ```sh
-fd 'progress_' /tmp/ --type f
+absurdctl list-tasks --queue=default --limit=20
+absurdctl dump-task --task-id=<id>
 ```
 
-The user may switch between sessions at any time, and progress files may have been updated by other sessions since the last interaction. Always check for the current state.
-
-For each file found:
-1. Read the file's `Status` header.
-2. If the status requires user attention (`AWAITING_DECISION`, `BLOCKED`), notify the user immediately with a brief summary of what needs their input.
-3. If the status is terminal (`IMPLEMENTED`, `DISCARDED`), mention it only if relevant to the current session's context.
-4. If the status is `IN_PROGRESS`, check whether the work described is related to the current task and resume or reference it as appropriate.
-
-### Status Lifecycle
-
-Every progress file MUST include a `Status:` field at the top. Valid statuses:
-
-| Status | Meaning |
-|--------|---------|
-| `IN_PROGRESS` | Actively being worked on; not yet complete |
-| `BLOCKED` | Cannot proceed without external input or dependency resolution |
-| `AWAITING_DECISION` | Work is complete; requires user review or choice before proceeding |
-| `IMPLEMENTED` | Decision made and applied; no further action needed |
-| `DISCARDED` | Explored but deliberately abandoned; kept for reference |
-
-Transition rules:
-- `IN_PROGRESS` → `BLOCKED`, `AWAITING_DECISION`, `IMPLEMENTED`, `DISCARDED`
-- `BLOCKED` → `IN_PROGRESS` (once unblocked), `DISCARDED`
-- `AWAITING_DECISION` → `IMPLEMENTED`, `DISCARDED`
-- `IMPLEMENTED` and `DISCARDED` are terminal — never reopen.
-
-### File Format
-
-```markdown
-# Progress: <brief title>
-
-Status: IN_PROGRESS
-Session: <session-id>
-Created: <ISO date>
-Updated: <ISO date>
-
-## Objective
-
-<what this progress file tracks>
-
-## Tasks
-
-- [x] Completed task
-- [ ] Pending task
-
-## Notes
-
-<decisions, blockers, context for future sessions>
-```
-
-### Updating Status
-
-When work tracked by a progress file is complete or no longer needed, update the `Status:` field and the `Updated:` date immediately. Do not leave stale `IN_PROGRESS` files behind.
-
-### User Notification
-
-Statuses that require notifying the user:
-- `AWAITING_DECISION` → Tell the user what decision is needed and present the options.
-- `BLOCKED` → Tell the user what is blocking and what they can do to unblock.
-
-Format notification as:
-
-```
-⚠ Progress file needs attention: /tmp/progress_<session-id>.md
-  Status: AWAITING_DECISION
-  Summary: <one-line description of what needs input>
-```
+Load the `absurd` skill for full workflow patterns, worker templates, and debugging playbooks.
 
 ## Completion
 
