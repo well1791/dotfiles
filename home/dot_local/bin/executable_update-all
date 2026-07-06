@@ -115,7 +115,7 @@ fi
 # ============================================================================
 if command -v cargo >/dev/null 2>&1 && command -v rmux >/dev/null 2>&1; then
     print_status "Updating rmux..."
-    cargo install rmux || FAILED=$((FAILED + 1))
+    cargo install rmux 2>/dev/null || print_warning "rmux update failed (may already be latest)"
 fi
 
 # ============================================================================

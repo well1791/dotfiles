@@ -7,7 +7,15 @@ A refactored, DRY installation system for chezmoi-managed dotfiles. All scripts 
 ```
 chezmoi apply
     │
+    ├── .chezmoi.toml.tmpl               ← Feature flags (distro, ephemeral, headless, work, personal)
+    │
     ├── .chezmoidata/tools.yaml          ← Declarative tool configs (25 tools)
+    │
+    ├── .chezmoiexternal.toml.tmpl       ← Declarative external deps (GitHub releases, fonts)
+    │
+    ├── .chezmoiignore.tmpl              ← Distro + feature-flag exclusions
+    │
+    ├── .chezmoiremove.tmpl              ← Files to actively remove from target
     │
     ├── .chezmoitemplates/
     │   ├── install-lib.sh               ← Shared function library (23 functions)
@@ -17,10 +25,32 @@ chezmoi apply
     │   ├── install-package.sh.tmpl      ← Package install snippet
     │   └── install-verify.sh.tmpl       ← Verification snippet
     │
-    └── run_once_before_*-install-*.sh.tmpl  ← Generated scripts (source library)
-        run_once_after_*-configure-*.sh.tmpl
-        run_onchange_*-install-*.sh.tmpl
+    └── .chezmoiscripts/
+        ├── run_onchange_before_*-install-*.sh.tmpl  ← Generic installs (distro-agnostic)
+        ├── run_once_after_*-configure-*.sh.tmpl    ← One-shot configure scripts
+        ├── arch/                                   ← Arch/CachyOS-specific (paru/AUR)
+        │   └── run_onchange_before_*-install-*.sh.tmpl
+        ├── debian/                                 ← Debian/Ubuntu-specific (future)
+        └── fedora/                                 ← Fedora/RHEL-specific (future)
 ```
+
+### Script Naming Convention
+
+- **`run_onchange_before_`** — Install scripts. Re-run automatically when script content changes.
+- **`run_onchange_after_`** — Post-install scripts that should re-run on content change.
+- **`run_once_before_`** — One-shot scripts that run exactly once ever (rare).
+- **`run_once_after_`** — One-shot configure scripts (e.g., firewall setup, shell change).
+
+### Distro Separation
+
+Scripts that use distro-specific package managers directly (paru, AUR, apt-specific repos) go in a subdirectory:
+- `arch/` — for Arch-family distros (arch, cachyos, manjaro, endeavouros)
+- `debian/` — for Debian-family (ubuntu, debian, linuxmint, pop)
+- `fedora/` — for RHEL-family (fedora, rhel, centos, rocky)
+
+Scripts using `install_packages` (the abstraction layer) stay at the top level since the library handles distro detection automatically.
+
+`.chezmoiignore.tmpl` excludes non-matching distro directories based on the `distro` feature flag.
 
 ### How It Works
 
@@ -228,7 +258,7 @@ Add an entry in `home/.chezmoidata/tools.yaml`:
 ```yaml
   - name: my-tool
     description: What my-tool does
-    type: run_once_before
+    type: run_onchange_before
     priority: 55                    # Controls execution order (00-99)
     check:
       commands: [my-tool]           # Command(s) to verify it's installed
@@ -243,7 +273,9 @@ Add an entry in `home/.chezmoidata/tools.yaml`:
 
 ### Step 2: Create the script
 
-Create `home/run_once_before_55-install-my-tool.sh.tmpl`:
+For **distro-agnostic** installs (uses `install_packages`):
+
+Create `home/.chezmoiscripts/run_onchange_before_55-install-my-tool.sh.tmpl`:
 
 ```sh
 {{ template "install-header.sh.tmpl" . }}
@@ -267,6 +299,10 @@ else
 fi
 ```
 
+For **distro-specific** installs (e.g., AUR on Arch):
+
+Create `home/.chezmoiscripts/arch/run_onchange_before_55-install-my-tool.sh.tmpl`:
+
 ### Step 3: Test with dry-run
 
 ```sh
@@ -275,7 +311,7 @@ DRY_RUN=1 chezmoi apply --include=scripts
 
 ### Common Patterns
 
-**System package install:**
+**System package install (distro-agnostic, goes in `.chezmoiscripts/`):**
 
 ```sh
 {{ template "install-header.sh.tmpl" . }}
@@ -284,7 +320,7 @@ install_packages my-pkg
 log_success "my-pkg installed" "$(get_version my-pkg)"
 ```
 
-**AUR package (Arch only):**
+**AUR package (Arch only, goes in `.chezmoiscripts/arch/`):**
 
 ```sh
 {{ template "install-header.sh.tmpl" . }}
@@ -321,7 +357,7 @@ require_any_command "curl or wget required" curl wget
 download_and_run "https://example.com/install.sh" "Installing my-tool..."
 ```
 
-**Configuration script (run_once_after):**
+**Configuration script (one-shot, goes in `.chezmoiscripts/`):**
 
 ```sh
 {{ template "install-header.sh.tmpl" . }}

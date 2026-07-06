@@ -1,0 +1,28 @@
+{{/* External dependencies managed declaratively by chezmoi.
+     Tools listed here are fetched from GitHub releases automatically.
+     Use refreshPeriod to control update frequency.
+     
+     To add a new tool:
+       [".local/bin/<name>"]
+           type = "archive-file"  (or "file" for single binaries)
+           url = {{ gitHubLatestReleaseAssetURL "org/repo" "pattern" | quote }}
+           executable = true
+           path = "<path-inside-archive>"
+           refreshPeriod = "168h"  (optional, default: never auto-refresh)
+*/}}
+
+{{ if not .ephemeral }}
+
+{{/* Fonts - MesloLGS for terminal */}}
+{{ range (list
+    "MesloLGS NF Regular.ttf"
+    "MesloLGS NF Bold.ttf"
+    "MesloLGS NF Italic.ttf"
+    "MesloLGS NF Bold Italic.ttf") }}
+[".local/share/fonts/{{ . }}"]
+    type = "file"
+    url = "https://github.com/romkatv/powerlevel10k-media/raw/master/{{ . }}"
+    refreshPeriod = "720h"
+{{ end }}
+
+{{ end }}

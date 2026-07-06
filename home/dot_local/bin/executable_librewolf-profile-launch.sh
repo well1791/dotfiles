@@ -2,8 +2,15 @@
 # librewolf-profile-launch.sh - Launch or focus LibreWolf with specific profile
 # Usage: librewolf-profile-launch.sh <profile-name>
 
-# Use absolute path for kdotool (KDE shortcuts don't have ~/.local/bin in PATH)
-KDOTOOL="$HOME/.local/bin/kdotool"
+# Find kdotool - check PATH first, then common locations
+if command -v kdotool >/dev/null 2>&1; then
+    KDOTOOL="kdotool"
+elif [ -x "$HOME/.local/bin/kdotool" ]; then
+    KDOTOOL="$HOME/.local/bin/kdotool"
+else
+    echo "Error: kdotool not found. Install it for KDE Wayland window management." >&2
+    exit 1
+fi
 
 PROFILE_NAME="$1"
 

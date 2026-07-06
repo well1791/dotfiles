@@ -1,31 +1,38 @@
-
-{{ if ne .chezmoi.os "darwin" }}
-.chezmoiscripts/darwin/**
-.config/karabiner
-.hammerspoon
+{{/* Distro-specific script exclusions */}}
+{{/* Arch-family: cachyos, arch, manjaro, endeavouros */}}
+{{ if not (eq .distro "cachyos" "arch" "manjaro" "endeavouros") }}
+.chezmoiscripts/arch/**
 {{ end }}
 
-{{ if ne .chezmoi.os "linux" }}
-.chezmoiscripts/linux/**
-.hushlogin
-.local/share/fonts
+{{ if not (eq .distro "ubuntu" "debian" "linuxmint" "pop") }}
+.chezmoiscripts/debian/**
 {{ end }}
 
-{{ if ne .chezmoi.os "windows" }}
-.chezmoiscripts/windows/**
-Documents
-{{ else }}
-.bash_aliases
-.config/git/cookies
-.gnupg
-.gnupg/**
-.inputrc
-.oh-my-zsh
-.oh-my-zsh/**
-.p10k.zsh
-.ssh/id_rsa
-.ssh/id_rsa.pub
-.tmux.conf
-.zprofile
-.zshrc
+{{ if not (eq .distro "fedora" "rhel" "centos" "rocky" "almalinux") }}
+.chezmoiscripts/fedora/**
+{{ end }}
+
+{{/* Headless machines don't need GUI configs */}}
+{{ if .headless }}
+.config/ghostty
+.config/ghostty/**
+.config/kanata
+.config/kanata/**
+.config/espanso
+.config/espanso/**
+.config/zellij
+.config/zellij/**
+.local/bin/run-or-cycle.sh
+.local/bin/librewolf-profile-launch.sh
+.local/bin/hxe
+{{ end }}
+
+{{/* Ephemeral machines get minimal config */}}
+{{ if .ephemeral }}
+.config/helix
+.config/helix/**
+.config/navi
+.config/navi/**
+.doom.d
+.doom.d/**
 {{ end }}

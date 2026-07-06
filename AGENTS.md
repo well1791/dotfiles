@@ -41,8 +41,48 @@ This applies to dotfiles, shell configs, editor settings, tool configs — every
 | `executable_` | sets `+x` permission |
 | `.tmpl` | processed as Go template |
 | `private_` | sets `0600` permission |
-| `run_once_before_` | install script, runs once before apply |
-| `run_once_after_` | post-install script, runs once after apply |
+| `run_onchange_before_` | install script, re-runs when content changes |
+| `run_onchange_after_` | post-install script, re-runs when content changes |
+| `run_once_before_` | one-shot script, runs exactly once ever |
+| `run_once_after_` | one-shot post-install script, runs exactly once ever |
+
+## Repository Structure
+
+```
+.chezmoi.toml.tmpl              ← Config template with feature flags + distro detection
+.chezmoiroot                    ← Points chezmoi source to home/
+.chezmoiversion                 ← Minimum chezmoi version
+home/
+├── .chezmoidata/tools.yaml     ← Declarative tool metadata
+├── .chezmoiexternal.toml.tmpl  ← Declarative external deps (GitHub releases, fonts)
+├── .chezmoiignore.tmpl         ← Distro + feature-flag exclusions
+├── .chezmoiremove.tmpl         ← Files chezmoi actively removes from target
+├── .chezmoiscripts/            ← ALL install/configure scripts (not in home/ root)
+│   ├── run_onchange_before_*   ← Generic install scripts (distro-agnostic)
+│   ├── run_once_after_*        ← One-shot configure scripts
+│   ├── arch/                   ← Arch/CachyOS-specific scripts (paru/AUR)
+│   ├── debian/                 ← Debian/Ubuntu-specific (future)
+│   └── fedora/                 ← Fedora/RHEL-specific (future)
+├── .chezmoitemplates/          ← Shared library + script snippets
+├── dot_config/                 ← Tool configurations
+├── dot_local/                  ← User-local binaries and data
+└── ...                         ← Other dotfiles
+```
+
+## Feature Flags
+
+Defined in `.chezmoi.toml.tmpl`, auto-detected or prompted on first `chezmoi init`:
+
+| Flag | Type | Purpose |
+|---|---|---|
+| `distro` | string | Linux distro ID from `/etc/os-release` (e.g., `cachyos`, `arch`, `ubuntu`) |
+| `ephemeral` | bool | Cloud/VM/container instance — skip heavy installs |
+| `headless` | bool | No screen/keyboard — skip GUI configs |
+| `work` | bool | Work machine — include work-specific configs |
+| `personal` | bool | Personal machine — include personal secrets |
+
+Use in templates: `{{ if .headless }}`, `{{ if eq .distro "cachyos" }}`, etc.
+Use in `.chezmoiignore.tmpl` to exclude entire config trees per machine type.
 
 ## Code Style
 
@@ -55,12 +95,17 @@ This applies to dotfiles, shell configs, editor settings, tool configs — every
 
 ### 1. Installation Script
 
-Create `home/run_once_before_<NN>-install-<tool>.sh.tmpl`:
+Create the script in `home/.chezmoiscripts/`:
+- **Distro-agnostic** (uses `install_packages`): `home/.chezmoiscripts/run_onchange_before_<NN>-install-<tool>.sh.tmpl`
+- **Distro-specific** (uses paru/AUR directly): `home/.chezmoiscripts/arch/run_onchange_before_<NN>-install-<tool>.sh.tmpl`
 
 **Numbering ranges** (lower runs first):
 - `00-09` System prerequisites — `10-29` Language/runtime managers — `30-49` Language toolchains
 - `50-59` Container tools — `60-69` Runtime tools — `70-79` CLI tools/utilities
 - `80-89` Desktop/system integration — `90-99` Tools with dependencies on earlier installs
+
+**Use `run_onchange_` for installs** (re-runs when script content changes).
+**Use `run_once_` only for one-shot configure** scripts that must never re-run.
 
 **Template:**
 ```sh

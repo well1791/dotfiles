@@ -3,6 +3,30 @@
 
 Well's dotfiles, managed with [`chezmoi`](https://github.com/twpayne/chezmoi).
 
+## Quick Start
+
+```sh
+chezmoi init --apply well1791
+```
+
+On first init, chezmoi will prompt for:
+- Machine classification (headless, work, personal)
+- Personal data (name, emails)
+
+The distro is auto-detected from `/etc/os-release`.
+
+## Architecture
+
+- **Scripts** live in `home/.chezmoiscripts/` (not `home/` root), organized by distro
+- **Feature flags** (`distro`, `ephemeral`, `headless`, `work`, `personal`) drive conditional behavior
+- **`run_onchange_`** for install scripts (re-run on content change); **`run_once_`** for one-shot config
+- **`.chezmoiexternal.toml.tmpl`** for declarative external deps (GitHub releases, fonts)
+- **`.chezmoiignore.tmpl`** excludes configs and scripts by distro/machine type
+- **`.chezmoiremove.tmpl`** actively removes obsolete files from target
+
+See `INSTALL-SCRIPTS.md` for the full installation system reference.
+See `AGENTS.md` for conventions when adding new tools.
+
 ## What Gets Installed
 
 During the initial setup, the following tools are automatically installed:
@@ -420,7 +444,7 @@ sudo systemctl restart sshd
 ### Network Optimization
 - **Wi-Fi Regulatory Domain**: Spain (ES)
   - ⚠️ Manual configuration required (country-specific)
-  - See: `run_once_after_85-configure-wifi-regdom.sh` output for instructions
+  - See: `.chezmoiscripts/arch/run_once_after_85-configure-wifi-regdom.sh` output for instructions
   - Benefits: Unlock all Wi-Fi channels, enable full 5GHz/6GHz spectrum, optimize transmit power
   - Verify: `iw reg get` (should show `country ES: DFS-ETSI`)
 

@@ -7,6 +7,11 @@
 #   window-class  The window class to search for (e.g. brave-browser, konsole, dolphin)
 #   command       The command to launch the app if no window is found
 
+if ! command -v kdotool >/dev/null 2>&1; then
+    echo "Error: kdotool not found. This script requires KDE Plasma (Wayland)." >&2
+    exit 1
+fi
+
 CLASS=$1
 CMD=$2
 

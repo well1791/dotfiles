@@ -4,7 +4,14 @@
 # Check if user really wants Ghostscript
 if [ "$1" = "--ghostscript" ]; then
     shift
-    exec /usr/bin/gs "$@"
+    if command -v /usr/bin/gs >/dev/null 2>&1; then
+        exec /usr/bin/gs "$@"
+    elif command -v /usr/local/bin/gs >/dev/null 2>&1; then
+        exec /usr/local/bin/gs "$@"
+    else
+        echo "Error: Ghostscript (gs) not found in standard paths" >&2
+        exit 1
+    fi
 fi
 
 # Colors (always enabled since we know ghostty supports them)

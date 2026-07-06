@@ -1,4 +1,35 @@
 
+{{/* boolean feature tags */}}
+{{- $ephemeral := false -}}{{/* true if this machine is ephemeral, e.g. a cloud or VM instance */}}
+{{- $work := false -}}{{/* true if this machine is a work machine */}}
+{{- $headless := false -}}{{/* true if this machine does not have a screen and keyboard */}}
+{{- $personal := false -}}{{/* true if this machine should have personal secrets */}}
+{{- "" -}}
+
+{{/* detect distro from os-release */}}
+{{- $distro := "unknown" -}}
+{{- if (and (eq .chezmoi.os "linux") (hasKey .chezmoi.osRelease "id")) -}}
+{{-   $distro = .chezmoi.osRelease.id -}}
+{{- end -}}
+
+{{/* detect ephemeral environments: codespaces, containers, VMs */}}
+{{- if or (env "CODESPACES") (env "REMOTE_CONTAINERS_IPC") (eq .chezmoi.username "root" "ubuntu" "vagrant" "vscode") -}}
+{{-   $ephemeral = true -}}
+{{-   $headless = true -}}
+{{- end -}}
+
+{{/* classify machines by hostname */}}
+{{- if not $ephemeral -}}
+{{-   if stdinIsATTY -}}
+{{-     $headless = promptBoolOnce . "headless" "Is this a headless machine" -}}
+{{-     $work = promptBoolOnce . "work" "Is this a work machine" -}}
+{{-     $personal = promptBoolOnce . "personal" "Is this a personal machine" -}}
+{{-   else -}}
+{{-     $ephemeral = true -}}
+{{-     $headless = true -}}
+{{-   end -}}
+{{- end -}}
+
 {{- $name := promptStringOnce . "name" "Full name" -}}
 {{- $email := promptStringOnce . "email" "Personal email address" -}}
 {{- $workEmail := promptStringOnce . "work_email" "Work email address" -}}
@@ -9,6 +40,11 @@
     email = {{ $email | quote }}
     work_email = {{ $workEmail | quote }}
     partner_email = {{ $partnerEmail | quote }}
+    ephemeral = {{ $ephemeral }}
+    headless = {{ $headless }}
+    work = {{ $work }}
+    personal = {{ $personal }}
+    distro = {{ $distro | quote }}
 
 [diff]
     pager = "hunk pager --pager"
