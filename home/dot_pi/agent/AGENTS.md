@@ -49,7 +49,6 @@ Follow this research order before answering questions:
 - Ask before acting when intent is materially ambiguous.
 - Ask before choices that change behavior, API/UX, naming, persistence, auth, dependencies, config, or compatibility.
 - Prefer one targeted question. When bundling, ensure each question can be answered independently.
-- When presenting choices with discrete options, use `ask_user_question` for structured selection instead of free-text questions.
 - Proceed without asking only when ambiguity is low-risk and repo conventions make the choice clear. State the assumption briefly.
 
 Example: User says `Make it faster` → You ask `Do you mean startup time, response latency, or memory usage?`

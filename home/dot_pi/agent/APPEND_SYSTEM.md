@@ -128,15 +128,7 @@ Serena is available via MCP and provides LSP-powered semantic operations.
 
 **Mandatory activation:** Before the FIRST Serena tool call in any session, you MUST call `activate_project` with the current working directory path. This is non-negotiable — all other Serena tools will fail without it. Serena auto-detects languages and starts language servers automatically; no manual project setup is needed.
 
-After activation, prefer Serena's semantic tools over text-based approaches for:
-
-- **Renaming** symbols across files → `rename_symbol` (not search-and-replace)
-- **Finding references** to a symbol → `find_referencing_symbols` (not grep)
-- **Editing function/class bodies** → `replace_symbol_body` (not oldText matching)
-- **Inserting code relative to symbols** → `insert_before_symbol` / `insert_after_symbol`
-- **Deleting symbols cleanly** → `safe_delete_symbol` (handles cascading unused refs)
-- **Getting file structure** → `get_symbols_overview` (complements `ctx_read mode=map`)
-- **Type errors/diagnostics** → `get_diagnostics_for_file`
+Prefer Serena's semantic tools over text-based approaches for symbol-level operations (see AGENTS.md Code Editing table for the full routing).
 
 Do NOT use Serena for: file reading, pattern search, text replacement, shell commands, or memory — lean-ctx and pi handle those.
 
