@@ -1,0 +1,33 @@
+% absurdctl, absurd, durable, workflow, postgres
+
+# List all queues
+absurdctl list-queues
+
+# List recent tasks (optionally filter by status)
+absurdctl list-tasks --queue=<queue> --status=<status> --limit=<limit>
+
+# Dump full task state (checkpoints, params, result)
+absurdctl dump-task --task-id=<task_id>
+
+# Spawn a new task with parameters
+absurdctl spawn-task <task_name> --queue=<queue> -P <key>=<value>
+
+# Emit event to wake a sleeping task
+absurdctl emit-event <event_name> --queue=<queue> -P <key>=<value>
+
+# Retry a failed task
+absurdctl retry-task <task_id>
+
+# Cancel a running/pending task
+absurdctl cancel-task <task_id>
+
+# Check schema version
+absurdctl schema-version
+
+# Apply schema migrations
+absurdctl migrate
+
+$ queue: absurdctl list-queues 2>/dev/null
+$ status: echo "pending\nrunning\nsleeping\ncompleted\nfailed\ncancelled" | tr '\n' '\n'
+$ task_id: absurdctl list-tasks --queue=default --limit=20 2>/dev/null | grep task_id | sed 's/task_id=//'
+$ limit: echo "10\n20\n50"
