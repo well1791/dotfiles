@@ -25,7 +25,14 @@ export default function (pi: ExtensionAPI) {
 	async function getClient() {
 		if (client) return client;
 		try {
-			const { Absurd } = await import("absurd-sdk");
+			// Import from pi's npm context (local extensions don't have node_modules)
+			const absurdPath = require.resolve("absurd-sdk", {
+				paths: [
+					process.env.HOME + "/.pi/agent/npm/node_modules",
+					process.cwd() + "/node_modules",
+				],
+			});
+			const { Absurd } = await import(absurdPath);
 			client = new Absurd({ queueName: QUEUE, databaseUrl: DB_URL });
 			available = true;
 			return client;
@@ -48,6 +55,7 @@ export default function (pi: ExtensionAPI) {
 				startedAt: new Date().toISOString(),
 				cwd: process.cwd(),
 			}, {
+				queue: QUEUE,
 				idempotencyKey: `pi-session:${sessionId}`,
 			});
 			taskId = result.taskID;
@@ -96,6 +104,7 @@ export default function (pi: ExtensionAPI) {
 				summary,
 				timestamp: new Date().toISOString(),
 			}, {
+				queue: QUEUE,
 				idempotencyKey: `pi-turn:${sessionId}:${turnCount}`,
 			});
 		} catch {
@@ -176,6 +185,7 @@ export default function (pi: ExtensionAPI) {
 					turn: turnCount,
 					timestamp: new Date().toISOString(),
 				}, {
+					queue: QUEUE,
 					idempotencyKey: `pi-checkpoint:${sessionId}:${params.name}`,
 				});
 
