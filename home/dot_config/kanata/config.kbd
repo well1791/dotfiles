@@ -22,15 +22,6 @@
   tap_timeout        170
   hold_timeout       150
   one_shot_timeout   500 ;; dismiss after that time
-
-  lt_kbd ( ;; [l]ef[t]-hand keyboard
-    q  w  e  r  y
-    a  s  d  f  g
-  )
-  rt_kbd ( ;; [r]igh[t]-hand keyboard
-    y  u  i  o  p
-    h  j  k  l  ;
-  )
 )
 
 (defalias
@@ -484,7 +475,7 @@
 
   ;; LEFT
                   q q     w w     e e     r r
-                  a z     s s     d d     f f    g @ch_no_sil
+                  a a     s s     d d     f f    g @ch_no_sil
                   z XX    x XX    c XX    v XX
 
   ;; RIGHT
