@@ -4,6 +4,9 @@
   name = {{ .name }}
   email = {{ .email }}
 
+[includeIf "gitdir:/mnt/storage/Code/work/"]
+  path = ~/Code/work/.gitconfig
+
 [includeIf "gitdir:~/Code/work/"]
   path = ~/Code/work/.gitconfig
 

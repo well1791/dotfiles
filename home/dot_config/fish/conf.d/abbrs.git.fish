@@ -2,61 +2,56 @@
 abbr -a -- gg 'git add . && git commit -m "WIP" -an && git push --set-upstream origin (git branch --show-current) --force-with-lease'
 
 # git fetch
-abbr -a -- gf 'git fetch --all --prune'
+abbr -a -- gfa 'git fetch --all --prune'
 
 # git push
-abbr -a -- gp 'git push --set-upstream origin (git branch --show-current) --force-with-lease'
+abbr -a -- gpf 'git push --set-upstream origin (git branch --show-current) --force-with-lease'
 
 # git add
-abbr -a -- ga 'git add'
-abbr -a -- gaa 'git add .'
+abbr -a -- gaa 'git add'
+abbr -a -- gal 'git add .'
 
 # git diff
 abbr -a -- gdi 'git diff --no-ext-diff'
-abbr -a -- gdis 'git diff --no-ext-diff --cached'
+abbr -a -- gdg 'git diff --no-ext-diff --cached'
 
 # git branch
 abbr -a -- gbr 'git branch'
-abbr -a -- gbra 'git branch --all'
-abbr -a -- gbrx 'git branch --delete --force'
-abbr -a -- gbrm 'git branch --move'
-abbr -a -- gbrc 'git switch --create'
-abbr -a -- gbry 'git switch --copy'
+abbr -a -- gba 'git branch --all'
+abbr -a -- gbx 'git branch --delete --force'
+abbr -a -- gbm 'git branch --move'
+abbr -a -- gbc 'git switch --create'
+abbr -a -- gby 'git switch --copy'
 
 # git status
 abbr -a -- gst 'git status --short'
-abbr -a -- gsts 'git status --short'
-abbr -a -- gstv 'git status --verbose'
+abbr -a -- gss 'git status --short'
+abbr -a -- gsv 'git status --verbose'
 
 # git switch
 abbr -a -- gsw 'git switch'
-abbr -a -- gswd 'git switch --detach'
-abbr -a -- gswdv 'git switch --detach origin/dev'
+abbr -a -- gsd 'git switch --detach'
 
 # git restore
 abbr -a -- grs 'git restore'
-abbr -a -- grsa 'git restore .'
-abbr -a -- grss 'git restore --staged'
-abbr -a -- grssa 'git restore --staged .'
+abbr -a -- grg 'git restore --staged'
 
 # git commit
 abbr -a -- gco 'git commit --verbose'
-abbr -a gcom --set-cursor 'git commit --message "%"'
-abbr -a gcoma --set-cursor 'git commit --message "%" -a'
-abbr -a -- gcoe 'git commit --verbose --amend'
-abbr -a -- gcof 'git commit --amend --reuse-message HEAD'
+abbr -a gcm --set-cursor 'git commit --message "%"'
+abbr -a -- gce 'git commit --verbose --amend'
+abbr -a -- gcf 'git commit --amend --reuse-message HEAD'
 
 # git merge
 abbr -a -- gme 'git merge'
-abbr -a -- gmec 'git merge --continue'
-abbr -a -- gmea 'git merge --abort'
+abbr -a -- gmc 'git merge --continue'
+abbr -a -- gma 'git merge --abort'
 
 # git rebase
 abbr -a -- grb 'git rebase'
-abbr -a -- grbi 'git rebase --interactive'
-abbr -a -- grbc 'git rebase --continue'
-abbr -a -- grba 'git rebase --abort'
-abbr -a -- grbd 'git rebase origin/dev'
+abbr -a -- gri 'git rebase --interactive'
+abbr -a -- grc 'git rebase --continue'
+abbr -a -- gra 'git rebase --abort'
 
 # git reset
 abbr -a -- gre 'git reset'
@@ -66,6 +61,6 @@ set -g _git_log_fuller_format '%C(bold yellow)commit %h%C(auto)%d%n%C(bold)Autho
 set -g _git_log_oneline_format '%C(bold yellow)%h%C(reset) %s%C(auto)%d%C(reset)'
 
 abbr -a -- glo 'git log --topo-order --pretty=format:(echo $_git_log_oneline_format) -11'
-abbr -a -- glol 'git log --topo-order --pretty=format:(echo $_git_log_fuller_format) -11'
-abbr -a -- glod 'git log --topo-order --stat --patch --pretty=format:(echo $_git_log_fuller_format) -11'
-abbr -a -- glos 'git log --topo-order --stat --pretty=format:(echo $_git_log_fuller_format) -11'
+abbr -a -- gll 'git log --topo-order --pretty=format:(echo $_git_log_fuller_format) -11'
+abbr -a -- gld 'git log --topo-order --stat --patch --pretty=format:(echo $_git_log_fuller_format) -11'
+abbr -a -- gls 'git log --topo-order --stat --pretty=format:(echo $_git_log_fuller_format) -11'
