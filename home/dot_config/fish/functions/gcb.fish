@@ -12,6 +12,7 @@ function gcb --description "Clones a repo as bare and set up two worktrees."
     git clone --single-branch --bare "$repo" .git
     git config --local --add remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
     git fetch --all --prune
+    git worktree add --detach agent
     git worktree add --detach "$proj_name.1"
     git worktree add --detach "$proj_name.2"
     git worktree add --detach "$proj_name.3"
