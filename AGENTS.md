@@ -244,16 +244,6 @@ chezmoi add --encrypt ~/.config/fish/api-keys.fish
 
 This produces an `.age` file (e.g., `encrypted_api-keys.fish.age`) that is safe to commit. The encryption key and recipient are configured in `~/.config/chezmoi/chezmoi.toml`.
 
-### Before Committing — PII Checklist
-
-Run this scan before any commit:
-
-```sh
-rg -n '(wellsaint91|lilyzam1993|wmendoza@inscyth|Wellington Mendoza)' --glob '!.git' --glob '!.chezmoi*'
-rg -n '/home/well[^a-z]' --glob '!.git' --glob '!*.md'
-```
-
-Both commands must return empty. If not, convert the file to a `.tmpl` and replace literals with template variables.
 
 ## lean-ctx Integration
 
