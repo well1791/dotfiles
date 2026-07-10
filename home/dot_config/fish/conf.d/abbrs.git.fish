@@ -8,8 +8,8 @@ abbr -a -- gfa 'git fetch --all --prune'
 abbr -a -- gpf 'git push --set-upstream origin (git branch --show-current) --force-with-lease'
 
 # git add
-abbr -a -- gaa 'git add'
-abbr -a -- gal 'git add .'
+abbr -a -- gad 'git add'
+abbr -a -- gaa 'git add .'
 
 # git diff
 abbr -a -- gdi 'git diff --no-ext-diff'
