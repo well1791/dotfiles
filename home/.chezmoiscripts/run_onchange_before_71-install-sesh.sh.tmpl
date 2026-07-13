@@ -1,0 +1,19 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install sesh (https://github.com/joshmedeski/sesh)
+# Smart tmux session manager with zoxide integration.
+
+if log_version sesh; then exit 0; fi
+
+log_info "Installing sesh..."
+
+# Try system package first, fall back to go install
+if check_command paru; then
+    install_packages sesh-bin
+elif check_command go; then
+    go install github.com/joshmedeski/sesh/v2@latest
+else
+    die "No package manager or go toolchain available to install sesh"
+fi
+
+if ! check_command sesh; then die "sesh installation failed"; fi
+log_success "sesh installed" "$(get_version sesh)"

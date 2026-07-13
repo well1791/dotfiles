@@ -1,0 +1,24 @@
+% sesh, session, tmux, rmux, multiplexer
+
+# Connect to a session (or create from zoxide path)
+sesh connect <session>
+
+# List all sessions (tmux + zoxide + configs)
+sesh list
+
+# List only active rmux sessions
+sesh list -t
+
+# Switch to last session
+sesh last
+
+# Open interactive picker (fzf inside terminal)
+sesh-picker
+
+# Clone a repo and start a session
+sesh clone <repo_url>
+
+# Create directory and connect
+sesh mkdir <path>
+
+$ session: sesh list 2>/dev/null

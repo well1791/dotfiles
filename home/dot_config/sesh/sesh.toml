@@ -1,0 +1,14 @@
+# sesh configuration
+# https://github.com/joshmedeski/sesh
+
+# Use rmux instead of tmux
+tmux_command = "rmux"
+
+# Use last 2 directory components for session names
+dir_length = 2
+
+# Sort: active sessions first, then configured, then zoxide results
+sort_order = ["tmux", "config", "zoxide"]
+
+# Sessions to hide from normal listing
+blacklist = ["scratch"]
