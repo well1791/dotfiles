@@ -74,6 +74,11 @@ During the initial setup, the following tools are automatically installed:
 - Installed via system package manager (pacman/apt/dnf)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
+### 6c. **[podman-compose](https://github.com/containers/podman-compose)** - docker-compose-compatible orchestrator for Podman
+- Runs multi-container `compose.yaml` stacks against the Podman backend
+- Installed via system package manager (pacman/apt/dnf)
+- Update: `sudo pacman -Syu` (or your distro's update command)
+
 ### 7. **[Bun](https://bun.sh)** - Fast all-in-one JavaScript runtime
 - Drop-in replacement for Node.js, with built-in bundler, test runner, package manager
 - Installed to `~/.bun/bin/bun`
@@ -253,7 +258,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ home-manager packages (node, go, gopls)

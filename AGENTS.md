@@ -184,6 +184,7 @@ $ variable: <command that produces selectable options> | fzf
 | direnv | — | Auto-loads .envrc; integrates with devenv for automatic shell activation |
 | pi | bun | Installed via bun global packages |
 | distrobox | podman | Container manager that uses podman as backend |
+| podman-compose | podman | docker-compose-compatible multi-container orchestrator for podman |
 | television | — | Standalone. Replaces fzf for shell integration (Ctrl-T, Ctrl-R) only. |
 | avahi | nss-mdns | mDNS responder for .local hostname resolution on local network |
 | herdr | — | Terminal-native agent runtime, installed via curl |

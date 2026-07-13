@@ -1,0 +1,22 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install podman-compose (docker-compose-compatible orchestrator for podman)
+# https://github.com/containers/podman-compose
+
+# Skip if already installed
+if log_version podman-compose; then
+    exit 0
+fi
+
+# Requires podman as backend
+if ! check_command podman; then
+    die "podman-compose requires podman"
+fi
+
+log_info "Installing podman-compose..."
+install_packages podman-compose
+
+if ! check_command podman-compose; then
+    die "podman-compose installation failed"
+fi
+
+log_success "podman-compose installed" "$(get_version podman-compose)"

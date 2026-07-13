@@ -1,0 +1,24 @@
+% podman-compose, container, docker-compose
+
+# Start services in the background
+podman-compose up -d
+
+# Start services in foreground (view logs)
+podman-compose up
+
+# Stop and remove services
+podman-compose down
+
+# List running services
+podman-compose ps
+
+# View logs for a service
+podman-compose logs -f <service>
+
+# Restart a service
+podman-compose restart <service>
+
+# Run a one-off command in a service
+podman-compose run --rm <service> <command>
+
+$ service: podman-compose ps --services 2>/dev/null | fzf
