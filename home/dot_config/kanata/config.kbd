@@ -25,16 +25,6 @@
 )
 
 (defalias
-  ;; SWITCH TO
-  sw_no_mods    (layer-switch L_NO_MODS)
-  sw_nav_r      (layer-switch L_NAV_R)
-  sw_nav_l      (layer-switch L_NAV_L)
-  sw_al         (layer-switch L_ALPHA)
-
-  ;; WHILE HELD
-  wh_nav_r      (layer-while-held L_NAV_R)
-  wh_nav_l      (layer-while-held L_NAV_L)
-
   ;; ONE SHOT
   os_go         (one-shot-press $one_shot_timeout (layer-while-held L_GO))
   os_media      (one-shot-press $one_shot_timeout (layer-while-held L_MEDIA))
@@ -42,19 +32,28 @@
   os_ff         (one-shot-press $one_shot_timeout (layer-while-held L_FF))
   os_ch         (one-shot-press $one_shot_timeout (layer-while-held L_CHARS))
   os_cw         (caps-word 1500)
+
+  ;; WHILE HELD
+  wh_nav_r      (layer-while-held L_NAV_R)
+  wh_nav_l      (layer-while-held L_NAV_L)
+
+  ;; SWITCH TO
+  sw_plain      (layer-switch L_PLAIN)
+  sw_nav_r      (layer-switch L_NAV_R)
+  sw_nav_l      (layer-switch L_NAV_L)
+  sw_al         (layer-switch L_ALPHA)
   ;;----------------------------------------------------------------------
   os_sft        (one-shot-press $one_shot_timeout lsft)
   os_ctl        (one-shot-press $one_shot_timeout lctl)
   os_alt        (one-shot-press $one_shot_timeout lalt)
   os_sup        (one-shot-press $one_shot_timeout lmet)
-  ;;----------------------------------------------------------------------
-  os_meh        (one-shot-press $one_shot_timeout C-A-lsft)
   os_ctl_sft    (one-shot-press $one_shot_timeout C-lsft)
   os_alt_sft    (one-shot-press $one_shot_timeout A-lsft)
   os_ctl_alt    (one-shot-press $one_shot_timeout C-lalt)
   os_sup_sft    (one-shot-press $one_shot_timeout M-lsft)
   os_sup_ctl    (one-shot-press $one_shot_timeout M-lctl)
   os_sup_alt    (one-shot-press $one_shot_timeout M-lalt)
+  os_meh        (one-shot-press $one_shot_timeout C-A-lsft)
 
   ;; TAP HOLD
   esc_sft           (tap-hold $tap_timeout $hold_timeout esc lsft)
@@ -85,6 +84,11 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORDS ALIAS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defalias
+  ;; PLAIN
+  pl_sil      (chord CH_PL ch_sil)
+  pl_sir      (chord CH_PL ch_sir)
+
+  ;; ALPHA
   al_sil      (chord CH_AL ch_sil)
   al_hil      (chord CH_AL ch_hil)
   al_hml      (chord CH_AL ch_hml)
@@ -117,8 +121,7 @@
   ns_hi       (chord CH_NS ch_ns_hi)
   ns_hm       (chord CH_NS ch_ns_hm)
   ns_hr       (chord CH_NS ch_ns_hr)
-  ns_hpl      (chord CH_NS ch_ns_hpl)
-  ns_hpr      (chord CH_NS ch_ns_hpr)
+  ns_hp       (chord CH_NS ch_ns_hp)
   ns_ti       (chord CH_NS ch_ns_ti)
   ns_tm       (chord CH_NS ch_ns_tm)
   ns_tr       (chord CH_NS ch_ns_tr)
@@ -127,31 +130,27 @@
   ns_bm       (chord CH_NS ch_ns_bm)
 
   ;; FUNCTIONAL
-  ff_hi       (chord CH_FF ch_ff_hi)
-  ff_hm       (chord CH_FF ch_ff_hm)
-  ff_hr       (chord CH_FF ch_ff_hr)
-  ff_ti       (chord CH_FF ch_ff_ti)
-  ff_tm       (chord CH_FF ch_ff_tm)
-  ff_tr       (chord CH_FF ch_ff_tr)
+  ff_hi       (chord CH_FF ch_hi)
+  ff_hm       (chord CH_FF ch_hm)
+  ff_hr       (chord CH_FF ch_hr)
+  ff_ti       (chord CH_FF ch_ti)
+  ff_tm       (chord CH_FF ch_tm)
+  ff_tr       (chord CH_FF ch_tr)
 
   ;; NAVIGATION
-  ch_na_up     (chord CH_NA ch_up)
-  ch_na_dn     (chord CH_NA ch_dn)
-  ch_na_lt     (chord CH_NA ch_lt)
-  ch_na_rt     (chord CH_NA ch_rt)
-  ch_na_tab    (chord CH_NA ch_tab)
-  ch_na_bspc   (chord CH_NA ch_bspc)
-
-  ;; NO MODS
-  ch_no_sil    (chord CH_NO_MODS ch_sil)
-  ch_no_sir    (chord CH_NO_MODS ch_sir)
+  na_up       (chord CH_NA ch_up)
+  na_dn       (chord CH_NA ch_dn)
+  na_lt       (chord CH_NA ch_lt)
+  na_rt       (chord CH_NA ch_rt)
+  na_tab      (chord CH_NA ch_tab)
+  na_bspc     (chord CH_NA ch_bspc)
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; CHORD KEYS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defchords CH_NO_MODS $chord_timeout
+(defchords CH_PL $chord_timeout
   (ch_sil) g
   (ch_sir) h
 
@@ -172,7 +171,7 @@
   ;;----------------------------------------------------------------------
   ;;                  | | | | |
   ;;                  |f|*|*|j|
-  (ch_sil ch_sir) @sw_no_mods
+  (ch_sil ch_sir) @sw_plain
 
   ;;----------------------------------------------------------------------
   ;;                  | | | | |     --     | | | | |
@@ -205,14 +204,14 @@
 
   ;;----------------------------------------------------------------------
   ;;                   | | | | |    --     | | | | |
-  ;;                   | | |*| |    --     | |*| | |
-  ;;                       | |*|    --     |*| |
-  (ch_bil ch_hml) @os_sft                  (ch_bir ch_hmr) @os_sft
-
-  ;;                   | | | | |    --     | | | | |
   ;;                   | |*| | |    --     | | |*| |
   ;;                       | |*|    --     |*| |
   (ch_bil ch_hrl) @os_ctl                  (ch_bir ch_hrr) @os_ctl
+
+  ;;                   | | | | |    --     | | | | |
+  ;;                   | | |*| |    --     | |*| | |
+  ;;                       | |*|    --     |*| |
+  (ch_bil ch_hml) @os_sft                  (ch_bir ch_hmr) @os_sft
 
   ;;                   | | | | |    --     | | | | |
   ;;                   |*| | | |    --     | | | |*|
@@ -248,10 +247,8 @@
 (defchords CH_NS $chord_timeout
   ;; NUMBER CHORDS
                     (ch_ns_ti) 6    (ch_ns_tm) 8      (ch_ns_tr) 0    (ch_ns_tp) S-8
-  (ch_ns_si) S-2    (ch_ns_hi) 1    (ch_ns_hm) 3      (ch_ns_hr) 5
+  (ch_ns_si) S-2    (ch_ns_hi) 1    (ch_ns_hm) 3      (ch_ns_hr) 5    (ch_ns_hp) '
                     (ch_ns_bi) =    (ch_ns_bm) S-=
-  (ch_ns_hpl) @ns_nav_quote_l
-  (ch_ns_hpr) @ns_nav_quote_r
 
   ;; --------------------------------------------------------
   ;;                  | | | | |     --     | | | | |
@@ -280,8 +277,7 @@
 
   ;;                  | | | | |     --     | | | | |
   ;;                  |*| | |*|     --     |*| | |*|
-  (ch_ns_hpl ch_ns_hi) [
-  (ch_ns_hpr ch_ns_hi) [
+  (ch_ns_hp ch_ns_hi) [
 
   ;;                  |*| | |*|     --     |*| | |*|
   ;;                  | | | | |     --     | | | | |
@@ -305,8 +301,7 @@
   ;;                  | | | | |     --     | | | | |
   ;;                  |*| | | |     --     | | | |*|
   ;;                      | |*|     --     |*| |
-  (ch_ns_hpl ch_ns_bi) S-. ;; >
-  (ch_ns_hpr ch_ns_bi) S-. ;; >
+  (ch_ns_hp ch_ns_bi) S-. ;; >
 
   ;;                  | | |*| |     --     | |*| | |
   ;;                  | | | |*|     --     |*| | | |
@@ -330,13 +325,11 @@
 
   ;;                  | | | |*|     --     |*| | | |
   ;;                  |*| | | |     --     | | | |*|
-  (ch_ns_hpl ch_ns_ti) S--
-  (ch_ns_hpr ch_ns_ti) S--
+  (ch_ns_hp ch_ns_ti) S--
 
   ;;                  | | | | |     --     | | | | |
   ;;                  |*|*| | |     --     | | |*|*|
-  (ch_ns_hpl ch_ns_hr) S-'
-  (ch_ns_hpr ch_ns_hr) S-'
+  (ch_ns_hp ch_ns_hr) S-'
 
   ;;                  |*|*| | |     --     | | |*|*|
   ;;                  | | | | |     --     | | | | |
@@ -369,8 +362,7 @@
 
   ;;                  | | | | |     --     | | | | |
   ;;                  |*|*|*| |     --     | |*|*|*|
-  (ch_ns_hpl ch_ns_hr ch_ns_hm) `
-  (ch_ns_hpr ch_ns_hr ch_ns_hm) `
+  (ch_ns_hp ch_ns_hr ch_ns_hm) `
 
   ;;                  |*|*|*| |     --     | |*|*|*|
   ;;                  | | | | |     --     | | | | |
@@ -394,25 +386,25 @@
 )
 
 (defchords CH_FF $chord_timeout
-  ;; NUMBER CHORDS
-  (ch_ff_ti) f6   (ch_ff_tm) f8   (ch_ff_tr) f10
-  (ch_ff_hi) f1   (ch_ff_hm) f3   (ch_ff_hr) f5
+  ;; FUNCTION CHORDS
+  (ch_ti) f6   (ch_tm) f8   (ch_tr) f10
+  (ch_hi) f1   (ch_hm) f3   (ch_hr) f5
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | | |*|*|     --     |*|*| | |
-  (ch_ff_hi  ch_ff_hm) f2
+  (ch_hi  ch_hm) f2
 
   ;;                  | | | | |     --     | | | | |
   ;;                  | |*|*| |     --     | |*|*| |
-  (ch_ff_hm  ch_ff_hr) f4
+  (ch_hm  ch_hr) f4
 
   ;;                  | | |*|*|     --     |*|*| | |
   ;;                  | | | | |     --     | | | | |
-  (ch_ff_ti  ch_ff_tm) f7
+  (ch_ti  ch_tm) f7
 
   ;;                  | |*|*| |     --     | |*|*| |
   ;;                  | | | | |     --     | | | | |
-  (ch_ff_tm  ch_ff_tr) f9
+  (ch_tm  ch_tr) f9
 )
 
 (defchords CH_NA $chord_timeout
@@ -453,7 +445,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; LAYERS ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Chords: "g + h" switchs to "L_NO_MODS" (same layer with no modifiers - same combo to switch back)
+;; Chords: "g + h" switchs to "L_PLAIN" (same layer with no modifiers - same combo to switch back)
 (deflayermap (L_ALPHA)
   caps @esc_sft
 
@@ -470,18 +462,18 @@
 
 ;; Layer: no modifiers (ideal for gaming)
 ;; Chords: "g + h" to switch to "L_ALPHA"
-(deflayermap (L_NO_MODS)
+(deflayermap (L_PLAIN)
   caps @esc_sft
 
   ;; LEFT
-                  q q     w w     e e     r r
-                  a a     s s     d d     f f    g @ch_no_sil
-                  z XX    x XX    c XX    v XX
+               q q     w w     e e     r r
+               a a     s s     d d     f f    g @pl_sil
+               z XX    x XX    c XX    v XX
 
   ;; RIGHT
-                  u u     i i     o o     p p
-  h @ch_no_sir    j j     k k     l l     ; ;
-                  m XX    , XX    . XX    / XX
+               u u     i i     o o     p p
+  h @pl_sir    j j     k k     l l     ; ;
+               m XX    , XX    . XX    / XX
 )
 
 ;; Layer: Navigation layer with modifiers and chords
@@ -492,17 +484,17 @@
           z XX           x XX      c XX     v XX
 
   ;; RIGHT
-          u @ch_na_tab    i @ch_na_up    o @ch_na_bspc    p @sw_al
-  h XX    j @ch_na_lt     k @ch_na_dn    l @ch_na_rt      ; enter
-          m pgup          , pgdn         . XX             / XX
+          u @na_tab    i @na_up    o @na_bspc    p @sw_al
+  h XX    j @na_lt     k @na_dn    l @na_rt      ; enter
+          m pgup       , pgdn      . XX          / XX
 )
 
 ;; Layer: The reverse of RIGHT
 (deflayermap (L_NAV_L)
   ;; LEFT
-          q @sw_al    w @ch_na_bspc    e @ch_na_up    r @ch_na_tab
-          a enter     s @ch_na_lt      d @ch_na_dn    f @ch_na_rt    g XX
-          z XX        x XX             c pgdn         v pgup
+          q @sw_al    w @na_bspc    e @na_up    r @na_tab
+          a enter     s @na_lt      d @na_dn    f @na_rt    g XX
+          z XX        x XX          c pgdn      v pgup
 
   ;; RIGHT
           u @na_pgup    i tab    o lalt    p @sw_nav_r
@@ -512,13 +504,13 @@
 
 (deflayermap (L_NUMS)
   ;; LEFT
-              q @ns_tp     w @ns_tr    e @ns_tm    r @ns_ti
-              a @ns_hpl    s @ns_hr    d @ns_hm    f @ns_hi    g @ns_si
-              z XX         x XX        c @ns_bm    v @ns_bi
+              q @ns_tp    w @ns_tr    e @ns_tm    r @ns_ti
+              a @ns_hp    s @ns_hr    d @ns_hm    f @ns_hi    g @ns_si
+              z XX        x XX        c @ns_bm    v @ns_bi
 
   ;; RIGHT
               u @ns_ti    i @ns_tm    o @ns_tr    p @ns_tp
-  h @ns_si    j @ns_hi    k @ns_hm    l @ns_hr    ; @ns_hpr
+  h @ns_si    j @ns_hi    k @ns_hm    l @ns_hr    ; @ns_hp
               m @ns_bi    , @ns_bm    . XX        / XX
 )
 
