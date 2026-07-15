@@ -180,7 +180,7 @@ $ variable: <command that produces selectable options> | fzf
 | Tool | Depends On | Reason |
 |---|---|---|
 | navi | fzf (system) | Uses fzf as pipe filter backend. Cannot use television (TUI, not a unix filter). |
-| devenv | nix | Built on Nix |
+| devenv | nix, home-manager | Declared in `home.nix` home.packages; tracks nixpkgs, updated via `update-all`'s `home-manager switch` step |
 | direnv | — | Auto-loads .envrc; integrates with devenv for automatic shell activation |
 | pi | bun | Installed via bun global packages |
 | distrobox | podman | Container manager that uses podman as backend |

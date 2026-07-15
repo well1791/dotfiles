@@ -7,12 +7,20 @@
 
   home.packages = with pkgs; [
     # Runtimes — replaces mise global tools
-    nodejs_22  # Node.js LTS (Pi requires 20+)
-    go_1_26    # Go stable
+    # Unversioned aliases: nixpkgs repoints these to the current stable/LTS
+    # release, so `nix flake update && home-manager switch` tracks new majors
+    # automatically (no manual attribute bump needed). Requires Node 20+ for Pi.
+    nodejs     # Node.js current LTS
+    go         # Go current stable
     gopls      # Go language server
 
     # Databases
+    # Pinned deliberately: Postgres major upgrades need `pg_upgrade` /
+    # a data migration step, not just a binary swap — do not switch this
+    # to an unversioned alias.
     postgresql_17  # PostgreSQL for Absurd durable workflows
+
+    devenv     # Declarative dev environments (was: standalone nix-profile install)
   ];
 
   systemd.user.services.absurd-postgres = {
