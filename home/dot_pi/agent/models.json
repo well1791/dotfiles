@@ -12,10 +12,10 @@
         {
           "id": "ornith:9b",
           "name": "Ornith 9B (Local)",
-          "reasoning": true,
+          "reasoning": false,
           "input": ["text"],
-          "contextWindow": 65536,
-          "maxTokens": 16384,
+          "contextWindow": 32768,
+          "maxTokens": 4096,
           "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
         }
       ]
