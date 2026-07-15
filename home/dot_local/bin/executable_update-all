@@ -187,6 +187,43 @@ if command -v pi >/dev/null 2>&1; then
 fi
 
 # ============================================================================
+# 12b. Rebuild pi's native Node addons (fixes ABI mismatches, e.g.
+#      "Module did not self-register" from better-sqlite3). This happens
+#      because pi runs on Nix-managed node (see ~/.pi/agent/bin/pi), so a
+#      home-manager node upgrade (step 2) or a bun-driven reinstall of
+#      extensions (step 12) can leave native modules compiled against a
+#      stale NODE_MODULE_VERSION.
+# ============================================================================
+PI_NPM_DIR="$HOME/.pi/agent/npm"
+PI_NODE="$HOME/.nix-profile/bin/node"
+PI_NPM_BIN="$HOME/.nix-profile/bin/npm"
+if command -v pi >/dev/null 2>&1 && [ -d "$PI_NPM_DIR/node_modules" ] && [ -x "$PI_NODE" ] && [ -x "$PI_NPM_BIN" ]; then
+    print_status "Checking pi extension native modules for ABI mismatches..."
+    BROKEN_PKGS=""
+    for so in $(find "$PI_NPM_DIR/node_modules" -name "*.node" -path "*/build/Release/*" 2>/dev/null); do
+        if ! "$PI_NODE" -e "require('$so')" >/dev/null 2>&1; then
+            pkg_dir=$(echo "$so" | sd '/build/Release/.*' '')
+            pkg_name=$("$PI_NODE" -e "console.log(require('$pkg_dir/package.json').name)" 2>/dev/null)
+            if [ -n "$pkg_name" ]; then
+                BROKEN_PKGS="$BROKEN_PKGS $pkg_name"
+            fi
+        fi
+    done
+    if [ -n "$BROKEN_PKGS" ]; then
+        print_warning "ABI mismatch found, rebuilding:$BROKEN_PKGS"
+        (
+            cd "$PI_NPM_DIR" || exit 1
+            for pkg_name in $BROKEN_PKGS; do
+                print_status "Rebuilding $pkg_name for $("$PI_NODE" --version)..."
+                "$PI_NODE" "$PI_NPM_BIN" rebuild "$pkg_name" || print_warning "Failed to rebuild $pkg_name"
+            done
+        ) || FAILED=$((FAILED + 1))
+    else
+        print_status "Pi native modules OK"
+    fi
+fi
+
+# ============================================================================
 # 13. hunk (review-first terminal diff viewer, installed via bun)
 # ============================================================================
 if command -v hunk >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
