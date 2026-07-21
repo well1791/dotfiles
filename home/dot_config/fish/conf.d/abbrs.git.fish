@@ -33,8 +33,8 @@ abbr -a -- gsw 'git switch'
 abbr -a -- gsd 'git switch --detach'
 
 # git restore
-abbr -a -- grs 'git restore'
-abbr -a -- grg 'git restore --staged'
+abbr -a -- grs 'git restore .'
+abbr -a -- grg 'git restore --staged .'
 
 # git commit
 abbr -a -- gco 'git commit --verbose'
