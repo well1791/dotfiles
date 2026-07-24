@@ -1,0 +1,11 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install mergiraf (syntax-aware git merge driver)
+# https://mergiraf.org
+
+if log_version mergiraf; then exit 0; fi
+
+log_info "Installing mergiraf..."
+install_packages mergiraf
+
+if ! check_command mergiraf; then die "mergiraf installation failed"; fi
+log_success "mergiraf installed" "$(get_version mergiraf)"

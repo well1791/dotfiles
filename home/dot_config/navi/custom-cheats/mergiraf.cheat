@@ -1,0 +1,19 @@
+% mergiraf, git, merge
+
+# Review a resolved merge (after mergiraf auto-solved conflicts)
+mergiraf review <merge_id>
+
+# Solve conflicts in a file interactively (after git merge conflict)
+mergiraf solve <file>
+
+# Report a bad merge for upstream bug filing
+mergiraf report <merge_id_or_file>
+
+# List supported languages and extensions
+mergiraf languages
+
+# Generate gitattributes entries for all supported languages
+mergiraf languages --gitattributes
+
+# Temporarily disable mergiraf for a git operation
+mergiraf=0 git <command>

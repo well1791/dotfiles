@@ -2,7 +2,7 @@
 # Unified update script for all package managers and tools
 # Updates: system packages, home-manager, uv, rust, nix, devenv, bun, pi,
 #          hunk, vortix, slumber, lean-ctx, tealdeer cache, flatpak,
-#          python-lsp-server, gopls, rmux, serena, absurdctl
+#          python-lsp-server, gopls, rmux, serena, absurdctl, mergiraf
 
 set -e
 

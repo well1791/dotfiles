@@ -1,0 +1,3 @@
+# Global gitattributes
+# Mergiraf: syntax-aware merge driver for all files (falls back gracefully)
+* merge=mergiraf

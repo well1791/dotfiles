@@ -85,6 +85,14 @@
   conflictstyle = diff3       # show base + ours + theirs in conflict markers
   log = true                  # list the commits being merged in the merge message
 
+# --- Mergiraf (syntax-aware merge driver) -----------------------------------
+# Registered as a custom merge driver; activated via ~/.gitattributes.
+# Falls back to line-based merge for unsupported languages.
+# https://mergiraf.org
+[merge "mergiraf"]
+  name = mergiraf
+  driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
+
 # --- Grep -------------------------------------------------------------------
 [grep]
   lineNumber = true           # show line numbers in `git grep`

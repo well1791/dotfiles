@@ -255,6 +255,17 @@ Installed via system package manager (pacman/apt/dnf):
 - Config: `[delta]` sections in `~/.gitconfig`
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
+### 28. **[mergiraf](https://mergiraf.org)** - Syntax-aware git merge driver
+- Resolves merge conflicts structurally using language-aware tree-sitter parsing
+- Handles independent edits, moved code, and neighbouring insertions that line-based merge cannot
+- Registered as a global git merge driver via `~/.gitconfig` + `~/.gitattributes`
+- Falls back gracefully to line-based merge for unsupported languages
+- Supports: Rust, Python, Java, JS/TS, Go, C/C++, YAML, JSON, HTML, and many more
+- Installed via system package manager (`mergiraf`)
+- Disable temporarily: `mergiraf=0 git rebase origin/main`
+- Review auto-solved conflicts: `mergiraf review <merge_id>`
+- Update: `sudo pacman -Syu` (or your distro's update command)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -266,7 +277,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, git-delta)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, git-delta, mergiraf)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ home-manager packages (node, go, gopls)
