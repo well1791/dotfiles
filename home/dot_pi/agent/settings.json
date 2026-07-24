@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.80.10",
+  "lastChangelogVersion": "0.81.1",
   "defaultProvider": "github-copilot",
   "defaultModel": "claude-sonnet-5",
   "defaultThinkingLevel": "medium",
@@ -23,7 +23,8 @@
     "npm:pi-sidequest",
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-sensitive-guard",
-    "npm:pi-prompt-template-model"
+    "npm:pi-prompt-template-model",
+    "npm:copilot-credit-usage"
   ],
   "npmCommand": [
     "bun"
