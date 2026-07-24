@@ -24,8 +24,8 @@ s forw-scroll
 
 
 ###
-# J/L dunno what back/forw-screen does
+# PgUp / PgDn
 ###
-J back-screen
-L forw-screen
+\kU back-screen
+\kD forw-screen
 
