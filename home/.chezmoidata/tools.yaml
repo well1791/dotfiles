@@ -330,6 +330,19 @@ tools:
     os_support: [arch, debian, fedora, alpine]
     skip_if_exists: true
 
+  - name: delta
+    description: Syntax-highlighting pager for git and diff output
+    type: run_once_before
+    priority: 70
+    check:
+      commands: [delta]
+      version_flag: "--version"
+    install:
+      method: package
+      packages: git-delta
+    os_support: [arch, debian, fedora, alpine]
+    skip_if_exists: true
+
   - name: global-menu
     description: Global menu support for GTK applications (KDE Plasma)
     type: run_once_before

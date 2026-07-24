@@ -1,0 +1,11 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install delta (syntax-highlighting pager for git)
+# https://github.com/dandavison/delta
+
+if log_version delta; then exit 0; fi
+
+log_info "Installing delta..."
+install_packages git-delta
+
+if ! check_command delta; then die "delta installation failed"; fi
+log_success "delta installed" "$(get_version delta)"

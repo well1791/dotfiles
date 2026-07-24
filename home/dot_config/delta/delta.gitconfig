@@ -1,0 +1,17 @@
+[core]
+  pager = delta
+
+[interactive]
+  # `--word-diff-regex='[^[:space:]]'` @see https://github.com/dandavison/delta/discussions/1575
+  diffFilter = delta --color-only --features=interactive --word-diff-regex='[^[:space:]]'
+
+[delta]
+  # dark = true      # or light = true, or omit for auto-detection
+  navigate = true  # use n and N to move between diff sections
+  features = decorations
+  whitespace-error-style = 22 reverse
+
+[delta "interactive"]
+  keep-plus-minus-markers = false
+
+ 

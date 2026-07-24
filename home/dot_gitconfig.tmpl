@@ -1,85 +1,131 @@
 ;reference: https://github.com/voku/dotfiles/blob/master/.gitconfig
+;Chezmoi-managed global git config. Edit this source (NOT ~/.gitconfig), then run `chezmoi apply`.
 
+# --- Identity ---------------------------------------------------------------
+# Author info attached to every commit. Values are injected from chezmoi data
+# (~/.config/chezmoi/chezmoi.toml), never hardcoded (repo is public).
 [user]
   name = {{ .name }}
   email = {{ .email }}
 
+# --- Per-context includes (work repos) --------------------------------------
+# When operating inside a work repository, load a separate work gitconfig
+# (e.g. a work email). Both the mounted and home-relative paths are covered.
 [includeIf "gitdir:/mnt/storage/Code/work/"]
   path = ~/Code/work/.gitconfig
-
 [includeIf "gitdir:~/Code/work/"]
   path = ~/Code/work/.gitconfig
 
+# --- Git LFS (Large File Storage) -------------------------------------------
+# Track large binaries through pointer files instead of committing them raw.
 [filter "lfs"]
-  clean = git-lfs clean %f
-  smudge = git-lfs smudge %f
-  required = true
+  clean = git-lfs clean %f   # real file -> pointer on staging (add/commit)
+  smudge = git-lfs smudge %f # pointer -> real file on checkout
+  required = true            # reject pushes that bypass LFS for large files
 
+# --- Color ------------------------------------------------------------------
+# Color all git output. `true` forces color even when piped; use `auto` to color
+# only when writing to a terminal.
 [color]
   ui = true
 
+# --- Diff computation & display ---------------------------------------------
+# How `git diff` computes and shows changes. Highlighting/paging of the result
+# is handled separately by delta (see the include at the bottom).
 [diff]
-  compactionHeuristic = true
-  renamelimit = 9999
-  renames = copies
-  algorithm = patience
-  wsErrorHighlight = all
-  identHeuristic = on
-  colorMoved = default
+  compactionHeuristic = true  # nudge hunk boundaries toward more readable diffs
+  renamelimit = 9999          # spend more effort detecting renames in big trees
+  renames = copies            # detect copies too, not just renames
+  algorithm = patience        # diff algorithm tuned for readable code changes
+  wsErrorHighlight = all      # flag whitespace errors in old AND new lines
+  identHeuristic = on         # better hunk headers from nearby function decls
+  colorMoved = default        # tint code that was merely moved within the diff
 
+# Show a hex dump instead of "Binary files differ" for paths marked as binary.
+[diff "bin"]
+  textconv = hexdump -v -C
+
+# --- Core / general behavior ------------------------------------------------
 [core]
-  pager = hunk pager
-  trustctime = false
-  precomposeunicode = false
-  untrackedCache = true
-  excludesfile = ~/.config/git/ignore
-  attributesfile = ~/.gitattributes
-  fscache = true
+  trustctime = false          # ignore ctime changes (safer across FS / clock skew)
+  precomposeunicode = false   # don't normalize unicode filenames (macOS-oriented)
+  untrackedCache = true       # cache untracked-file info -> faster `git status`
+  excludesfile = ~/.config/git/ignore  # global ignore rules (chezmoi-managed)
+  attributesfile = ~/.gitattributes    # global path attributes
+  fscache = true              # cache filesystem stat calls for speed
+  preloadindex = true         # refresh the index in parallel -> faster status/diff
+  whitespace = space-before-tab,-indent-with-non-tab,trailing-space  # what counts as a whitespace error
 
+# --- New repository defaults ------------------------------------------------
 [init]
-  defaultBranch = main
+  defaultBranch = main        # `git init` starts on `main` instead of `master`
   templatedir = ~/.git_template
 
+# --- Push -------------------------------------------------------------------
 [push]
-  default = simple
-  followTags = true
-  autoSetupRemote = true
+  default = simple            # push only the current branch to its upstream
+  followTags = true           # send annotated tags along with branch pushes
+  autoSetupRemote = true      # first push of a new branch sets up tracking
 
+# --- Pull -------------------------------------------------------------------
 [pull]
-  default = current
-  rebase = true
-  ff = only
+  default = current           # only update the current branch
+  rebase = true               # rebase fetched commits instead of a merge commit
+  ff = only                   # only fast-forward; never create a merge commit on pull
 
+# --- Fetch ------------------------------------------------------------------
 [fetch]
-  prune = true
-  writeCommitGraph = true
+  prune = true                # drop remote-tracking refs deleted upstream
+  writeCommitGraph = true     # maintain a commit-graph file for faster log/walks
 
+# --- Merge ------------------------------------------------------------------
 [merge]
-  stat = true
-  ff = false
-  conflictstyle = zdiff3
+  stat = true                 # print a diffstat when a merge completes
+  ff = false                  # force an explicit merge commit (no silent fast-forward)
+  conflictstyle = diff3       # show base + ours + theirs in conflict markers
+  log = true                  # list the commits being merged in the merge message
 
+# --- Grep -------------------------------------------------------------------
 [grep]
-  lineNumber = true
+  lineNumber = true           # show line numbers in `git grep`
 
+# --- Applying patches -------------------------------------------------------
 [apply]
-  whitespace = warn
+  whitespace = warn           # warn (don't fail) on whitespace errors in patches
 
+# --- Rebase -----------------------------------------------------------------
 [rebase]
-  autosquash = true
+  autosquash = true           # auto-order `fixup!`/`squash!` commits before interactive rebase
+  autoStash = true            # stash/pop local changes around a rebase or `pull --rebase`
 
+# --- Credentials (HTTP/HTTPS auth) ------------------------------------------
+# Cache credentials in memory so you aren't re-prompted on every push.
 [credential]
-  # cache the password for http-auth
   helper = cache
 
+# --- Log --------------------------------------------------------------------
 [log]
-  decorate = short
+  decorate = short            # show branch/tag refs beside commits, compactly
 
+# --- Reuse recorded resolution (rerere) -------------------------------------
+# Remember how you resolved a conflict once and reapply the same resolution if
+# the identical conflict reappears (e.g. across rebases).
 [rerere]
   enabled = true
 
+# --- Branch listing ---------------------------------------------------------
 [branch]
-  sort = -committerdate
+  sort = -committerdate       # `git branch` / `for-each-ref` ordered by most recent commit
 
+# --- Advice / hints ---------------------------------------------------------
 [advice]
-  detachedHead = false
+  detachedHead = false        # silence the verbose detached-HEAD notice
+
+# --- Delta (syntax-highlighting pager) --------------------------------------
+# Always load delta's git integration from its own file so all delta settings
+# live together. This is an UNCONDITIONAL [include] (NOT includeIf gitdir:), so
+# it applies to every repository. Placed LAST so delta values (core.pager =
+# delta, interactive.diffFilter, [delta] features) take precedence over the
+# settings above. See: ~/.config/delta/delta.gitconfig
+[include]
+  path = ~/.config/delta/delta.gitconfig

@@ -1,0 +1,26 @@
+% delta, diff, git, pager, syntax
+
+# View working tree changes (delta is the default git pager)
+git diff
+
+# View a specific commit's diff
+git show <revision>
+
+# Show git log with inline diffs
+git log -p
+
+# Diff two branches
+git diff <branch_a>..<branch_b>
+
+# Diff two files directly
+diff <file_a> <file_b> | delta
+
+# Highlight a patch/stream from stdin
+<command> | delta
+
+$ revision: git log --oneline -20 | fzf | awk '{print $1}'
+$ branch_a: git branch --format='%(refname:short)' | fzf
+$ branch_b: git branch --format='%(refname:short)' | fzf
+$ file_a: fd --type f --max-depth 3 | fzf
+$ file_b: fd --type f --max-depth 3 | fzf
+$ command: echo -e "git diff\ngit show\ngit diff --staged" | fzf

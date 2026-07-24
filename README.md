@@ -247,6 +247,14 @@ Installed via system package manager (pacman/apt/dnf):
 - Pi context: `~/.serena/contexts/pi.yml` (semantic tools only, overlapping tools disabled)
 - Connected to pi via MCP (`~/.pi/agent/mcp.json`)
 
+### 27. **[delta](https://github.com/dandavison/delta)** - Syntax-highlighting pager for git
+- Default git pager for `git diff`, `git log`, `git show`, etc. (configured in `dot_gitconfig.tmpl`)
+- Side-by-side diffs, syntax highlighting, line numbers, and navigable hunks
+- Also powers interactive add (`git add -p`) via `interactive.diffFilter`
+- Installed via system package manager (`git-delta`)
+- Config: `[delta]` sections in `~/.gitconfig`
+- Update: `sudo pacman -Syu` (or your distro's update command)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -258,7 +266,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, git-delta)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ home-manager packages (node, go, gopls)

@@ -192,6 +192,7 @@ $ variable: <command that produces selectable options> | fzf
 | sqlit | uv | Installed via uv tool with mssql-python driver |
 | lazyjira | — | Standalone Go binary; uses Jira REST API directly |
 | hunk | bun | Review-first terminal diff viewer, installed via bun global (npm: hunkdiff) |
+| delta | — | Syntax-highlighting pager for git; installed via system package `git-delta`, configured as the default `core.pager` in `dot_gitconfig.tmpl` |
 | lean-ctx | — | Context intelligence layer for AI agents; self-updates via `lean-ctx update` |
 | pi-lean-ctx | lean-ctx, bun | Pi extension that routes built-in tools through lean-ctx CLI |
 | rmux | rust (cargo) | Installed via cargo install |
