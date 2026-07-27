@@ -3,6 +3,8 @@
 # Updates: system packages, home-manager, uv, rust, nix, devenv, bun, pi,
 #          hunk, vortix, slumber, lean-ctx, tealdeer cache, flatpak,
 #          python-lsp-server, gopls, rmux, serena, absurdctl, mergiraf
+# Note: emacs is a system package (updated by step 1, paru/pacman); its
+#       elpaca packages update inside Emacs via `M-x elpaca-update-all`, not here.
 
 set -e
 

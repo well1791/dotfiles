@@ -6,7 +6,7 @@ Personal dotfiles repository managed with [chezmoi](https://chezmoi.io). Source 
 
 - **Shell:** fish
 - **Terminal:** ghostty
-- **Editors:** helix (primary), doom-emacs (secondary)
+- **Editors:** emacs (primary, meow), helix (fallback), doom-emacs (legacy)
 - **Key-remapper:** kanata
 - **AI Agent:** pi (terminal coding agent)
 - **Fuzzy finder:** television (replaces fzf/skim for shell integration)
@@ -202,6 +202,7 @@ $ variable: <command that produces selectable options> | fzf
 | gopls | nix, home-manager | Go LSP; declared in `~/.config/home-manager/home.nix` |
 | postgresql | nix, home-manager | User-level instance for Absurd; declared in home.nix, systemd user service on port 5433 |
 | absurdctl | uv, postgresql | Durable workflow CLI; installed via `uv tool install`, connects to user-level postgres on port 5433 |
+| emacs | (standalone) | Primary editor; meow modal layer; packages managed by elpaca (`M-x elpaca-update-all` inside Emacs), NOT via `update-all`. Binary updated by system package step. |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 

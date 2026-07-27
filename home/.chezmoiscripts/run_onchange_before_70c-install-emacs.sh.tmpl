@@ -1,0 +1,25 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install Emacs (editor, meow-based config)
+# https://www.gnu.org/software/emacs/
+
+if log_version emacs; then exit 0; fi
+
+log_info "Installing Emacs..."
+install_packages emacs
+
+if ! check_command emacs; then die "Emacs installation failed"; fi
+log_success "Emacs installed" "$(get_version emacs)"
+
+# External language servers consumed by eglot.
+# pylsp is installed by run_onchange_before_68-install-python-lsp.sh.
+# OmniSharp is referenced by helix/languages.toml but NOT installed by these
+# dotfiles -- C# LSP won't work until you install OmniSharp separately.
+# typescript-language-server + bash-language-server via npm; nil for Nix.
+if check_command npm; then
+  log_info "Installing JS/bash language servers..."
+  npm install -g typescript-language-server bash-language-server || log_warn "npm LSP install partial"
+fi
+if check_command nix; then
+  log_info "Installing Nix LSP (nil)..."
+  nix profile install nixpkgs#nil 2>/dev/null || log_warn "nil install skipped"
+fi

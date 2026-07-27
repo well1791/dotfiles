@@ -12,7 +12,9 @@ abbr -a -- du dust
 abbr -a -- df duf
 
 # |-- EMACS
-# abbr -a -- emacs "emacsclient -c -a 'emacs'"
+# abbr -a -- e     "emacsclient -c -a emacs"    # GUI frame
+# abbr -a -- et    "emacsclient -nw -a emacs"   # terminal frame
+abbr -a -- emacs "emacsclient -c -a emacs"
 
 # |-- ALIAS for cmd
 abbr -a -- cmd command

@@ -1,0 +1,19 @@
+% emacs, editor, meow, daemon
+
+# Start / connect to the GUI daemon
+emacsclient -c -a emacs
+
+# Open a terminal frame
+emacsclient -nw -a emacs
+
+# Evaluate an expression in the running daemon
+emacsclient --eval '(+ 1 1)'
+
+# Update all elpaca packages (inside Emacs)
+M-x elpaca-update-all
+
+# Open the meow cheatsheet (inside Emacs)
+SPC ?
+
+# Start LSP for current buffer (eglot)
+M-x eglot

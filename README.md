@@ -266,6 +266,14 @@ Installed via system package manager (pacman/apt/dnf):
 - Review auto-solved conflicts: `mergiraf review <merge_id>`
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
+### 29. **[Emacs](https://www.gnu.org/software/emacs/)** - Extensible editor (primary)
+- Primary editor with [meow](https://github.com/meow-edit/meow) modal layer (selection-first, Helix/Kakoune-style) and a custom `ijkl` navigation cluster
+- Config: `~/.config/emacs/{early-init.el,init.el}`; packages managed by [elpaca](https://github.com/progfolio/elpaca) (async, git-based)
+- Daemon: systemd user service (`~/.config/systemd/user/emacs.service`); connect via `emacsclient -c` (GUI) or `emacsclient -nw` (terminal)
+- `$EDITOR` = `emacsclient -nw -a emacs` (terminal frame); helix retained as fallback
+- Installed via system package manager (`emacs`); install script: `run_onchange_before_70c-install-emacs.sh.tmpl` (also pulls `typescript-language-server`, `bash-language-server`, `nil`)
+- Update: `sudo pacman -Syu` (system package). Elpaca packages update **inside** Emacs: `M-x elpaca-update-all`
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -277,7 +285,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, git-delta, mergiraf)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, git-delta, mergiraf, emacs)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ home-manager packages (node, go, gopls)
