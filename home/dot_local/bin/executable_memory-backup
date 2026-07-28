@@ -2,7 +2,7 @@
 # memory-backup — encrypt + snapshot pi-hermes-memory markdown into the chezmoi
 # repo and commit. Only durable .md surfaces; NEVER sessions.db (binary, high
 # churn). Encrypted with the chezmoi age recipient because this repo is PUBLIC.
-# Restore: see memory-backup/RESTORE.md (created on first run).
+# Restore: see memory-backup/RESTORE.md.
 
 set -l live_global ~/.pi/agent/pi-hermes-memory
 set -l live_projects ~/.pi/agent/projects-memory
@@ -10,6 +10,7 @@ set -l cfg ~/.config/chezmoi/chezmoi.toml
 # chezmoi source-path returns the chezmoiroot subdir (home/), not the git repo root;
 # derive the true repo root so the snapshot lands outside home/ (pure git backup, not applied).
 set -l repo (cd (chezmoi source-path); and git rev-parse --show-toplevel)
+if test -z "$repo"; echo "memory-backup: could not resolve repo root" >&2; exit 1; end
 set -l snap $repo/memory-backup
 
 # --- age recipient from chezmoi config (robust TOML parse) ---
@@ -34,7 +35,7 @@ mkdir -p $snap/global $snap/projects
 for f in MEMORY.md USER.md failures.md
     set -l src "$live_global/$f"
     if test -f "$src"
-        age -r "$recipient" -o "$snap/global/$f.age" "$src"
+        age -r "$recipient" -o "$snap/global/$f.age" "$src"; or begin; echo "memory-backup: encrypt failed for $src" >&2; exit 1; end
     end
 end
 
@@ -44,7 +45,7 @@ for d in $live_projects/*/
     set -l m "$d/MEMORY.md"
     if test -f "$m"; and test -s "$m"
         mkdir -p "$snap/projects/$proj"
-        age -r "$recipient" -o "$snap/projects/$proj/MEMORY.md.age" "$m"
+        age -r "$recipient" -o "$snap/projects/$proj/MEMORY.md.age" "$m"; or begin; echo "memory-backup: encrypt failed for $m" >&2; exit 1; end
     end
 end
 
