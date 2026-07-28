@@ -53,7 +53,6 @@ This applies to dotfiles, shell configs, editor settings, tool configs — every
 .chezmoiroot                    ← Points chezmoi source to home/
 .chezmoiversion                 ← Minimum chezmoi version
 home/
-├── .chezmoidata/tools.yaml     ← Declarative tool metadata
 ├── .chezmoiexternal.toml.tmpl  ← Declarative external deps (GitHub releases, fonts)
 ├── .chezmoiignore.tmpl         ← Distro + feature-flag exclusions
 ├── .chezmoiremove.tmpl         ← Files chezmoi actively removes from target

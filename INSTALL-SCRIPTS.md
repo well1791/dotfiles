@@ -9,8 +9,6 @@ chezmoi apply
     │
     ├── .chezmoi.toml.tmpl               ← Feature flags (distro, ephemeral, headless, work, personal)
     │
-    ├── .chezmoidata/tools.yaml          ← Declarative tool configs (25 tools)
-    │
     ├── .chezmoiexternal.toml.tmpl       ← Declarative external deps (GitHub releases, fonts)
     │
     ├── .chezmoiignore.tmpl              ← Distro + feature-flag exclusions
@@ -63,8 +61,8 @@ Scripts using `install_packages` (the abstraction layer) stay at the top level s
 ### Data Flow
 
 ```
-tools.yaml (what to install)
-    → Go templates (how to structure the script)
+run_onchange_before_*-install-*.sh.tmpl (what to install)
+    → Go templates (resolve {{ template }} snippets + chezmoi vars)
         → install-lib.sh (how to actually do it)
             → System (pacman/apt/dnf/apk/curl/wget)
 ```
@@ -251,27 +249,7 @@ fi
 
 ## How to Add a New Tool
 
-### Step 1: Add to `tools.yaml`
-
-Add an entry in `home/.chezmoidata/tools.yaml`:
-
-```yaml
-  - name: my-tool
-    description: What my-tool does
-    type: run_onchange_before
-    priority: 55                    # Controls execution order (00-99)
-    check:
-      commands: [my-tool]           # Command(s) to verify it's installed
-      version_flag: "--version"     # How to get version (default)
-    install:
-      method: download              # package | download | cargo | aur | custom
-      url: "https://example.com/install.sh"
-    dependencies: [curl]            # Tools that must exist first
-    os_support: all                 # Or: [arch, debian, fedora]
-    skip_if_exists: true
-```
-
-### Step 2: Create the script
+### Step 1: Create the script
 
 For **distro-agnostic** installs (uses `install_packages`):
 
@@ -303,7 +281,7 @@ For **distro-specific** installs (e.g., AUR on Arch):
 
 Create `home/.chezmoiscripts/arch/run_onchange_before_55-install-my-tool.sh.tmpl`:
 
-### Step 3: Test with dry-run
+### Step 2: Test with dry-run
 
 ```sh
 DRY_RUN=1 chezmoi apply --include=scripts
