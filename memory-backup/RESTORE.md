@@ -12,7 +12,7 @@ never touches it — it is a pure git backup. It comes along with `chezmoi init`
 
 ```fish
 set -l ident ~/.config/chezmoi/key.txt
-set -l repo (chezmoi source-path)
+set -l repo (cd (chezmoi source-path); and git rev-parse --show-toplevel)
 
 # global surfaces
 mkdir -p ~/.pi/agent/pi-hermes-memory
