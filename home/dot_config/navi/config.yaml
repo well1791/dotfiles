@@ -19,6 +19,12 @@ shell:
   command: fish        # Use fish for command execution
   finder_command: fish # Use fish inside fzf/skim
 
+# tldr client integration
+# Enables `navi --tldr <query>` to pull live tldr-pages (via tealdeer),
+# so generic tools don't need a hand-written cheat. See AGENTS.md §5.
+client:
+  tealdeer: true
+
 # Cheatsheet paths (in addition to default ~/.local/share/navi/cheats/)
 cheats:
   paths:

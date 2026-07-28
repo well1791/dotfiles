@@ -151,7 +151,14 @@ After adding, removing, or modifying any CLI tool installation, **all** of these
 
 ### 5. Navi Cheatsheet
 
-Every CLI tool added MUST have a corresponding navi cheatsheet at `home/dot_config/navi/custom-cheats/<tool>.cheat`.
+`navi --tldr <query>` is configured (`client.tealdeer: true` in `config.yaml`) to pull live tldr-pages through tealdeer. **A hand-written cheat is NOT required for every tool.**
+
+Write a `.cheat` file at `home/dot_config/navi/custom-cheats/<tool>.cheat` only when at least one applies:
+- **Dynamic selectors** (`$ variable:` lines, e.g. picking a git branch or container) — tldr is static text and can't do this.
+- **Personal/internal tool** with no tldr page (e.g. atlcli, lazyjira, absurd, update-all).
+- **Personal or environment-specific commands** beyond tldr basics (e.g. emacs elpaca/meow, home-manager flake path).
+
+For a generic public tool already on tldr (devenv, duf, nix, zoxide, ...), skip the cheat and run `ntldr <tool>` (fish alias for `navi --tldr <tool>`) instead.
 
 **Format:**
 ```cheat
