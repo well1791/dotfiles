@@ -44,6 +44,32 @@ Follow this research order before answering questions:
 6. **If no answer is found, say so.** Write "No reliable source found" rather than guessing or fabricating information.
 7. **Be accurate and analytic.** Present facts, data, and reasoning. Flag uncertainty explicitly when it exists.
 
+## Memory Routing
+
+Pi has ONE curated memory system — pi-hermes-memory — exposed via the `memory` / `memory_search` tools and stored as `MEMORY.md` / `USER.md` / `failures.md` (global) and `projects-memory/<project>/MEMORY.md` (per-project). Write every durable fact to exactly ONE home based on type. Never split the same fact across stores.
+
+| Fact type | Write to | Call |
+|---|---|---|
+| Who the user is; stable personal preferences | hermes `user` | `memory(add, target="user", …)` |
+| Cross-project learnings, tool quirks, conventions | hermes `memory` | `memory(add, target="memory", …)` |
+| Project-specific facts | hermes `project` (inferred from cwd) | `memory(add, target="project", …)` |
+| Failures, corrections, what didn't work | hermes `failure` | `memory(add, target="failure", category=<…>, …)` |
+| Reusable multi-step procedures (how-to) | skills | `skill_manage(create/patch, scope=…)` |
+
+Do NOT write curated facts to:
+- `lean-ctx` `ctx_knowledge` / `ctx_session` — `ctx_session` is ephemeral session scratch; `ctx_knowledge` is a dormant capability, not the memory source of truth.
+- Serena `~/.serena/memories/` — dormant (empty); Serena holds only code-project onboarding state, not durable facts.
+
+Recall order (retrieve context in this order):
+1. `memory_search` — curated durable memory (user / global / project / failure).
+2. `session_search` — recent conversation history.
+3. Codebase via `ctx_compose` / Serena — current source of truth in code.
+
+Rules:
+- One home per fact. Never duplicate the same fact in two stores.
+- `memory` is for facts (what / why); `skill_manage` is for reusable procedures (how-to). When a learning becomes a repeatable workflow, promote it to a skill and drop the memory entry.
+- Do not duplicate a preference between this file and hermes `user` memory. AGENTS.md holds operational rules; `user` holds identity and stable preferences.
+
 ## Uncertainty
 
 - Ask before acting when intent is materially ambiguous.
