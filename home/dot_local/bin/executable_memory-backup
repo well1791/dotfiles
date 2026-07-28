@@ -1,0 +1,59 @@
+#!/usr/bin/env fish
+# memory-backup — encrypt + snapshot pi-hermes-memory markdown into the chezmoi
+# repo and commit. Only durable .md surfaces; NEVER sessions.db (binary, high
+# churn). Encrypted with the chezmoi age recipient because this repo is PUBLIC.
+# Restore: see memory-backup/RESTORE.md (created on first run).
+
+set -l live_global ~/.pi/agent/pi-hermes-memory
+set -l live_projects ~/.pi/agent/projects-memory
+set -l cfg ~/.config/chezmoi/chezmoi.toml
+# chezmoi source-path returns the chezmoiroot subdir (home/), not the git repo root;
+# derive the true repo root so the snapshot lands outside home/ (pure git backup, not applied).
+set -l repo (cd (chezmoi source-path); and git rev-parse --show-toplevel)
+set -l snap $repo/memory-backup
+
+# --- age recipient from chezmoi config (robust TOML parse) ---
+set -l recipient (python3 -c 'import tomllib,sys; print(tomllib.load(open(sys.argv[1],"rb"))["age"]["recipient"])' $cfg 2>/dev/null)
+if test -z "$recipient"
+    echo "memory-backup: could not read age recipient from $cfg" >&2
+    exit 1
+end
+
+if not test -d "$live_global"
+    echo "memory-backup: $live_global not found — nothing to back up" >&2
+    exit 1
+end
+if not command -v age >/dev/null
+    echo "memory-backup: age binary not found" >&2
+    exit 1
+end
+
+mkdir -p $snap/global $snap/projects
+
+# --- global surfaces ---
+for f in MEMORY.md USER.md failures.md
+    set -l src "$live_global/$f"
+    if test -f "$src"
+        age -r "$recipient" -o "$snap/global/$f.age" "$src"
+    end
+end
+
+# --- per-project surfaces (non-empty only) ---
+for d in $live_projects/*/
+    set -l proj (basename "$d")
+    set -l m "$d/MEMORY.md"
+    if test -f "$m"; and test -s "$m"
+        mkdir -p "$snap/projects/$proj"
+        age -r "$recipient" -o "$snap/projects/$proj/MEMORY.md.age" "$m"
+    end
+end
+
+# --- commit (scoped to memory-backup/ only) ---
+cd $repo
+git add memory-backup/
+if git diff --cached --quiet
+    echo "memory-backup: no changes since last snapshot"
+else
+    git commit -m "chore(memory): encrypted snapshot $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+    echo "memory-backup: snapshot committed"
+end
