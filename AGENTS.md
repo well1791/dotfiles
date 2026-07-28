@@ -9,7 +9,7 @@ Personal dotfiles repository managed with [chezmoi](https://chezmoi.io). Source 
 - **Editors:** emacs (primary, meow), helix (fallback), doom-emacs (legacy)
 - **Key-remapper:** kanata
 - **AI Agent:** pi (terminal coding agent)
-- **Fuzzy finder:** television (replaces fzf/skim for shell integration)
+- **Fuzzy finder:** television (replaces fzf for shell integration)
 
 ## Commands
 

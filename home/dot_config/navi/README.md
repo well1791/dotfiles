@@ -142,7 +142,7 @@ $ container-ids: docker ps -a | awk '{print $1, $NF}' --- --column 1 --multi
 - `--multi` - Allow multi-selection
 - `--delimiter` - Custom delimiter for parsing
 - `--map` - Transform output before display
-- `--fzf-overrides` - Custom fzf/skim options
+- `--fzf-overrides` - Custom fzf options
 
 ### Example Custom Cheatsheet
 

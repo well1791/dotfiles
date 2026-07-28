@@ -130,7 +130,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
 ### 13. **[television](https://github.com/alexpasmantier/television)** - Fast, hackable fuzzy finder TUI
-- Replaces skim/fzf for shell integration (Ctrl-T smart autocomplete, Ctrl-R history)
+- Replaces fzf for shell integration (Ctrl-T smart autocomplete, Ctrl-R history)
 - Context-aware: detects current command and picks appropriate channel (files, dirs, git branches, etc.)
 - Built-in channels: files, dirs, git-branch, git-log, git-diff, env, procs, docker-images, and many more
 - Installed via system package manager
