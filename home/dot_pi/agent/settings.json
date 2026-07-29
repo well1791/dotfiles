@@ -24,7 +24,8 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:pi-sensitive-guard",
     "npm:pi-prompt-template-model",
-    "npm:copilot-credit-usage"
+    "npm:copilot-credit-usage",
+    "npm:@well1791/pi-sm"
   ],
   "npmCommand": [
     "bun"
