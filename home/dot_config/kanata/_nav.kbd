@@ -1,0 +1,87 @@
+;; ==============================================================
+;; Navigation module
+;; Included by config.kbd via (include nav.kbd).
+;; ==============================================================
+;; Contains:
+;;   - chord aliases : na_up na_dn na_lt na_rt na_tab na_bspc
+;;   - chord group   : defchords CH_NA
+;;   - layers        : L_NAV_R, L_NAV_L
+;;
+;; Resolved via kanata global namespace:
+;;   needs var     : chord_timeout (defvar in config.kbd)
+;;   needs aliases : sw_nav_l sw_nav_r sw_al
+;;   provides      : layer names L_NAV_R / L_NAV_L
+
+(defalias
+  ;; TAP
+  na_pgup     (tap-hold $tap_timeout $hold_timeout pgup lmet)
+  na_pgdn     (tap-hold $tap_timeout $hold_timeout pgdn lsft)
+
+  ;; CHORDS
+  na_up       (chord CH_NA ch_up)
+  na_dn       (chord CH_NA ch_dn)
+  na_lt       (chord CH_NA ch_lt)
+  na_rt       (chord CH_NA ch_rt)
+  na_tab      (chord CH_NA ch_tab)
+  na_bspc     (chord CH_NA ch_bspc)
+)
+
+(defchords CH_NA $chord_timeout
+  (ch_tab) tab   (ch_up) up     (ch_bspc) bspc
+  (ch_lt) left   (ch_dn) down   (ch_rt) rght
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  (ch_lt ch_dn ch_rt) spc
+
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tab ch_up ch_bspc) esc
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tab ch_bspc) home
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_lt ch_rt) end
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_up  ch_bspc) del
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  ;;(ch_tab  ch_up) ???
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | |*| |     --     | |*| | |
+  ;;(ch_dn  ch_bspc) ???
+)
+
+;; Layer: Navigation layer with modifiers and chords
+(deflayermap (L_NAV_R)
+  ;; LEFT
+          q @sw_nav_l    w lalt    e tab    r @na_pgup
+          a XX           s lctl    d esc    f @na_pgdn    g XX
+          z XX           x XX      c XX     v XX
+
+  ;; RIGHT
+          u @na_tab    i @na_up    o @na_bspc    p @sw_al
+  h XX    j @na_lt     k @na_dn    l @na_rt      ; enter
+          m pgup       , pgdn      . XX          / XX
+)
+
+;; Layer: The reverse of RIGHT
+(deflayermap (L_NAV_L)
+  ;; LEFT
+          q @sw_al    w @na_bspc    e @na_up    r @na_tab
+          a enter     s @na_lt      d @na_dn    f @na_rt    g XX
+          z XX        x XX          c pgdn      v pgup
+
+  ;; RIGHT
+          u @na_pgup    i tab    o lalt    p @sw_nav_r
+  h XX    j @na_pgdn    k esc    l lctl    ; XX
+          m XX          , XX     . XX      / XX
+)
+

@@ -1,0 +1,178 @@
+;; ==============================================================
+;; Numbers module
+;; Included by config.kbd via (include nums.kbd).
+;; ==============================================================
+;; Contains:
+;;   - chord aliases : ns_si ns_hi ns_hm ns_hr ns_hp ns_ti ns_tm ns_tr ns_tp ns_bi ns_bm
+;;   - chord group   : defchords CH_NS
+;;   - layer         : L_NUMS
+;;
+;; Resolved via kanata global namespace:
+;;   needs var : chord_timeout (defvar in config.kbd)
+;;   provides  : layer name L_NUMS (triggered by os_nums in config.kbd)
+
+(defalias
+  ns_si       (chord CH_NS ch_ns_si)
+  ns_hi       (chord CH_NS ch_ns_hi)
+  ns_hm       (chord CH_NS ch_ns_hm)
+  ns_hr       (chord CH_NS ch_ns_hr)
+  ns_hp       (chord CH_NS ch_ns_hp)
+  ns_ti       (chord CH_NS ch_ns_ti)
+  ns_tm       (chord CH_NS ch_ns_tm)
+  ns_tr       (chord CH_NS ch_ns_tr)
+  ns_tp       (chord CH_NS ch_ns_tp)
+  ns_bi       (chord CH_NS ch_ns_bi)
+  ns_bm       (chord CH_NS ch_ns_bm)
+)
+
+(defchords CH_NS $chord_timeout
+                    (ch_ns_ti) 6    (ch_ns_tm) 8      (ch_ns_tr) 0    (ch_ns_tp) S-8
+  (ch_ns_si) S-2    (ch_ns_hi) 1    (ch_ns_hm) 3      (ch_ns_hr) 5    (ch_ns_hp) '
+                    (ch_ns_bi) =    (ch_ns_bm) S-=
+
+  ;; --------------------------------------------------------
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (ch_ns_hi  ch_ns_hm) 2
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (ch_ns_hm  ch_ns_hr) 4
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_ti  ch_ns_tm) 7
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tm  ch_ns_tr) 9
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_ns_hr ch_ns_hi) S-9 ;; (
+
+  ;;                  | |*| |*|     --     |*| |*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tr ch_ns_ti) S-0 ;; )
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*| | |*|     --     |*| | |*|
+  (ch_ns_hp ch_ns_hi) [
+
+  ;;                  |*| | |*|     --     |*| | |*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tp ch_ns_ti) ]
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                      | |*|     --     |*| |
+  (ch_ns_hm ch_ns_bi) S-[ ;; {
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                      |*| |     --     | |*|
+  (ch_ns_hr ch_ns_bm) S-] ;; }
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                      | |*|     --     |*| |
+  (ch_ns_hr ch_ns_bi) S-, ;; <
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*| | | |     --     | | | |*|
+  ;;                      | |*|     --     |*| |
+  (ch_ns_hp ch_ns_bi) S-. ;; >
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_ns_hi ch_ns_tm) .
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_ns_hr ch_ns_tm) ,
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_ns_tr ch_ns_hi) /
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_ns_hr ch_ns_ti) \
+
+  ;;                  |*| | | |     --     | | | |*|
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_ns_tp ch_ns_hi) -
+
+  ;;                  | | | |*|     --     |*| | | |
+  ;;                  |*| | | |     --     | | | |*|
+  (ch_ns_hp ch_ns_ti) S-- ;; _
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*|*| | |     --     | | |*|*|
+  (ch_ns_hp ch_ns_hr) S-' ;; "
+
+  ;;                  |*|*| | |     --     | | |*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tp ch_ns_tr) S-5 ;; %
+
+  ;; --------------------------------------------------------
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  (ch_ns_hr ch_ns_hm ch_ns_hi) S-1 ;; !
+
+  ;;                  | |*|*|*|     --     |*|*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tr ch_ns_tm ch_ns_ti) S-/ ;; ?
+
+  ;;                  | | |*| |     --     | |*| | |
+  ;;                  | |*| |*|     --     |*| |*| |
+  (ch_ns_hr ch_ns_tm ch_ns_hi) ;
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | |*|     --     |*| | | |
+  (ch_ns_tr ch_ns_tm ch_ns_hi) S-; ;; :
+
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (ch_ns_tr ch_ns_hm ch_ns_hi) S-7 ;; &
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | |*| | |     --     | | |*| |
+  (ch_ns_hr ch_ns_tm ch_ns_ti) S-\ ;; |
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  |*|*|*| |     --     | |*|*|*|
+  (ch_ns_hp ch_ns_hr ch_ns_hm) `
+
+  ;;                  |*|*|*| |     --     | |*|*|*|
+  ;;                  | | | | |     --     | | | | |
+  (ch_ns_tp ch_ns_tr ch_ns_tm) S-` ;; ~
+
+  ;; --------------------------------------------------------
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | | | |     --     | | | | |
+  ;;                      |*|*|     --     |*|*|
+  (ch_ns_bm ch_ns_bi) S-3 ;; #
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                      | |*|     --     |*| |
+  (ch_ns_hr ch_ns_hm ch_ns_bi) S-4 ;; $
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*| | |     --     | | |*| |
+  ;;                      |*|*|     --     |*|*|
+  (ch_ns_hr ch_ns_bm ch_ns_bi) S-6 ;; ^
+)
+
+(deflayermap (L_NUMS)
+  ;; LEFT
+              q @ns_tp    w @ns_tr    e @ns_tm    r @ns_ti
+              a @ns_hp    s @ns_hr    d @ns_hm    f @ns_hi    g @ns_si
+              z XX        x XX        c @ns_bm    v @ns_bi
+
+  ;; RIGHT
+              u @ns_ti    i @ns_tm    o @ns_tr    p @ns_tp
+  h @ns_si    j @ns_hi    k @ns_hm    l @ns_hr    ; @ns_hp
+              m @ns_bi    , @ns_bm    . XX        / XX
+)

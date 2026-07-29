@@ -1,0 +1,32 @@
+;; ==============================================================
+;; Go-to shortcuts layer module
+;; Included by config.kbd via (include go.kbd).
+;; ==============================================================
+;; Contains:
+;;   - layer : L_GO (browser/app tab, history, window shortcuts)
+;;
+;; Resolved via kanata global namespace:
+;;   provides      : layer name L_GO (triggered by os_go in config.kbd)
+
+(defalias
+  alt_9          (macro A-9)
+  alt_1          (macro A-1)
+  alt_grv        (macro A-grv)
+  ctl_tab        (macro C-tab)
+  ctl_pgup       (macro C-pgup)
+  ctl_pgdn       (macro C-pgdn)
+  ctl_w          (macro C-w)
+  ctl_sft_t      (macro C-S-t)
+)
+
+(deflayermap (L_GO) ;; Go-to shortcuts
+  ;; LEFT
+          q @alt_9    w @alt_grv    e @ctl_pgup    r @ctl_sft_t
+          a @alt_1    s @ctl_tab    d @ctl_pgdn    f @ctl_w        g XX
+          z XX        x XX          c XX           v XX
+
+  ;; RIGHT
+          u @ctl_sft_t    i @ctl_pgup    o @alt_grv    p @alt_9
+  h XX    j @ctl_w        k @ctl_pgdn    l @ctl_tab    ; @alt_1
+          m XX            , XX           . XX          / XX
+)

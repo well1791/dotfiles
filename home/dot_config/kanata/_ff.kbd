@@ -1,0 +1,55 @@
+;; ==============================================================
+;; Function-keys module
+;; Included by config.kbd via (include ff.kbd).
+;; ==============================================================
+;; Contains:
+;;   - chord aliases : ff_hi ff_hm ff_hr ff_ti ff_tm ff_tr
+;;   - chord group   : defchords CH_FF
+;;   - layer         : L_FF
+;;
+;; Resolved via kanata global namespace:
+;;   needs var : chord_timeout (defvar in config.kbd)
+;;   provides  : layer name L_FF (triggered by os_ff in config.kbd)
+
+(defalias
+  ff_hi       (chord CH_FF ch_hi)
+  ff_hm       (chord CH_FF ch_hm)
+  ff_hr       (chord CH_FF ch_hr)
+  ff_ti       (chord CH_FF ch_ti)
+  ff_tm       (chord CH_FF ch_tm)
+  ff_tr       (chord CH_FF ch_tr)
+)
+
+(defchords CH_FF $chord_timeout
+  ;; FUNCTION CHORDS
+  (ch_ti) f6   (ch_tm) f8   (ch_tr) f10
+  (ch_hi) f1   (ch_hm) f3   (ch_hr) f5
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | | |*|*|     --     |*|*| | |
+  (ch_hi  ch_hm) f2
+
+  ;;                  | | | | |     --     | | | | |
+  ;;                  | |*|*| |     --     | |*|*| |
+  (ch_hm  ch_hr) f4
+
+  ;;                  | | |*|*|     --     |*|*| | |
+  ;;                  | | | | |     --     | | | | |
+  (ch_ti  ch_tm) f7
+
+  ;;                  | |*|*| |     --     | |*|*| |
+  ;;                  | | | | |     --     | | | | |
+  (ch_tm  ch_tr) f9
+)
+
+(deflayermap (L_FF)
+  ;; LEFT
+          q f11    w @ff_tr    e @ff_tm     r @ff_ti
+          a f23    s @ff_hr    d @ff_hm     f @ff_hi    g XX
+          z XX     x XX        c XX         v XX
+
+  ;; RIGHT
+          u @ff_ti    i @ff_tm    o @ff_tr    p f11
+  h XX    j @ff_hi    k @ff_hm    l @ff_hr    ; f12
+          m XX        , XX        . XX        / XX
+)

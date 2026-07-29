@@ -1,0 +1,25 @@
+;; ==============================================================
+;; Media layer module
+;; Included by config.kbd via (include media.kbd).
+;; ==============================================================
+;; Contains:
+;;   - layer : L_MEDIA (volume, brightness, playback)
+;;
+;; Resolved via kanata global namespace:
+;;   provides      : layer name L_MEDIA (triggered by os_media in config.kbd)
+
+(defalias
+  restart_kanata (cmd sh -c "systemctl --user restart kanata.service")
+)
+
+(deflayermap (L_MEDIA) ;;
+  ;; LEFT
+          q brup              w prev   e volu      r mute
+          a brdwn             s next   d voldwn    f pp      g XX
+          z @restart_kanata   x XX     c XX        v XX
+
+  ;; RIGHT
+          u mute    i volu     o prev    p brup
+  h XX    j pp      k voldwn   l next    ; brdwn
+          m XX      , XX       . XX      / XX
+)
