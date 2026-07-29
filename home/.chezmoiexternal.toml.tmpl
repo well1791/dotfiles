@@ -25,4 +25,14 @@
     refreshPeriod = "720h"
 {{ end }}
 
+{{/* kanata keyboard remapping config — standalone repo, cloned into ~/.config/kanata.
+     SSH URL requires an SSH key to github; the stat guard skips it gracefully on
+     machines that don't yet have ~/.ssh/id_ed25519 instead of failing the apply. */}}
+{{ if stat (joinPath .chezmoi.homeDir ".ssh" "id_ed25519") }}
+[".config/kanata"]
+    type = "git-repo"
+    url = "git@github.com:well1791/kanata-config.git"
+    refreshPeriod = "168h"
+{{ end }}
+
 {{ end }}
