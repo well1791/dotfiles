@@ -32,15 +32,9 @@
   os_ff         (one-shot-press $one_shot_timeout (layer-while-held L_FF))
   os_ch         (one-shot-press $one_shot_timeout (layer-while-held L_CHARS))
 
-  ;; WHILE HELD
-  wh_nav_r      (layer-while-held L_NAV_R)
-  wh_nav_l      (layer-while-held L_NAV_L)
-
-  ;; SWITCH TO
-  sw_al         (layer-switch L_ALPHA)
-  sw_plain      (layer-switch L_PLAIN)
-  sw_nav_r      (layer-switch L_NAV_R)
-  sw_nav_l      (layer-switch L_NAV_L)
+  ;; WHILE HELD (ALPHA)
+  al_nav_a          (tap-hold $tap_timeout $hold_timeout a (layer-while-held L_NAV_R))
+  al_nav_semicolon  (tap-hold $tap_timeout $hold_timeout ; (layer-while-held L_NAV_L))
 )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

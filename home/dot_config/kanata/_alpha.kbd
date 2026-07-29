@@ -9,14 +9,17 @@
 ;;
 ;; Resolved via kanata global namespace:
 ;;   needs var     : chord_timeout (defvar in config.kbd)
-;;   needs aliases : sw_al wh_nav_r wh_nav_l os_go os_nums os_media os_ff
+;;   needs aliases : al_nav_a al_nav_semicolon
+;;                   os_go os_nums os_media os_ff
 ;;   provides      : layer names L_ALPHA / L_PLAIN / L_CHARS
 
 (defalias
+  ;; SWITCH TO
+  sw_al         (layer-switch L_ALPHA)
+  sw_plain      (layer-switch L_PLAIN)
+
   ;; TAP HOLD
-  esc_sft           (tap-hold $tap_timeout $hold_timeout esc lsft)
-  al_nav_a          (tap-hold $tap_timeout $hold_timeout a @wh_nav_r)
-  al_nav_semicolon  (tap-hold $tap_timeout $hold_timeout ; @wh_nav_l)
+  esc_sft       (tap-hold $tap_timeout $hold_timeout esc lsft)
 
   ;; ONE SHOT
   os_cw         (caps-word 1500)
@@ -113,7 +116,7 @@
 
   ;;                  | |*| | |     --     | | |*| |
   ;;                  | | |*|*|     --     |*|*| | |
-  (ch_trl ch_hml ch_hil) @os_cw          (ch_hir ch_hmr ch_trr) @os_cw
+  (ch_trl ch_hml ch_hil) @os_cw            (ch_hir ch_hmr ch_trr) @os_cw
 
   ;;                  | | | |*|     --     |*| | | |
   ;;                  | |*|*| |     --     | |*|*| |
@@ -154,11 +157,6 @@
   ;;                   | |*| | |    --     | | |*| |
   ;;                       |*|*|    --     |*|*|
   ;;(ch_bil ch_bml ch_hrl) ???             (ch_bir ch_bmr ch_hrr) ???
-
-  ;;----------------------------------------------------------------------
-  ;;                  |*|*|*|*|     --     |*|*|*|*|
-  ;;                  | | | | |     --     | | | | |
-  ;;(ch_tpl ch_trl ch_tml ch_til) ???       (ch_tir ch_tmr ch_trr ch_tpr) ???
 )
 
 ;; Chords: "g + h" switchs to "L_PLAIN" (same layer with no modifiers - same combo to switch back)

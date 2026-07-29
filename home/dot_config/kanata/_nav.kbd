@@ -9,10 +9,14 @@
 ;;
 ;; Resolved via kanata global namespace:
 ;;   needs var     : chord_timeout (defvar in config.kbd)
-;;   needs aliases : sw_nav_l sw_nav_r sw_al
+;;   needs aliases : sw_al
 ;;   provides      : layer names L_NAV_R / L_NAV_L
 
 (defalias
+  ;; SWITCH TO
+  sw_nav_r      (layer-switch L_NAV_R)
+  sw_nav_l      (layer-switch L_NAV_L)
+
   ;; TAP
   na_pgup     (tap-hold $tap_timeout $hold_timeout pgup lmet)
   na_pgdn     (tap-hold $tap_timeout $hold_timeout pgdn lsft)
