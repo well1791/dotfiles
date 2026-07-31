@@ -1,10 +1,17 @@
 allow_ide_config_dirs = true
-shell_activation = "off"
-shell_security = "off"
+shell_activation = "agents-only"
+shell_security = "warn"
+shell_allowlist_extra = ["rg", "fd", "zoxide", "duf", "dust", "sd", "choose"]
 extra_roots = ["/mnt/storage/Code", "~/.local/bin", "~/.pi", "~/.serena"]
+compression_level = "standard"
+memory_profile = "performance"
+tool_profile = "power"
 
 [updates]
 auto_update = true
 check_interval_hours = 6
 notify_only = false
 
+[[custom_aliases]]
+alias = "lint"
+command = "npm run lint -- --fix"
