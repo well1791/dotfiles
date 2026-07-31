@@ -274,6 +274,12 @@ Installed via system package manager (pacman/apt/dnf):
 - Installed via system package manager (`emacs`); install script: `run_onchange_before_70c-install-emacs.sh.tmpl` (also pulls `typescript-language-server`, `bash-language-server`, `nil`)
 - Update: `sudo pacman -Syu` (system package). Elpaca packages update **inside** Emacs: `M-x elpaca-update-all`
 
+### 30. **[choose](https://github.com/theryangeary/choose)** - Human-friendly alternative to `cut` and `awk`
+- Fast, terse field selection: Python-style slices, negative indexing, regex field separators
+- Zero-indexed; character-wise or field-wise; much faster than `awk` for basic text processing
+- Installed via cargo: `cargo install choose`; install script: `run_onchange_before_70d-install-choose.sh.tmpl`
+- Update: `cargo install choose` (covered by `update-all`)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -290,7 +296,7 @@ This single command updates:
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ home-manager packages (node, go, gopls)
 - ✅ uv (Python package manager) and uv tools (sqlit, serena, etc.)
-- ✅ Rust (rustup update) and cargo tools (rmux, rmux-sdk)
+- ✅ Rust (rustup update) and cargo tools (rmux, rmux-sdk, choose)
 - ✅ Nix channels, packages, and flake installs
 - ✅ devenv
 - ✅ Bun (if installed)

@@ -2,7 +2,7 @@
 # Unified update script for all package managers and tools
 # Updates: system packages, home-manager, uv, rust, nix, devenv, bun, pi,
 #          hunk, vortix, slumber, lean-ctx, tealdeer cache, flatpak,
-#          python-lsp-server, gopls, rmux, serena, absurdctl, mergiraf
+#          python-lsp-server, gopls, rmux, choose, serena, absurdctl, mergiraf
 # Note: emacs is a system package (updated by step 1, paru/pacman); its
 #       elpaca packages update inside Emacs via `M-x elpaca-update-all`, not here.
 
@@ -114,11 +114,16 @@ else
 fi
 
 # ============================================================================
-# 4b. Cargo tools (rmux)
+# 4b. Cargo tools (rmux, choose)
 # ============================================================================
 if command -v cargo >/dev/null 2>&1 && command -v rmux >/dev/null 2>&1; then
     print_status "Updating rmux..."
     cargo install rmux 2>/dev/null || print_warning "rmux update failed (may already be latest)"
+fi
+
+if command -v cargo >/dev/null 2>&1 && command -v choose >/dev/null 2>&1; then
+    print_status "Updating choose..."
+    cargo install choose 2>/dev/null || print_warning "choose update failed (may already be latest)"
 fi
 
 # ============================================================================

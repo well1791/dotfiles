@@ -1,0 +1,15 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install choose (https://github.com/theryangeary/choose)
+# A human-friendly and fast alternative to cut (and sometimes awk).
+
+if log_version choose; then exit 0; fi
+
+log_info "Installing choose..."
+require_command cargo "cargo (rust toolchain) is required to install choose"
+
+if ! cargo install choose; then
+    die "choose installation failed"
+fi
+
+if ! check_command choose; then die "choose installation failed"; fi
+log_success "choose" "$(get_version choose)"

@@ -203,6 +203,7 @@ $ variable: <command that produces selectable options> | fzf
 | lean-ctx | — | Context intelligence layer for AI agents; self-updates via `lean-ctx update` |
 | pi-lean-ctx | lean-ctx, bun | Pi extension that routes built-in tools through lean-ctx CLI |
 | rmux | rust (cargo) | Installed via cargo install |
+| choose | rust (cargo) | Human-friendly alternative to cut/awk; installed via `cargo install choose` |
 | serena | uv, python 3.13 | Semantic code tools via LSP; MCP server connected to pi |
 | python-lsp-server | uv | Python LSP; installed via `uv tool install python-lsp-server` |
 | gopls | nix, home-manager | Go LSP; declared in `~/.config/home-manager/home.nix` |
