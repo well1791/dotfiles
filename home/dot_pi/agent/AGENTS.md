@@ -32,7 +32,7 @@ If rules conflict, lower-numbered priority wins:
 Follow this research order before answering questions:
 
 1. **Local documentation first.** Check local resources in this order:
-   - Command-line tools: `tealdeer`, `tldr`, `man`, or `--help` argument
+   - Command-line tools: `tldr` (provided by the tealdeer client), `man`, or `--help` argument
    - Project documentation: `.md` files in the repository
    - Configuration files and inline documentation
 2. **Search memory.** Query available memory systems:
@@ -94,7 +94,7 @@ Gather evidence proportional to risk, following the research order.
 - Trivial low-risk edit: inspect the target file and adjacent context.
 - Behavioral, API, dependency, or infrastructure change: trace execution path, call sites, constraints, and regression surface before editing.
 - Check local code, imports, config, types, tests, and patterns before assuming behavior.
-- For command usage: check `tealdeer`, `tldr`, `man`, or `--help` before searching online.
+- For command usage: check `tldr` (tealdeer client), `man`, or `--help` before searching online.
 - For project conventions: read local `.md` files and check project memory before asking or searching.
 - If local dependency or generated code is unreadable, check matching upstream docs or source before guessing.
 - Query memory (personal → project scope) for relevant patterns and learnings.
@@ -107,7 +107,7 @@ Proceed once the execution path, constraints, and regression surface are clear e
 
 ## Workflow
 
-1. Explore in the main agent first — read files, check local docs (tealdeer/tldr/man/--help), trace execution paths, search patterns, query memory, and follow the research order — and build your own understanding. Do not delegate before you have seen the data.
+1. Explore in the main agent first — read files, check local docs (tldr/man/--help), trace execution paths, search patterns, query memory, and follow the research order — and build your own understanding. Do not delegate before you have seen the data.
 2. Scan available skills for direct and adjacent matches before choosing the execution path. When in doubt, load the skill and check.
 3. Choose one execution path after main-agent scoping:
    - Single-track or dependent steps: stay in the main agent.
@@ -190,7 +190,68 @@ absurdctl dump-task --task-id=<id>
 
 Before declaring completion, confirm the change solves the stated problem, relevant validation ran or gaps are stated, no known unintended side effects were introduced, and no secrets were added or exposed.
 
-## Tool Preferences
+## Tool Routing
+
+Three layers, applied in order of token cost and precision. Lower layers first.
+
+### Layer 1 — lean-ctx MCP tools (primary)
+
+lean-ctx (exposed as the `ctx_*` tools via the `pi-lean-ctx` extension) is the primary interface for everything it covers: reading, searching, finding, listing, shell, symbol outline, code editing, and multi-file understanding. It token-compresses output, caches reads (unchanged re-reads cost ~13 tokens), and auto-indexes with no project activation step. Do NOT shell out to CLI equivalents for these operations.
+
+| Operation | Use | NOT |
+|-----------|-----|-----|
+| Read files | `ctx_read` | `bat`, `cat` |
+| Search text | `ctx_grep`, `ctx_search` | `rg`, `grep` |
+| Find files | `ctx_find`, `ctx_glob` | `fd`, `find` |
+| List dirs | `ctx_ls`, `ctx_tree` | `eza`, `ls` |
+| Run commands | `ctx_shell` | `bash` |
+| Symbol outline (before reading) | `ctx_outline` | reading a whole file |
+| Multi-file understanding | `ctx_compose`, `ctx_overview` | reading many files |
+| Call graph / references / impact | `ctx_callgraph`, `ctx_graph`, `ctx_impact` | manual tracing |
+| Downstream MCP tools (gateway) | `ctx_tools` (find / call / list) | registering every server's catalog |
+| Hash-anchored / bulk edit | `ctx_patch`, `ctx_edit` | `sd` for code |
+| Regex content replace | `ctx_edit` (`replace_all`) | `sd` for code |
+
+`ctx_read` modes: `full` (about to edit), `map` (deps/exports), `signatures` (API surface of large files), `diff` (after editing). First read populates the cache; subsequent reads are nearly free.
+
+`ctx_callgraph` / `ctx_graph` carry Serena's LSP reference edges — Serena is wired behind the gateway as a `code-symbols` addon (see the integration section below).
+
+### Layer 2 — Serena (LSP-precise symbol operations)
+
+Serena (the `serena_*` tools via the `@bacnh85/pi-serena` extension, backed by a persistent worker) provides language-server-backed symbol tools. Use it when you need **LSP guarantees** that lean-ctx's tree-sitter/BM25 layer cannot give: exact cross-file references, whole-codebase rename, true implementations, compiler diagnostics, verified-safe delete.
+
+The project is **auto-activated from cwd** (`serena start-mcp-server --project-from-cwd` in `~/.pi/agent/mcp.json`), so there is no `activate_project` step. If a symbol lookup fails or the wrong project resolves, the session is in the wrong directory — Serena follows cwd. Verify with `serena_status` / `serena_get_current_config`, and restart a stale language server with `serena_restart_language_server`.
+
+| Operation | Use |
+|-----------|-----|
+| Locate symbol by name path | `serena_find_symbol` (not grep) |
+| True cross-file references | `serena_find_referencing_symbols` |
+| Cross-file rename | `serena_rename_symbol` |
+| Replace function/class/method body | `serena_replace_symbol_body` |
+| Insert adjacent to a symbol | `serena_insert_before_symbol` / `serena_insert_after_symbol` |
+| Safe delete (verify unreferenced) | `serena_safe_delete_symbol` |
+| Implementations / declaration | `serena_find_implementations` / `serena_find_declaration` |
+| Compiler/IDE diagnostics | `serena_get_diagnostics_for_file` |
+
+### lean-ctx ↔ Serena integration
+
+**Current architecture.** Serena runs in two complementary roles: (1) as pi-native `serena_*` tools via the `@bacnh85/pi-serena` worker extension — the first-class interface for direct symbol mutation; and (2) behind the lean-ctx MCP gateway as a `code-symbols` addon (`lean-ctx addon add serena`), whose LSP reference data folds into lean-ctx's property graph. Because of (2), `ctx_callgraph` / `ctx_graph` now carry Serena's reference edges, not lean-ctx's tree-sitter graph alone. The two run as separate Serena processes: the pi-native one backs the `serena_*` tools, the gateway one (spawned lazily via `uvx`) backs the graph folding and `ctx_tools call serena::…`.
+
+They overlap on symbol overview, symbol lookup, and symbol-body replacement. The decision rule:
+
+- **Reading / exploring / composing context** → lean-ctx (`ctx_compose`, `ctx_read`, `ctx_search`, `ctx_outline`). Token-cheap, cached, no project activation. This is always the first contact.
+- **Single-file symbol-body edit where you already know the symbol** → either works. `ctx_patch` / `ctx_edit` (hash-anchored) is cheaper; `serena_replace_symbol_body` is LSP-precise. Prefer Serena when the body is large or the symbol name is ambiguous; prefer lean-ctx for a quick surgical patch.
+- **Call graph / impact / reference blast radius** → lean-ctx (`ctx_callgraph`, `ctx_graph`, `ctx_impact`). Now Serena-powered via the `code-symbols` gateway adapter — structural analysis at near-constant context cost.
+- **Explicit references list / cross-file rename / safe delete / implementations / diagnostics** → Serena `serena_*` (native, authoritative via LSP). Direct, precise calls.
+- **First contact with a file you intend to edit by symbol** → `serena_get_symbols_overview`, then `serena_find_symbol` to navigate, then the Serena edit tools. For files you only read, use `ctx_read` / `ctx_outline`.
+
+**Gateway integration (enabled).** Serena is wired behind the lean-ctx MCP gateway with `integration = "code-symbols"` (`lean-ctx addon list` → `✓ serena`). Its LSP reference output folds into lean-ctx's property graph, so reference/call-graph queries surface through `ctx_callgraph` / `ctx_graph`, and all 23 Serena tools are reachable at near-constant context cost via the single `ctx_tools` meta-tool (e.g. `ctx_tools call serena::find_referencing_symbols`). Direct symbol mutation still uses the native `serena_*` tools — they are already loaded (persistent worker) and cheaper than a gateway round-trip. Verify or undo with `lean-ctx addon list` / `lean-ctx addon remove serena` (and `lean-ctx config set gateway.enabled false`).
+
+Fall back to Layer 3 (`edit` / `write`) when: the target is not a recognizable symbol (config, markdown, YAML, JSON); Serena's language server doesn't support the file type; the edit crosses symbol boundaries or is purely textual; Serena returns an error (stale index, symbol not found).
+
+### Layer 3 — CLI-TOOLS (modern CLI for the rest)
+
+For operations lean-ctx MCP tools do not cover — text substitution, field extraction, directory navigation, JSON query, diff review — prefer modern CLI tools. See [CLI-TOOLS.md](./CLI-TOOLS.md) for full syntax.
 
 ### Shell Syntax
 
@@ -204,56 +265,19 @@ Common fish equivalents:
 - Chaining: `cmd1; and cmd2` or `cmd1 && cmd2` (fish 3.0+)
 - Loops: `for x in items; ...; end` (not `for x in items; do ...; done`)
 
-### lean-ctx Defaults
+### Strict: modern tools over legacy — no exceptions
 
-lean-ctx tools are the primary interface for file reading, searching, and listing. Do NOT use CLI equivalents for these operations:
+NEVER use `sed`, `cut`, `awk` (for simple field extraction), or bare `cd` (for user-facing navigation). Use the modern equivalents. Translate any third-party guide that uses the legacy form before presenting it.
 
-| Operation | Use | NOT |
-|-----------|-----|-----|
-| Read files | `ctx_read` | `bat`, `cat` |
-| Search text | `ctx_grep`, `ctx_search` | `rg`, `grep` |
-| Find files | `ctx_find` | `fd`, `find` |
-| List dirs | `ctx_ls`, `ctx_tree` | `eza`, `ls` |
-| Shell commands | `ctx_shell` | `bash` |
+| Operation | Use | Never |
+|-----------|-----|-------|
+| Text substitution | `sd` | `sed` |
+| Field/column extraction | `choose` | `cut`, `awk` (simple cases) |
+| Directory jump (user-facing) | `z` (zoxide) | `cd` |
 
-### Code Editing
+`sd` specifics: standard regex (no backslash-escaping of `(`, `)`, `+`, `?`), `$1` for capture groups (not `\1`), `-F` for literal strings, replaces globally and in-place on files by default. See [CLI-TOOLS.md](./CLI-TOOLS.md) for the full `sed` → `sd` translation table.
 
-Prefer Serena's symbol-aware tools for modifying code files:
-
-| Edit type | Primary (Serena) | Fallback (pi native) |
-|-----------|-------------------|----------------------|
-| Replace function/class/method body | `replace_symbol_body` | `edit` with oldText matching |
-| Insert code near a symbol | `insert_before_symbol` / `insert_after_symbol` | `edit` |
-| Rename across files | `rename_symbol` | find-and-replace manually |
-| Delete unused symbol | `safe_delete_symbol` | `edit` |
-| Non-symbol content (config, prose, YAML) | — | `edit` / `write` |
-| New file creation | — | `write` |
-| Regex-based replacement in code | `replace_content` | `edit` / `sd` |
-
-Fall back to `edit`/`write` when:
-- The target is not a recognizable symbol (config files, markdown, YAML, JSON)
-- Serena's language server doesn't support the file type
-- The edit crosses symbol boundaries or is purely textual
-- Serena returns an error (stale index, symbol not found)
-
-### CLI Tools (for operations lean-ctx does not cover)
-
-For text substitution and git diffs, use modern CLI tools. See [CLI-TOOLS.md](./CLI-TOOLS.md) for examples.
-
-- `sd` → text substitution (`sed` replacement) — NEVER use `sed`
-- `hunk` → git diff viewing and inline review comments (`hunk session *` for programmatic access)
-
-### Strict: `sd` over `sed` — no exceptions
-
-NEVER use `sed` in commands you run or suggest the user run. Always use `sd` instead.
-
-- When performing text substitution in your own tool calls, use `sd`.
-- When suggesting commands for the user to run, write them with `sd`.
-- When explaining how to do text replacement, show `sd` syntax.
-- If a third-party guide or Stack Overflow answer uses `sed`, translate it to `sd` before presenting.
-- The only exception is when `sed` appears in existing project code or scripts that you are not modifying — do not rewrite working code unprompted.
-
-`sd` uses standard regex syntax (no backslash-escaping of `(`, `)`, `+`, `?`), uses `$1` for capture groups (not `\1`), and supports `-F` for literal string matching. See [CLI-TOOLS.md](./CLI-TOOLS.md) for a full `sed` → `sd` translation guide.
+The only exception is legacy commands appearing inside existing project code or scripts you are not modifying — do not rewrite working code unprompted.
 
 ## Response Format
 

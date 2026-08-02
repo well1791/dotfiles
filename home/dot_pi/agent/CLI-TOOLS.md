@@ -1,8 +1,25 @@
 # CLI Tools Reference
 
-Tools the agent uses for operations **not covered by lean-ctx**. For file reading, text search, file finding, and directory listing, always use lean-ctx tools (`ctx_read`, `ctx_grep`, `ctx_search`, `ctx_find`, `ctx_ls`, `ctx_tree`).
+Modern CLI tools for operations **not covered by lean-ctx MCP tools**. lean-ctx handles file reading, text search, file finding, directory listing, shell execution, symbol outline, code editing, and multi-file understanding — reach those through the `ctx_*` tools (`ctx_read`, `ctx_grep`, `ctx_search`, `ctx_find`, `ctx_glob`, `ctx_ls`, `ctx_tree`, `ctx_shell`, `ctx_outline`, `ctx_patch`, `ctx_edit`, `ctx_compose`). For LSP-precise symbol edits, use Serena — see the Tool Routing section in [AGENTS.md](./AGENTS.md).
+
+This file covers what lean-ctx leaves to the shell: text substitution, field extraction, directory navigation, JSON query, diff review, and runtime/package managers.
 
 All examples use **fish shell syntax**.
+
+---
+
+## Modern tool → legacy quick reference
+
+| Operation | Modern | Not (legacy) |
+|-----------|--------|--------------|
+| Text substitution | `sd` | `sed` |
+| Field/column extraction | `choose` | `cut`, `awk` (simple cases) |
+| Directory jump | `z` (zoxide) | `cd` |
+| JSON query | `jq` | manual parsing |
+| Diff review (TUI) | `hunk` | raw `git diff` piping |
+| Syntax-highlighted pager | `delta` (git `core.pager`) | plain `diff` |
+
+> `rg`, `fd`, `eza`, `bat`, `dust`, `duf` are also modern replacements, but the agent reaches them through lean-ctx MCP (`ctx_search`, `ctx_find`, `ctx_ls`, `ctx_read`) — not by shelling out directly. Prefer the MCP tool unless composing a one-off pipeline that lean-ctx has no tool for.
 
 ---
 
@@ -52,6 +69,57 @@ sd 'v([0-9]+)' 'v$1.0' f
 sd -F '[X]' '[Y]' f
 # echo x | sed 's/.*/"&"/'           →
 echo x | sd '.*' '"$0"'
+```
+
+---
+
+## choose
+
+`choose` extracts fields/columns by index — a human-friendly `cut`/`awk` replacement. Use it for simple column extraction in pipelines. For regex substitution use `sd`; for conditional or multi-line transforms use `ctx_execute` (or `awk` when its full power is genuinely needed).
+
+```fish
+choose 0 file.txt                 # first whitespace-separated field
+choose 1: file.txt                # 2nd field through end of line
+choose -f, -1 data.csv            # last comma-separated field
+echo "a:b:c" | choose -f: 1       # 2nd colon-separated field → "b"
+choose 2..5 file.txt              # fields 3-5 (exclusive end)
+choose -x 0:2 file.txt            # fields 1-2 (exclusive range, 0-indexed)
+echo "a b c" | choose 0 2         # pick fields 1 and 3
+```
+
+- Default field separator: whitespace. Override with `-f <regex>` (e.g. `-f,` for comma).
+- Ranges: `a:b` inclusive, `a..b` exclusive, `a..=b` inclusive, open-ended by omitting a bound.
+- Indices are **0-based** by default; `--one-indexed` switches to 1-based.
+
+---
+
+## zoxide (`z`)
+
+Smarter `cd` — jumps to frecency-ranked directories by substring. Use when **suggesting directory changes to the user** or scripting interactive fish sessions. The agent itself operates by cwd and absolute paths and does not need `z`.
+
+```fish
+z foo               # jump to most-used dir matching "foo"
+z proj src          # refine: best match for "proj" then "src"
+zi                  # interactive picker (fzf) over ranked dirs
+zoxide add /path    # register a dir without jumping
+zoxide query --list # show the ranked database (non-mutating)
+```
+
+- Requires fish integration (`zoxide init fish | source`) — wired via chezmoi.
+- `z` = jump, `zi` = interactive jump, `zoxide query` = lookup, `zoxide add` = register.
+
+---
+
+## jq
+
+JSON query/transform, run via `ctx_shell`. For YAML, use `yq` if available.
+
+```fish
+jq '.field' data.json
+jq '.items[] | .name' data.json
+jq -r '.url' meta.json             # raw (unquoted) output
+echo '{"a":1}' | jq '.a'           # stdin
+jq 'keys' data.json                # object keys
 ```
 
 ---
@@ -151,7 +219,7 @@ Guidelines:
 
 ## nix
 
-Experimental features not enabled globally. All `nix` subcommands need:
+Experimental features are not enabled globally. All `nix` subcommands need:
 `--extra-experimental-features "nix-command flakes"` (shown as `$NF` below).
 
 In fish, set this as a variable:
@@ -190,4 +258,5 @@ nix-collect-garbage --delete-older-than 30d # gc older than 30d
 
 - All examples assume fish shell. Do not translate to bash/POSIX.
 - `sd`: replaces globally by default (no `/g` needed). In-place on files by default.
+- `choose`: 0-indexed, whitespace-separated by default.
 - `hunk`: color auto-disabled when piping. Force with `--color always`.
