@@ -1,8 +1,21 @@
 allow_ide_config_dirs = true
 shell_activation = "agents-only"
 shell_security = "warn"
-shell_allowlist_extra = ["rg", "fd", "zoxide", "duf", "dust", "sd", "choose"]
-extra_roots = ["/mnt/storage/Code", "~/.local/bin", "~/.pi", "~/.serena"]
+shell_allowlist_extra = [
+  "rg",
+  "fd",
+  "zoxide",
+  "duf",
+  "dust",
+  "sd",
+  "choose",
+]
+extra_roots = [
+  "/mnt/storage/Code",
+  "~/.local/bin",
+  "~/.pi",
+  "~/.serena",
+]
 compression_level = "standard"
 memory_profile = "performance"
 tool_profile = "power"
@@ -13,5 +26,34 @@ check_interval_hours = 6
 notify_only = false
 
 [[custom_aliases]]
-alias = "lint"
 command = "npm run lint -- --fix"
+alias = "lint"
+
+[gateway]
+enabled = true
+
+[[gateway.servers]]
+name = "serena"
+transport = "stdio"
+enabled = true
+command = "uvx"
+args = [
+  "--from",
+  "serena-agent==1.5.3",
+  "serena",
+  "start-mcp-server",
+  "--context",
+  "ide",
+]
+url = ""
+integration = "code-symbols"
+
+[gateway.servers.env]
+
+[gateway.servers.headers]
+
+[gateway.servers.capabilities]
+network = "full"
+filesystem = "read_write"
+env = []
+exec = "none"
