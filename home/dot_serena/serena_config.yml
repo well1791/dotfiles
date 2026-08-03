@@ -168,13 +168,29 @@ projects:
 - ~/Code/work/EE2/EE2.1
 - ~/Code/work/EE2/EE2.2
 - ~/Code/work/EE2/EE2.3
+- ~/Code/work/EE2/agent
 - ~/Code/work/EE3/EE3.1
 - ~/Code/work/EE3/EE3.2
 - ~/Code/work/EE3/EE3.3
+- ~/Code/work/EE3/agent
 - ~/Code/work/sage/sage.1
 - ~/Code/work/sage/sage.2
 - ~/Code/work/sage/sage.3
+- ~/Code/work/sage/agent
 - ~/Code/work/local-llm
+- /mnt/storage/Code/work/EE2/EE2.1
+- /mnt/storage/Code/work/EE2/EE2.2
+- /mnt/storage/Code/work/EE2/EE2.3
+- /mnt/storage/Code/work/EE2/agent
+- /mnt/storage/Code/work/EE3/EE3.1
+- /mnt/storage/Code/work/EE3/EE3.2
+- /mnt/storage/Code/work/EE3/EE3.3
+- /mnt/storage/Code/work/EE3/agent
+- /mnt/storage/Code/work/sage/sage.1
+- /mnt/storage/Code/work/sage/sage.2
+- /mnt/storage/Code/work/sage/sage.3
+- /mnt/storage/Code/work/sage/agent
+- /mnt/storage/Code/work/local-llm
 
 # trusted hosts used to access the web dashboard.
 # By default, only allow access via local addresses for security reasons.
