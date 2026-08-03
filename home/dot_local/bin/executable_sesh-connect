@@ -1,0 +1,47 @@
+#!/bin/sh
+# sesh-connect: create/switch sessions using sesh for naming + rmux for attach
+#
+# Problem: sesh's Go code captures rmux's stdout into a buffer when calling
+# attach-session, which breaks terminal rendering (rmux uses stdout for output).
+# The exec'd wrapper doesn't help since Go sets up the pipe before spawning.
+#
+# Solution: use sesh only for listing and session creation (detached), then
+# call rmux directly via exec for the attach step.
+#
+# Usage: sesh-connect <session-name-or-path>
+
+session="$1"
+if [ -z "$session" ]; then
+    echo "Usage: sesh-connect <session-name-or-path>" >&2
+    exit 1
+fi
+
+# If already inside rmux, use switch-client via sesh (works fine — no terminal
+# takeover needed, switch-client is a server-side command that returns immediately)
+if [ -n "$RMUX" ] || [ -n "$TMUX" ]; then
+    sesh connect --switch "$session"
+    exit $?
+fi
+
+# Outside rmux: we need to attach, which requires exec to give rmux direct
+# terminal access (bypassing sesh's stdout capture).
+
+# Check if this session already exists
+if rmux has-session -t "$session" 2>/dev/null; then
+    exec rmux attach-session -t "$session"
+fi
+
+# Session doesn't exist — create it first, then attach.
+# If it's a directory, create with that as the working directory.
+if [ -d "$session" ]; then
+    abs_path="$(cd "$session" && pwd)"
+    # Use last 2 path components as session name (matches sesh dir_length=2)
+    session_name="$(echo "$abs_path" | awk -F/ '{print $(NF-1)"/"$NF}')"
+    rmux new-session -d -s "$session_name" -c "$abs_path"
+    exec rmux attach-session -t "$session_name"
+fi
+
+# Not a directory and not an existing session — might be a zoxide/config entry.
+# Create a session with this name using current directory.
+rmux new-session -d -s "$session"
+exec rmux attach-session -t "$session"
