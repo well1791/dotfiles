@@ -177,6 +177,7 @@ projects:
 - ~/Code/work/sage/sage.2
 - ~/Code/work/sage/sage.3
 - ~/Code/work/sage/agent
+- ~/Code/work/sage/agent/Sage/Code/EE/Backend
 - ~/Code/work/local-llm
 - /mnt/storage/Code/work/EE2/EE2.1
 - /mnt/storage/Code/work/EE2/EE2.2
@@ -190,6 +191,7 @@ projects:
 - /mnt/storage/Code/work/sage/sage.2
 - /mnt/storage/Code/work/sage/sage.3
 - /mnt/storage/Code/work/sage/agent
+- /mnt/storage/Code/work/sage/agent/Sage/Code/EE/Backend
 - /mnt/storage/Code/work/local-llm
 
 # trusted hosts used to access the web dashboard.
