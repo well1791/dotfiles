@@ -47,7 +47,6 @@
     "opencode/big-pickle",
     "zai/glm-5-turbo",
     "zai/glm-5.2",
-    "zai/glm-5v-turbo",
     "ollama/ornith:9b"
   ],
   "theme": "dark",
