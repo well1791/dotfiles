@@ -1,10 +1,24 @@
 #!/bin/bash
-# librewolf-profile-launch.sh - Launch or focus LibreWolf with specific profile
+# librewolf-profile-launch.sh - Launch or focus a LibreWolf profile window.
+#
+# KDE Wayland (kdotool) aware. Each LibreWolf profile runs as its own
+# top-level process ("<binary> -P <profile>"); that process owns the profile
+# window (_NET_WM_PID). We locate the LIVE main process for the requested
+# profile and focus its window if present, otherwise launch a new instance.
+#
+# Why not a stored PID file: LibreWolf (Firefox-based) re-execs, so the PID
+# captured from `librewolf ... &` dies quickly and the focus path never hits.
+# Why not `kdotool search --pid`: kdotool v0.2.1 ignores the pid filter and
+# returns unrelated windows, so we scan --class librewolf and match each
+# window's own PID via getwindowpid instead.
+#
 # Usage: librewolf-profile-launch.sh <profile-name>
 
-# Find kdotool - check PATH first, then common locations
+set -u
+
+KDOTOOL=""
 if command -v kdotool >/dev/null 2>&1; then
-    KDOTOOL="kdotool"
+    KDOTOOL="$(command -v kdotool)"
 elif [ -x "$HOME/.local/bin/kdotool" ]; then
     KDOTOOL="$HOME/.local/bin/kdotool"
 else
@@ -12,73 +26,76 @@ else
     exit 1
 fi
 
-PROFILE_NAME="$1"
-
+PROFILE_NAME="${1:-}"
 if [ -z "$PROFILE_NAME" ]; then
     echo "Usage: librewolf-profile-launch.sh <profile-name>" >&2
-    echo "Example: librewolf-profile-launch.sh well" >&2
+    echo "Profiles: well, work, games, contabilidad" >&2
     exit 1
 fi
 
-# Validate profile name
 case "$PROFILE_NAME" in
-    well|work|games|contabilidad)
-        # Valid profile
-        ;;
+    well|work|games|contabilidad) ;;
     *)
-        echo "Error: Unknown profile '$PROFILE_NAME'" >&2
+        echo "Error: Unknown profile '$PROFILE_NAME'." >&2
         echo "Valid profiles: well, work, games, contabilidad" >&2
         exit 1
         ;;
 esac
 
-PID_FILE="$HOME/.cache/librewolf-profile-${PROFILE_NAME}.pid"
+# Print the PID of the live top-level librewolf process running profile $1.
+# Uses /proc cmdline (not `pgrep -f`) to avoid matching this script or shells.
+find_main_pid() {
+    local profile="$1" pid cmd
+    for pid in $(pgrep -x librewolf 2>/dev/null); do
+        cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null || true)"
+        # Match " -P <profile> " as a distinct argv pair; the trailing space
+        # comes from tr converting the cmdline's final NUL to a space.
+        case "$cmd" in
+            *" -P $profile "*) printf '%s\n' "$pid"; return 0 ;;
+        esac
+    done
+    return 1
+}
 
-# Try to find existing window by stored PID
-if [ -f "$PID_FILE" ]; then
-    STORED_PID=$(cat "$PID_FILE")
-    
-    # Check if process is still running
-    if kill -0 "$STORED_PID" 2>/dev/null; then
-        # Try to find windows by PID
-        WIDS=$("$KDOTOOL" search --pid "$STORED_PID" 2>/dev/null)
-        
-        if [ -n "$WIDS" ]; then
-            # Window found - activate first one
-            FIRST_WID=$(echo "$WIDS" | head -n1)
-            echo "Focusing existing LibreWolf window for profile: $PROFILE_NAME (PID: $STORED_PID)"
-            "$KDOTOOL" windowactivate "$FIRST_WID"
-            exit 0
-        else
-            echo "Process $STORED_PID exists but no window found, launching new instance..."
+# Given a librewolf main PID, print the window id owned by that process.
+find_window_for_pid() {
+    local target="$1" wid wpid
+    for wid in $("$KDOTOOL" search --class librewolf 2>/dev/null); do
+        wpid="$("$KDOTOOL" getwindowpid "$wid" 2>/dev/null || true)"
+        if [ "$wpid" = "$target" ]; then
+            printf '%s\n' "$wid"
+            return 0
         fi
-    else
-        echo "Stale PID file found, removing..."
-        rm -f "$PID_FILE"
+    done
+    return 1
+}
+
+focus_window() { "$KDOTOOL" windowactivate "$1" >/dev/null 2>&1 || true; }
+
+# 1. Existing instance for this profile -> focus its window.
+MAIN_PID="$(find_main_pid "$PROFILE_NAME" || true)"
+if [ -n "$MAIN_PID" ]; then
+    WID="$(find_window_for_pid "$MAIN_PID" || true)"
+    if [ -n "$WID" ]; then
+        focus_window "$WID"
+        exit 0
     fi
 fi
 
-# No existing window found - launch new instance
-echo "Launching LibreWolf with profile: $PROFILE_NAME"
+# 2. No (focusable) window -> launch and wait for the window to appear.
 librewolf -P "$PROFILE_NAME" >/dev/null 2>&1 &
-NEW_PID=$!
+disown 2>/dev/null || true
 
-# Store PID for future lookups
-mkdir -p "$(dirname "$PID_FILE")"
-echo "$NEW_PID" > "$PID_FILE"
-echo "Stored PID: $NEW_PID in $PID_FILE"
-
-# Wait for window to appear
-echo "Waiting for window to appear..."
-for i in {1..10}; do
-    sleep 0.3
-    WIDS=$("$KDOTOOL" search --pid "$NEW_PID" 2>/dev/null)
-    if [ -n "$WIDS" ]; then
-        FIRST_WID=$(echo "$WIDS" | head -n1)
-        echo "Window appeared, focusing..."
-        "$KDOTOOL" windowactivate "$FIRST_WID"
+for _ in $(seq 1 20); do
+    sleep 0.5
+    MAIN_PID="$(find_main_pid "$PROFILE_NAME" || true)"
+    [ -n "$MAIN_PID" ] || continue
+    WID="$(find_window_for_pid "$MAIN_PID" || true)"
+    if [ -n "$WID" ]; then
+        focus_window "$WID"
         exit 0
     fi
 done
 
-echo "⚠️  Window didn't appear within 3 seconds. It may still be loading."
+echo "LibreWolf '$PROFILE_NAME' launched; window focus could not be confirmed." >&2
+exit 0
