@@ -23,6 +23,10 @@ abbr -a -- gbm 'git branch --move'
 abbr -a -- gbc 'git switch --create'
 abbr -a -- gby 'git switch --copy'
 
+# git branch
+abbr -a -- gwl 'git worktree list'
+abbr -a -- gwr 'git worktree remove'
+
 # git status
 abbr -a -- gst 'git status --short'
 abbr -a -- gss 'git status --short'
