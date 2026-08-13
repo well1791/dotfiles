@@ -241,7 +241,7 @@ records = true
 enabled = true
 # #Automatically start and manage the daemon when needed.
 # # Not compatible with `systemd_socket = true`.
-autostart = false
+autostart = true
 
 # #How often the daemon should sync in seconds
 # sync_frequency = 300
