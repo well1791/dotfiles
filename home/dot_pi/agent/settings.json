@@ -45,8 +45,7 @@
     "github-copilot/gpt-5.6-sol",
     "github-copilot/gpt-5.6-terra",
     "opencode/big-pickle",
-    "zai/glm-5-turbo",
-    "zai/glm-5.2",
+    "zai/glm-5.3",
     "ollama/ornith:9b"
   ],
   "theme": "dark",
