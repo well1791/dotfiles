@@ -55,7 +55,7 @@ l = ["move_next_word_end", "trim_selections"]
 # S-l = ":noop"
 i = "move_visual_line_up"
 S-i = "goto_file_start"
-C-i = "goto_previous_buffer"
+C-i = "jump_backward"
 A-i = [
   "extend_to_line_bounds",
   "delete_selection",
@@ -65,7 +65,7 @@ A-i = [
 ]  # Move line(s) up
 k = "move_visual_line_down"
 S-k = "goto_file_end"
-C-k = "goto_next_buffer"
+C-k = "jump_forward"
 A-k = [
   "extend_to_line_bounds",
   "delete_selection",
@@ -77,7 +77,7 @@ A-k = [
 # u = "undo"
 # S-u = ":noop"
 C-u = ":noop"
-# o = "jump_forward"
+o = ":noop"
 # C-o = ":noop"
 h = "goto_first_nonwhitespace"
 # S-h = "redo"
@@ -105,17 +105,17 @@ l = "extend_next_word_end"
 # S-l = "extend_to_line_end"
 i = "extend_visual_line_up"
 S-i = "extend_to_file_start"
-C-i = "goto_previous_buffer"
+C-i = "jump_backward"
 A-i = ":noop"
 k = "extend_visual_line_down"
 S-k = "extend_to_file_end"
-C-k = "goto_next_buffer"
+C-k = "jump_forward"
 A-k = ":noop"
 # u = "jump_backward"
 # S-u = ":noop"
 C-u = ":noop"
 # A-u = ":noop"
-# o = "jump_forward"
+o = ":noop"
 # S-o = ":noop"
 # C-o = ":noop"
 h = "extend_to_first_nonwhitespace"
