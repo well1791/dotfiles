@@ -23,6 +23,9 @@ end
 # |-- PI (must come after BUN to take precedence)
 set --export PATH ~/.pi/agent/bin $PATH
 
+# |-- Podman
+set --global --export PODMAN_COMPOSE_WARNING_LOGS false
+
 # |-- TV
 if status is-interactive
     tv init fish | source
