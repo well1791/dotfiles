@@ -49,12 +49,18 @@ mode.select = "S"
 [keys.normal]
 esc = ["collapse_selection", "keep_primary_selection"]
 # RIGHT
+S-left = ["move_prev_word_start", "trim_selections"]
 j = ["move_prev_word_start", "trim_selections"]
 # S-j = ":noop"
+S-right = ["move_next_word_end", "trim_selections"]
 l = ["move_next_word_end", "trim_selections"]
 # S-l = ":noop"
+up = "move_visual_line_up"
+S-up = "move_visual_line_up"
 i = "move_visual_line_up"
+C-home = "goto_file_start"
 S-i = "goto_file_start"
+C-up = "jump_backward"
 C-i = "jump_backward"
 A-i = [
   "extend_to_line_bounds",
@@ -63,8 +69,12 @@ A-i = [
   "paste_before",
   "flip_selections",
 ]  # Move line(s) up
+down = "move_visual_line_down"
+S-down = "move_visual_line_down"
 k = "move_visual_line_down"
+C-end = "goto_file_end"
 S-k = "goto_file_end"
+C-down = "jump_forward"
 C-k = "jump_forward"
 A-k = [
   "extend_to_line_bounds",
@@ -79,14 +89,20 @@ A-k = [
 C-u = ":noop"
 o = ":noop"
 # C-o = ":noop"
+home = "goto_first_nonwhitespace"
 h = "goto_first_nonwhitespace"
 # S-h = "redo"
+end = "goto_line_end"
 ";" = "goto_line_end"
 # LEFT
+pageup = "page_cursor_half_up"
 w = "page_cursor_half_up"
+S-pageup = "goto_prev_paragraph"
 S-w = "goto_prev_paragraph"
 A-w = ":noop"
+pagedown = "page_cursor_half_down"
 s = "page_cursor_half_down"
+S-pagedown = "goto_next_paragraph"
 S-s = "goto_next_paragraph"
 # C-s = ":noop"
 A-s = ":noop"
@@ -99,17 +115,25 @@ S-x = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.select]
 # RIGHT
+S-left = "extend_prev_word_start"
 j = "extend_prev_word_start"
 # S-j = "extend_to_first_nonwhitespace"
+S-right = "extend_next_word_end"
 l = "extend_next_word_end"
 # S-l = "extend_to_line_end"
+up = "extend_visual_line_up"
 i = "extend_visual_line_up"
+C-home = "extend_to_file_start"
 S-i = "extend_to_file_start"
+C-up = "jump_backward"
 C-i = "jump_backward"
 A-i = ":noop"
+down = "extend_visual_line_down"
 k = "extend_visual_line_down"
+C-end = "extend_to_file_end"
 S-k = "extend_to_file_end"
 C-k = "jump_forward"
+C-down = "jump_forward"
 A-k = ":noop"
 # u = "jump_backward"
 # S-u = ":noop"
@@ -122,10 +146,14 @@ h = "extend_to_first_nonwhitespace"
 # S-h = "redo"
 ";" = "extend_to_line_end"
 # LEFT
+pageup = "page_cursor_half_up"
 w = "page_cursor_half_up"
+S-pageup = "goto_prev_paragraph"
 S-w = "goto_prev_paragraph"
 A-w = ":noop"
+pagedown = "page_cursor_half_down"
 s = "page_cursor_half_down"
+S-pagedown = "goto_next_paragraph"
 S-s = "goto_next_paragraph"
 # C-s = ":noop"
 A-s = ":noop"
@@ -140,52 +168,62 @@ S-x = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.normal.a]
 j = "insert_mode"
+left = "insert_mode"
 l = "append_mode"
+right = "append_mode"
 h = "insert_at_line_start"
+home = "insert_at_line_start"
 ";" = "insert_at_line_end"
+end = "insert_at_line_end"
 i = "open_above"
+up = "open_above"
+S-up = "open_above"
 k = "open_below"
+down = "open_below"
+S-down = "open_below"
 o = "change_selection"
+backspace = "change_selection"
 S-o = "change_selection_noyank"
+S-backspace = "change_selection_noyank"
 
 [keys.select.a]
 j = "insert_mode"
+left = "insert_mode"
 l = "append_mode"
+right = "append_mode"
 h = "insert_at_line_start"
+home = "insert_at_line_start"
 ";" = "insert_at_line_end"
+end = "insert_at_line_end"
 i = "open_above"
+up = "open_above"
 k = "open_below"
+down = "open_below"
 o = "change_selection"
+backspace = "change_selection"
 S-o = "change_selection_noyank"
+S-backspace = "change_selection_noyank"
 
 [keys.normal.b]
 r = [":reload-all", ":redraw"]
 s = ":write-all!"
-w = ":write-all!"
 b = "buffer_picker"
 i = "goto_previous_buffer"
 k = "goto_next_buffer"
 c = ":write-buffer-close"
 S-c = ":write-buffer-close!"
 A-c = ":buffer-close-others"
-d = ":write-buffer-close"
-S-d = ":write-buffer-close"
-A-d = ":buffer-close-others"
 x = ":buffer-close-all"
 
 [keys.select.b]
 r = [":reload-all", ":redraw"]
 s = ":write-all!"
-w = ":write-all!"
 b = "buffer_picker"
 i = "goto_previous_buffer"
 k = "goto_next_buffer"
 c = ":write-buffer-close"
 S-c = ":write-buffer-close!"
 A-c = ":buffer-close-others"
-d = ":write-buffer-close"
-S-d = ":write-buffer-close"
-A-d = ":buffer-close-others"
 x = ":buffer-close-all"
 
 [keys.normal.c]
@@ -220,15 +258,23 @@ h = "select_references_to_symbol_under_cursor"
 
 [keys.normal.f]
 j = "find_prev_char"
+left = "find_prev_char"
 l = "find_next_char"
+right = "find_next_char"
 S-j = "till_prev_char"
+S-left = "till_prev_char"
 S-l = "find_till_char"
+S-right = "find_till_char"
 
 [keys.select.f]
 j = "find_prev_char"
+left = "find_prev_char"
 l = "find_next_char"
+right = "find_next_char"
 S-j = "till_prev_char"
+S-left = "till_prev_char"
 S-l = "find_till_char"
+S-right = "find_till_char"
 
 [keys.normal.t]
 d = "goto_next_diag"
