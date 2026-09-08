@@ -49,20 +49,19 @@ mode.select = "S"
 [keys.normal]
 esc = ["collapse_selection", "keep_primary_selection"]
 # RIGHT
-S-left = ["move_prev_word_start", "trim_selections"]
+C-left = ["move_prev_word_start", "trim_selections"]
 j = ["move_prev_word_start", "trim_selections"]
 # S-j = ":noop"
-S-right = ["move_next_word_end", "trim_selections"]
+C-right = ["move_next_word_end", "trim_selections"]
 l = ["move_next_word_end", "trim_selections"]
 # S-l = ":noop"
 up = "move_visual_line_up"
-S-up = "move_visual_line_up"
+C-up = "move_visual_line_up"
 i = "move_visual_line_up"
 C-home = "goto_file_start"
 S-i = "goto_file_start"
-C-up = "jump_backward"
-C-i = "jump_backward"
-A-i = [
+# C-tab = "jump_backward"
+C-A-up = [
   "extend_to_line_bounds",
   "delete_selection",
   "move_line_up",
@@ -70,13 +69,12 @@ A-i = [
   "flip_selections",
 ]  # Move line(s) up
 down = "move_visual_line_down"
-S-down = "move_visual_line_down"
+C-down = "move_visual_line_down"
 k = "move_visual_line_down"
 C-end = "goto_file_end"
 S-k = "goto_file_end"
-C-down = "jump_forward"
-C-k = "jump_forward"
-A-k = [
+# C-S-tab = "jump_forward"
+C-A-down = [
   "extend_to_line_bounds",
   "delete_selection",
   "paste_after",
@@ -115,25 +113,26 @@ S-x = ["extend_line_up", "extend_to_line_bounds"]
 
 [keys.select]
 # RIGHT
-S-left = "extend_prev_word_start"
+C-left = "extend_prev_word_start"
 j = "extend_prev_word_start"
 # S-j = "extend_to_first_nonwhitespace"
-S-right = "extend_next_word_end"
+C-right = "extend_next_word_end"
 l = "extend_next_word_end"
 # S-l = "extend_to_line_end"
 up = "extend_visual_line_up"
+C-up = "extend_visual_line_up"
 i = "extend_visual_line_up"
 C-home = "extend_to_file_start"
 S-i = "extend_to_file_start"
-C-up = "jump_backward"
+# C-up = "jump_backward"
 C-i = "jump_backward"
 A-i = ":noop"
 down = "extend_visual_line_down"
+C-down = "extend_visual_line_down"
 k = "extend_visual_line_down"
 C-end = "extend_to_file_end"
 S-k = "extend_to_file_end"
 C-k = "jump_forward"
-C-down = "jump_forward"
 A-k = ":noop"
 # u = "jump_backward"
 # S-u = ":noop"
