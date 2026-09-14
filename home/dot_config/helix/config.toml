@@ -10,6 +10,7 @@ shell = ["fish", "-c"]
 scrolloff = 10
 completion-trigger-len = 1
 popup-border = "all"
+insert-final-newline = false
 
 [editor.inline-diagnostics]
 cursor-line = "error"

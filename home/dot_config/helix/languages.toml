@@ -12,8 +12,7 @@ auto-format = true
 name = "typescript"
 injection-regex = "(ts|typescript)"
 file-types = ["ts", "mts", "cts"]
-auto-format = true
-# @see https://github.com/helix-editor/helix/discussions/8452#discussioncomment-12224231
+auto-format = false
 formatter = { command = "npx", args = ["prettier", "--parser", "typescript"] }
 
 [[language]]
@@ -21,8 +20,7 @@ name = "javascript"
 language-servers = [
   "typescript-language-server",
   "eslint-lsp",
-]  # ADD eslint-lsp to your langauge.
-# formatter = { command = 'prettier', args = ['--parser', 'babel'] }
+]
 auto-format = false
 
 [[language]]
@@ -58,15 +56,15 @@ injection-regex = "ini"
 comment-token = "#"
 indent = { tab-width = 4, unit = "\t" }
 
-[[grammar]]
-name = "ini"
-source = { git = "https://github.com/justinmk/tree-sitter-ini", rev = "87176e524f0a98f5be75fa44f4f0ff5c6eac069c" }
-
 # C# configuration
 [[language]]
 name = "c-sharp"
 auto-format = true
 language-servers = ["omnisharp"]
+
+[[grammar]]
+name = "ini"
+source = { git = "https://github.com/justinmk/tree-sitter-ini", rev = "87176e524f0a98f5be75fa44f4f0ff5c6eac069c" }
 
 [language-server.omnisharp]
 command = "OmniSharp"
@@ -77,4 +75,3 @@ FormattingOptions.EnableEditorConfigSupport = true
 RoslynExtensionsOptions.EnableAnalyzersSupport = true
 RoslynExtensionsOptions.EnableImportCompletion = true
 RoslynExtensionsOptions.AnalyzeOpenDocumentsOnly = false
-
