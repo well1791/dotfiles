@@ -210,6 +210,7 @@ $ variable: <command that produces selectable options> | fzf
 | postgresql | nix, home-manager | User-level instance for Absurd; declared in home.nix, systemd user service on port 5433 |
 | absurdctl | uv, postgresql | Durable workflow CLI; installed via `uv tool install`, connects to user-level postgres on port 5433 |
 | emacs | (standalone) | Primary editor; meow modal layer; packages managed by elpaca (`M-x elpaca-update-all` inside Emacs), NOT via `update-all`. Binary updated by system package step. |
+| helium-browser | — | GUI web browser (Chromium-based, by imput); system package `helium-browser-bin` via CachyOS repo/AUR, updated by `update-all` step 1. Skipped on headless machines. |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 

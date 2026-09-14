@@ -1,0 +1,22 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install Helium browser (privacy-focused Chromium browser by imput)
+# https://helium.computer/
+# https://github.com/imputnet/helium-linux
+
+# Skip if already installed
+# NOTE: the Arch package names the binary `helium-browser` (upstream deb/tarball ship `helium`)
+if log_version helium-browser; then
+    exit 0
+fi
+
+# Install via system package manager (CachyOS repo / AUR)
+log_info "Installing Helium browser..."
+install_packages helium-browser-bin
+
+# Verify
+if ! check_command helium-browser; then
+    die "Helium browser installation failed"
+fi
+
+log_success "Helium browser installed" "$(get_version helium-browser)"
+log_info "  Launch: helium-browser (or from the application launcher)"

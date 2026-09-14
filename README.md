@@ -280,6 +280,12 @@ Installed via system package manager (pacman/apt/dnf):
 - Installed via cargo: `cargo install choose`; install script: `run_onchange_before_70d-install-choose.sh.tmpl`
 - Update: `cargo install choose` (covered by `update-all`)
 
+### 31. **[Helium](https://helium.computer/)** - Privacy-focused web browser
+- Chromium-based browser by [imput](https://imput.net/): private, fast, and honest
+- Installed via system package (`helium-browser-bin`, CachyOS repo/AUR); install script: `arch/run_onchange_before_81-install-helium-browser.sh.tmpl` (skipped on headless machines)
+- Binary: `helium-browser` (upstream deb/tarball name it `helium`); config lives in `~/.config/helium` at runtime
+- Update: system package step of `update-all` (`paru -Syu`)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -291,7 +297,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, git-delta, mergiraf, emacs)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, git-delta, mergiraf, emacs, helium-browser-bin)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ home-manager packages (node, go, gopls)
