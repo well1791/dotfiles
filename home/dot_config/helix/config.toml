@@ -346,7 +346,8 @@ S-d = "page_cursor_half_down"
 
 [keys.normal.space]
 r = [":config-reload", ":redraw"]
-S-f = ":noop"
+f = "file_picker_in_current_directory"
+S-f = "file_picker_in_current_buffer_directory"
 e = "file_explorer_in_current_buffer_directory"
 S-e = ":noop"
 ";" = ":sh hxe filetree '%{buffer_name}'"
@@ -360,7 +361,9 @@ t = ":sh hxe terminal"
 
 [keys.select.space]
 r = [":config-reload", ":redraw"]
+f = "file_picker_in_current_directory"
 S-f = "file_picker_in_current_buffer_directory"
+e = "file_explorer_in_current_buffer_directory"
 c = ":noop"
 S-c = ":noop"
 A-c = ":noop"
