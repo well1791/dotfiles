@@ -1,0 +1,21 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install leaf (terminal Markdown previewer)
+# https://github.com/RivoLink/leaf
+
+# Skip if already installed
+if log_version leaf; then
+    exit 0
+fi
+
+# Install via AUR (pre-compiled binary package)
+log_info "Installing leaf..."
+install_packages leaf-markdown-viewer-bin
+
+# Verify
+if ! check_command leaf; then
+    die "leaf installation failed"
+fi
+
+log_success "leaf installed" "$(get_version leaf)"
+log_info "  Usage: leaf <file.md> (TUI viewer), leaf -w <file.md> (watch mode)"
+log_info "  Config: ~/.config/leaf/config.toml"

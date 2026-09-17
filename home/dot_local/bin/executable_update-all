@@ -5,6 +5,8 @@
 #          python-lsp-server, gopls, rmux, choose, serena, absurdctl, mergiraf
 # Note: emacs is a system package (updated by step 1, paru/pacman); its
 #       elpaca packages update inside Emacs via `M-x elpaca-update-all`, not here.
+# Note: leaf is an AUR system package (updated by step 1, paru/pacman);
+#       avoid `leaf --update`, it installs a shadow binary outside pacman.
 
 set -e
 

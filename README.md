@@ -112,7 +112,7 @@ Installed via system package manager (pacman/apt/dnf):
 - **[duf](https://github.com/muesli/duf)** - Disk free utility (`df` replacement)
 - **[eza](https://eza.rocks/)** - Modern ls replacement
 - **[sd](https://github.com/chmln/sd)** - Intuitive find & replace (`sed` replacement)
-- **[glow](https://github.com/charmbracelet/glow)** - Terminal markdown reader with TUI
+- **[leaf](https://github.com/RivoLink/leaf)** - Terminal markdown previewer with rich TUI (Arch: AUR `leaf-markdown-viewer-bin`)
 - **[serpl](https://github.com/yassinebridi/serpl)** - TUI search and replace tool
 - **[just](https://github.com/casey/just)** - Command runner (like make, but better)
 - **[tealdeer](https://tealdeer-rs.github.io/tealdeer/)** - Fast tldr client in Rust (`tldr`)
@@ -297,7 +297,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, glow, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, git-delta, mergiraf, emacs, helium-browser-bin)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, leaf-markdown-viewer-bin, git-delta, mergiraf, emacs, helium-browser-bin)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ home-manager packages (node, go, gopls)

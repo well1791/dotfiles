@@ -1,0 +1,8 @@
+# leaf configuration
+# Reference: https://github.com/RivoLink/leaf (see config.toml for all options)
+
+# Default editor for Ctrl+E (alternative: emacsclient)
+editor = "hx"
+
+# Maximum content width (default: terminal width, unlimited)
+width = 80

@@ -1,0 +1,18 @@
+% leaf, markdown, viewer
+
+# View markdown file
+leaf <file>
+
+# Watch mode (auto-reload on save)
+leaf -w <file>
+
+# View markdown from stdin
+<command> | leaf
+
+# Render to stdout inline (pipe-friendly, no TUI)
+leaf --inline ansi <file>
+
+# Open fuzzy markdown picker
+leaf
+
+$ file: fd -e md --max-depth 3 | fzf
