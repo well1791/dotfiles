@@ -9,6 +9,10 @@ shell_allowlist_extra = [
   "dust",
   "sd",
   "choose",
+  "devenv",
+  "podman",
+  "npm",
+  "uv",
 ]
 extra_roots = [
   "/mnt/storage/Code",
