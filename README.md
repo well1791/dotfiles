@@ -286,6 +286,14 @@ Installed via system package manager (pacman/apt/dnf):
 - Binary: `helium-browser` (upstream deb/tarball name it `helium`); config lives in `~/.config/helium` at runtime
 - Update: system package step of `update-all` (`paru -Syu`)
 
+### 32. **[Laya](https://github.com/NandhaKishorM/laya)** - Local typed-decision engine (ML service)
+- Non-autoregressive decision engine (choice/score/noul with calibrated confidence) over text/JSON state, 100+ languages, single forward pass
+- Persistent systemd user service (`laya.service`) on `127.0.0.1:8082`; all three checkpoints preloaded on CPU (GPU reserved for llama.cpp)
+- Environment: uv venv (python 3.13, CPU torch) at `~/.local/share/laya/.venv`; install script: `run_onchange_before_74a-install-laya.sh.tmpl`; service code: `~/.local/share/laya/server.py`
+- Checkpoints (~3 GB) download into `~/.cache/huggingface` on first start
+- API: `GET /healthz`, `POST /v1/predict`, `POST /v1/route` — full docs: `docs/laya-service.md`
+- Update: bump `LAYA_VERSION` in the install script, then `chezmoi apply` (skipped on ephemeral machines)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages

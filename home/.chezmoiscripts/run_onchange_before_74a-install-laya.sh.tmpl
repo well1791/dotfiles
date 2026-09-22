@@ -1,0 +1,42 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install laya (typed-decision ML engine, PyPI: laya) into a uv-managed venv
+# https://github.com/NandhaKishorM/laya
+#
+# Environment: ~/.local/share/laya/.venv (python 3.13). Served by the systemd
+# user unit laya.service on 127.0.0.1:8082 (enabled by after_74a-enable-laya).
+#
+# torch is installed from the CPU wheel index BEFORE laya: the service runs on
+# CPU by default (the GPU is reserved for llama.cpp), and the default PyPI
+# torch would pull the full CUDA stack (~6 GB) for nothing. For CUDA support
+# drop the --index-url line and reinstall.
+
+{{ if .ephemeral -}}
+log_info "Ephemeral machine — skipping laya install"
+exit 0
+{{ end -}}
+
+LAYA_VERSION="0.3.5"
+LAYA_HOME="${HOME}/.local/share/laya"
+VENV_PYTHON="${LAYA_HOME}/.venv/bin/python"
+
+require_command uv "uv must be installed first (run_onchange_before_40-install-uv)"
+
+installed=""
+if [ -x "${VENV_PYTHON}" ]; then
+    installed="$("${VENV_PYTHON}" -c 'import importlib.metadata as m; print(m.version("laya"))' 2>/dev/null || true)"
+fi
+if [ "${installed}" = "${LAYA_VERSION}" ]; then
+    log_info "laya ${LAYA_VERSION} already installed, nothing to do"
+    exit 0
+fi
+
+log_info "Installing laya ${LAYA_VERSION} (uv venv, python 3.13, CPU torch)..."
+mkdir -p "${LAYA_HOME}"
+uv venv -p 3.13 "${LAYA_HOME}/.venv"
+uv pip install --python "${VENV_PYTHON}" --index-url https://download.pytorch.org/whl/cpu torch
+uv pip install --python "${VENV_PYTHON}" "laya==${LAYA_VERSION}"
+
+if ! "${VENV_PYTHON}" -c "import laya" >/dev/null 2>&1; then die "laya installation failed"; fi
+log_success "laya installed" "$("${VENV_PYTHON}" -c 'import importlib.metadata as m; print(m.version("laya"))')"
+# Checkpoints (~3 GB total) download from Hugging Face into ~/.cache/huggingface
+# on the service's first start, not here.

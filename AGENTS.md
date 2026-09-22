@@ -205,6 +205,7 @@ $ variable: <command that produces selectable options> | fzf
 | rmux | rust (cargo) | Installed via cargo install |
 | choose | rust (cargo) | Human-friendly alternative to cut/awk; installed via `cargo install choose` |
 | serena | uv, python 3.13 | Semantic code tools via LSP; MCP server connected to pi |
+| laya | uv, python 3.13 | Typed-decision ML engine (PyPI `laya`) served by systemd user unit `laya.service` on `127.0.0.1:8082`; venv `~/.local/share/laya/.venv`, service code `~/.local/share/laya/server.py`, checkpoints in `~/.cache/huggingface`; ops docs `docs/laya-service.md`; skipped on ephemeral machines |
 | python-lsp-server | uv | Python LSP; installed via `uv tool install python-lsp-server` |
 | gopls | nix, home-manager | Go LSP; declared in `~/.config/home-manager/home.nix` |
 | postgresql | nix, home-manager | User-level instance for Absurd; declared in home.nix, systemd user service on port 5433 |

@@ -1,0 +1,18 @@
+{{ template "install-header.sh.tmpl" . }}
+# Enable the laya systemd user service (unit file is applied by chezmoi before this runs)
+# Docs: docs/laya-service.md
+
+{{ if .ephemeral -}}
+log_info "Ephemeral machine — skipping laya service enable"
+exit 0
+{{ end -}}
+
+if ! [ -x "${HOME}/.local/share/laya/.venv/bin/python" ]; then
+    log_warn "laya venv missing — run_onchange_before_74a-install-laya did not run"
+    exit 0
+fi
+
+log_info "Enabling laya.service (127.0.0.1:8082)..."
+systemctl --user daemon-reload
+systemctl --user enable --now laya.service
+log_success "laya.service enabled" "http://127.0.0.1:8082/healthz"

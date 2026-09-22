@@ -1,0 +1,21 @@
+[Unit]
+Description=Laya decision engine — local HTTP service on 127.0.0.1:8082
+Documentation=https://github.com/NandhaKishorM/laya
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/share/laya/.venv/bin/python %h/.local/share/laya/server.py
+Environment=LAYA_HOST=127.0.0.1
+Environment=LAYA_PORT=8082
+Environment=LAYA_DEVICE=cpu
+Environment=LAYA_PRELOAD=all
+Restart=on-failure
+RestartSec=5
+# First start downloads ~3 GB of checkpoints into ~/.cache/huggingface and can
+# take minutes; /healthz returns 503 until all models are resident:
+#   curl -fsS http://127.0.0.1:8082/healthz
+
+[Install]
+WantedBy=default.target

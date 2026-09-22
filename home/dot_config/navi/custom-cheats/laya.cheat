@@ -1,0 +1,21 @@
+% laya, ai, ml, service, decision-engine
+
+# Service status / readiness (state, loaded checkpoints, versions)
+curl -fsS http://127.0.0.1:8082/healthz | jq
+
+# Typed decision: score urgency + detect refund request in one forward pass
+curl -fsS -X POST http://127.0.0.1:8082/v1/predict -H 'Content-Type: application/json' -d '{"state": {"body": "We were billed twice. Please refund the duplicate today."}, "questions": {"urgency": {"type": "score", "instructions": "How urgent is this?", "criteria": ["not urgent", "soon", "critical"]}, "refund": {"type": "noul", "instructions": "Does the user request a refund?"}}}'
+
+# Route a department choice question (choice type with criteria map)
+curl -fsS -X POST http://127.0.0.1:8082/v1/predict -H 'Content-Type: application/json' -d '{"state": {"body": "Invoice 4411 charged twice"}, "questions": {"department": {"type": "choice", "instructions": "Which department?", "criteria": {"billing": "invoices, refunds", "technical": "bugs, outages", "other": "rest"}}}}'
+
+# Dry-run: which checkpoint handles this state (no forward pass)
+curl -fsS -X POST http://127.0.0.1:8082/v1/route -H 'Content-Type: application/json' -d '{"state": {"body": "मुझसे दो बार शुल्क लिया गया"}}'
+
+# Start / stop / restart / status
+systemctl --user start laya.service; and systemctl --user status laya.service --no-pager
+systemctl --user stop laya.service
+systemctl --user restart laya.service
+
+# Follow service logs (model loads, requests, shutdown)
+journalctl --user -u laya.service -f
