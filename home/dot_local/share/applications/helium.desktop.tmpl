@@ -1,0 +1,26 @@
+[Desktop Entry]
+# Overrides the packaged /usr/share/applications/helium.desktop: the default
+# Helium launcher opens the personal ("mine") profile instance. The work
+# profile has its own helium-work.desktop. StartupWMClass groups the taskbar
+# entry with the mine instance's windows (class helium-mine).
+Version=1.0
+Name=Helium Browser
+GenericName=Web Browser
+Comment=Access the Internet
+Exec=helium-browser --user-data-dir={{ .chezmoi.homeDir }}/.config/helium-mine --class=helium-mine %U
+StartupNotify=true
+Terminal=false
+Icon=helium-browser
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=application/pdf;application/rdf+xml;application/rss+xml;application/xhtml+xml;application/xhtml_xml;application/xml;image/gif;image/jpeg;image/png;image/webp;text/html;text/xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupWMClass=helium-mine
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=helium-browser --user-data-dir={{ .chezmoi.homeDir }}/.config/helium-mine --class=helium-mine
+
+[Desktop Action new-private-window]
+Name=New Incognito Window
+Exec=helium-browser --user-data-dir={{ .chezmoi.homeDir }}/.config/helium-mine --class=helium-mine --incognito
