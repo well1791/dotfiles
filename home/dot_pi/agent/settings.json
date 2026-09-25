@@ -7,7 +7,6 @@
   "packages": [
     "npm:pi-subagents",
     "npm:pi-intercom",
-    "npm:@a5c-ai/babysitter-pi",
     "npm:pi-hermes-memory",
     "npm:pi-smart-fetch",
     "npm:pi-smart-web-search",
@@ -15,8 +14,6 @@
     "npm:pi-lean-ctx",
     "git:github.com/obra/superpowers",
     "npm:@pi-stef/atlassian",
-    "npm:@juicesharp/rpiv-voice",
-    "npm:@juicesharp/rpiv-i18n",
     "npm:@upstash/context7-pi",
     "npm:@bacnh85/pi-serena",
     "npm:pi-smart-compact",
@@ -36,16 +33,10 @@
     "skipPrompt": true
   },
   "enabledModels": [
-    "github-copilot/claude-haiku-4.5",
-    "github-copilot/claude-opus-5",
-    "github-copilot/claude-sonnet-5",
-    "github-copilot/gpt-5-mini",
-    "github-copilot/gpt-5.5",
-    "github-copilot/gpt-5.6-luna",
-    "github-copilot/gpt-5.6-sol",
-    "github-copilot/gpt-5.6-terra",
+    "github-copilot/gpt-6-luna",
     "opencode/big-pickle",
     "zai/glm-5.3",
+    "zai/glm-5.3-flash",
     "llamacpp/minicpm5-2b"
   ],
   "theme": "dark",
