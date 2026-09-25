@@ -292,6 +292,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Environment: uv venv (python 3.13, CPU torch) at `~/.local/share/laya/.venv`; install script: `run_onchange_before_74a-install-laya.sh.tmpl`; service code: `~/.local/share/laya/server.py`
 - Checkpoints (~3 GB) download into `~/.cache/huggingface` on first start
 - API: `GET /healthz`, `POST /v1/predict`, `POST /v1/route` — full docs: `docs/laya-service.md`
+- Pi integration: `laya-router` extension (`~/.pi/agent/extensions/laya-router/`) consults Laya before each prompt and routes to small/frontier model classes (or answers typed decisions at Laya directly); config `~/.pi/agent/laya.json`, `/laya` command in pi, telemetry `~/.local/share/pi-laya/routing.jsonl`
 - Update: bump `LAYA_VERSION` in the install script, then `chezmoi apply` (skipped on ephemeral machines)
 
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.

@@ -173,3 +173,32 @@ Not part of `update-all` (no self-update; deliberate pin). Skipped entirely on
 - README "What Gets Installed" (entry 32), Tool Dependencies table in
   `AGENTS.md`, and a navi cheat (`navi --tldr` has no laya page) updated in the
   same change; no PII in any source file (paths use `%h`/`$HOME` at runtime)
+
+## Pi integration (laya-router, 2026-09)
+
+`~/.pi/agent/extensions/laya-router/` (chezmoi source:
+`home/dot_pi/agent/extensions/laya-router/`) turns this service into pi's
+model-routing decision layer.
+
+- **Flow:** before each user prompt pi asks `POST /v1/predict` (4 guard-style
+  noul questions: trivial / coding / decision / sensitive) and composes the
+  route deterministically — sensitive or coding → frontier (base model,
+  `zai/glm-5.3`), typed decision → laya (answered by laya itself, no LLM
+  call), trivial → small (`zai/glm-5.3-flash`), unknown → frontier.
+- **Explicit selection wins:** `/model`, Ctrl+P, or `--model` pins the
+  session; routing stands down. `/laya off` or `PI_LAYA_DISABLE=1` disables.
+- **Fallback-first:** service down / timeout / malformed → pi keeps its
+  normal model; single attempt per call; health checks cached (60 s ready /
+  30 s failed).
+- **Config:** `~/.pi/agent/laya.json` (thresholds, routes, endpoint);
+  trusted project override `.pi/laya.json`.
+- **Commands:** `/laya` (status), `/laya stats`, `/laya test <prompt>`,
+  `/laya on|off`, `/laya start` (explicit `systemctl --user start
+  laya.service`).
+- **Telemetry:** `~/.local/share/pi-laya/routing.jsonl` (route, confidence,
+  reason, model, latency; prompts stored only as sha256 digests).
+- **Tests:** `bun test ~/.pi/agent/extensions/laya-router/` (75 tests,
+  mocked service). Benchmark: `docs/laya-pi-benchmark-2026-09.md`.
+
+Readiness for pi = `GET /healthz` → 200 `ready` (same as everything else
+that consumes this service).
