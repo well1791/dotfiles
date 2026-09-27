@@ -4,12 +4,13 @@
   "timeoutMs": 5000,
   "healthTimeoutMs": 1500,
   "healthCacheMs": { "ready": 60000, "failed": 30000 },
-  "minConfidence": 0.7,
-  "escalate": { "sensitive": true },
-  "signals": { "coding": 0.5, "decision": 0.75, "trivial": 0.6, "sensitive": 0.5 },
-  "routes": { "laya": null, "small": "zai/glm-5.3-flash", "frontier": null },
-  "layaOnly": { "enabled": true, "minConfidence": 0.8 },
-  "smallRouteMaxContextTokens": 24000,
+  "contextSupervision": {
+    "enabled": true,
+    "minBytes": 2048,
+    "minConfidence": 0.7,
+    "compressHeadChars": 1500,
+    "verdictCacheEntries": 200
+  },
   "state": { "maxPromptChars": 4000 },
   "showStatus": true,
   "log": { "file": "~/.local/share/pi-laya/routing.jsonl" }

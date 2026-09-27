@@ -14,12 +14,13 @@ test("defaults are exact", () => {
 		timeoutMs: 5000,
 		healthTimeoutMs: 1500,
 		healthCacheMs: { ready: 60000, failed: 30000 },
-		minConfidence: 0.7,
-		escalate: { sensitive: true },
-		signals: { coding: 0.5, decision: 0.75, trivial: 0.6, sensitive: 0.5 },
-		routes: { laya: null, small: "zai/glm-5.3-flash", frontier: null },
-		layaOnly: { enabled: true, minConfidence: 0.8 },
-		smallRouteMaxContextTokens: 24000,
+		contextSupervision: {
+			enabled: true,
+			minBytes: 2048,
+			minConfidence: 0.7,
+			compressHeadChars: 1500,
+			verdictCacheEntries: 200,
+		},
 		state: { maxPromptChars: 4000 },
 		showStatus: true,
 		log: { file: "~/.local/share/pi-laya/routing.jsonl" },
@@ -33,20 +34,20 @@ test("missing files yield defaults without warnings", () => {
 });
 
 test("global file deep-merges over defaults", () => {
-	const file = JSON.stringify({ minConfidence: 0.8, routes: { small: "llamacpp/minicpm5-2b" } });
+	const file = JSON.stringify({ contextSupervision: { minBytes: 4096, minConfidence: 0.8 } });
 	const r = loadConfig(env(), (p) => (p === "/g" ? file : null), "/g", null);
-	expect(r.config.minConfidence).toBe(0.8);
-	expect(r.config.routes.small).toBe("llamacpp/minicpm5-2b");
-	expect(r.config.routes.frontier).toBe(null);
-	expect(r.config.layaOnly.minConfidence).toBe(0.8);
+	expect(r.config.contextSupervision.minBytes).toBe(4096);
+	expect(r.config.contextSupervision.minConfidence).toBe(0.8);
+	expect(r.config.contextSupervision.compressHeadChars).toBe(1500);
+	expect(r.config.contextSupervision.verdictCacheEntries).toBe(200);
 	expect(r.config.timeoutMs).toBe(5000);
 });
 
 test("project file overrides global", () => {
-	const global = JSON.stringify({ minConfidence: 0.8, enabled: false });
-	const project = JSON.stringify({ minConfidence: 0.6 });
+	const global = JSON.stringify({ contextSupervision: { minConfidence: 0.8 }, enabled: false });
+	const project = JSON.stringify({ contextSupervision: { minConfidence: 0.6 } });
 	const r = loadConfig(env(), (p) => (p === "/g" ? global : p === "/p" ? project : null), "/g", "/p");
-	expect(r.config.minConfidence).toBe(0.6);
+	expect(r.config.contextSupervision.minConfidence).toBe(0.6);
 	expect(r.config.enabled).toBe(false);
 });
 
@@ -59,13 +60,44 @@ test("PI_LAYA_DISABLE=1 forces enabled false even when files say true", () => {
 });
 
 test("invalid scalar types fall back to defaults with a warning", () => {
-	const file = JSON.stringify({ minConfidence: "abc", timeoutMs: -3, routes: "nope", enabled: 42 });
+	const file = JSON.stringify({ timeoutMs: -3, enabled: 42, baseUrl: "ftp://x", showStatus: "no" });
 	const r = loadConfig(env(), (p) => (p === "/g" ? file : null), "/g", null);
-	expect(r.config.minConfidence).toBe(0.7);
 	expect(r.config.timeoutMs).toBe(5000);
-	expect(r.config.routes.small).toBe("zai/glm-5.3-flash");
 	expect(r.config.enabled).toBe(true);
+	expect(r.config.baseUrl).toBe("http://127.0.0.1:8082");
+	expect(r.config.showStatus).toBe(true);
 	expect(r.warnings.length).toBe(4);
+});
+
+test("invalid contextSupervision values fall back to defaults with warnings", () => {
+	const file = JSON.stringify({
+		contextSupervision: {
+			enabled: "yes",
+			minBytes: 0,
+			minConfidence: 2,
+			compressHeadChars: "x",
+			verdictCacheEntries: -1,
+		},
+	});
+	const r = loadConfig(env(), (p) => (p === "/g" ? file : null), "/g", null);
+	expect(r.config.contextSupervision).toEqual(DEFAULT_CONFIG.contextSupervision);
+	expect(r.warnings.length).toBe(5);
+});
+
+test("stale routing keys produce one deprecation warning each and are ignored", () => {
+	const file = JSON.stringify({
+		routes: { small: "zai/glm-5.3-flash" },
+		signals: { coding: 0.9 },
+		escalate: { sensitive: false },
+		minConfidence: 0.9,
+		smallRouteMaxContextTokens: 100,
+		layaOnly: { enabled: false },
+	});
+	const r = loadConfig(env(), (p) => (p === "/g" ? file : null), "/g", null);
+	expect(r.config).toEqual(DEFAULT_CONFIG);
+	const stale = ["routes", "signals", "escalate", "minConfidence", "smallRouteMaxContextTokens", "layaOnly"];
+	for (const k of stale) expect(r.warnings).toContain(`"${k}" is no longer used; routing was removed`);
+	expect(r.warnings.length).toBe(6);
 });
 
 test("unparseable JSON yields defaults with a warning and no throw", () => {

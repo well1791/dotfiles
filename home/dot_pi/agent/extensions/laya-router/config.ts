@@ -13,26 +13,23 @@ export interface LayaRouterConfig {
 	timeoutMs: number;
 	healthTimeoutMs: number;
 	healthCacheMs: { ready: number; failed: number };
-	minConfidence: number;
-	escalate: { sensitive: boolean };
-	/** Signal cut-offs for route composition (validated live 2026-09-23; see spec amendment). */
-	signals: { coding: number; decision: number; trivial: number; sensitive: number };
-	routes: { laya: null; small: string | null; frontier: string | null };
-	layaOnly: { enabled: boolean; minConfidence: number };
-	smallRouteMaxContextTokens: number;
+	/** Tool-result representation gating (spec §7). */
+	contextSupervision: {
+		enabled: boolean;
+		minBytes: number;
+		minConfidence: number;
+		compressHeadChars: number;
+		verdictCacheEntries: number;
+	};
 	state: { maxPromptChars: number };
 	showStatus: boolean;
 	log: { file: string };
 }
 
 /**
- * Threshold rationale (spec §6, docs/superpowers/specs/2026-09-22-laya-pi-routing-design.md):
- * - minConfidence 0.70: at 0.70 the chosen class is ≥2.3x more probable than all
- *   others combined; misroute cost is asymmetric (wrong-cheap = quality loss,
- *   wrong-expensive = only money), so escalate below it.
- * - layaOnly.minConfidence 0.80: a laya-only answer ships with no model fallback.
- * - smallRouteMaxContextTokens 24000: beyond this, switching back to frontier
- *   re-pays full-context input; flash savings no longer dominate.
+ * Gating thresholds (spec 2026-09-26 §6–§7): minConfidence 0.7 — wrongly digesting
+ * costs quality, wrongly keeping verbatim costs only tokens; minBytes 2048 —
+ * below this a consult costs more than the tokens it could save.
  */
 export const DEFAULT_CONFIG: LayaRouterConfig = {
 	enabled: true,
@@ -40,12 +37,13 @@ export const DEFAULT_CONFIG: LayaRouterConfig = {
 	timeoutMs: 5000,
 	healthTimeoutMs: 1500,
 	healthCacheMs: { ready: 60000, failed: 30000 },
-	minConfidence: 0.7,
-	escalate: { sensitive: true },
-	signals: { coding: 0.5, decision: 0.75, trivial: 0.6, sensitive: 0.5 },
-	routes: { laya: null, small: "zai/glm-5.3-flash", frontier: null },
-	layaOnly: { enabled: true, minConfidence: 0.8 },
-	smallRouteMaxContextTokens: 24000,
+	contextSupervision: {
+		enabled: true,
+		minBytes: 2048,
+		minConfidence: 0.7,
+		compressHeadChars: 1500,
+		verdictCacheEntries: 200,
+	},
 	state: { maxPromptChars: 4000 },
 	showStatus: true,
 	log: { file: "~/.local/share/pi-laya/routing.jsonl" },
@@ -73,9 +71,22 @@ export function deepMerge<T>(base: T, over: unknown): T {
 	return out as T;
 }
 
+/** Keys from the removed model-routing design: warn once each, ignore values (spec §7). */
+const STALE_ROUTING_KEYS = [
+	"routes",
+	"signals",
+	"escalate",
+	"minConfidence",
+	"smallRouteMaxContextTokens",
+	"layaOnly",
+] as const;
+
 /** Validate/coerce one file's overlay, dropping invalid values with a warning. */
 function sanitize(overlay: unknown, warnings: string[]): Partial<LayaRouterConfig> | null {
 	if (!isPlainObject(overlay)) return null;
+	for (const k of STALE_ROUTING_KEYS) {
+		if (overlay[k] !== undefined) warnings.push(`"${k}" is no longer used; routing was removed`);
+	}
 	const out: Record<string, unknown> = {};
 
 	const num = (key: string, min: number): void => {
@@ -98,8 +109,6 @@ function sanitize(overlay: unknown, warnings: string[]): Partial<LayaRouterConfi
 	}
 	num("timeoutMs", 1);
 	num("healthTimeoutMs", 1);
-	num("minConfidence", 0);
-	num("smallRouteMaxContextTokens", 0);
 	if (overlay.state !== undefined) {
 		if (isPlainObject(overlay.state)) {
 			const s: Record<string, unknown> = {};
@@ -123,57 +132,32 @@ function sanitize(overlay: unknown, warnings: string[]): Partial<LayaRouterConfi
 			if (Object.keys(h).length > 0) out.healthCacheMs = h;
 		} else warnings.push(`invalid value for "healthCacheMs" ignored`);
 	}
-	if (overlay.escalate !== undefined) {
-		if (isPlainObject(overlay.escalate)) {
-			const e: Record<string, unknown> = {};
-			if (overlay.escalate.sensitive !== undefined) {
-				if (typeof overlay.escalate.sensitive === "boolean") e.sensitive = overlay.escalate.sensitive;
-				else warnings.push(`invalid value for "escalate.sensitive" ignored`);
+	if (overlay.contextSupervision !== undefined) {
+		if (isPlainObject(overlay.contextSupervision)) {
+			const cs = overlay.contextSupervision;
+			const c: Record<string, unknown> = {};
+			if (cs.enabled !== undefined) {
+				if (typeof cs.enabled === "boolean") c.enabled = cs.enabled;
+				else warnings.push(`invalid value for "contextSupervision.enabled" ignored`);
 			}
-			if (Object.keys(e).length > 0) out.escalate = e;
-		} else warnings.push(`invalid value for "escalate" ignored`);
-	}
-	if (overlay.signals !== undefined) {
-		if (isPlainObject(overlay.signals)) {
-			const s: Record<string, unknown> = {};
-			for (const k of ["coding", "decision", "trivial", "sensitive"] as const) {
-				const v = overlay.signals[k];
-				if (v === undefined) continue;
-				if (typeof v === "number" && v >= 0 && v <= 1) s[k] = v;
-				else warnings.push(`invalid value for "signals.${k}" ignored (expected 0..1)`);
+			if (cs.minBytes !== undefined) {
+				if (typeof cs.minBytes === "number" && Number.isFinite(cs.minBytes) && cs.minBytes >= 1) c.minBytes = cs.minBytes;
+				else warnings.push(`invalid value for "contextSupervision.minBytes" ignored`);
 			}
-			if (Object.keys(s).length > 0) out.signals = s;
-		} else warnings.push(`invalid value for "signals" ignored`);
-	}
-	if (overlay.layaOnly !== undefined) {
-		if (isPlainObject(overlay.layaOnly)) {
-			const l: Record<string, unknown> = {};
-			if (overlay.layaOnly.enabled !== undefined) {
-				if (typeof overlay.layaOnly.enabled === "boolean") l.enabled = overlay.layaOnly.enabled;
-				else warnings.push(`invalid value for "layaOnly.enabled" ignored`);
+			if (cs.minConfidence !== undefined) {
+				if (typeof cs.minConfidence === "number" && cs.minConfidence >= 0 && cs.minConfidence <= 1) c.minConfidence = cs.minConfidence;
+				else warnings.push(`invalid value for "contextSupervision.minConfidence" ignored`);
 			}
-			if (overlay.layaOnly.minConfidence !== undefined) {
-				if (typeof overlay.layaOnly.minConfidence === "number" && overlay.layaOnly.minConfidence >= 0)
-					l.minConfidence = overlay.layaOnly.minConfidence;
-				else warnings.push(`invalid value for "layaOnly.minConfidence" ignored`);
+			if (cs.compressHeadChars !== undefined) {
+				if (typeof cs.compressHeadChars === "number" && Number.isFinite(cs.compressHeadChars) && cs.compressHeadChars >= 1) c.compressHeadChars = cs.compressHeadChars;
+				else warnings.push(`invalid value for "contextSupervision.compressHeadChars" ignored`);
 			}
-			if (Object.keys(l).length > 0) out.layaOnly = l;
-		} else warnings.push(`invalid value for "layaOnly" ignored`);
-	}
-	if (overlay.routes !== undefined) {
-		if (isPlainObject(overlay.routes)) {
-			const r: Record<string, unknown> = {};
-			for (const k of ["small", "frontier"] as const) {
-				const v = overlay.routes[k];
-				if (v === undefined) continue;
-				if (v === null || (typeof v === "string" && v.includes("/"))) r[k] = v;
-				else warnings.push(`invalid value for "routes.${k}" ignored (expected "provider/model" or null)`);
+			if (cs.verdictCacheEntries !== undefined) {
+				if (typeof cs.verdictCacheEntries === "number" && Number.isFinite(cs.verdictCacheEntries) && cs.verdictCacheEntries >= 1) c.verdictCacheEntries = cs.verdictCacheEntries;
+				else warnings.push(`invalid value for "contextSupervision.verdictCacheEntries" ignored`);
 			}
-			// routes.laya is reserved: laya terminates at the service itself.
-			if (overlay.routes.laya !== undefined && overlay.routes.laya !== null)
-				warnings.push(`"routes.laya" is reserved (must be null) — value ignored`);
-			if (Object.keys(r).length > 0) out.routes = r;
-		} else warnings.push(`invalid value for "routes" ignored`);
+			if (Object.keys(c).length > 0) out.contextSupervision = c;
+		} else warnings.push(`invalid value for "contextSupervision" ignored`);
 	}
 	if (overlay.showStatus !== undefined) bool("showStatus");
 	if (overlay.log !== undefined) {
