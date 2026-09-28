@@ -2,9 +2,10 @@ import { test, expect } from "bun:test";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { LayaHealth, LayaPredictResult } from "./client";
+import { LayaError, type LayaHealth, type LayaPredictResult } from "./client";
 import { DEFAULT_CONFIG, type LayaRouterConfig } from "./config";
 import { RoutingLog } from "./log";
+import { verdictKey } from "./verdict-cache";
 import { createRouter, type RouterDeps } from "./index";
 
 // ----------------------------------------------------------------- fakes
@@ -84,6 +85,173 @@ function setup(over: Record<string, unknown> = {}) {
 }
 
 const INPUT = (text: string, over: Record<string, unknown> = {}) => ({ text, source: "interactive", ...over });
+
+// ----------------------------------------------------------------- classification
+
+const BIG = "L".repeat(3000); // > minBytes 2048
+
+function TR(text: string, over: Record<string, unknown> = {}) {
+	return {
+		type: "tool_result",
+		toolName: "bash",
+		toolCallId: "tc-1",
+		input: { command: "ls" },
+		content: [{ type: "text", text }],
+		isError: false,
+		...over,
+	};
+}
+
+function answer(choice: string, confidence: number): LayaPredictResult {
+	return { answers: { representation: { type: "choice", choice, confidence } }, latencyMs: 100 };
+}
+
+test("small result (≤ minBytes) is not classified: no predict, no cache entry, no log", async () => {
+	const s = setup();
+	await s.pi.emit("input", INPUT("task"), s.ctx);
+	await s.pi.emit("tool_result", TR("x".repeat(2048)), s.ctx);
+	expect(s.client.predictCalls.length).toBe(0);
+	expect(s.log.snapshot().gated).toBe(0);
+	s.cleanup();
+});
+
+test("large result is classified once with spec state and question; verdict cached; gate event recorded", async () => {
+	const s = setup();
+	await s.pi.emit("input", INPUT("fix the build"), s.ctx);
+	s.client.predictImpl = () => answer("digest", 0.9);
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	expect(s.client.predictCalls.length).toBe(1);
+	const call = s.client.predictCalls[0];
+	expect(call.questions).toHaveProperty("representation");
+	expect(call.state).toEqual({ task: "fix the build", tool: "bash", output: BIG });
+	const e = s.log.recent(1)[0];
+	expect(e.kind).toBe("gate");
+	expect(e.tool).toBe("bash");
+	expect(e.verdict).toBe("digest");
+	expect(e.bytesIn).toBe(3000);
+	expect(e.consulted).toBe(true);
+	expect(typeof e.bytesOut).toBe("number");
+	expect(e.bytesOut!).toBeLessThan(e.bytesIn!);
+	expect(s.ctx.ui.status.some(([k, v]) => k === "laya" && v.includes("digest"))).toBe(true);
+	s.cleanup();
+});
+
+test("duplicate identical result is a cache hit: one predict, re-read counted for digest", async () => {
+	const s = setup();
+	await s.pi.emit("input", INPUT("t"), s.ctx);
+	s.client.predictImpl = () => answer("digest", 0.9);
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	expect(s.client.predictCalls.length).toBe(1);
+	expect(s.log.snapshot().reReadAfterDigest).toBe(1);
+	s.cleanup();
+});
+
+test("unhealthy service: no predict, gate failure recorded, verbatim", async () => {
+	const s = setup();
+	s.client.healthOk = false;
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	expect(s.client.predictCalls.length).toBe(0);
+	const e = s.log.recent(1)[0];
+	expect(e.failure).toBe("unreachable");
+	expect(e.kind).toBe("gate");
+	s.cleanup();
+});
+
+test("predict timeout: single attempt per event, gate failure recorded", async () => {
+	const s = setup();
+	s.client.predictImpl = () => {
+		throw new LayaError("timeout", "laya request timed out");
+	};
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	expect(s.client.predictCalls.length).toBe(1); // no retry within the event
+	expect(s.log.recent(1)[0].failure).toBe("timeout");
+	s.cleanup();
+});
+
+test("low-confidence answer resolves to verbatim and stores a verbatim entry", async () => {
+	const s = setup();
+	s.client.predictImpl = () => answer("digest", 0.5);
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	const e = s.log.recent(1)[0];
+	expect(e.verdict).toBe("verbatim");
+	expect(e.bytesOut).toBe(e.bytesIn);
+	s.cleanup();
+});
+
+test("disabled config: no predict for large results, disabled skip logged", async () => {
+	const s = setup({ enabled: false });
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	expect(s.client.predictCalls.length).toBe(0);
+	expect(s.log.snapshot().disabledSkips).toBe(1);
+	s.cleanup();
+});
+
+test("/laya off mid-session: no predict even with warm cache", async () => {
+	const s = setup();
+	s.client.predictImpl = () => answer("compress", 0.9);
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	await s.pi.commands.get("laya")!.handler("off", s.ctx);
+	await s.pi.emit("tool_result", TR(BIG + "2"), s.ctx);
+	expect(s.client.predictCalls.length).toBe(1);
+	expect(s.log.recent(1)[0].failure).toBe("disabled");
+	s.cleanup();
+});
+
+test("image-bearing content is never gated", async () => {
+	const s = setup();
+	await s.pi.emit(
+		"tool_result",
+		TR(BIG, { content: [{ type: "image", data: "..." }, { type: "text", text: BIG }] }),
+		s.ctx,
+	);
+	expect(s.client.predictCalls.length).toBe(0);
+	expect(s.log.snapshot().gated).toBe(0);
+	s.cleanup();
+});
+
+test("custom or unknown toolName is never gated", async () => {
+	const s = setup();
+	await s.pi.emit("tool_result", TR(BIG, { toolName: "my-extension-tool" }), s.ctx);
+	expect(s.client.predictCalls.length).toBe(0);
+	expect(s.log.snapshot().gated).toBe(0);
+	s.cleanup();
+});
+
+test("empty text is skipped silently", async () => {
+	const s = setup();
+	await s.pi.emit("tool_result", TR(""), s.ctx);
+	expect(s.client.predictCalls.length).toBe(0);
+	expect(s.log.snapshot().gated).toBe(0);
+	s.cleanup();
+});
+
+test("anchor passed to laya is the latest user input, capped at maxPromptChars", async () => {
+	const s = setup();
+	await s.pi.emit("input", INPUT("A".repeat(5000)), s.ctx);
+	s.client.predictImpl = () => answer("digest", 0.9);
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	expect((s.client.predictCalls[0].state as { task: string }).task).toHaveLength(4000);
+	s.cleanup();
+});
+
+test("extension-generated input does not update the anchor", async () => {
+	const s = setup();
+	await s.pi.emit("input", INPUT("real task"), s.ctx);
+	await s.pi.emit("input", INPUT("injected"), s.ctx);
+	s.client.predictImpl = () => answer("digest", 0.9);
+	await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	expect((s.client.predictCalls[0].state as { task: string }).task).toBe("real task");
+	s.cleanup();
+});
+
+test("tool_result handler returns undefined: the result itself is never mutated", async () => {
+	const s = setup();
+	s.client.predictImpl = () => answer("digest", 0.9);
+	const r = await s.pi.emit("tool_result", TR(BIG), s.ctx);
+	expect(r).toBeUndefined();
+	s.cleanup();
+});
 
 // ----------------------------------------------------------------- routing removal
 

@@ -13,9 +13,11 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { homedir } from "node:os";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { LayaServiceClient } from "./client";
+import { LayaServiceClient, LayaError } from "./client";
 import { loadConfig, type LayaRouterConfig } from "./config";
-import { RoutingLog } from "./log";
+import { RoutingLog, digest } from "./log";
+import { VerdictCache, verdictKey, type Verdict } from "./verdict-cache";
+import { REPRESENTATION_QUESTIONS, buildGateState, validateVerdict, effectiveVerdict, renderVerdict } from "./supervision-policy";
 
 // Structural subset of the pi APIs this extension uses (keeps tests fake-able;
 // the real ExtensionAPI satisfies these shapes). No setModel: the extension
@@ -38,6 +40,31 @@ export interface RouterDeps {
 	} | null;
 }
 
+/** Built-in tool names only: custom (extension-registered) tools are never gated. */
+const BUILTIN_TOOLS: ReadonlySet<string> = new Set([
+	"bash",
+	"powershell",
+	"read",
+	"edit",
+	"write",
+	"grep",
+	"find",
+	"ls",
+]);
+
+/** Concatenate the text parts of a tool-result content array; null if any part is not text. */
+function textOf(content: unknown): string | null {
+	if (!Array.isArray(content)) return null;
+	let out = "";
+	for (const part of content) {
+		if (!part || typeof part !== "object" || (part as { type?: unknown }).type !== "text") return null;
+		const t = (part as { text?: unknown }).text;
+		if (typeof t !== "string") return null;
+		out += t;
+	}
+	return out;
+}
+
 export function createRouter(pi: PiLike, deps: RouterDeps): void {
 	const log = deps.log;
 	const now = deps.now ?? (() => Date.now());
@@ -48,6 +75,8 @@ export function createRouter(pi: PiLike, deps: RouterDeps): void {
 
 	const gatingEnabled = (): boolean =>
 		(runtimeEnabled !== null ? runtimeEnabled : config.enabled) && config.contextSupervision.enabled;
+
+	const cache = new VerdictCache(config.contextSupervision.verdictCacheEntries);
 
 	function record(e: Parameters<RoutingLog["record"]>[0]): void {
 		log.record({ ts: now(), consulted: false, ...e });
@@ -75,6 +104,73 @@ export function createRouter(pi: PiLike, deps: RouterDeps): void {
 		if (event?.source === "extension" || event?.streamingBehavior !== undefined || text.startsWith("/")) return;
 		const max = config.state.maxPromptChars;
 		taskAnchor = text.length > max ? text.slice(0, max) : text;
+	});
+
+	// Classify one large tool result (spec §4). Advisory only: the handler never
+	// mutates the event and always returns undefined; every failure → verbatim.
+	pi.on("tool_result", async (event: any, ctx: any) => {
+		const toolName: unknown = event?.toolName;
+		if (typeof toolName !== "string" || !BUILTIN_TOOLS.has(toolName)) return;
+		const text = textOf(event?.content);
+		if (text === null || text.length === 0) return; // image parts / empty: verbatim
+		const cs = config.contextSupervision;
+		const bytesIn = Buffer.byteLength(text, "utf8");
+		if (bytesIn <= cs.minBytes) return; // rule 1: never consult for small results
+		const promptDigest = digest(taskAnchor);
+		if (!gatingEnabled()) {
+			record({ kind: "gate", tool: toolName, promptDigest, failure: "disabled" });
+			return;
+		}
+		const key = verdictKey(toolName, text);
+		const hit = cache.get(key);
+		if (hit) {
+			if (hit.verdict === "digest" || hit.verdict === "compress") log.markReRead();
+			return;
+		}
+		const t0 = now();
+		const health = await client.health();
+		if (!health.ok) {
+			record({ kind: "gate", tool: toolName, promptDigest, failure: health.status, totalLatencyMs: now() - t0 });
+			return;
+		}
+		let result;
+		try {
+			result = await client.predict(
+				buildGateState(taskAnchor, toolName, text, config.state.maxPromptChars),
+				REPRESENTATION_QUESTIONS as unknown as Record<string, unknown>,
+			);
+		} catch (e) {
+			const failure = e instanceof LayaError ? e.failure : "unreachable";
+			record({ kind: "gate", tool: toolName, promptDigest, consulted: true, failure, totalLatencyMs: now() - t0 });
+			return;
+		}
+		const layaAnswer = (result.answers as Record<string, unknown>).representation;
+		const verdict = effectiveVerdict(text, validateVerdict(layaAnswer, cs.minConfidence), cs.minBytes, cs.compressHeadChars);
+		const confidence =
+			typeof (layaAnswer as { confidence?: unknown } | undefined)?.confidence === "number"
+				? (layaAnswer as { confidence: number }).confidence
+				: 0;
+		const bytesOut =
+			verdict === "verbatim"
+				? bytesIn
+				: Buffer.byteLength(renderVerdict(toolName, text, event?.isError === true, verdict, cs.compressHeadChars), "utf8");
+		cache.set(key, { verdict, confidence, bytesIn, bytesOut });
+		record({
+			kind: "gate",
+			tool: toolName,
+			promptDigest,
+			consulted: true,
+			verdict,
+			confidence,
+			bytesIn,
+			bytesOut,
+			layaLatencyMs: result.latencyMs,
+			totalLatencyMs: now() - t0,
+		});
+		if (config.showStatus && ctx?.hasUI && ctx.ui?.setStatus) {
+			ctx.ui.setStatus("laya", `laya:${verdict}`);
+		}
+		return; // advisory: never alter the tool result
 	});
 
 	// ------------------------------------------------------------ commands
