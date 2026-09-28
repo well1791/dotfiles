@@ -37,7 +37,8 @@
     "opencode/big-pickle",
     "zai/glm-5.3",
     "zai/glm-5.3-flash",
-    "llamacpp/minicpm5-2b"
+    "local-minicpm/minicpm5-2b",
+    "local-qwen/qwen3.5-4b"
   ],
   "theme": "dark",
   "quietStartup": true,

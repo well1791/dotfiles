@@ -1,6 +1,6 @@
 {
   "providers": {
-    "llamacpp": {
+    "local-minicpm": {
       "baseUrl": "http://localhost:8081/v1",
       "api": "openai-completions",
       "apiKey": "llamacpp",
@@ -12,6 +12,27 @@
         {
           "id": "minicpm5-2b",
           "name": "MiniCPM5 2B (Local llama.cpp)",
+          "reasoning": true,
+          "input": ["text"],
+          "contextWindow": 73728,
+          "maxTokens": 8192,
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 }
+        }
+      ]
+    },
+    "local-qwen": {
+      "baseUrl": "http://localhost:8083/v1",
+      "api": "openai-completions",
+      "apiKey": "llamacpp",
+      "compat": {
+        "supportsDeveloperRole": false,
+        "supportsReasoningEffort": false
+      },
+      "models": [
+        {
+          "id": "qwen3.5-4b",
+          "name": "Qwen3.5 4B (Local CUDA)",
+          "reasoning": true,
           "reasoning": true,
           "input": ["text"],
           "contextWindow": 73728,
