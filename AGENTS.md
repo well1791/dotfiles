@@ -193,7 +193,7 @@ $ variable: <command that produces selectable options> | fzf
 | podman-compose | podman | docker-compose-compatible multi-container orchestrator for podman |
 | television | — | Standalone. Replaces fzf for shell integration (Ctrl-T, Ctrl-R) only. |
 | avahi | nss-mdns | mDNS responder for .local hostname resolution on local network |
-| herdr | — | Terminal-native agent runtime, installed via curl |
+| tuios | — | Terminal multiplexer/window manager, installed via AUR package `tuios-bin` |
 | vortix | openvpn | VPN TUI that manages tunnels via system openvpn binary |
 | sqlit | uv | Installed via uv tool with mssql-python driver |
 | lazyjira | — | Standalone Go binary; uses Jira REST API directly |

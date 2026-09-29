@@ -90,11 +90,10 @@ During the initial setup, the following tools are automatically installed:
 - Fish shell integration: `atuin init fish | source`
 - Update: `atuin update` or `sudo pacman -Syu`
 
-### 9b. **[Herdr](https://herdr.dev)** - Terminal-native agent runtime
-- tmux-style persistence with agent-aware panes, state rollups, and runtime API
-- Installed via curl: `curl -fsSL https://herdr.dev/install.sh | sh`
-- Supports local, SSH, and remote-attach workflows
-- Update: `herdr update`
+### 9b. **[TUIOS](https://tuios.dev/docs/getting-started)** - Terminal UI operating system
+- Terminal multiplexer and window manager with workspaces, tiling, and persistent sessions
+- Installed on Arch/CachyOS via AUR (`tuios-bin`)
+- Update: `paru -Syu` (or your distro's package update command)
 
 ### 10. **[pi](https://pi.dev)** - Terminal coding agent
 - Minimal terminal coding harness with AI-powered assistance
