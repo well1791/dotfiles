@@ -25,6 +25,16 @@
     refreshPeriod = "720h"
 {{ end }}
 
+{{ if not .headless }}
+{{/* NEO — distraction-free word processor for authors */}}
+{{ $neoRelease := gitHubLatestRelease "hughhowey/neo" }}
+[".local/bin/neo.AppImage"]
+    type = "file"
+    url = {{ gitHubReleaseAssetURL "hughhowey/neo" $neoRelease.TagName (printf "NEO-%s.AppImage" (trimPrefix "v" $neoRelease.TagName)) | quote }}
+    executable = true
+    refreshPeriod = "168h"
+{{ end }}
+
 {{/* kanata keyboard remapping config — standalone repo, cloned into ~/.config/kanata.
      SSH URL requires an SSH key to github; the stat guard skips it gracefully on
      machines that don't yet have ~/.ssh/id_ed25519 instead of failing the apply. */}}

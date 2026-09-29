@@ -1,0 +1,25 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install the FUSE 2 runtime required by AppImages
+# https://github.com/AppImage/AppImageKit
+
+if ! check_command pacman; then
+    die "pacman is required to verify the FUSE 2 runtime"
+fi
+
+if pacman -Q fuse2 >/dev/null 2>&1; then
+    log_success "FUSE 2 runtime already installed"
+    exit 0
+fi
+
+log_info "Installing FUSE 2 runtime..."
+install_packages fuse2
+
+if is_dry_run; then
+    exit 0
+fi
+
+if ! pacman -Q fuse2 >/dev/null 2>&1; then
+    die "FUSE 2 runtime installation failed"
+fi
+
+log_success "FUSE 2 runtime installed"

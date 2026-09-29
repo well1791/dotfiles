@@ -285,7 +285,13 @@ Installed via system package manager (pacman/apt/dnf):
 - Binary: `helium-browser` (upstream deb/tarball name it `helium`); config lives in `~/.config/helium` at runtime
 - Update: system package step of `update-all` (`paru -Syu`)
 
-### 32. **[Laya](https://github.com/NandhaKishorM/laya)** - Local typed-decision engine (ML service)
+### 32. **[NEO](https://github.com/hughhowey/neo)** - Distraction-free word processor for authors
+- Installed as the upstream Linux AppImage in `~/.local/bin/neo.AppImage` via a chezmoi external; desktop launcher is managed under `~/.local/share/applications/`
+- Requires FUSE 2 to run; the Arch-family install script installs `fuse2`
+- Only installed on non-headless, non-ephemeral machines
+- Update: `update-all` refreshes the AppImage from the latest GitHub release (checked every 168 hours)
+
+### 33. **[Laya](https://github.com/NandhaKishorM/laya)** - Local typed-decision engine (ML service)
 - Non-autoregressive decision engine (choice/score/noul with calibrated confidence) over text/JSON state, 100+ languages, single forward pass
 - Persistent systemd user service (`laya.service`) on `127.0.0.1:8082`; all three checkpoints preloaded on CPU (GPU reserved for llama.cpp)
 - Environment: uv venv (python 3.13, CPU torch) at `~/.local/share/laya/.venv`; install script: `run_onchange_before_74a-install-laya.sh.tmpl`; service code: `~/.local/share/laya/server.py`
@@ -304,9 +310,10 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, leaf-markdown-viewer-bin, git-delta, mergiraf, emacs, helium-browser-bin)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, leaf-markdown-viewer-bin, git-delta, mergiraf, emacs, helium-browser-bin, fuse2)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
+- ✅ NEO AppImage (latest GitHub release via chezmoi)
 - ✅ home-manager packages (node, go, gopls)
 - ✅ uv (Python package manager) and uv tools (sqlit, serena, etc.)
 - ✅ Rust (rustup update) and cargo tools (rmux, rmux-sdk, choose)
