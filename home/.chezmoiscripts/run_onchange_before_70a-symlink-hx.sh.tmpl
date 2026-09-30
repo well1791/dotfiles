@@ -14,7 +14,7 @@ if [ -z "$helix_bin" ]; then
 fi
 
 log_info "Creating hx symlink -> $helix_bin"
-ln -sf "$helix_bin" "{{ .chezmoi.homeDir }}/.local/bin/hx"
+ln -sf "$helix_bin" ~/.local/bin/hx
 
 if ! check_command hx; then
     die "hx symlink creation failed"

@@ -23,6 +23,7 @@ The distro is auto-detected from `/etc/os-release`.
 - **`.chezmoiexternal.toml.tmpl`** for declarative external deps (GitHub releases, fonts)
 - **`.chezmoiignore.tmpl`** excludes configs and scripts by distro/machine type
 - **`.chezmoiremove.tmpl`** actively removes obsolete files from target
+- **Home Manager config** is a chezmoi template so its required absolute home path is rendered for the current user.
 
 See `INSTALL-SCRIPTS.md` for the full installation system reference.
 See `AGENTS.md` for conventions when adding new tools.

@@ -216,19 +216,31 @@ $ variable: <command that produces selectable options> | fzf
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 
-## Critical Rule: No PII in Source Files
+## Critical Rule: Keep PII Out of Source Files
 
 **This repository is PUBLIC.** Never commit personally identifiable information (PII) directly into source files. This includes:
 
 - Email addresses (personal, work, or third-party)
 - Full names
 - Employer names or work domains
-- Hardcoded home directory paths (e.g., `/home/well`)
+- Hardcoded absolute home-directory paths (e.g., `/home/<user>/...`)
 - API keys, tokens, or secrets (use `age` encryption via chezmoi)
+
+A home-relative path written as `~/...` is **not PII**. Do not treat it as a personal home-directory path or replace it just to avoid exposing the home directory; `~` does not identify the user or their machine.
+
+### Home-Directory Path Notation
+
+Choose notation based on what the consuming shell or file format actually supports:
+
+- Prefer `~/...` in documentation, command examples, and config formats that support tilde expansion.
+- Use `$HOME/...` only when the consuming shell or application expands the environment variable.
+- Prefer a target system's native home-directory setting or variable when it has one.
+- Use chezmoi's built-in `.chezmoi.homeDir` value only when the rendered target genuinely requires an absolute home path and no native runtime/home-relative notation is appropriate. Keep the source path-independent by making it a `.tmpl` file.
+- Do not assume that arbitrary config parsers expand `~` or `$HOME`; verify the target format before changing a path.
 
 ### How to Handle PII
 
-All personal data is stored in `~/.config/chezmoi/chezmoi.toml` under `[data]` and referenced via Go template variables in `.tmpl` files:
+Personal data is stored in `~/.config/chezmoi/chezmoi.toml` under `[data]` and referenced via Go template variables in `.tmpl` files:
 
 | Variable | Purpose |
 |---|---|
@@ -236,14 +248,14 @@ All personal data is stored in `~/.config/chezmoi/chezmoi.toml` under `[data]` a
 | `{{ .email }}` | Personal email |
 | `{{ .work_email }}` | Work email |
 | `{{ .partner_email }}` | Partner's email |
-| `{{ .chezmoi.homeDir }}` | Home directory path (built-in) |
+| `{{ .chezmoi.homeDir }}` | Built-in home directory value; use only when an absolute path is required |
 
 New data fields are added via `promptStringOnce` in `.chezmoi.toml.tmpl`.
 
 ### When Adding Config That Contains PII
 
 1. Name the file with `.tmpl` suffix (e.g., `dot_gitconfig.tmpl`)
-2. Replace literal PII with the appropriate template variable
+2. Replace literal PII with the appropriate template variable; for home paths, follow the notation rules above
 3. If the config uses `{{` for its own syntax (e.g., espanso), escape with `{{ "{{" }}`
 4. Verify with `chezmoi cat <target-path>` that output is correct
 5. Verify with `chezmoi diff` that no unintended changes occur

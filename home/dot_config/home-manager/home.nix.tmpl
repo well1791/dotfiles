@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
   home.username = "well";
-  home.homeDirectory = "/home/well";
+  home.homeDirectory = "{{ .chezmoi.homeDir }}";
   home.stateVersion = "24.11";
 
   home.packages = with pkgs; [
@@ -30,9 +30,9 @@
     };
     Service = {
       Type = "simple";
-      Environment = "PGDATA=/home/well/.local/share/absurd/pgdata";
+      Environment = "PGDATA=${config.home.homeDirectory}/.local/share/absurd/pgdata";
       ExecStartPre = toString (pkgs.writeShellScript "absurd-pg-init" ''
-        PGDATA="/home/well/.local/share/absurd/pgdata"
+        PGDATA="${config.home.homeDirectory}/.local/share/absurd/pgdata"
         if [ ! -f "$PGDATA/PG_VERSION" ]; then
           mkdir -p "$PGDATA"
           ${pkgs.postgresql_17}/bin/initdb -D "$PGDATA" --auth=trust --no-locale --encoding=UTF8
@@ -43,7 +43,7 @@ unix_socket_directories = '$PGDATA'
 EOF
         fi
       '');
-      ExecStart = "${pkgs.postgresql_17}/bin/postgres -D /home/well/.local/share/absurd/pgdata";
+      ExecStart = "${pkgs.postgresql_17}/bin/postgres -D ${config.home.homeDirectory}/.local/share/absurd/pgdata";
       Restart = "on-failure";
       RestartSec = 5;
     };

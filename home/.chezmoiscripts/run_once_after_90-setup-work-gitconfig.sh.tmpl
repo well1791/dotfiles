@@ -2,7 +2,7 @@
 # Generate ~/Code/work/.gitconfig with work identity
 # Keeps PII out of the public repo by templating at apply time
 
-WORK_GITCONFIG="{{ .chezmoi.homeDir }}/Code/work/.gitconfig"
+WORK_GITCONFIG=~/Code/work/.gitconfig
 
 if [ -f "$WORK_GITCONFIG" ]; then
   log_info "Work gitconfig already exists, skipping"

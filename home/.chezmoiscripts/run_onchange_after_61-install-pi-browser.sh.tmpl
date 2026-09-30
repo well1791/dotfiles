@@ -2,7 +2,7 @@
 # Install pi-browser extension (Playwright-backed browser automation for pi)
 # https://github.com/larsderidder/pi-browser
 
-PI_BROWSER_DIR="{{ .chezmoi.homeDir }}/.pi/agent/extensions/pi-browser"
+PI_BROWSER_DIR=~/.pi/agent/extensions/pi-browser
 
 # Skip if already installed
 if [ -d "$PI_BROWSER_DIR/.git" ]; then
