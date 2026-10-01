@@ -139,6 +139,12 @@ describe("classify", () => {
 	test("low confidence fails open without intent", async () => {
 		const out = await classify("x", config(), okFetch({ type: "choice", choice: "trivial_shell", confidence: 0.02 }));
 		expect(out.intent).toBeNull();
+		expect(out.confidence).toBe(0.02);
+		expect(out.failure).toBe("low-confidence");
+	});
+	test("wrong-shape answer is schema, not low-confidence", async () => {
+		const out = await classify("x", config(), okFetch({ type: "choice", choice: "vibes", confidence: 0.9 }));
+		expect(out.intent).toBeNull();
 		expect(out.failure).toBe("schema");
 	});
 	test("missing answer is malformed", async () => {

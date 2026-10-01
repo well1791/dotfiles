@@ -172,13 +172,13 @@ Two pi extensions consult this service; they are independent and coexist:
   the `laya/auto` virtual model: classifies each user prompt
   (`trivial_shell`/`localized_refactor` → fast tier `zai/glm-5.3-flash`,
   `multi_file_architecture`/`deep_debugging` → heavy tier `zai/glm-5.3`)
-  and dispatches per request; hard 100ms classification budget, every failure
+  and dispatches per request; hard 500ms classification budget, every failure
   fails open to the heavy tier. Opt-in: select `laya/auto` in `/model`.
   Config: `~/.pi/agent/laya-model-router.json`; kill switch
   `LAYA_MODEL_ROUTER_ENABLED=0`. Telemetry:
   `~/.local/share/pi-laya/model-routing.jsonl`. Note: CPU inference takes
-  ~400ms, so with the 100ms budget most turns fail open by design; raise
-  `classifyTimeoutMs` to route for real.
+  ~400-550ms, so occasional turns still fail open; the JSONL log's
+  `classifyMs`/`failure` fields show the real distribution.
 
 ## AGENTS.md requirements honored
 

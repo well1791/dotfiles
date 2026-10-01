@@ -206,10 +206,22 @@ export async function classify(
 			? data.result.answers.intent
 			: undefined;
 		const intent = validateIntentAnswer(answer, config.minConfidence);
+		let failure: string | undefined;
+		if (intent) failure = undefined;
+		else if (!answer) failure = "malformed";
+		else {
+			// Distinguish a well-formed answer rejected by the confidence gate
+			// from an actually malformed one — the log drives threshold tuning.
+			const a = answer as { type?: unknown; choice?: unknown; confidence?: unknown };
+			failure = a.type === "choice" && typeof a.choice === "string" && INTENTS.includes(a.choice as Intent)
+				&& typeof a.confidence === "number" && Number.isFinite(a.confidence) && a.confidence < config.minConfidence
+				? "low-confidence"
+				: "schema";
+		}
 		return {
 			intent,
 			confidence: isPlainObject(answer) && typeof answer.confidence === "number" ? answer.confidence : null,
-			failure: intent ? undefined : answer ? "schema" : "malformed",
+			failure,
 			latencyMs: Date.now() - started,
 		};
 	} catch (err) {

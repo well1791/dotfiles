@@ -1,7 +1,7 @@
 {
   "enabled": true,
   "baseUrl": "http://127.0.0.1:8082",
-  "classifyTimeoutMs": 100,
+  "classifyTimeoutMs": 500,
   "minConfidence": 0.3,
   "maxPromptChars": 4000,
   "virtualModel": {
