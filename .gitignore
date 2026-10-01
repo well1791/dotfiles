@@ -8,6 +8,9 @@ key.txt
 .devenv/
 devenv.lock
 
+# worktrees
+.wt/
+
 # Zellij plugins (downloaded via manifest, not tracked in git)
 home/dot_config/zellij/plugins/*.wasm
 
