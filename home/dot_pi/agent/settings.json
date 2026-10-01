@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "0.87.1",
+  "lastChangelogVersion": "0.99.2",
   "defaultProvider": "zai",
   "defaultModel": "glm-5.3",
   "defaultThinkingLevel": "medium",
@@ -10,7 +10,6 @@
     "npm:pi-hermes-memory",
     "npm:pi-smart-fetch",
     "npm:pi-smart-web-search",
-    "npm:pi-mcp-extension",
     "npm:pi-lean-ctx",
     "git:github.com/obra/superpowers",
     "npm:@pi-stef/atlassian",
