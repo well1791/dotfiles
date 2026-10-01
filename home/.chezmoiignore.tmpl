@@ -45,3 +45,8 @@
 .local/share/applications/neo.desktop
 .chezmoiscripts/arch/run_onchange_before_80-install-fuse2.sh.tmpl
 {{ end }}
+
+{{/* pi auto-loads every .ts/.js in ~/.pi/agent/extensions (loader isExtensionFile);
+     colocated extension tests must stay in source only — deployed they would be
+     loaded as extensions and fail on their bun:test import */}}
+.pi/agent/extensions/laya-model-router.test.ts

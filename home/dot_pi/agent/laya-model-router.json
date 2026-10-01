@@ -1,0 +1,20 @@
+{
+  "enabled": true,
+  "baseUrl": "http://127.0.0.1:8082",
+  "classifyTimeoutMs": 100,
+  "minConfidence": 0.3,
+  "maxPromptChars": 4000,
+  "virtualModel": {
+    "provider": "laya",
+    "id": "auto",
+    "name": "Laya Auto"
+  },
+  "tiers": {
+    "fast": { "provider": "zai", "model": "glm-5.3-flash" },
+    "heavy": { "provider": "zai", "model": "glm-5.3" }
+  },
+  "log": {
+    "file": "~/.local/share/pi-laya/model-routing.jsonl",
+    "maxBytes": 8388608
+  }
+}

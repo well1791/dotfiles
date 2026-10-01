@@ -162,6 +162,24 @@ The version is pinned for reproducibility. To upgrade:
 Not part of `update-all` (no self-update; deliberate pin). Skipped entirely on
 `ephemeral` machines via `.chezmoiignore.tmpl` + in-script guards.
 
+## Consumers
+
+Two pi extensions consult this service; they are independent and coexist:
+
+- `~/.pi/agent/extensions/laya-router/` — tool-result representation gating
+  (spec 2026-09-26). Config: `~/.pi/agent/laya.json`.
+- `~/.pi/agent/extensions/laya-model-router.ts` — System 1 model routing via
+  the `laya/auto` virtual model: classifies each user prompt
+  (`trivial_shell`/`localized_refactor` → fast tier `zai/glm-5.3-flash`,
+  `multi_file_architecture`/`deep_debugging` → heavy tier `zai/glm-5.3`)
+  and dispatches per request; hard 100ms classification budget, every failure
+  fails open to the heavy tier. Opt-in: select `laya/auto` in `/model`.
+  Config: `~/.pi/agent/laya-model-router.json`; kill switch
+  `LAYA_MODEL_ROUTER_ENABLED=0`. Telemetry:
+  `~/.local/share/pi-laya/model-routing.jsonl`. Note: CPU inference takes
+  ~400ms, so with the 100ms budget most turns fail open by design; raise
+  `classifyTimeoutMs` to route for real.
+
 ## AGENTS.md requirements honored
 
 - All files chezmoi-managed (no direct writes to `~`); install via

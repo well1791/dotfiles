@@ -32,6 +32,7 @@
     "skipPrompt": true
   },
   "enabledModels": [
+    "laya/auto",
     "github-copilot/gpt-6-luna",
     "opencode/big-pickle",
     "zai/glm-5.3",
