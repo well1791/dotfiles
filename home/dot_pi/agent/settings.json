@@ -1,7 +1,7 @@
 {
-  "lastChangelogVersion": "0.99.2",
+  "lastChangelogVersion": "1.0.3",
   "defaultProvider": "zai",
-  "defaultModel": "glm-5.3",
+  "defaultModel": "glm-5.3-flash",
   "defaultThinkingLevel": "medium",
   "skills": [],
   "packages": [
