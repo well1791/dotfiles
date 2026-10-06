@@ -133,7 +133,7 @@ modal_dim = 30
 whichkey_position = ""
 window_title_position = "hidden"
 hide_clock = false
-show_clock = false
+show_clock = true
 show_cpu = false
 show_ram = false
 theme = ""
@@ -148,6 +148,7 @@ max_fps = 0
 dock_workspace_tab_format = ""
 glyphs = "default"
 gap = 0
+tiling_scheme = "spiral"
 master_ratio = 50
 scroll_column_width = 55
 scroll_column_max = 90
@@ -155,6 +156,9 @@ zoom_size = 95
 panel_padding = 2
 clock_format = "15:04:05"
 dim_unfocused = 0
+dim_multifocus = false
+master_position = "left"
+master_count = 1
 background = "off"
 pane_background = ""
 desktop_background = ""
@@ -180,6 +184,9 @@ cursor_fg = "#08222B"
 flash = true
 flash_ms = 420
 flash_style = "diagonal"
+multi_format = "plain"
+copy_entry = "cursor"
+osc52_write = "focused"
 
 [appearance.sidebar]
 enabled = false
@@ -188,6 +195,7 @@ width = 24
 workspaces = ""
 sections = "sessions:25,files:25,agents:34"
 folder_click = "navigate"
+editor = ""
 file_delete = "trash"
 background = ""
 agent_rest_fold = "1h"
@@ -208,22 +216,24 @@ quiet_hours = ""
 done = ""
 needs_input = ""
 
+[notifications.mail]
+
 [keybindings]
 leader_key = "ctrl+m"
 
 [keybindings.window_management]
-minimize_window = []
-next_window = []
-prev_window = []
 close_window = ["x"]
 copy_selection = ["y"]
-focus_sidebar = ["e"]
-new_session = ["s"]
+focus_sidebar = ["s"]
+minimize_window = ["m"]
+new_session = ["N"]
 new_window = ["n"]
-rename_window = ["r"]
-restore_all = ["M"]
-next_session = ["alt+shift+n"]
-prev_session = ["alt+shift+p"]
+next_session = []
+next_window = []
+prev_session = []
+prev_window = []
+rename_window = []
+restore_all = ["r"]
 select_window_1 = ["1"]
 select_window_2 = ["2"]
 select_window_3 = ["3"]
@@ -233,7 +243,8 @@ select_window_6 = ["6"]
 select_window_7 = ["7"]
 select_window_8 = ["8"]
 select_window_9 = ["9"]
-start_screensaver = ["X"]
+start_screensaver = ["S"]
+toggle_pip = ["p"]
 toggle_zoom = ["z"]
 
 [keybindings.workspaces]
@@ -258,6 +269,8 @@ switch_workspace_9 = ["alt+9"]
 
 [keybindings.layout]
 equalize_splits = ["="]
+focus_down = []
+focus_up = []
 preselect_down = ["alt+j"]
 preselect_left = ["alt+h"]
 preselect_right = ["alt+l"]
@@ -274,7 +287,7 @@ snap_fullscreen = ["f"]
 snap_left = ["h"]
 snap_right = ["l"]
 split_horizontal = ["-"]
-split_vertical = ["|", '\']
+split_vertical = ["|"]
 swap_down = ["J", "ctrl+down"]
 swap_left = ["H", "ctrl+left"]
 swap_right = ["L", "ctrl+right"]
@@ -290,7 +303,7 @@ quit = ["q"]
 toggle_help = ["?"]
 
 [keybindings.system]
-toggle_spotlight = ["p"]
+toggle_spotlight = ["b"]
 
 [keybindings.navigation]
 
@@ -306,23 +319,27 @@ restore_minimized_8 = ["shift+8", "*"]
 restore_minimized_9 = ["shift+9", "("]
 
 [keybindings.prefix_mode]
+hints = ["F"]
 launcher = []
+next_session = []
+paste_image = ["V"]
 prefix_close_session = []
 prefix_close_window = []
 prefix_command_palette = ["P"]
-prefix_debug = []
+prefix_debug = ["D"]
 prefix_detach = ["x"]
 prefix_equalize_splits = ["="]
 prefix_exit_mode = ["esc"]
 prefix_explore = ["e"]
+prefix_file_search = ["f"]
 prefix_fullscreen = ["z"]
 prefix_help = ["?"]
 prefix_inbox = ["i"]
 prefix_jump_notif = ["j"]
 prefix_keybinds = ["k"]
 prefix_layout = ["L"]
-prefix_mail = ["m"]
-prefix_minimize = []
+prefix_mail = ["l"]
+prefix_minimize = ["m"]
 prefix_new_window = ["c"]
 prefix_next_attention = ["o"]
 prefix_next_finished = ["O"]
@@ -333,8 +350,7 @@ prefix_rename_window = []
 prefix_review = ["v"]
 prefix_rotate_split = ["R"]
 prefix_screenshot = ["C"]
-prefix_scrollback = ["h"]
-prefix_selection = ["a"]
+prefix_scrollback = ["s"]
 prefix_select_0 = ["0"]
 prefix_select_1 = ["1"]
 prefix_select_2 = ["2"]
@@ -345,26 +361,27 @@ prefix_select_6 = ["6"]
 prefix_select_7 = ["7"]
 prefix_select_8 = ["8"]
 prefix_select_9 = ["9"]
+prefix_selection = ["a"]
 prefix_session_switcher = ["w"]
 prefix_settings = [","]
 prefix_split_horizontal = ["-"]
-prefix_split_vertical = ["|", '\']
+prefix_split_vertical = ["|"]
 prefix_tape = ["T"]
 prefix_toggle_sidebar = ["b"]
 prefix_toggle_tiling = ["space"]
-prefix_window = []
-prefix_workspace = ["S"]
-prefix_workspace_switcher = ["s"]
-prev_session = ["("]
-next_session = [")"]
+prefix_window = ["t"]
+prefix_workspace = []
+prefix_workspace_switcher = ["W"]
+prev_session = []
 terminal_focus_down = ["down"]
 terminal_focus_left = ["left"]
 terminal_focus_right = ["right"]
 terminal_focus_up = ["up"]
+toggle_scratch = ["g"]
 
 [keybindings.window_prefix]
 window_prefix_cancel = ["esc"]
-window_prefix_close = ["x"]
+window_prefix_close = []
 window_prefix_new = ["n"]
 window_prefix_next = ["tab"]
 window_prefix_prev = ["shift+tab"]
@@ -383,7 +400,7 @@ minimize_prefix_restore_6 = ["6"]
 minimize_prefix_restore_7 = ["7"]
 minimize_prefix_restore_8 = ["8"]
 minimize_prefix_restore_9 = ["9"]
-minimize_prefix_restore_all = ["M"]
+minimize_prefix_restore_all = ["r"]
 
 [keybindings.workspace_prefix]
 workspace_prefix_cancel = ["esc"]
@@ -422,9 +439,13 @@ tape_prefix_review = ["t"]
 tape_prefix_stop = ["s"]
 
 [keybindings.layout_prefix]
+add_master = ["i"]
+cycle_master_position = ["o"]
+focus_master = ["m"]
 layout_prefix_cancel = ["esc"]
 layout_prefix_load = ["l"]
 layout_prefix_save = ["s"]
+remove_master = ["d"]
 resize_height_50 = ["shift+5"]
 resize_height_60 = ["shift+6"]
 resize_height_70 = ["shift+7"]
@@ -439,6 +460,7 @@ snap_corner_1 = ["1"]
 snap_corner_2 = ["2"]
 snap_corner_3 = ["3"]
 snap_corner_4 = ["4"]
+swap_with_master = ["enter"]
 
 [keybindings.terminal_mode]
 terminal_exit_mode = ["alt+esc"]
@@ -469,6 +491,7 @@ cursor_down = ["j", "down"]
 cursor_up = ["k", "up"]
 exit = ["esc", "s"]
 expand = ["l", "right"]
+file_search = ["ctrl+f"]
 first = ["g", "home"]
 help = ["?"]
 jump_1 = ["1"]
@@ -500,6 +523,7 @@ file_create = ["a"]
 file_cut = ["x"]
 file_delete = ["d"]
 file_delete_forever = ["D"]
+file_edit = ["shift+enter"]
 file_open = ["enter"]
 file_paste = ["p"]
 file_rename = ["r"]
@@ -549,6 +573,7 @@ peek_type = ["tab"]
 mail_back = ["esc", "q"]
 mail_down = ["j", "down", "ctrl+n"]
 mail_focus_pane = ["o"]
+mail_new = ["n"]
 mail_open = ["enter"]
 mail_page_down = ["pgdown"]
 mail_page_up = ["pgup"]
@@ -561,6 +586,9 @@ agent_detect_seconds = 0
 agent_binaries = []
 respond_from_shell = false
 resume_agents = "ask"
+persist_scrollback_lines = 0
+persist_scrollback_kb = 0
+window_size = "smallest"
 
 [startup]
 open_default_window = false
@@ -592,12 +620,27 @@ idle_minutes = 10
 effect = "random"
 
 [spotlight]
-enabled = false
 follow = "mouse"
 radius = 10
 dim = 75
 edge = "hard"
 shake = false
+
+[hints]
+builtins = "all"
+patterns = []
+alphabet = "asdfghjkl"
+dim = 60
+all_panes = false
+
+[scratch]
+width = "80%"
+height = "80%"
+
+[pip]
+width = 40
+height = 12
+corner = "bottom-right"
 
 [dock]
 [dock.clock]
