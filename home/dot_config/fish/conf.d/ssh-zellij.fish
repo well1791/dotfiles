@@ -3,7 +3,7 @@
 # - Prevents nesting (skips if already inside zellij)
 # - Attaches to the most recently used session, or creates "remote" if none exist
 
-if set -q SSH_CONNECTION; and not set -q ZELLIJ
+if set -q SSH_CONNECTION; and not set -q ZELLIJ; and command -v zellij >/dev/null 2>&1
     set -l last_session (zellij list-sessions -s -r 2>/dev/null | head -1)
     if test -n "$last_session"
         zellij attach $last_session

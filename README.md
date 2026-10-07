@@ -232,13 +232,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Browse local services: `avahi-browse -at`
 - Update: `sudo pacman -Syu` (system package)
 
-### 25. **[rmux](https://rmux.io)** - High-performance session manager
-- Session manager and multiplexer written in Rust
-- Includes Rust SDK (`rmux-sdk`) for programmatic session control
-- Installed via cargo: `cargo install rmux rmux-sdk`
-- Update: `cargo install rmux rmux-sdk`
-
-### 26. **[serena](https://github.com/oraios/serena)** - Semantic code retrieval and editing via LSP
+### 25. **[serena](https://github.com/oraios/serena)** - Semantic code retrieval and editing via LSP
 - MCP server providing IDE-grade symbol operations: find, rename, refactor, diagnostics
 - Supports 40+ languages via language server protocol
 - Installed via `uv tool install -p 3.13 serena-agent`
@@ -247,7 +241,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Pi context: `~/.serena/contexts/pi.yml` (semantic tools only, overlapping tools disabled)
 - Connected to pi via MCP (`~/.pi/agent/mcp.json`)
 
-### 27. **[delta](https://github.com/dandavison/delta)** - Syntax-highlighting pager for git
+### 26. **[delta](https://github.com/dandavison/delta)** - Syntax-highlighting pager for git
 - Default git pager for `git diff`, `git log`, `git show`, etc. (configured in `dot_gitconfig.tmpl`)
 - Side-by-side diffs, syntax highlighting, line numbers, and navigable hunks
 - Also powers interactive add (`git add -p`) via `interactive.diffFilter`
@@ -255,7 +249,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Config: `[delta]` sections in `~/.gitconfig`
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
-### 28. **[mergiraf](https://mergiraf.org)** - Syntax-aware git merge driver
+### 27. **[mergiraf](https://mergiraf.org)** - Syntax-aware git merge driver
 - Resolves merge conflicts structurally using language-aware tree-sitter parsing
 - Handles independent edits, moved code, and neighbouring insertions that line-based merge cannot
 - Registered as a global git merge driver via `~/.gitconfig` + `~/.gitattributes`
@@ -266,7 +260,7 @@ Installed via system package manager (pacman/apt/dnf):
 - Review auto-solved conflicts: `mergiraf review <merge_id>`
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
-### 29. **[Emacs](https://www.gnu.org/software/emacs/)** - Extensible editor (primary)
+### 28. **[Emacs](https://www.gnu.org/software/emacs/)** - Extensible editor (primary)
 - Primary editor with [meow](https://github.com/meow-edit/meow) modal layer (selection-first, Helix/Kakoune-style) and a custom `ijkl` navigation cluster
 - Config: `~/.config/emacs/{early-init.el,init.el}`; packages managed by [elpaca](https://github.com/progfolio/elpaca) (async, git-based)
 - Daemon: systemd user service (`~/.config/systemd/user/emacs.service`); connect via `emacsclient -c` (GUI) or `emacsclient -nw` (terminal)
@@ -274,19 +268,19 @@ Installed via system package manager (pacman/apt/dnf):
 - Installed via system package manager (`emacs`); install script: `run_onchange_before_70c-install-emacs.sh.tmpl` (also pulls `typescript-language-server`, `bash-language-server`, `nil`)
 - Update: `sudo pacman -Syu` (system package). Elpaca packages update **inside** Emacs: `M-x elpaca-update-all`
 
-### 30. **[choose](https://github.com/theryangeary/choose)** - Human-friendly alternative to `cut` and `awk`
+### 29. **[choose](https://github.com/theryangeary/choose)** - Human-friendly alternative to `cut` and `awk`
 - Fast, terse field selection: Python-style slices, negative indexing, regex field separators
 - Zero-indexed; character-wise or field-wise; much faster than `awk` for basic text processing
 - Installed via cargo: `cargo install choose`; install script: `run_onchange_before_70d-install-choose.sh.tmpl`
 - Update: `cargo install choose` (covered by `update-all`)
 
-### 31. **[Helium](https://helium.computer/)** - Privacy-focused web browser
+### 30. **[Helium](https://helium.computer/)** - Privacy-focused web browser
 - Chromium-based browser by [imput](https://imput.net/): private, fast, and honest
 - Installed via system package (`helium-browser-bin`, CachyOS repo/AUR); install script: `arch/run_onchange_before_81-install-helium-browser.sh.tmpl` (skipped on headless machines)
 - Binary: `helium-browser` (upstream deb/tarball name it `helium`); config lives in `~/.config/helium` at runtime
 - Update: system package step of `update-all` (`paru -Syu`)
 
-### 32. **[NEO](https://github.com/hughhowey/neo)** - Distraction-free word processor for authors
+### 31. **[NEO](https://github.com/hughhowey/neo)** - Distraction-free word processor for authors
 - Installed as the upstream Linux AppImage in `~/.local/bin/neo.AppImage` via a chezmoi external; desktop launcher is managed under `~/.local/share/applications/`
 - Requires FUSE 2 to run; the Arch-family install script installs `fuse2`
 - Only installed on non-headless, non-ephemeral machines
@@ -309,7 +303,7 @@ This single command updates:
 - ✅ NEO AppImage (latest GitHub release via chezmoi)
 - ✅ home-manager packages (node, go, gopls)
 - ✅ uv (Python package manager) and uv tools (sqlit, serena, etc.)
-- ✅ Rust (rustup update) and cargo tools (rmux, rmux-sdk, choose)
+- ✅ Rust (rustup update) and cargo tools (choose)
 - ✅ Nix channels, packages, and flake installs
 - ✅ devenv
 - ✅ Bun (if installed)

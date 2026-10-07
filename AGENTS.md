@@ -202,7 +202,6 @@ $ variable: <command that produces selectable options> | fzf
 | mergiraf | — | Syntax-aware git merge driver; installed via system package, configured in `dot_gitconfig.tmpl` + `dot_gitattributes` |
 | lean-ctx | — | Context intelligence layer for AI agents; self-updates via `lean-ctx update` |
 | pi-lean-ctx | lean-ctx, bun | Pi extension that routes built-in tools through lean-ctx CLI |
-| rmux | rust (cargo) | Installed via cargo install |
 | choose | rust (cargo) | Human-friendly alternative to cut/awk; installed via `cargo install choose` |
 | serena | uv, python 3.13 | Semantic code tools via LSP; MCP server connected to pi |
 | python-lsp-server | uv | Python LSP; installed via `uv tool install python-lsp-server` |
@@ -255,7 +254,7 @@ New data fields are added via `promptStringOnce` in `.chezmoi.toml.tmpl`.
 
 1. Name the file with `.tmpl` suffix (e.g., `dot_gitconfig.tmpl`)
 2. Replace literal PII with the appropriate template variable; for home paths, follow the notation rules above
-3. If the config uses `{{` for its own syntax (e.g., espanso), escape with `{{ "{{" }}`
+3. If the config uses `{{` for its own syntax, escape with `{{ "{{" }}`
 4. Verify with `chezmoi cat <target-path>` that output is correct
 5. Verify with `chezmoi diff` that no unintended changes occur
 
