@@ -20,6 +20,8 @@ chezmoi edit <file>    # edit a target's source file
 chezmoi add <file>     # add a new file to chezmoi management
 ```
 
+**NEVER run `chezmoi apply` yourself — always defer it to the user.** Make source edits, verify with read-only commands (`chezmoi diff`, `chezmoi cat`, `chezmoi managed`), and report the pending changes so the user can run `chezmoi apply` themselves.
+
 No automated tests — verify changes manually (start a new shell, reload the tool, etc).
 
 ## Critical Rule: All Config Through Chezmoi
