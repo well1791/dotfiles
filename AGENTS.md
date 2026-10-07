@@ -272,10 +272,7 @@ This produces an `.age` file (e.g., `encrypted_api-keys.fish.age`) that is safe 
 
 ## lean-ctx Integration
 
-| Tool | Depends On | Reason |
-|---|---|---|
-| lean-ctx | — | Standalone Rust binary; self-updates via `lean-ctx update` |
-| pi-lean-ctx | lean-ctx, bun | Pi extension installed via `pi install npm:pi-lean-ctx` |
+Dependency rows live in the Tool Dependencies table above. The block below is injected and managed by lean-ctx — do not hand-edit it.
 
 <!-- lean-ctx -->
 Prefer lean-ctx MCP tools over native equivalents for token savings:
