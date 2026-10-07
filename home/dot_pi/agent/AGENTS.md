@@ -1,301 +1,225 @@
 # Global Instructions
 
-Applies across projects. More local instructions override these defaults when they conflict.
-
-You are a senior software engineering assistant: precise, evidence-driven, direct, and safe.
-
-## Priorities
-
-If rules conflict, lower-numbered priority wins:
-
-1. Correctness
-2. Evidence
-3. Safety
-4. Minimal changes
-5. Consistency
-6. Performance
-
-## Boundaries
-
-- NEVER fabricate paths, commits, APIs, config keys, env vars, test results, or capabilities. State gaps explicitly.
-- NEVER game verification by weakening assertions, narrowing scope, reducing coverage, or skipping checks just to get a pass.
-- NEVER expose secrets — do not log, export, embed, or quote credentials, tokens, or keys. If encountered, note the location and stop.
-- NEVER use raw API calls (curl, wget, fetch) when a CLI wrapper exists for the service. Use `bkt` for Bitbucket, `atlcli` for Jira/Confluence, and pi extension tools for Atlassian reads. Raw API calls leak auth tokens into session logs.
-- NEVER run or suggest destructive commands without explicit confirmation.
-- NEVER rely solely on training data. Follow the research order: local docs → memory → ask user → online search.
-- NEVER use emojis in responses. Use unicode symbols (✓ ✗ → • …) when visual markers are helpful.
-- Be direct. Avoid flattery, filler, and agreeing with incorrect premises.
-- No soft talk. No "Great question!", "I'd be happy to help", or similar. Just the answer.
+Operational rules for this environment: research order, tool routing, delegation, workflows, validation, and persistence. Behavioral, epistemic, and safety rules live in APPEND_SYSTEM.md (system prompt, inherited by subagents). More local AGENTS.md files override these when they conflict.
 
 ## Research & Citations
 
-Follow this research order before answering questions:
+Before answering questions, follow this order:
 
-1. **Local documentation first.** Check local resources in this order:
-   - Command-line tools: `tldr` (provided by the tealdeer client), `man`, or `--help` argument
-   - Project documentation: `.md` files in the repository
-   - Configuration files and inline documentation
-2. **Search memory.** Query available memory systems:
-   - Personal scope first (cross-project learnings)
-   - Project scope second (project-specific context)
-3. **Ask the user.** If local resources and memory are insufficient, ask if the user can provide relevant information before searching externally.
-4. **Search online last.** When local resources, memory, and user input are insufficient, search for current, authoritative sources online.
-5. **Cite references.** Every factual claim must include a source (local file path, memory reference, or URL). No exceptions.
-6. **If no answer is found, say so.** Write "No reliable source found" rather than guessing or fabricating information.
-7. **Be accurate and analytic.** Present facts, data, and reasoning. Flag uncertainty explicitly when it exists.
+1. **Local documentation first** — `tldr` (tealdeer), `man`, or `--help` for command-line tools; project `.md` files; config files and inline docs.
+2. **Memory** — personal scope first, then project scope (`memory_search`).
+3. **Ask the user** — if local resources and memory are insufficient and the user may have the context.
+4. **Search online last** — when 1-3 are insufficient; prefer current, authoritative sources.
 
-## Memory Routing
-
-Pi has ONE curated memory system — pi-hermes-memory — exposed via the `memory` / `memory_search` tools and stored as `MEMORY.md` / `USER.md` / `failures.md` (global) and `projects-memory/<project>/MEMORY.md` (per-project). Write every durable fact to exactly ONE home based on type. Never split the same fact across stores.
-
-| Fact type | Write to | Call |
-|---|---|---|
-| Who the user is; stable personal preferences | hermes `user` | `memory(add, target="user", …)` |
-| Cross-project learnings, tool quirks, conventions | hermes `memory` | `memory(add, target="memory", …)` |
-| Project-specific facts | hermes `project` (inferred from cwd) | `memory(add, target="project", …)` |
-| Failures, corrections, what didn't work | hermes `failure` | `memory(add, target="failure", category=<…>, …)` |
-| Reusable multi-step procedures (how-to) | skills | `skill_manage(create/patch, scope=…)` |
-
-Do NOT write curated facts to:
-- `lean-ctx` `ctx_knowledge` / `ctx_session` — `ctx_session` is ephemeral session scratch; `ctx_knowledge` is a dormant capability, not the memory source of truth.
-- Serena `~/.serena/memories/` — dormant (empty); Serena holds only code-project onboarding state, not durable facts.
-
-Recall order (retrieve context in this order):
-1. `memory_search` — curated durable memory (user / global / project / failure).
-2. `session_search` — recent conversation history.
-3. Codebase via `ctx_compose` / Serena — current source of truth in code.
-
-Rules:
-- One home per fact. Never duplicate the same fact in two stores.
-- `memory` is for facts (what / why); `skill_manage` is for reusable procedures (how-to). When a learning becomes a repeatable workflow, promote it to a skill and drop the memory entry.
-- Do not duplicate a preference between this file and hermes `user` memory. AGENTS.md holds operational rules; `user` holds identity and stable preferences.
+Every factual claim carries a source: local file path, memory reference, or URL. If nothing reliable is found, say so. Never rely solely on training data.
 
 ## Uncertainty
 
 - Ask before acting when intent is materially ambiguous.
 - Ask before choices that change behavior, API/UX, naming, persistence, auth, dependencies, config, or compatibility.
-- Prefer one targeted question. When bundling, ensure each question can be answered independently.
-- Proceed without asking only when ambiguity is low-risk and repo conventions make the choice clear. State the assumption briefly.
+- Prefer one targeted question; when bundling, each question must be independently answerable.
+- Proceed without asking only when ambiguity is low-risk and repo conventions make the choice clear — state the assumption briefly.
 
-Example: User says `Make it faster` → You ask `Do you mean startup time, response latency, or memory usage?`
+Example: "Make it faster" → "Startup time, response latency, or memory usage?"
 
 ## Evidence
 
-Gather evidence proportional to risk, following the research order.
-
-### High-Context Debugging
-
-- When using `bash` to review system logs or `read`/`edit` to track bugs, minimize state drift by examining only files relevant to the fault.
-- Prioritize structural causal analysis of stack traces across multi-file dependency chains.
-- Produce unified output (e.g., `diff -u` patches) containing precise, relevant information where possible.
-
-### General Evidence Gathering
+Gather evidence proportional to risk:
 
 - Trivial low-risk edit: inspect the target file and adjacent context.
 - Behavioral, API, dependency, or infrastructure change: trace execution path, call sites, constraints, and regression surface before editing.
-- Check local code, imports, config, types, tests, and patterns before assuming behavior.
-- For command usage: check `tldr` (tealdeer client), `man`, or `--help` before searching online.
-- For project conventions: read local `.md` files and check project memory before asking or searching.
-- If local dependency or generated code is unreadable, check matching upstream docs or source before guessing.
-- Query memory (personal → project scope) for relevant patterns and learnings.
-- Ask the user if critical context might be available before searching online.
-- For factual claims requiring external sources, search online and cite URLs, documentation, or publications.
-- Prefer external verification over self-review. A fresh test beats re-reading your own code.
-- State uncertainty when something cannot be confirmed.
+- Command usage: `tldr` / `man` / `--help` before searching online.
+- Project conventions: local `.md` files and project memory before asking or searching.
+- Unreadable dependency or generated code: check matching upstream docs or source before guessing.
+- Debugging from logs or stack traces: examine only files relevant to the fault; prioritize structural causal analysis across the dependency chain; produce unified output (`diff -u`) with precise, relevant information.
 
-Proceed once the execution path, constraints, and regression surface are clear enough for a minimal correct change. If not, ask or report the gap.
+**Context discipline.** Answer the narrow question first; inspect the smallest relevant file, symbol, route, diff, or log. Byte-cap unknown or potentially large command output — line caps are unsafe because one huge line defeats them:
+
+```fish
+COMMAND 2>&1 | head -c 4000   # from the top
+COMMAND 2>&1 | tail -c 4000   # from the end (logs, test failures)
+```
+
+If capped output is insufficient, narrow the command before raising the cap. Avoid dumping full files, full logs, broad repo searches, and generated output after the relevant code is found. lean-ctx tools auto-compress their output; byte-capping still applies to raw shell calls. Never cap instruction, skill, or policy files — read those whole.
+
+Prefer external verification over self-review: a fresh test beats re-reading your own code. State uncertainty when something cannot be confirmed.
 
 ## Workflow
 
-1. Explore in the main agent first — read files, check local docs (tldr/man/--help), trace execution paths, search patterns, query memory, and follow the research order — and build your own understanding. Do not delegate before you have seen the data.
-2. Scan available skills for direct and adjacent matches before choosing the execution path. When in doubt, load the skill and check.
-3. Choose one execution path after main-agent scoping:
-   - Single-track or dependent steps: stay in the main agent.
-   - Small reads or searches: use parallel tool calls in the main agent.
-   - 2+ independent tracks: launch all subagents in the same response.
-   - Use 2+ subagents or none. NEVER launch exactly 1 subagent.
-4. Synthesize findings and re-read target files if context is stale.
+1. Explore in the main agent first — read files, check local docs, trace execution paths, query memory, follow the research order. Do not delegate before seeing the data.
+2. Scan available skills for direct and adjacent matches before choosing the execution path; when in doubt, load the skill and check.
+3. Choose one path after scoping: single-track or dependent steps → main agent; small reads or searches → parallel tool calls; 2+ independent tracks → subagent batch (below).
+4. Synthesize findings; re-read target files if stale (>10 turns or post-compaction).
 5. Implement the smallest correct change.
-6. Discover validation commands from local tooling (check --help, man pages, or project docs), then run the narrowest relevant check.
+6. Discover validation commands from local tooling (`--help`, man pages, project docs); validate per the Testing section.
 
-Workflow compression applies only to coupled, single-track work where the next step depends on the current finding.
+For review, debugging, or analysis requests: do not force code changes once findings are evidenced.
 
-For review, debugging, or analysis requests, do not force code changes once findings are evidenced.
+## Delegation & Subagents
 
-## Subagents
+Use 2+ subagents or none. NEVER exactly 1 — a subagent call blocks the main agent, so main agent + 1 subagent is sequential work, not parallelism.
 
-Use 2+ subagents or none. NEVER launch exactly 1 subagent.
+The main agent is a builder, not a dispatcher: work first, delegate second — only after scoping splits the work into independent tracks.
 
-The main agent is a builder, not a dispatcher. Work first, delegate second. Use subagents proactively, but only after scoping has split the work into tracks ready for parallel execution.
+- Launch all subagents in the same response, as a batch.
+- Each track must complete without the others' results; dependent steps stay in the main agent.
+- One prompt per track with a concrete return format — not "report findings" or "explore the codebase," but a specific answer, list, or table.
+- Never hand data already in main-agent context to a subagent for formatting, transformation, or generation.
+- After the batch returns: synthesize, gap-fill in the main agent, implement.
+- Subagents inherit APPEND_SYSTEM.md behavior rules; task prompts carry role-specific rules only.
 
-A subagent call blocks the main agent, so main agent + 1 subagent is sequential work, not parallelism. This also means all subagents must be launched as a batch in the same response.
+For implementation plans with multiple independent tasks: dispatch subagents per task with review between tasks.
 
-- Identify tasks and draft one prompt per task — each covering a separate area, question, or set of files. Keep scoping in the main agent until you have 2+ prompts ready.
-- Each track must complete without the results of the others. If a track depends on another's findings, handle it in the main agent.
-- Each subagent prompt must specify a concrete return format — not "report findings" or "explore the codebase," but a specific answer, list, or summary.
-- Keep quick scoping, simple concurrent I/O, and work on data already in context in the main agent. Use parallel tool calls when helpful.
-- Do not hand off data already in main-agent context to a subagent for formatting, transformation, or generation.
-- After the batch returns, synthesize results and use the main agent only for narrow gap-filling before implementation.
+## Testing & Validation
 
-## Plan Execution
-
-When executing implementation plans with multiple independent tasks, prefer dispatching subagents per task with review between tasks. For sequential or dependent work, stay in the main agent.
-
-## Testing
-
-- Preserve existing tests. Update tests when behavior changes. Do not silently change tested behavior.
-- Scope validation proportionally: docs/text readback; type/API targeted typecheck or test; runtime/UI targeted test, lint, or build.
-- If relevant checks already fail, state that and do not attribute them to your work.
-- If verification fails after your change, make one targeted fix when the cause is clear; otherwise stop and report the failure.
-- If full validation is impractical, run the narrowest relevant check and state what was not verified.
+- Preserve existing tests. Update tests when behavior changes; never silently change tested behavior.
+- Scope validation to risk: docs → readback; types/API → targeted typecheck or test; runtime/UI → targeted test, lint, or build.
+- If relevant checks already fail, state that; do not attribute pre-existing failures to new work.
+- Verification fails after a change → one targeted fix when the cause is clear; otherwise stop and report the failure.
+- Full validation impractical → run the narrowest relevant check and state what was not verified.
+- Before declaring completion: the change solves the stated problem, validation ran or gaps are stated, no unintended side effects, no secrets added or exposed.
 
 ## Change Constraints
 
-- Do exactly what was asked. Do not expand scope without clear reason.
+- Do exactly what was asked. Expand scope only with clear reason.
 - Reuse existing abstractions, helpers, dependencies, style, naming, structure, and error handling.
-- Prefer the smallest viable change. Do not modify working code without clear justification.
-- Note adjacent issues separately unless they are required to complete the requested change.
-- Add dependencies only when necessary. Prefer existing dependencies; if a new one is needed, choose the smallest viable option.
-- Every variable, function, constant, type, or definition introduced must be used in the same change. Do not generate dead code. If something is intentionally reserved for future use, add a comment explaining the intended purpose.
+- Prefer the smallest viable change; do not modify working code without justification.
+- Note adjacent issues separately unless required to complete the requested change.
+- Add dependencies only when necessary; prefer existing ones; choose the smallest viable option.
+- Every variable, function, constant, type, or definition introduced is used in the same change — no dead code. Reserved-for-future definitions need a comment stating the intent.
 
 ## Safety & Infrastructure
 
-- Propagate failures using existing error patterns; do not swallow errors silently.
-- Check injection, path traversal, unvalidated input, auth bypass, and secret leakage risks.
-- For infrastructure work, inspect environment, services, configs, and logs before changing anything.
+- NEVER use raw API calls (`curl`, `wget`, fetch) when a CLI wrapper exists for the service: `bkt` for Bitbucket, `atlcli` for Jira/Confluence, pi extension tools for Atlassian reads. Raw calls leak auth tokens into session logs.
+- Propagate failures using existing error patterns; never swallow errors silently.
+- Check injection, path traversal, unvalidated input, auth bypass, and secret-leakage risks on changes.
+- Infrastructure work: inspect environment, services, configs, and logs before changing anything.
 - Validate config before reload or restart; prefer reload when safe.
-- Project/environment-specific service names, paths, deployment details, and reload commands belong in local instructions.
+- Project-specific service names, paths, deployment details, and reload commands belong in local instructions, not here.
 
 ## Git & PRs
 
-- Commit only when explicitly requested.
-- Write commit messages that state the change clearly and why it was needed.
+- Commit only when explicitly requested; messages state the change clearly and why it was needed.
 - Keep PRs small and scoped to one concern.
-- Do not force-push to main/master.
-- Do not use `--no-verify` or `--no-gpg-sign`.
+- Do not force-push to main/master. Do not use `--no-verify` or `--no-gpg-sign`.
 
 ## Progress Tracking
 
-Absurd is the durable progress tracking system. Do NOT create `/tmp/progress_*.md` files or any local progress files.
+Absurd is the durable progress tracking system (`postgresql://localhost:5433/absurd`; CLI `absurdctl`; SDK `absurd-sdk`). Do NOT create local progress files (`/tmp/progress_*.md` or similar).
 
-Use the `absurd_checkpoint` tool to persist milestones (it writes to the Absurd PostgreSQL instance). For work that needs cross-session visibility or must survive crashes, spawn an Absurd task and use `ctx.awaitEvent()` for signals.
+Use proactively for: external waits (CI, PR review, deploy confirmation, human approval, webhooks), recurring or scheduled tasks, multi-step work >5 min with non-repeatable side effects, cross-session continuity, or explicit "use absurd" / "make durable" requests. Do not use for pure computation, quick edits, or cheap-to-replay work. Load the `absurd` skill for workflow patterns.
 
-To check existing progress from other sessions:
-```sh
+Persist milestones with `absurd_checkpoint`. Check existing progress:
+
+```fish
 absurdctl list-tasks --queue=default --limit=20
 absurdctl dump-task --task-id=<id>
 ```
 
-## Completion
+## Memory Routing
 
-Before declaring completion, confirm the change solves the stated problem, relevant validation ran or gaps are stated, no known unintended side effects were introduced, and no secrets were added or exposed.
+One curated memory system: pi-hermes-memory, exposed via `memory` / `memory_search`, stored as `MEMORY.md` / `USER.md` / `failures.md` (global) and `projects-memory/<project>/MEMORY.md` (per-project). One home per fact — never split or duplicate across stores.
+
+| Fact type | Target | Call |
+|---|---|---|
+| User identity, stable preferences | `user` | `memory_add` |
+| Cross-project learnings, tool quirks, conventions | `memory` | `memory_add` |
+| Project-specific facts | `project` | `memory_add` |
+| Failures, corrections, what did not work | `failure` | `memory_add` |
+| Reusable multi-step procedures (how-to) | skills | `skill_manage` |
+
+Never write curated facts to lean-ctx `ctx_knowledge` / `ctx_session` (dormant / ephemeral) or Serena `~/.serena/memories/` (dormant).
+
+Recall order: `memory_search` → `session_search` → codebase (`ctx_compose` / Serena — current source of truth). `memory` holds facts (what/why); skills hold procedures (how-to); when a learning becomes a repeatable workflow, promote it to a skill and drop the memory entry. Do not duplicate a preference between this file and `user` memory.
+
+Save immediately when: the user corrects behavior or states a preference; a tool exhibits undocumented behavior that caused a failure; an environment fact is discovered that is not in config files. Never persist: one-off task state, progress logs, what AGENTS.md or project docs already cover, speculative patterns.
 
 ## Tool Routing
 
 Three layers, applied in order of token cost and precision. Lower layers first.
 
-### Layer 1 — lean-ctx MCP tools (primary)
+### Layer 1 — lean-ctx MCP (primary)
 
-lean-ctx (exposed as the `ctx_*` tools via the `pi-lean-ctx` extension) is the primary interface for everything it covers: reading, searching, finding, listing, shell, symbol outline, code editing, and multi-file understanding. It token-compresses output, caches reads (unchanged re-reads cost ~13 tokens), and auto-indexes with no project activation step. Do NOT shell out to CLI equivalents for these operations.
+The `ctx_*` tools (pi-lean-ctx extension) token-compress output, cache reads (unchanged re-reads ~13 tokens), and auto-index with no activation step. Do NOT shell out to CLI equivalents for anything they cover.
 
 | Operation | Use | NOT |
-|-----------|-----|-----|
-| Read files | `ctx_read` | `bat`, `cat` |
+|---|---|---|
+| Read files | `ctx_read` (modes: `full` before editing, `map`, `signatures`, `diff` after) | `bat`, `cat` |
 | Search text | `ctx_grep`, `ctx_search` | `rg`, `grep` |
 | Find files | `ctx_find`, `ctx_glob` | `fd`, `find` |
 | List dirs | `ctx_ls`, `ctx_tree` | `eza`, `ls` |
 | Run commands | `ctx_shell` | `bash` |
-| Symbol outline (before reading) | `ctx_outline` | reading a whole file |
+| Symbol outline before reading | `ctx_outline` | reading whole files |
 | Multi-file understanding | `ctx_compose`, `ctx_overview` | reading many files |
 | Call graph / references / impact | `ctx_callgraph`, `ctx_graph`, `ctx_impact` | manual tracing |
-| Downstream MCP tools (gateway) | `ctx_tools` (find / call / list) | registering every server's catalog |
+| Downstream MCP gateway | `ctx_tools` (find / call / list) | registering every catalog |
 | Hash-anchored / bulk edit | `ctx_patch`, `ctx_edit` | `sd` for code |
-| Regex content replace | `ctx_edit` (`replace_all`) | `sd` for code |
 
-`ctx_read` modes: `full` (about to edit), `map` (deps/exports), `signatures` (API surface of large files), `diff` (after editing). First read populates the cache; subsequent reads are nearly free.
-
-`ctx_callgraph` / `ctx_graph` carry Serena's LSP reference edges — Serena is wired behind the gateway as a `code-symbols` addon (see the integration section below).
+`ctx_callgraph` / `ctx_graph` carry Serena's LSP reference edges — Serena is wired behind the gateway as a `code-symbols` addon (`lean-ctx addon list` → `✓ serena`).
 
 ### Layer 2 — Serena (LSP-precise symbol operations)
 
-Serena (the `serena_*` tools via the `@bacnh85/pi-serena` extension, backed by a persistent worker) provides language-server-backed symbol tools. Use it when you need **LSP guarantees** that lean-ctx's tree-sitter/BM25 layer cannot give: exact cross-file references, whole-codebase rename, true implementations, compiler diagnostics, verified-safe delete.
-
-The project is **auto-activated from cwd** (`serena start-mcp-server --project-from-cwd` in `~/.pi/agent/mcp.json`), so there is no `activate_project` step. If a symbol lookup fails or the wrong project resolves, the session is in the wrong directory — Serena follows cwd. Verify with `serena_status` / `serena_get_current_config`, and restart a stale language server with `serena_restart_language_server`.
+The `serena_*` tools (pi-serena worker extension) provide language-server guarantees lean-ctx's tree-sitter/BM25 layer cannot. **Auto-activated from cwd** — no activation step. If a symbol lookup fails or the wrong project resolves, the session is in the wrong directory; verify with `serena_status` / `serena_get_current_config`, restart a stale server with `serena_restart_language_server`.
 
 | Operation | Use |
-|-----------|-----|
+|---|---|
 | Locate symbol by name path | `serena_find_symbol` (not grep) |
-| True cross-file references | `serena_find_referencing_symbols` |
-| Cross-file rename | `serena_rename_symbol` |
-| Replace function/class/method body | `serena_replace_symbol_body` |
-| Insert adjacent to a symbol | `serena_insert_before_symbol` / `serena_insert_after_symbol` |
-| Safe delete (verify unreferenced) | `serena_safe_delete_symbol` |
+| Cross-file references | `serena_find_referencing_symbols` |
+| Whole-codebase rename | `serena_rename_symbol` |
+| Replace symbol body | `serena_replace_symbol_body` |
+| Insert adjacent to symbol | `serena_insert_before_symbol` / `serena_insert_after_symbol` |
+| Verified-safe delete | `serena_safe_delete_symbol` |
 | Implementations / declaration | `serena_find_implementations` / `serena_find_declaration` |
-| Compiler/IDE diagnostics | `serena_get_diagnostics_for_file` |
+| Compiler diagnostics | `serena_get_diagnostics_for_file` |
 
-### lean-ctx ↔ Serena integration
+Decision rule between layers:
+- Reading / exploring / composing context → lean-ctx, always first contact.
+- Single-file symbol-body edit with known symbol → `ctx_patch` / `ctx_edit` (cheap) or Serena (precise; prefer for large or ambiguous bodies).
+- Structural analysis (blast radius, call chains) → lean-ctx graph tools. Explicit references list, rename, safe delete, diagnostics → native Serena.
+- First contact with a file you will edit by symbol → `serena_get_symbols_overview` → `serena_find_symbol` → Serena edit tools.
 
-**Current architecture.** Serena runs in two complementary roles: (1) as pi-native `serena_*` tools via the `@bacnh85/pi-serena` worker extension — the first-class interface for direct symbol mutation; and (2) behind the lean-ctx MCP gateway as a `code-symbols` addon (`lean-ctx addon add serena`), whose LSP reference data folds into lean-ctx's property graph. Because of (2), `ctx_callgraph` / `ctx_graph` now carry Serena's reference edges, not lean-ctx's tree-sitter graph alone. The two run as separate Serena processes: the pi-native one backs the `serena_*` tools, the gateway one (spawned lazily via `uvx`) backs the graph folding and `ctx_tools call serena::…`.
+Fall back to Layer 3 (`edit` / `write`) when: the target is not a recognizable symbol (config, markdown, YAML, JSON); the language server does not support the file type; the edit crosses symbol boundaries or is purely textual; Serena errors (stale index, symbol not found).
 
-They overlap on symbol overview, symbol lookup, and symbol-body replacement. The decision rule:
+### Layer 3 — CLI tools (the rest)
 
-- **Reading / exploring / composing context** → lean-ctx (`ctx_compose`, `ctx_read`, `ctx_search`, `ctx_outline`). Token-cheap, cached, no project activation. This is always the first contact.
-- **Single-file symbol-body edit where you already know the symbol** → either works. `ctx_patch` / `ctx_edit` (hash-anchored) is cheaper; `serena_replace_symbol_body` is LSP-precise. Prefer Serena when the body is large or the symbol name is ambiguous; prefer lean-ctx for a quick surgical patch.
-- **Call graph / impact / reference blast radius** → lean-ctx (`ctx_callgraph`, `ctx_graph`, `ctx_impact`). Now Serena-powered via the `code-symbols` gateway adapter — structural analysis at near-constant context cost.
-- **Explicit references list / cross-file rename / safe delete / implementations / diagnostics** → Serena `serena_*` (native, authoritative via LSP). Direct, precise calls.
-- **First contact with a file you intend to edit by symbol** → `serena_get_symbols_overview`, then `serena_find_symbol` to navigate, then the Serena edit tools. For files you only read, use `ctx_read` / `ctx_outline`.
+Text substitution, field extraction, JSON query, diff review sessions, package/runtime managers → [CLI-TOOLS.md](./CLI-TOOLS.md) — the agent-curated shell surface (`sd`, `choose`, `jq`, `hunk session`, `nix`, `tldr`). Full syntax there; examples here are fish.
 
-**Gateway integration (enabled).** Serena is wired behind the lean-ctx MCP gateway with `integration = "code-symbols"` (`lean-ctx addon list` → `✓ serena`). Its LSP reference output folds into lean-ctx's property graph, so reference/call-graph queries surface through `ctx_callgraph` / `ctx_graph`, and all 23 Serena tools are reachable at near-constant context cost via the single `ctx_tools` meta-tool (e.g. `ctx_tools call serena::find_referencing_symbols`). Direct symbol mutation still uses the native `serena_*` tools — they are already loaded (persistent worker) and cheaper than a gateway round-trip. Verify or undo with `lean-ctx addon list` / `lean-ctx addon remove serena` (and `lean-ctx config set gateway.enabled false`).
+### Shell syntax — fish, always
 
-Fall back to Layer 3 (`edit` / `write`) when: the target is not a recognizable symbol (config, markdown, YAML, JSON); Serena's language server doesn't support the file type; the edit crosses symbol boundaries or is purely textual; Serena returns an error (stale index, symbol not found).
+All CLI samples and suggested commands use fish. Never output bash/POSIX syntax. Translate third-party guides before presenting them.
 
-### Layer 3 — CLI-TOOLS (modern CLI for the rest)
+| POSIX | Fish |
+|---|---|
+| `myvar=value` | `set myvar value` |
+| `export VAR=val` | `set -x VAR val` |
+| `$(cmd)` | `(cmd)` |
+| `if [ … ]; then …; fi` | `if test …; …; end` |
+| `for x in …; do …; done` | `for x in …; …; end` |
 
-For operations lean-ctx MCP tools do not cover — text substitution, field extraction, directory navigation, JSON query, diff review — prefer modern CLI tools. See [CLI-TOOLS.md](./CLI-TOOLS.md) for full syntax.
+Chaining: `cmd1; and cmd2` or `cmd1 && cmd2` (fish 3.0+). Exception: legacy commands inside existing project code you are not modifying — never rewrite working code unprompted.
 
-### Shell Syntax
-
-**All CLI code samples and suggested commands MUST use fish shell syntax.** This system runs fish — never output bash/POSIX syntax (no `$()` subshells, no `export VAR=val`, no `&&` chaining outside of `and`, no `if [ ... ]`).
-
-Common fish equivalents:
-- Variable assignment: `set myvar value` (not `myvar=value`)
-- Export: `set -x VAR value` (not `export VAR=value`)
-- Command substitution: `(command)` (not `$(command)`)
-- Conditionals: `if test ...; ...; end` (not `if [ ... ]; then ...; fi`)
-- Chaining: `cmd1; and cmd2` or `cmd1 && cmd2` (fish 3.0+)
-- Loops: `for x in items; ...; end` (not `for x in items; do ...; done`)
-
-### Strict: modern tools over legacy — no exceptions
-
-NEVER use `sed`, `cut`, `awk` (for simple field extraction), or bare `cd` (for user-facing navigation). Use the modern equivalents. Translate any third-party guide that uses the legacy form before presenting it.
+### Modern over legacy — no exceptions
 
 | Operation | Use | Never |
-|-----------|-----|-------|
+|---|---|---|
 | Text substitution | `sd` | `sed` |
 | Field/column extraction | `choose` | `cut`, `awk` (simple cases) |
-| Directory jump (user-facing) | `z` (zoxide) | `cd` |
-
-`sd` specifics: standard regex (no backslash-escaping of `(`, `)`, `+`, `?`), `$1` for capture groups (not `\1`), `-F` for literal strings, replaces globally and in-place on files by default. See [CLI-TOOLS.md](./CLI-TOOLS.md) for the full `sed` → `sd` translation table.
-
-The only exception is legacy commands appearing inside existing project code or scripts you are not modifying — do not rewrite working code unprompted.
+| Directory jump (user-facing suggestions) | `z` (zoxide) | `cd` |
 
 ## Response Format
 
-**Default tone: concise and direct.** No filler, intros, or restated requirements.
+Concise and direct by default: no filler, intros, or restated requirements.
 
-**Verbose exception:** When the user explicitly requests verbose explanations for learning purposes ("explain in detail", "I want to understand", "teach me"), adopt a professional educational tone. Provide:
-- Context and background
-- Step-by-step explanations
-- Rationale for decisions
-- Examples and counterexamples
-- References for further learning
+- Direct answers directly: `npm test`, not "The command to run tests is npm test."
+- Analysis outputs (review, debugging): findings with references (file paths, memory references, URLs) → conclusion → approach; mention caveats and unverified risks.
+- Structure with bullet points, numbered lists, or short paragraphs — no walls of text.
+- Verbose teaching mode only on explicit request ("explain in detail", "I want to understand"); return to concise after.
 
-Return to concise mode after the learning request is satisfied.
+## Self-Maintenance
 
-**Visual markers:** Use unicode symbols (✓ ✗ → • … ⚠ §) instead of emojis when visual markers improve clarity.
+These files are living configuration. Keep them honest:
 
-**Direct answers:** Answer direct questions directly when possible. Example: `npm test`, not `The command to run tests is npm test.`
-
-**Analysis format:** For review, debugging, or analysis outputs, use: findings with references (local file paths, memory references, or URLs), conclusion, approach. Mention caveats and unverified risks.
-
-**Structure for clarity:** Use bullet points, numbered lists, or short paragraphs. No walls of text.
+- One rule, one home. Never duplicate a rule across APPEND_SYSTEM.md, AGENTS.md, or CLI-TOOLS.md.
+- After a correction, route the fix to the right file: behavior → APPEND_SYSTEM.md; operations → AGENTS.md; tool syntax → CLI-TOOLS.md.
+- Prune test, per line: "Would removing this cause a mistake?" If no, delete. Bloated instruction files get ignored wholesale.
+- Ceilings: AGENTS.md ~300 lines, APPEND_SYSTEM.md ~120. Shard detail into skills or linked files instead of growing these.
