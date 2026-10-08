@@ -15,11 +15,13 @@ shell_allowlist_extra = [
   "uv",
 ]
 extra_roots = [
-  "/mnt/storage/Code",
-  "~/Code",
+  "~/.config/kanata",
+  "~/.local/share/chezmoi",
   "~/.local/bin",
   "~/.pi",
   "~/.serena",
+  "~/Code",
+  "/mnt/storage/Code",
 ]
 compression_level = "standard"
 memory_profile = "performance"
