@@ -68,8 +68,6 @@ web_dashboard_interface:
 
 # the address the web dashboard will listen on (bind address).
 web_dashboard_listen_address: 127.0.0.1
-
-# address where JetBrains plugin servers are running (only relevant when using the JetBrains language backend)
 jetbrains_plugin_server_address: 127.0.0.1
 
 # the minimum log level for the GUI log window and the dashboard (10 = debug, 20 = info, 30 = warning, 40 = error)
@@ -164,35 +162,15 @@ project_serena_folder_location: "$projectDir/.serena"
 
 # the list of registered project paths (updated automatically).
 projects:
-- ~/.local/share/chezmoi
-- ~/Code/work/EE2/EE2.1
-- ~/Code/work/EE2/EE2.2
-- ~/Code/work/EE2/EE2.3
-- ~/Code/work/EE2/agent
-- ~/Code/work/EE3/EE3.1
-- ~/Code/work/EE3/EE3.2
-- ~/Code/work/EE3/EE3.3
-- ~/Code/work/EE3/agent
-- ~/Code/work/sage/sage.1
-- ~/Code/work/sage/sage.2
-- ~/Code/work/sage/sage.3
-- ~/Code/work/sage/agent
-- ~/Code/work/sage/agent/Sage/Code/EE/Backend
-- ~/Code/work/local-llm
 - /mnt/storage/Code/work/EE2/EE2.1
-- /mnt/storage/Code/work/EE2/EE2.2
-- /mnt/storage/Code/work/EE2/EE2.3
-- /mnt/storage/Code/work/EE2/agent
 - /mnt/storage/Code/work/EE3/EE3.1
 - /mnt/storage/Code/work/EE3/EE3.2
 - /mnt/storage/Code/work/EE3/EE3.3
-- /mnt/storage/Code/work/EE3/agent
+- /mnt/storage/Code/work/sage/agent
+- /mnt/storage/Code/work/sage/agent/Sage/Code/EE/Backend
 - /mnt/storage/Code/work/sage/sage.1
 - /mnt/storage/Code/work/sage/sage.2
 - /mnt/storage/Code/work/sage/sage.3
-- /mnt/storage/Code/work/sage/agent
-- /mnt/storage/Code/work/sage/agent/Sage/Code/EE/Backend
-- /mnt/storage/Code/work/local-llm
 
 # trusted hosts used to access the web dashboard.
 # By default, only allow access via local addresses for security reasons.
@@ -224,3 +202,21 @@ jetbrains_launch_command:
 # The pattern "**" matches any project path, so it can be used to trust all projects.
 trusted_project_path_patterns:
 - '**'
+
+# mapping from language server keys to integer priority values (higher = more preferred), which determine
+# language server selection during automatic project creation and are used to break ties when multiple
+# language servers match an equal number of source files.
+# The priority values override Serena's default priorities:
+#   * 0 = experimental or secondary language servers, which are never auto-detected
+#         (e.g. `python_*` and `php_*` are "secondary"; also applies to non-programming languages like `json`)
+#   * 1 = supersets of other languages, which shall be preferred only if they match more files
+#         (e.g. `vue` and `svelte`, which are supersets of `typescript`)
+#   * 2 = default priority
+# Example:
+#   ls_priorities:
+#     python: 0
+#     python_basedpyright: 3
+# This example would achieve that `python_basedpyright` becomes the preferred language server for Python,
+# giving it a high priority of 3, while the default Python language server is fully excluded from
+# auto-detection with priority 0.
+ls_priorities:

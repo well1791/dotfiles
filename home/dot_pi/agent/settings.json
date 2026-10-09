@@ -21,7 +21,8 @@
     "npm:pi-sensitive-guard",
     "npm:pi-prompt-template-model",
     "npm:copilot-credit-usage",
-    "npm:@well1791/pi-sm"
+    "npm:@well1791/pi-sm",
+    "npm:pi-context-view"
   ],
   "npmCommand": [
     "bun"
