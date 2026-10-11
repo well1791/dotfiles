@@ -1,42 +1,43 @@
 #!/bin/bash
 # hxe - helix extensions launcher
-# Launches tools in floating zellij panes with context from helix
+# Launches tools in floating tuios popups with context from helix
 set -e
 
-FLOAT_ARGS=(-f --x 10% --y 10% --width 80% --height 80%)
+if [ "$TUIOS_ENV" != "1" ]; then
+  echo "hxe: not inside a tuios session (TUIOS_ENV unset)" >&2
+  exit 1
+fi
+
+POPUP=(popup -s "$TUIOS_SESSION" --width 80% --height 80%)
+
+bufdir() {
+  local buf="${1/\~/$HOME}"
+  if [ -n "$buf" ] && [ -e "$buf" ]; then
+    dirname "$(realpath "$buf")"
+  else
+    printf '%s' "$PWD"
+  fi
+}
 
 case "$1" in
-  filetree)
-    buf="${2/\~/$HOME}"
-    if [ -n "$buf" ] && [ -e "$buf" ]; then
-      dir=$(dirname "$(realpath "$buf")")
-    else
-      dir="$PWD"
-    fi
-    zellij run -c "${FLOAT_ARGS[@]}" --cwd "$dir" -- env HXE_CONTEXT=floating yazi "$dir"
-    zellij action rename-pane "Files" || true
+  gitu)
+    dir=$(bufdir "$2")
+    tuios "${POPUP[@]}" --name "Git" --cwd "$dir" -- gitu
     ;;
   find-replace)
-    buf="${2/\~/$HOME}"
-    if [ -n "$buf" ] && [ -e "$buf" ]; then
-      buf=$(realpath "$buf")
-      dir=$(dirname "$buf")
-    else
-      dir="$PWD"
-    fi
+    dir=$(bufdir "$2")
     if git -C "$dir" rev-parse --is-inside-work-tree &>/dev/null; then
       root=$(git -C "$dir" rev-parse --show-toplevel)
-      zellij run -c "${FLOAT_ARGS[@]}" -n "Find & Replace" -- serpl -p "$root"
+      tuios "${POPUP[@]}" --name "Find & Replace" -- serpl -p "$root"
     else
-      zellij run -c "${FLOAT_ARGS[@]}" -n "Find & Replace" -- serpl
+      tuios "${POPUP[@]}" --name "Find & Replace" -- serpl
     fi
     ;;
   terminal)
-    zellij action new-pane -f -x 10% -y 10% --width 80% --height 80%
-    zellij action rename-pane "Terminal" || true
+    tuios "${POPUP[@]}" --name "Terminal" -- "${SHELL:-/bin/bash}"
     ;;
   *)
-    echo "Usage: hxe {filetree|find-replace|terminal} [buffer_path]"
+    echo "Usage: hxe {gitu|find-replace|terminal} [buffer_path]"
     exit 1
     ;;
 esac
