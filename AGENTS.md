@@ -200,7 +200,7 @@ $ variable: <command that produces selectable options> | fzf
 | sqlit | uv | Installed via uv tool with mssql-python driver |
 | lazyjira | — | Standalone Go binary; uses Jira REST API directly |
 | hunk | bun | Review-first terminal diff viewer, installed via bun global (npm: hunkdiff) |
-| little-coder | bun, node (nix/home-manager) | pi-based coding agent tuned for small local models; installed via bun global (npm: little-coder); launcher is a Node script needing Node ≥ 22.19 on PATH |
+| little-coder | bun, node (nix/home-manager) | pi-based coding agent tuned for small local models; installed via bun global (npm: little-coder); wrapper at `~/.pi/agent/bin/little-coder` execs the launcher under `~/.nix-profile/bin/node` so direnv/devenv-forced old Node can't trip the Node ≥ 22.19 preflight |
 | delta | — | Syntax-highlighting pager for git; installed via system package `git-delta`, configured as the default `core.pager` in `dot_gitconfig.tmpl` |
 | mergiraf | — | Syntax-aware git merge driver; installed via system package, configured in `dot_gitconfig.tmpl` + `dot_gitattributes` |
 | lean-ctx | — | Context intelligence layer for AI agents; self-updates via `lean-ctx update` |

@@ -289,7 +289,7 @@ Installed via system package manager (pacman/apt/dnf):
 ### 32. **[little-coder](https://github.com/itayinbarr/little-coder)** - pi-based coding agent for small local models
 - pi plus a curated extension set tuned for small local LLMs (llama.cpp, Ollama, LM Studio); cloud models also work
 - Installed via bun global: `bun add -g little-coder`
-- The launcher is a Node script (`#!/usr/bin/env node`): needs Node ≥ 22.19 on PATH (provided by the nix/home-manager node)
+- Wrapper at `~/.pi/agent/bin/little-coder` (PATH-precedence over `~/.bun/bin`) runs the launcher under `~/.nix-profile/bin/node`, so project dirs that force an old Node via direnv/devenv can't trip the launcher's Node ≥ 22.19 preflight
 - User extensions and model overrides: `~/.config/little-coder/`
 - Update: `bun add -g little-coder` (or `update-all`)
 

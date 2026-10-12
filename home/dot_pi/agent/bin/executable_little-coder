@@ -1,0 +1,5 @@
+#!/bin/sh
+# little-coder wrapper: Uses Nix-managed Node (home-manager) to avoid version
+# conflicts with project-local Node versions forced by direnv/devenv in work
+# directories. The launcher preflight requires Node >= 22.19.0.
+exec ~/.nix-profile/bin/node ~/.bun/bin/little-coder "$@"
