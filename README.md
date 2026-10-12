@@ -286,6 +286,13 @@ Installed via system package manager (pacman/apt/dnf):
 - Only installed on non-headless, non-ephemeral machines
 - Update: `update-all` refreshes the AppImage from the latest GitHub release (checked every 168 hours)
 
+### 32. **[little-coder](https://github.com/itayinbarr/little-coder)** - pi-based coding agent for small local models
+- pi plus a curated extension set tuned for small local LLMs (llama.cpp, Ollama, LM Studio); cloud models also work
+- Installed via bun global: `bun add -g little-coder`
+- The launcher is a Node script (`#!/usr/bin/env node`): needs Node ≥ 22.19 on PATH (provided by the nix/home-manager node)
+- User extensions and model overrides: `~/.config/little-coder/`
+- Update: `bun add -g little-coder` (or `update-all`)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
@@ -299,6 +306,7 @@ update-all
 This single command updates:
 - ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, leaf-markdown-viewer-bin, git-delta, mergiraf, emacs, helium-browser-bin, fuse2)
 - ✅ hunk (review-first diff viewer, via bun)
+- ✅ little-coder (coding agent for small local models, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
 - ✅ NEO AppImage (latest GitHub release via chezmoi)
 - ✅ home-manager packages (node, go, gopls)

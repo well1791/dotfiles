@@ -1,0 +1,13 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install little-coder (pi-based coding agent tuned for small local models)
+# https://github.com/itayinbarr/little-coder
+
+if log_version little-coder; then exit 0; fi
+
+require_command bun "bun is required to install little-coder"
+
+log_info "Installing little-coder..."
+bun add -g little-coder
+
+if ! check_command little-coder; then die "little-coder installation failed"; fi
+log_success "little-coder installed" "$(get_version little-coder)"

@@ -1,0 +1,18 @@
+% little-coder, ai, coding-agent, local-llm
+
+# Launch with the default model
+little-coder
+
+# Launch with a specific model
+little-coder --model <model>
+
+# List all known models
+little-coder --list-models
+
+# Start in plan mode (ctrl+q toggles it in-session)
+little-coder --plan-mode
+
+# One-shot prompt without the interactive TUI
+little-coder --model <model> "<prompt>"
+
+$ model: little-coder --list-models | fzf
