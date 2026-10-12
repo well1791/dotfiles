@@ -1,7 +1,7 @@
 #!/bin/sh
 # Unified update script for all package managers and tools
 # Updates: system packages, home-manager, uv, rust, nix, devenv, bun, pi,
-#          hunk, vortix, slumber, lean-ctx, tealdeer cache, flatpak,
+#          hunk, little-coder, vortix, slumber, lean-ctx, tealdeer cache, flatpak,
 #          python-lsp-server, gopls, choose, serena, absurdctl, mergiraf, neo
 # Note: emacs is a system package (updated by step 1, paru/pacman); its
 #       elpaca packages update inside Emacs via `M-x elpaca-update-all`, not here.
@@ -233,6 +233,14 @@ fi
 if command -v hunk >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
     print_status "Updating hunk..."
     bun install -g hunkdiff || FAILED=$((FAILED + 1))
+fi
+
+# ============================================================================
+# 13b. little-coder (pi-based coding agent for small local models, via bun)
+# ============================================================================
+if command -v little-coder >/dev/null 2>&1 && command -v bun >/dev/null 2>&1; then
+    print_status "Updating little-coder..."
+    bun add -g little-coder || FAILED=$((FAILED + 1))
 fi
 
 # ============================================================================
