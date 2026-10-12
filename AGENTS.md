@@ -205,7 +205,7 @@ $ variable: <command that produces selectable options> | fzf
 | lean-ctx | — | Context intelligence layer for AI agents; self-updates via `lean-ctx update` |
 | pi-lean-ctx | lean-ctx, bun | Pi extension that routes built-in tools through lean-ctx CLI |
 | choose | rust (cargo) | Human-friendly alternative to cut/awk; installed via `cargo install choose` |
-| serena | uv, python 3.13 | Semantic code tools via LSP; MCP server connected to pi |
+| serena | uv, python 3.13 | Semantic code tools via LSP; provided by the @bacnh85/pi-serena pi extension, which spawns its own worker |
 | python-lsp-server | uv | Python LSP; installed via `uv tool install python-lsp-server` |
 | gopls | nix, home-manager | Go LSP; declared in `~/.config/home-manager/home.nix` |
 | postgresql | nix, home-manager | User-level instance for Absurd; declared in home.nix, systemd user service on port 5433 |

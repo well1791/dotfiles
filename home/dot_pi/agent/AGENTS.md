@@ -90,7 +90,7 @@ For implementation plans with multiple independent tasks: dispatch subagents per
 
 ## Safety & Infrastructure
 
-- NEVER use raw API calls (`curl`, `wget`, fetch) when a CLI wrapper exists for the service: `bkt` for Bitbucket, `atlcli` for Jira/Confluence, pi extension tools for Atlassian reads. Raw calls leak auth tokens into session logs.
+- NEVER use raw API calls (`curl`, `wget`, fetch) when a CLI wrapper exists for the service: `bkt` for Bitbucket, `atlcli` for Jira/Confluence. Raw calls leak auth tokens into session logs.
 - Propagate failures using existing error patterns; never swallow errors silently.
 - Check injection, path traversal, unvalidated input, auth bypass, and secret-leakage risks on changes.
 - Infrastructure work: inspect environment, services, configs, and logs before changing anything.
@@ -141,6 +141,8 @@ Three layers, applied in order of token cost and precision. Lower layers first.
 ### Layer 1 — lean-ctx MCP (primary)
 
 The `ctx_*` tools (pi-lean-ctx extension) token-compress output, cache reads (unchanged re-reads ~13 tokens), and auto-index with no activation step. Do NOT shell out to CLI equivalents for anything they cover.
+
+**Tool profile is `lean`** — only 12 tools are registered: `ctx_read`, `ctx_shell`, `shell`, `ctx_search`, `ctx_glob`, `ctx_tree`, `ctx_session`, `ctx_compose`, `ctx_callgraph`, `ctx_patch`, `ctx_call`, `ctx_expand`. Every other `ctx_*` tool named below is NOT a direct tool: invoke it through `ctx_call` instead, e.g. `ctx_call("ctx_grep", {pattern: "...", path: "..."})`, `ctx_call("ctx_edit", {...})`, `ctx_call("ctx_outline", {...})`. All 79 lean-ctx tools remain callable this way.
 
 | Operation | Use | NOT |
 |---|---|---|
