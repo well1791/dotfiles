@@ -19,7 +19,8 @@
     "npm:pi-sensitive-guard",
     "npm:pi-prompt-template-model",
     "npm:@well1791/pi-sm",
-    "npm:pi-context-view"
+    "npm:pi-context-view",
+    "npm:billion-context"
   ],
   "npmCommand": [
     "bun"

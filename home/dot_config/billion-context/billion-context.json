@@ -1,0 +1,11 @@
+{
+  "pi": {
+    "subagents": false
+  },
+  "sessions": {
+    "gc": {
+      "enabled": true,
+      "maxAgeDays": 14
+    }
+  }
+}

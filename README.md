@@ -293,6 +293,14 @@ Installed via system package manager (pacman/apt/dnf):
 - User extensions and model overrides: `~/.config/little-coder/`
 - Update: `bun add -g little-coder` (or `update-all`)
 
+### 33. **[billion-context](https://github.com/ranxianglei/billion-context)** - Context-compression proxy for pi
+- Sits between pi and model APIs, folding consumed conversation into layered summaries (model-driven `compress`/`decompress`/`search_context`/`acp_status` tools)
+- Installed as a pi package: `pi install npm:billion-context` — self-spawning loopback proxy (port zone 18787+), no env vars or URL edits needed
+- Config: `~/.config/billion-context/billion-context.json` (chezmoi-managed; built-in `acp_delegate` subagents disabled in favor of `pi-subagents`)
+- Session state: `~/.local/share/billion-context/`; log: `~/.local/state/billion-context/bili.log`
+- Health check in-session: `/acp` (status) and `/acp-cache` (prefix-cache hit report; healthy = 95-97%)
+- Update: `pi update --all` (or `update-all`)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages
