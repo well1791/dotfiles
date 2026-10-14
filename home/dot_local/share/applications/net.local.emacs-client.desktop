@@ -1,0 +1,7 @@
+[Desktop Entry]
+Exec=~/.local/bin/run-or-cycle.sh [Ee]macs emacs-client.sh
+Name=emacs-client
+NoDisplay=true
+StartupNotify=false
+Type=Application
+X-KDE-GlobalAccel-CommandShortcut=true

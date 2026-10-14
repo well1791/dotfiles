@@ -1,0 +1,8 @@
+# Masks the system emacs.desktop (from the emacs package) so only
+# "Emacs (Client)" (emacsclient.desktop) shows in krunner/app launchers.
+# emacsclient connects every window to the single emacs daemon instance
+# (auto-starts it via --alternate-editor=), see ~/.config/systemd/user/emacs.service.
+[Desktop Entry]
+Type=Application
+Name=Emacs
+Hidden=true
