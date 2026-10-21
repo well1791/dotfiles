@@ -1,6 +1,7 @@
 # github.com/well1791/dotfiles
 
 
+
 Well's dotfiles, managed with [`chezmoi`](https://github.com/twpayne/chezmoi).
 
 ## Quick Start
@@ -30,6 +31,7 @@ See `AGENTS.md` for conventions when adding new tools.
 
 ## What Gets Installed
 
+sdf
 During the initial setup, the following tools are automatically installed:
 
 ### 0. **[age](https://github.com/FiloSottile/age)** - Simple, modern encryption tool
