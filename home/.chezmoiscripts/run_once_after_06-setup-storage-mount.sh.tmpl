@@ -9,19 +9,29 @@
 STORAGE_DEVICE="/dev/disk/by-label/storage"
 STORAGE_MOUNT="/mnt/storage"
 
-# Print the /etc/fstab line for the storage drive. Prefer UUID from blkid;
-# fall back to LABEL= if blkid cannot read the device.
-storage_fstab_line() {
-    _uuid="$(blkid -s UUID -o value "$STORAGE_DEVICE" 2>/dev/null || true)"
-    _fstype="$(blkid -s TYPE -o value "$STORAGE_DEVICE" 2>/dev/null || true)"
-    if [ -n "$_uuid" ]; then
-        _spec="UUID=$_uuid"
-    else
-        _spec="LABEL=storage"
+# Resolve the drive's UUID and filesystem type into STORAGE_UUID /
+# STORAGE_FSTYPE. lsblk reads sysfs and works unprivileged; sudo blkid is
+# the fallback. Returns non-zero if either stays unknown — callers must
+# fall back to manual guidance instead of guessing into /etc/fstab.
+storage_fs_details() {
+    _uuid="$(lsblk -rn -o UUID "$STORAGE_DEVICE" 2>/dev/null | head -n 1)"
+    _fstype="$(lsblk -rn -o FSTYPE "$STORAGE_DEVICE" 2>/dev/null | head -n 1)"
+    if [ -z "$_uuid" ]; then
+        _uuid="$(run_privileged blkid -s UUID -o value "$STORAGE_DEVICE" 2>/dev/null | head -n 1)"
     fi
-    # every drive labeled "storage" so far has been btrfs
-    [ -n "$_fstype" ] || _fstype="btrfs"
-    printf '%s %s %s defaults 0 0\n' "$_spec" "$STORAGE_MOUNT" "$_fstype"
+    if [ -z "$_fstype" ]; then
+        _fstype="$(run_privileged blkid -s TYPE -o value "$STORAGE_DEVICE" 2>/dev/null | head -n 1)"
+    fi
+    [ -n "$_uuid" ] && [ -n "$_fstype" ] || return 1
+    STORAGE_UUID="$_uuid"
+    STORAGE_FSTYPE="$_fstype"
+}
+
+# Print the /etc/fstab line from resolved details. Caller must have run
+# storage_fs_details successfully first — unknown values are a fallback
+# case, never a "btrfs by default" guess.
+storage_fstab_line() {
+    printf 'UUID=%s %s %s defaults 0 0\n' "$STORAGE_UUID" "$STORAGE_MOUNT" "$STORAGE_FSTYPE"
 }
 
 # Print the manual equivalent of the auto-setup, then exit 1 so chezmoi
@@ -30,7 +40,13 @@ manual_fallback() {
     log_warn "Automatic storage mount setup failed. Run these commands, then re-run 'chezmoi apply':"
     echo ""
     echo "    sudo mkdir -p $STORAGE_MOUNT"
-    echo "    echo '$(storage_fstab_line)' | sudo tee -a /etc/fstab"
+    if storage_fs_details; then
+        echo "    echo '$(storage_fstab_line)' | sudo tee -a /etc/fstab"
+    else
+        echo "    # UUID/fstype could not be read automatically. Get them with:
+        echo "    #   lsblk -o UUID,FSTYPE $STORAGE_DEVICE"
+        echo "    echo 'UUID=<uuid> $STORAGE_MOUNT <fstype> defaults 0 0' | sudo tee -a /etc/fstab"
+    fi
     echo "    sudo systemctl daemon-reload"
     echo "    sudo mount $STORAGE_MOUNT"
     echo "    findmnt $STORAGE_MOUNT"
@@ -65,6 +81,8 @@ if is_dry_run; then
     log_info "[DRY RUN] Would add $STORAGE_MOUNT to /etc/fstab and mount it"
     exit 0
 fi
+
+storage_fs_details || manual_fallback
 
 MOUNTED=1
 findmnt -rn "$STORAGE_MOUNT" >/dev/null 2>&1 || MOUNTED=0
