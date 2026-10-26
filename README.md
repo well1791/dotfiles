@@ -16,6 +16,32 @@ On first init, chezmoi will prompt for:
 
 The distro is auto-detected from `/etc/os-release`.
 
+### Storage Drive Auto-Mount
+
+On the first `chezmoi apply`, a `run_once` script sets up auto-mounting for the
+drive labeled `storage` at `/mnt/storage`:
+
+- Detects the drive via `/dev/disk/by-label/storage`, adds
+  `UUID=<uuid> /mnt/storage <fstype> defaults 0 0` to `/etc/fstab`, and mounts it
+- Skips silently on machines without a drive labeled `storage` (headless, VMs)
+- Does nothing when the mount is already configured in `/etc/fstab`
+
+If the privileged steps fail (e.g. no sudo available), the script prints the exact
+manual commands and exits 1. chezmoi records `run_once_*` scripts as done only on
+success, so `chezmoi apply` keeps retrying until the mount is configured:
+
+```sh
+sudo mkdir -p /mnt/storage
+echo 'UUID=<uuid> /mnt/storage btrfs defaults 0 0' | sudo tee -a /etc/fstab
+sudo systemctl daemon-reload
+sudo mount /mnt/storage
+findmnt /mnt/storage
+```
+
+> **Note:** the `/nix` bind mount (`/mnt/storage/nix` → `/nix`) is machine-specific
+> and stays manual. If your machine keeps its nix store on the storage drive, add
+> `/mnt/storage/nix /nix none bind 0 0` to `/etc/fstab` yourself.
+
 ## Architecture
 
 - **Scripts** live in `home/.chezmoiscripts/` (not `home/` root), organized by distro
