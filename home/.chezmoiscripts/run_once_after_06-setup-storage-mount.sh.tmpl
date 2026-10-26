@@ -1,0 +1,84 @@
+{{ template "install-header.sh.tmpl" . }}
+# Auto-mount the drive labeled "storage" at /mnt/storage via /etc/fstab.
+# Runs once after the first chezmoi apply. If a privileged step fails (e.g.
+# no sudo available), prints the exact manual commands and exits 1 — chezmoi
+# records run_once scripts as done only on success, so this retries on every
+# apply until the mount is configured. Machines without a drive labeled
+# "storage" (headless, VMs) are skipped silently.
+
+STORAGE_DEVICE="/dev/disk/by-label/storage"
+STORAGE_MOUNT="/mnt/storage"
+
+# Print the /etc/fstab line for the storage drive. Prefer UUID from blkid;
+# fall back to LABEL= if blkid cannot read the device.
+storage_fstab_line() {
+    _uuid="$(blkid -s UUID -o value "$STORAGE_DEVICE" 2>/dev/null || true)"
+    _fstype="$(blkid -s TYPE -o value "$STORAGE_DEVICE" 2>/dev/null || true)"
+    if [ -n "$_uuid" ]; then
+        _spec="UUID=$_uuid"
+    else
+        _spec="LABEL=storage"
+    fi
+    # every drive labeled "storage" so far has been btrfs
+    [ -n "$_fstype" ] || _fstype="btrfs"
+    printf '%s %s %s defaults 0 0\n' "$_spec" "$STORAGE_MOUNT" "$_fstype"
+}
+
+# Print the manual equivalent of the auto-setup, then exit 1 so chezmoi
+# retries this script on the next apply.
+manual_fallback() {
+    log_warn "Automatic storage mount setup failed. Run these commands, then re-run 'chezmoi apply':"
+    echo ""
+    echo "    sudo mkdir -p $STORAGE_MOUNT"
+    echo "    echo '$(storage_fstab_line)' | sudo tee -a /etc/fstab"
+    echo "    sudo systemctl daemon-reload"
+    echo "    sudo mount $STORAGE_MOUNT"
+    echo "    findmnt $STORAGE_MOUNT"
+    echo ""
+    exit 1
+}
+
+# 1. No drive labeled "storage" (headless, VMs, cloud instances): skip
+if [ ! -e "$STORAGE_DEVICE" ]; then
+    log_info "No drive labeled 'storage' found, skipping storage mount setup"
+    exit 0
+fi
+
+# 2. fstab already has a (non-commented) entry: ensure mounted, never append
+#    a duplicate — mount only
+if awk '$1 !~ /^#/ && $2 == "/mnt/storage" { found = 1 } END { exit !found }' /etc/fstab; then
+    if findmnt -rn "$STORAGE_MOUNT" >/dev/null 2>&1; then
+        log_success "Storage mount already configured and mounted at $STORAGE_MOUNT"
+        exit 0
+    fi
+    if run_privileged mount "$STORAGE_MOUNT"; then
+        log_success "Storage mount already in /etc/fstab, mounted at $STORAGE_MOUNT"
+        exit 0
+    fi
+    log_error "fstab entry for $STORAGE_MOUNT exists but mount failed (drive disconnected?)"
+    exit 1
+fi
+
+# 3. Not in fstab: make the mount persistent. If it is already mounted
+#    manually, only the fstab entry and daemon-reload are needed.
+if is_dry_run; then
+    log_info "[DRY RUN] Would add $STORAGE_MOUNT to /etc/fstab and mount it"
+    exit 0
+fi
+
+MOUNTED=1
+findmnt -rn "$STORAGE_MOUNT" >/dev/null 2>&1 || MOUNTED=0
+
+if [ "$MOUNTED" = "0" ]; then
+    run_privileged mkdir -p "$STORAGE_MOUNT" || manual_fallback
+fi
+
+printf '%s\n' "$(storage_fstab_line)" | run_privileged tee -a /etc/fstab >/dev/null || manual_fallback
+run_privileged systemctl daemon-reload || manual_fallback
+
+if [ "$MOUNTED" = "0" ]; then
+    run_privileged mount "$STORAGE_MOUNT" || manual_fallback
+fi
+
+findmnt -rn "$STORAGE_MOUNT" >/dev/null 2>&1 || manual_fallback
+log_success "Storage drive mounted at $STORAGE_MOUNT and added to /etc/fstab"
