@@ -97,6 +97,8 @@ During the initial setup, the following tools are automatically installed:
 - Terminal multiplexer and window manager with workspaces, tiling, and persistent sessions
 - Installed on Arch/CachyOS via AUR (`tuios-bin`)
 - Update: `paru -Syu` (or your distro's package update command)
+- pi integration (agent-state extension + tuios skill, both tuios-owned) refreshed by
+  `run_onchange_after_93-integrate-tuios-pi.sh` whenever the tuios version changes
 
 ### 10. **[pi](https://pi.dev)** - Terminal coding agent
 - Minimal terminal coding harness with AI-powered assistance

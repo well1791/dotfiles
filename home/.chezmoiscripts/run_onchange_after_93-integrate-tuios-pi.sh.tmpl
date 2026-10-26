@@ -1,0 +1,29 @@
+{{ template "install-header.sh.tmpl" . }}
+# Integrate pi with tuios (agent-state extension + tuios skill)
+# https://tuios.dev
+#
+# tuios owns both generated files and rewrites them on every
+# `tuios integration install pi`, so they are NOT chezmoi-managed files.
+# This script just re-runs the installer; chezmoi re-runs the script whenever
+# the rendered tuios version below changes (run_onchange hashes rendered content).
+#
+# Re-run key (tuios version): {{ if lookPath "tuios" }}{{ (output "tuios" "--version" | trim | splitList "\n") | first }}{{ else }}not installed{{ end }}
+
+if ! check_command tuios; then
+    log_info "tuios not installed; skipping tuios-pi integration"
+    exit 0
+fi
+
+if ! check_command pi && [ ! -d "${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}" ]; then
+    log_info "pi not installed; skipping tuios-pi integration"
+    exit 0
+fi
+
+log_info "Installing tuios integration for pi..."
+if ! is_dry_run; then
+    tuios integration install pi
+else
+    log_info "[DRY RUN] Would run: tuios integration install pi"
+fi
+
+log_success "tuios-pi integration installed" "$(get_version tuios)"
