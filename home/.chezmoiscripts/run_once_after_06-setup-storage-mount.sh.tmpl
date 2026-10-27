@@ -1,0 +1,102 @@
+{{ template "install-header.sh.tmpl" . }}
+# Auto-mount the drive labeled "storage" at /mnt/storage via /etc/fstab.
+# Runs once after the first chezmoi apply. If a privileged step fails (e.g.
+# no sudo available), prints the exact manual commands and exits 1 — chezmoi
+# records run_once scripts as done only on success, so this retries on every
+# apply until the mount is configured. Machines without a drive labeled
+# "storage" (headless, VMs) are skipped silently.
+
+STORAGE_DEVICE="/dev/disk/by-label/storage"
+STORAGE_MOUNT="/mnt/storage"
+
+# Resolve the drive's UUID and filesystem type into STORAGE_UUID /
+# STORAGE_FSTYPE. lsblk reads sysfs and works unprivileged; sudo blkid is
+# the fallback. Returns non-zero if either stays unknown — callers must
+# fall back to manual guidance instead of guessing into /etc/fstab.
+storage_fs_details() {
+    _uuid="$(lsblk -rn -o UUID "$STORAGE_DEVICE" 2>/dev/null | head -n 1)"
+    _fstype="$(lsblk -rn -o FSTYPE "$STORAGE_DEVICE" 2>/dev/null | head -n 1)"
+    if [ -z "$_uuid" ]; then
+        _uuid="$(run_privileged blkid -s UUID -o value "$STORAGE_DEVICE" 2>/dev/null | head -n 1)"
+    fi
+    if [ -z "$_fstype" ]; then
+        _fstype="$(run_privileged blkid -s TYPE -o value "$STORAGE_DEVICE" 2>/dev/null | head -n 1)"
+    fi
+    [ -n "$_uuid" ] && [ -n "$_fstype" ] || return 1
+    STORAGE_UUID="$_uuid"
+    STORAGE_FSTYPE="$_fstype"
+}
+
+# Print the /etc/fstab line from resolved details. Caller must have run
+# storage_fs_details successfully first — unknown values are a fallback
+# case, never a "btrfs by default" guess.
+storage_fstab_line() {
+    printf 'UUID=%s %s %s defaults 0 0\n' "$STORAGE_UUID" "$STORAGE_MOUNT" "$STORAGE_FSTYPE"
+}
+
+# Print the manual equivalent of the auto-setup, then exit 1 so chezmoi
+# retries this script on the next apply.
+manual_fallback() {
+    log_warn "Automatic storage mount setup failed. Run these commands, then re-run 'chezmoi apply':"
+    echo ""
+    echo "    sudo mkdir -p $STORAGE_MOUNT"
+    if storage_fs_details; then
+        echo "    echo '$(storage_fstab_line)' | sudo tee -a /etc/fstab"
+    else
+        echo "    # UUID/fstype could not be read automatically. Get them with:
+        echo "    #   lsblk -o UUID,FSTYPE $STORAGE_DEVICE"
+        echo "    echo 'UUID=<uuid> $STORAGE_MOUNT <fstype> defaults 0 0' | sudo tee -a /etc/fstab"
+    fi
+    echo "    sudo systemctl daemon-reload"
+    echo "    sudo mount $STORAGE_MOUNT"
+    echo "    findmnt $STORAGE_MOUNT"
+    echo ""
+    exit 1
+}
+
+# 1. No drive labeled "storage" (headless, VMs, cloud instances): skip
+if [ ! -e "$STORAGE_DEVICE" ]; then
+    log_info "No drive labeled 'storage' found, skipping storage mount setup"
+    exit 0
+fi
+
+# 2. fstab already has a (non-commented) entry: ensure mounted, never append
+#    a duplicate — mount only
+if awk '$1 !~ /^#/ && $2 == "/mnt/storage" { found = 1 } END { exit !found }' /etc/fstab; then
+    if findmnt -rn "$STORAGE_MOUNT" >/dev/null 2>&1; then
+        log_success "Storage mount already configured and mounted at $STORAGE_MOUNT"
+        exit 0
+    fi
+    if run_privileged mount "$STORAGE_MOUNT"; then
+        log_success "Storage mount already in /etc/fstab, mounted at $STORAGE_MOUNT"
+        exit 0
+    fi
+    log_error "fstab entry for $STORAGE_MOUNT exists but mount failed (drive disconnected?)"
+    exit 1
+fi
+
+# 3. Not in fstab: make the mount persistent. If it is already mounted
+#    manually, only the fstab entry and daemon-reload are needed.
+if is_dry_run; then
+    log_info "[DRY RUN] Would add $STORAGE_MOUNT to /etc/fstab and mount it"
+    exit 0
+fi
+
+storage_fs_details || manual_fallback
+
+MOUNTED=1
+findmnt -rn "$STORAGE_MOUNT" >/dev/null 2>&1 || MOUNTED=0
+
+if [ "$MOUNTED" = "0" ]; then
+    run_privileged mkdir -p "$STORAGE_MOUNT" || manual_fallback
+fi
+
+printf '%s\n' "$(storage_fstab_line)" | run_privileged tee -a /etc/fstab >/dev/null || manual_fallback
+run_privileged systemctl daemon-reload || manual_fallback
+
+if [ "$MOUNTED" = "0" ]; then
+    run_privileged mount "$STORAGE_MOUNT" || manual_fallback
+fi
+
+findmnt -rn "$STORAGE_MOUNT" >/dev/null 2>&1 || manual_fallback
+log_success "Storage drive mounted at $STORAGE_MOUNT and added to /etc/fstab"
