@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.4.0",
+  "lastChangelogVersion": "1.5.0",
   "defaultProvider": "zai",
   "defaultModel": "glm-5.3-flash",
   "defaultThinkingLevel": "medium",
@@ -41,5 +41,12 @@
   "theme": "dark",
   "quietStartup": true,
   "doubleEscapeAction": "tree",
-  "enableSkillCommands": true
+  "enableSkillCommands": true,
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:pi-subagents\",\"scope\":\"user\"}": "0.84.0",
+    "{\"source\":\"npm:@bacnh85/pi-serena\",\"scope\":\"user\"}": "0.10.1",
+    "{\"source\":\"npm:pi-sidequest\",\"scope\":\"user\"}": "1.0.2",
+    "{\"source\":\"npm:pi-sensitive-guard\",\"scope\":\"user\"}": "0.5.0",
+    "{\"source\":\"npm:pi-prompt-template-model\",\"scope\":\"user\"}": "0.12.3"
+  }
 }
