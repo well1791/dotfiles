@@ -148,7 +148,6 @@ Installed via system package manager (pacman/apt/dnf):
 - **[tealdeer](https://tealdeer-rs.github.io/tealdeer/)** - Fast tldr client in Rust (`tldr`)
 - **[pass](https://www.passwordstore.org/)** - Standard Unix password manager (GPG-encrypted, git-tracked)
 - **[gitu](https://github.com/altsem/gitu)** - TUI Git client inspired by Magit
-- **[jujutsu](https://jj-vcs.dev)** - Git-compatible VCS that is both simple and powerful (`jj`)
 - Update: `sudo pacman -Syu` (or your distro's update command)
 
 ### 12. **[direnv](https://direnv.net)** - Auto-load environment on cd
@@ -342,7 +341,7 @@ update-all
 ```
 
 This single command updates:
-- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, sd, serpl, just, tealdeer, pass, jujutsu, slumber, vortix, openvpn, lazyjira-bin, leaf-markdown-viewer-bin, git-delta, mergiraf, emacs, helium-browser-bin, fuse2)
+- ✅ System packages (age, aim-bin, avahi, nss-mdns, podman, podman-compose, distrobox, direnv, helix, ripgrep, yazi, bat, dust, duf, eza, sd, serpl, just, tealdeer, pass, slumber, vortix, openvpn, lazyjira-bin, leaf-markdown-viewer-bin, git-delta, mergiraf, emacs, helium-browser-bin, fuse2)
 - ✅ hunk (review-first diff viewer, via bun)
 - ✅ little-coder (coding agent for small local models, via bun)
 - ✅ lean-ctx (context intelligence, self-update)
