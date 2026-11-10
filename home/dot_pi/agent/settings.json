@@ -19,8 +19,7 @@
     "npm:pi-sensitive-guard",
     "npm:pi-prompt-template-model",
     "npm:@well1791/pi-sm",
-    "npm:pi-context-view",
-    "npm:billion-context"
+    "npm:pi-context-view"
   ],
   "npmCommand": [
     "bun"
@@ -43,10 +42,11 @@
   "doubleEscapeAction": "tree",
   "enableSkillCommands": true,
   "extensionChangelogVersions": {
-    "{\"source\":\"npm:pi-subagents\",\"scope\":\"user\"}": "0.84.0",
+    "{\"source\":\"npm:pi-subagents\",\"scope\":\"user\"}": "0.87.0",
     "{\"source\":\"npm:@bacnh85/pi-serena\",\"scope\":\"user\"}": "0.10.1",
     "{\"source\":\"npm:pi-sidequest\",\"scope\":\"user\"}": "1.0.2",
     "{\"source\":\"npm:pi-sensitive-guard\",\"scope\":\"user\"}": "0.5.0",
-    "{\"source\":\"npm:pi-prompt-template-model\",\"scope\":\"user\"}": "0.12.3"
+    "{\"source\":\"npm:pi-prompt-template-model\",\"scope\":\"user\"}": "0.12.3",
+    "{\"source\":\"npm:pi-context-view\",\"scope\":\"user\"}": "0.8.3"
   }
 }
