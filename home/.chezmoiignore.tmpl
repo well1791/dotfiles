@@ -38,4 +38,10 @@
 .doom.d/**
 .local/share/applications/neo.desktop
 .chezmoiscripts/arch/run_onchange_before_80-install-fuse2.sh.tmpl
+.chezmoiscripts/run_onchange_before_62a-install-laya.sh.tmpl
+.chezmoiscripts/run_onchange_after_62a-enable-laya.sh.tmpl
+.config/systemd/user/laya-serve.service
 {{ end }}
+
+{{/* Unmanaged runtime state: laya venv, generated laya.env, HF checkpoint cache */}}
+.local/share/laya
