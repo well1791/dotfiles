@@ -1,0 +1,22 @@
+{{ template "install-header.sh.tmpl" . }}
+# Enable the laya-serve systemd user service (unit file is applied by chezmoi
+# before this runs — before_ scripts run too early for daemon-reload+enable).
+#
+# NOTE: this script re-runs only when its own content changes. Editing
+# laya-serve.service does NOT re-trigger it; after unit edits run manually:
+#   systemctl --user daemon-reload && systemctl --user restart laya-serve
+
+{{ if .ephemeral -}}
+log_info "Ephemeral machine — skipping laya-serve enable"
+exit 0
+{{ end -}}
+
+if ! [ -x "${HOME}/.local/share/laya/.venv/bin/laya-serve" ]; then
+    log_warn "laya-serve missing — run_onchange_before_62a-install-laya did not run"
+    exit 0
+fi
+
+log_info "Enabling laya-serve.service (127.0.0.1:8082)..."
+systemctl --user daemon-reload
+systemctl --user enable --now laya-serve.service
+log_success "laya-serve.service enabled" "http://127.0.0.1:8082/health"

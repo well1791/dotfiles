@@ -1,0 +1,16 @@
+% laya-serve, laya, classifier, systemd, local-llm
+
+# Health check (returns {"status":"ok"} once checkpoints are ready)
+curl -sS http://127.0.0.1:8082/health
+
+# Restart the service (after editing laya.env or the unit file)
+systemctl --user restart laya-serve
+
+# Follow service logs (boot, downloads, errors)
+journalctl --user -u laya-serve -f
+
+# Service status
+systemctl --user status laya-serve
+
+# One typed decision over curl (reads bearer key from laya.env, never prints it; jq pretty-prints the answers)
+set -l key (awk -F= '$1 == "LAYA_API_KEY" {print $2}' ~/.local/share/laya/laya.env); curl -sS -X POST http://127.0.0.1:8082/v1/systemone -H "Authorization: Bearer $key" -H "Content-Type: application/json" -d '{"model":"english","state":"<one-line state text>","questions":{"verdict":{"type":"noul","instructions":"<yes/no question>","criteria":{"true":"<when true>","false":"<when false>"}}}}' | jq

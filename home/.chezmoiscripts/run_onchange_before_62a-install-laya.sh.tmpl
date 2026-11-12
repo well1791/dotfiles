@@ -1,0 +1,67 @@
+{{ template "install-header.sh.tmpl" . }}
+# Install laya (typed-decision ML engine, PyPI: laya) into a uv-managed venv
+# https://github.com/NandhaKishorM/laya
+#
+# Environment: ~/.local/share/laya/.venv (python 3.13). Served by the systemd
+# user unit laya-serve.service on 127.0.0.1:8082 (enabled by after_62a-enable-laya).
+#
+# torch comes from the default PyPI index WITH the CUDA build (2.15.0+cu132 via
+# the laya[serve] extra) on purpose: this service runs on the GPU
+# (LAYA_DEVICE=cuda, ~43 ms/request vs ~1 s on cpu). Checkpoints are NOT
+# downloaded here — they fetch (~1.6 GiB) into HF_HOME on the first service
+# start and persist in the service-local cache (~30 s on a fast link, minutes
+# on slow ones; cached boots take 4-7 s).
+
+{{ if .ephemeral -}}
+log_info "Ephemeral machine — skipping laya install"
+exit 0
+{{ end -}}
+
+LAYA_VERSION="0.4.31"
+LAYA_DEVICE="cuda"
+LAYA_HOME="${HOME}/.local/share/laya"
+VENV_PYTHON="${LAYA_HOME}/.venv/bin/python"
+
+require_command uv "uv must be installed first (run_onchange_before_40-install-uv)"
+mkdir -p "${LAYA_HOME}"
+
+# laya.env is generated at deploy time, never committed (0600 via umask 077;
+# LAYA_API_KEY is the bearer key laya-serve requires). Generated only when
+# absent so re-runs keep the key stable. CPU fallback: set LAYA_DEVICE=cpu
+# below if VRAM pressure appears — idle use is ~4356 MiB of 6144 MiB beside
+# Plasma; cpu costs ~1 s/request instead of ~43 ms.
+if [ ! -f "${LAYA_HOME}/laya.env" ]; then
+    require_command openssl "openssl is required to generate LAYA_API_KEY"
+    LAYA_API_KEY="$(openssl rand -hex 24)"
+    (
+        umask 077
+        cat > "${LAYA_HOME}/laya.env" <<EOF
+LAYA_HOST=127.0.0.1
+LAYA_PORT=8082
+LAYA_MODELS=english,typed-decisions
+LAYA_DEFAULT_MODEL=english
+LAYA_JEV_STRICT=1
+LAYA_API_KEY=${LAYA_API_KEY}
+LAYA_DEVICE=${LAYA_DEVICE}
+LAYA_PRELOAD=1
+LAYA_MAX_LOADED=2
+EOF
+    )
+    log_info "Generated ${LAYA_HOME}/laya.env (0600)"
+fi
+
+installed=""
+if [ -x "${VENV_PYTHON}" ]; then
+    installed="$("${VENV_PYTHON}" -c 'import importlib.metadata as m; print(m.version("laya"))' 2>/dev/null || true)"
+fi
+if [ "${installed}" = "${LAYA_VERSION}" ]; then
+    log_info "laya ${LAYA_VERSION} already installed, nothing to do"
+    exit 0
+fi
+
+log_info "Installing laya ${LAYA_VERSION} (uv venv, python 3.13, CUDA torch via laya[serve])..."
+uv venv -p 3.13 "${LAYA_HOME}/.venv"
+uv pip install --python "${VENV_PYTHON}" "laya[serve]==${LAYA_VERSION}"
+
+if ! "${VENV_PYTHON}" -c "import laya" >/dev/null 2>&1; then die "laya installation failed"; fi
+log_success "laya installed" "$("${VENV_PYTHON}" -c 'import importlib.metadata as m; print(m.version("laya"))')"

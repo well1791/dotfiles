@@ -1,0 +1,21 @@
+[Unit]
+Description=Laya decision engine — local HTTP service on 127.0.0.1:8082
+Documentation=https://github.com/NandhaKishorM/laya
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+ExecStart=%h/.local/share/laya/.venv/bin/laya-serve
+EnvironmentFile=%h/.local/share/laya/laya.env
+# Checkpoints (~1.6 GiB) download into this service-local HF cache on FIRST
+# start only — can take minutes on slow links (~30 s measured); cached boots
+# take 4-7 s. /health serves {"status":"ok"} once ready.
+Environment=HF_HOME=%h/.local/share/laya/hf
+Restart=on-failure
+RestartSec=5
+# cuda uses ~4356 MiB of 6144 MiB VRAM beside Plasma; if VRAM pressure
+# appears, set LAYA_DEVICE=cpu in laya.env (~1 s/request vs ~43 ms on cuda).
+
+[Install]
+WantedBy=default.target
