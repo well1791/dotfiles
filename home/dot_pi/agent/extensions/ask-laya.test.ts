@@ -227,8 +227,15 @@ describe("ask_laya", () => {
 		expect(first.systemPrompt).toContain("You are pi.");
 		expect(first.systemPrompt).toContain(NUDGE);
 
+		// (b) prompt already carrying the NUDGE → skipped, no double injection.
 		const second = await handler({ systemPrompt: first.systemPrompt });
 		expect(second).toBeUndefined();
+
+		// (a) prompt mentioning "ask_laya" for unrelated reasons (tool declarations,
+		// other snippets) but WITHOUT the NUDGE → injection must still happen.
+		const unrelated = "Tools: read, ask_laya (ask the laya classifier). You are pi.";
+		const injected = await handler({ systemPrompt: unrelated });
+		expect(injected.systemPrompt).toBe(`${unrelated}\n\n${NUDGE}`);
 
 		const empty = await handler({ systemPrompt: "" });
 		expect(empty.systemPrompt).toBe(`\n\n${NUDGE}`);

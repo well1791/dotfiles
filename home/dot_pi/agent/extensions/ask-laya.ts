@@ -481,12 +481,15 @@ const ok = (payload: unknown) => ({ content: [{ type: "text", text: JSON.stringi
 const SERVER_DOWN_HINT =
 	"laya-serve looks unreachable — check `systemctl --user status laya-serve` (it should listen on 127.0.0.1:8082) and that the laya provider extension is loaded.";
 
+/** First words of the NUDGE — a marker that cannot appear in the prompt for unrelated reasons (tool declarations mention "ask_laya", never this sentence). */
+const NUDGE_MARKER = "You have ask_laya";
+
 export default function askLaya(pi: any) {
 	let ledger = emptyLedger();
 
 	pi.on("before_agent_start", async (event: any) => {
 		const systemPrompt = event.systemPrompt ?? "";
-		if (systemPrompt.includes("ask_laya")) return;
+		if (systemPrompt.includes(NUDGE_MARKER)) return;
 		return { systemPrompt: `${systemPrompt}\n\n${NUDGE}` };
 	});
 
