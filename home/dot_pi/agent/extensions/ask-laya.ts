@@ -368,7 +368,17 @@ export async function assembleState(input: AssembleInput, cwd: string, run: RunC
 		parts.push({ name: `output of \`${output.command}\``, tokens: tokensOf(output.stdout + output.stderr), kind: "output" });
 	}
 
-	if (!parts.length) throw new AskStateError("ask_laya: nothing to judge. Pass state, paths, or command.");
+	if (!parts.length) {
+		if (skipped.length) {
+			// Every path was pruned (oversize, binary, not found...). Name them so the
+			// agent can act; nothing was silently truncated.
+			throw new AskStateError(
+					`ask_laya: nothing usable to judge — every path was skipped: ${skipped.map((s) => `${s.path} (${s.reason})`).join("; ")}. ` +
+						`A single file over the ${fmtK(STATE_TOKEN_BUDGET)} call budget cannot be judged whole. Split it into parts with the same questions_json, excerpt the relevant section via command (e.g. \`head -n 40 <path>\`), or pass a short state instead.`,
+			);
+		}
+		throw new AskStateError("ask_laya: nothing to judge. Pass state, paths, or command.");
+	}
 
 	const total = parts.reduce((n, p) => n + p.tokens, 0);
 	if (total > STATE_TOKEN_BUDGET) throw new AskStateError(overflowMessage(parts, STATE_TOKEN_BUDGET));

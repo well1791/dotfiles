@@ -241,6 +241,32 @@ describe("ask_laya", () => {
 		expect(empty.systemPrompt).toBe(`\n\n${NUDGE}`);
 	});
 
+	test("paths work for small files, relative and absolute", async () => {
+		const dir = mkdtempSync(path.join(os.tmpdir(), "ask-laya-paths-"));
+		try {
+			writeFileSync(path.join(dir, "note.md"), "# small file\n");
+			const { state } = await assembleState({ paths: ["note.md"] }, dir, noRun);
+		expect((state as any).files["note.md"]).toContain("small file");
+			const absolute = await assembleState({ paths: [path.join(dir, "note.md")] }, dir, noRun);
+			expect((absolute.state as any).files[path.join(dir, "note.md")]).toContain("small file");
+		} finally {
+			rmSync(dir, { recursive: true, force: true });
+		}
+	});
+
+	test("refuses a single oversize path naming the file, size, and remedy", async () => {
+		const dir = mkdtempSync(path.join(os.tmpdir(), "ask-laya-big-"));
+		try {
+			// ~30k chars ≈ 7.5k tokens: over STATE_TOKEN_BUDGET for a single call.
+			writeFileSync(path.join(dir, "bigreadme.md"), "x".repeat(30_000));
+			await expect(assembleState({ paths: ["bigreadme.md"] }, dir, noRun)).rejects.toThrow(/bigreadme\.md/);
+			await expect(assembleState({ paths: ["bigreadme.md"] }, dir, noRun)).rejects.toThrow(/30\s*000 bytes|too large/i);
+			await expect(assembleState({ paths: ["bigreadme.md"] }, dir, noRun)).rejects.toThrow(/command|excerpt|split/i);
+		} finally {
+			rmSync(dir, { recursive: true, force: true });
+		}
+	});
+
 	test("ported constants match the reference implementation", () => {
 		expect(STATE_TOKEN_BUDGET).toBe(6000);
 		expect(MAX_FILES_PER_CALL).toBe(20);
