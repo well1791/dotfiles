@@ -330,6 +330,15 @@ Installed via system package manager (pacman/apt/dnf):
 - Health check in-session: `/acp` (status) and `/acp-cache` (prefix-cache hit report; healthy = 95-97%)
 - Update: `pi update --all` (or `update-all`)
 
+### 34. **[laya](https://github.com/NandhaKishorM/laya)** - Local decision engine (`laya-serve`) behind pi's `ask_laya` tool
+- Answers typed questions (choice / score / bool) from local checkpoints — the agent's "ask instead of reason" shortcut, used by the `ask_laya` pi tool
+- Installed into a uv-managed venv at `~/.local/share/laya/.venv` (python 3.13, CUDA torch via `laya[serve]`)
+- Served by the `laya-serve` systemd **user** unit on `127.0.0.1:8082` (loopback only, bearer auth via `~/.local/share/laya/laya.env`, 0600 deploy-time generated)
+- Checkpoints (~1.6 GiB) download into `~/.local/share/laya/hf` on first service start (~30 s fast link); cached boots take 4-7 s; cuda ≈ 43 ms/request, cpu fallback ≈ 1 s (`LAYA_DEVICE=cpu`)
+- pi integration: `~/.pi/agent/extensions/laya-provider.ts` (provider `laya`) + `ask-laya.ts` (tool), both chezmoi-managed; laya classifiers intentionally don't show in `pi --list-models`
+- Skipped on ephemeral machines; ops doc: [docs/laya-serve.md](docs/laya-serve.md)
+- Update: bump the `LAYA_VERSION` pin in `run_onchange_before_62a-install-laya.sh.tmpl`, then `chezmoi apply` (not covered by `update-all`)
+
 **Note:** After installation, restart your shell to ensure all tools are in your PATH.
 
 ## Updating All Packages

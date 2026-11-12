@@ -215,6 +215,7 @@ $ variable: <command that produces selectable options> | fzf
 | helium-browser | — | GUI web browser (Chromium-based, by imput); system package `helium-browser-bin` via CachyOS repo/AUR, updated by `update-all` step 1. Skipped on headless machines. |
 | neo | chezmoi, fuse2 (Arch) | GUI word processor; upstream Linux AppImage managed from GitHub releases with a desktop launcher, refreshed via `update-all`; Arch-family FUSE 2 dependency is installed by `arch/run_onchange_before_80-install-fuse2.sh.tmpl`; skipped on headless and ephemeral machines. |
 | billion-context | pi (bun) | Context-compression proxy for pi; installed as a pi package (`pi install npm:billion-context`), self-spawning loopback proxy; config chezmoi-managed at `dot_config/billion-context/` with built-in subagents disabled (`pi.subagents: false`, keeps `pi-subagents` as the only delegate surface); updated via `update-all`'s `pi update --all` step. |
+| laya-serve | uv, python 3.13, HF checkpoints (~1.6 GiB) | Local decision engine for pi ask_laya; systemd user unit on 127.0.0.1:8082; updated via `LAYA_VERSION` pin bump in `run_onchange_before_62a-install-laya` + `chezmoi apply` (not covered by update-all); ops doc `docs/laya-serve.md`. Skipped on ephemeral machines. |
 
 Do NOT replace fzf with television for tools that pipe through fzf. Television is a full-screen TUI requiring `--source-command`, not stdin piping.
 
