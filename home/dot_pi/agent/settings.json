@@ -1,5 +1,5 @@
 {
-  "lastChangelogVersion": "1.5.0",
+  "lastChangelogVersion": "1.6.0",
   "defaultProvider": "zai",
   "defaultModel": "glm-5.3-flash",
   "defaultThinkingLevel": "medium",
@@ -29,14 +29,7 @@
   "branchSummary": {
     "skipPrompt": true
   },
-  "enabledModels": [
-    "github-copilot/gpt-6-luna",
-    "opencode/big-pickle",
-    "zai/glm-5.3",
-    "zai/glm-5.3-flash",
-    "local-minicpm/minicpm5-2b",
-    "local-qwen/qwen3.5-4b"
-  ],
+  "enabledModels": [],
   "theme": "dark",
   "quietStartup": true,
   "doubleEscapeAction": "tree",
